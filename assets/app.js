@@ -384,6 +384,128 @@
     r.readAsText(file);
   }
 
+  /* ================= export PDF (questions + student answers) ================= */
+  var PRINT_CSS =
+    "*{box-sizing:border-box}" +
+    "body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;color:#111;font-size:12px;line-height:1.65;margin:0}" +
+    "h1{font-size:20px;color:#1f5c8b;border-bottom:2px solid #1f5c8b;padding-bottom:6px;margin:0 0 6px}" +
+    "h2{font-size:16px;color:#7a2a24;border-left:5px solid #c0392b;padding-left:8px;margin:0 0 8px}" +
+    "h3{font-size:13.5px;color:#1f5c8b;margin:14px 0 6px}" +
+    ".meta{color:#666;font-size:11px;margin:4px 0 14px}" +
+    "section.module{page-break-before:always}" +
+    "section.module:first-of-type{page-break-before:avoid}" +
+    ".q{border:1px solid #ccc;border-radius:6px;padding:8px 10px;margin:8px 0;page-break-inside:avoid}" +
+    ".qt{font-weight:700;margin-bottom:4px}" +
+    ".opts{margin:2px 0 4px}" +
+    ".stu{color:#0a6b2e;margin-top:3px}" +
+    ".ans{color:#b0301f;margin-top:3px}" +
+    ".exp{color:#555;font-size:11px;margin-top:3px}" +
+    ".hwimg{max-width:100%;border:1px solid #ddd;border-radius:4px;margin-top:4px}" +
+    "@media print{@page{size:A4;margin:14mm}}";
+
+  function strokesToDataURL(strokes, w, h) {
+    if (!strokes || !strokes.length) return null;
+    var cv = document.createElement("canvas");
+    cv.width = w; cv.height = h;
+    var ctx = cv.getContext("2d");
+    ctx.fillStyle = "#fffdf7"; ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = "#1a2b45"; ctx.lineWidth = 2; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    strokes.forEach(function (st) {
+      if (!st.length) return;
+      if (st.length === 1) { ctx.beginPath(); ctx.arc(st[0][0] * w, st[0][1] * h, 1.6, 0, 7); ctx.fill(); return; }
+      ctx.beginPath();
+      st.forEach(function (p, i) { var x = p[0] * w, y = p[1] * h; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+      ctx.stroke();
+    });
+    return cv.toDataURL("image/png");
+  }
+
+  function buildChapterDoc(cid, ch) {
+    var mc = mcqStore(cid), fi = fillStore(cid), se = selfStore(cid), tx = textStore(cid);
+    var hw = jget(skey(cid, "hw"), {});
+    var P = [];
+    P.push('<h1>' + esc(ch.title) + '</h1>');
+    P.push('<p class="meta">题目与我的作答 ｜ 导出时间：' + esc(new Date().toLocaleString("zh-CN")) + '</p>');
+    ch.modules.forEach(function (m) {
+      P.push('<section class="module">');
+      P.push('<h2>' + esc(m.name) + '</h2>');
+      if (m.mcq && m.mcq.length) {
+        P.push('<h3>一、选择题</h3>');
+        m.mcq.forEach(function (q, i) {
+          var rec = mc[q.id] || {};
+          P.push('<div class="q"><div class="qt">' + (i + 1) + '. ' + esc(q.q) + '</div>');
+          P.push('<div class="opts">' + q.o.map(function (o) { return '<div>' + esc(o) + '</div>'; }).join('') + '</div>');
+          P.push('<div class="stu">我的作答：<b>' + esc(rec.last || "（未作答）") + '</b></div>');
+          P.push('<div class="ans">正确答案：' + esc(q.a) + '</div>');
+          if (q.e) P.push('<div class="exp">解析：' + esc(q.e) + '</div>');
+          var im = strokesToDataURL(hw[q.id], 900, 150);
+          if (im) P.push('<img class="hwimg" src="' + im + '">');
+          P.push('</div>');
+        });
+      }
+      if (m.fill && m.fill.length) {
+        P.push('<h3>二、填空题</h3>');
+        m.fill.forEach(function (q, i) {
+          var rec = fi[q.id] || {};
+          P.push('<div class="q"><div class="qt">' + (i + 1) + '. ' + esc(q.q) + '</div>');
+          P.push('<div class="stu">我的作答：<b>' + esc(rec.last || tx[q.id] || "（未作答）") + '</b></div>');
+          P.push('<div class="ans">参考答案：' + esc(q.a) + '</div>');
+          var im = strokesToDataURL(hw[q.id], 900, 150);
+          if (im) P.push('<img class="hwimg" src="' + im + '">');
+          P.push('</div>');
+        });
+      }
+      function selfSec(title, arr, kind) {
+        if (!arr || !arr.length) return;
+        P.push('<h3>' + title + '</h3>');
+        arr.forEach(function (q, i) {
+          var st = se[q.id] || {};
+          var qtext = kind === "term" ? q.term : q.q;
+          var ans = kind === "term" ? q.def : (kind === "calc" ? (q.steps || q.a) : q.a);
+          P.push('<div class="q"><div class="qt">' + (i + 1) + '. ' + esc(qtext) + '</div>');
+          P.push('<div class="stu">我的作答：<br>' + esc(tx[q.id] || "（未作答）").replace(/\n/g, "<br>") + '</div>');
+          P.push('<div class="stu">自评：' + (st.state === "ok" ? "会" : st.state === "no" ? "不会" : "未评") + '</div>');
+          P.push('<div class="ans">参考答案：<br>' + esc(ans).replace(/\n/g, "<br>") + '</div>');
+          if (q.kps) P.push('<div class="exp">踩分点：' + esc(q.kps) + '</div>');
+          var im = strokesToDataURL(hw[q.id], 900, 230);
+          if (im) P.push('<img class="hwimg" src="' + im + '">');
+          P.push('</div>');
+        });
+      }
+      selfSec("三、简答题", m.short, "short");
+      selfSec("四、论述 / 推导题", m.calc, "calc");
+      selfSec("五、名词解释", m.term, "term");
+      P.push('</section>');
+    });
+    return P.join("");
+  }
+
+  function printDoc(bodyHtml, title) {
+    var html = '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>' + esc(title) + '</title><style>' + PRINT_CSS + '</style></head><body>' + bodyHtml + '</body></html>';
+    var iframe = document.createElement("iframe");
+    iframe.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;";
+    document.body.appendChild(iframe);
+    var doc = iframe.contentWindow.document;
+    doc.open(); doc.write(html); doc.close();
+    setTimeout(function () {
+      try { iframe.contentWindow.focus(); iframe.contentWindow.print(); }
+      catch (e) { alert("打印失败：" + e.message); }
+      setTimeout(function () { iframe.remove(); }, 60000);
+    }, 300);
+  }
+
+  function exportChapterPDF(cid) {
+    var ch = window.CHAPTERS[cid];
+    printDoc(buildChapterDoc(cid, ch), ch.title + " 题目与作答");
+  }
+
+  function exportAllPDF() {
+    var M = window.MANIFEST || [];
+    var P = ['<h1>细胞生物学 · 全部章节（题目与我的作答）</h1>', '<p class="meta">导出时间：' + esc(new Date().toLocaleString("zh-CN")) + '</p>'];
+    M.forEach(function (m) { var ch = window.CHAPTERS[m.id]; if (ch) P.push(buildChapterDoc(m.id, ch)); });
+    printDoc(P.join(""), "细胞生物学 全部题目与作答");
+  }
+
   /* ================= chapter page ================= */
   function renderChapter(cid) {
     var ch = window.CHAPTERS[cid];
@@ -409,6 +531,7 @@
     tb("📋 交卷判分", function () { mGradeAll(cid); });
     tb("📊 学习统计", function () { renderStats(cid, ch, document.getElementById("statsbox")); document.getElementById("statsbox").scrollIntoView({ behavior: "smooth" }); });
     tb("💾 数据备份", function () { backupChapter(cid); });
+    tb("🖨 导出PDF（题目+我的作答）", function () { exportChapterPDF(cid); });
     var rst = el("button", "navbtn", "⬆ 从备份恢复");
     var fi = el("input"); fi.type = "file"; fi.accept = ".json"; fi.style.display = "none";
     fi.onchange = function () { if (fi.files[0]) restoreFile(cid, fi.files[0]); };
@@ -511,6 +634,8 @@
     renderOverview();
     var bAll = document.getElementById("backupAll"), rAll = document.getElementById("restoreAll"), fAll = document.getElementById("fileAll");
     if (bAll) bAll.onclick = backupAll;
+    var bExp = document.getElementById("exportAll");
+    if (bExp) bExp.onclick = exportAllPDF;
     if (rAll && fAll) { rAll.onclick = function () { fAll.click(); }; fAll.onchange = function () { if (fAll.files[0]) restoreAll(fAll.files[0]); }; }
   }
 
@@ -590,5 +715,5 @@
     else if (page === "wrong") renderWrongPage();
   });
 
-  window.CELL = { backupAll: backupAll, restoreAll: restoreAll };
+  window.CELL = { backupAll: backupAll, restoreAll: restoreAll, exportChapterPDF: exportChapterPDF, exportAllPDF: exportAllPDF, buildChapterDoc: buildChapterDoc };
 })();
