@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>泛素-蛋白酶体</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function steps(W){var m=14,g=8,n=6,bw=(W-2*m-g*(n-1))/n,by=200,bh=120,arr=[];
+    for(var i=0;i<n;i++)arr.push({x:m+i*(bw+g),y:by,w:bw,h:bh});return arr;}
+  AnimKit.mount({
+    title:'泛素-蛋白酶体降解系统',
+    sub:'E1→E2→E3 级联把泛素连到靶蛋白，形成多聚泛素链，被 26S 蛋白酶体降解。',
+    legend:[{c:'#e8a13a',t:'泛素'},{c:'#5a7fa8',t:'酶 / 靶蛋白'},{c:'#c0392b',t:'蛋白酶体'}],
+    phases:[
+      {name:'① 靶蛋白',dur:1200,note:'待降解的靶蛋白。'},
+      {name:'② E1 活化泛素（耗 ATP）',dur:1300,note:'泛素活化酶 E1 消耗 ATP 激活泛素。'},
+      {name:'③ E2 结合',dur:1200,note:'泛素结合酶 E2 接受活化泛素。'},
+      {name:'④ E3 连接酶',dur:1300,note:'泛素连接酶 E3 把泛素转移到靶蛋白的 Lys 残基上。'},
+      {name:'⑤ 多聚泛素链',dur:1300,note:'多轮循环形成 K48 多聚泛素链（降解信号）。'},
+      {name:'⑥ 26S 蛋白酶体降解',dur:1500,note:'26S 蛋白酶体识别泛素链，把蛋白降解为短肽。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      var st=steps(W);AnimKit.pathway(ctx,W,H,st,phaseI);
+      var a=st[phaseI];
+      // target protein blob
+      AnimKit.roundRect(ctx,a.x+a.w/2-22,a.y-30,44,26,8);ctx.fillStyle='#5a7fa8';ctx.fill();
+      // ubiquitin dots (grow with phase)
+      for(var i=0;i<Math.min(4,phaseI);i++)AnimKit.circle(ctx,a.x+a.w/2-18+i*12,a.y-46,6,'#e8a13a',null);
+      if(phaseI>=5){AnimKit.label(ctx,'→ 短肽',a.x+a.w+6,a.y+a.h/2,'#c0392b','12px "Microsoft YaHei"','left');}
+      AnimKit.label(ctx,'泛素化需 E1/E2/E3 三种酶（2004 诺贝尔化学奖）',W/2,44,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

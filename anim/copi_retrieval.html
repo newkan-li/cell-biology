@@ -1,0 +1,28 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>COPI回收</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function steps(W){var m=20,g=18,n=4,bw=(W-2*m-g*(n-1))/n,by=200,bh=125,arr=[];
+    for(var i=0;i<n;i++)arr.push({x:m+i*(bw+g),y:by,w:bw,h:bh});return arr;}
+  AnimKit.mount({
+    title:'COPI 有被小泡（高尔基体 → ER 回收）',
+    sub:'带 KDEL 信号的 ER 驻留蛋白逃逸到高尔基体后，被 KDEL 受体识别，经 COPI 小泡回收回 ER。',
+    legend:[{c:'#8e5bb5',t:'COPI/ARF'},{c:'#c0392b',t:'KDEL 信号'},{c:'#5a7fa8',t:'驻留蛋白'}],
+    phases:[
+      {name:'① 驻留蛋白逃逸',dur:1300,note:'ER 驻留蛋白(Bip/PDI)带 KDEL，若逃逸到高尔基体。'},
+      {name:'② ARF 与 COPI 组装',dur:1400,note:'ARF(GTP 结合蛋白)招募 COPI(7 个亚基)组装。'},
+      {name:'③ 形成回收小泡',dur:1400,note:'出芽形成 COPI 小泡，包裹逃逸蛋白。'},
+      {name:'④ 返回 ER',dur:1400,note:'小泡与 ER 融合，驻留蛋白回到内质网。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      var st=steps(W);AnimKit.pathway(ctx,W,H,st,phaseI);
+      var a=st[phaseI],cx=a.x+a.w/2,cy=a.y+a.h/2;
+      AnimKit.circle(ctx,cx,cy,14,'#5a7fa8','P');
+      AnimKit.label(ctx,'KDEL',cx+30,cy-8,'#c0392b','bold 11px Arial');
+      if(phaseI>=1)for(var i=0;i<4;i++)AnimKit.circle(ctx,cx-18+i*12,cy+22,5,'#8e5bb5',null);
+      AnimKit.label(ctx,'COPI 负责 Golgi→ER 的逆向回收（KDEL 信号）',W/2,44,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

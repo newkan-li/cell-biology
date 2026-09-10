@@ -1,0 +1,28 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>N-连接糖基化</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function steps(W){var m=16,g=12,n=4,bw=(W-2*m-g*(n-1))/n,by=190,bh=130,arr=[];
+    for(var i=0;i<n;i++)arr.push({x:m+i*(bw+g),y:by,w:bw,h:bh});return arr;}
+  AnimKit.mount({
+    title:'N-连接糖基化',
+    sub:'寡糖前体连在磷酸多萜醇上，整体转移到 Asn 残基（Asn-X-Ser/Thr），起始于粗面内质网。',
+    legend:[{c:'#8e5bb5',t:'寡糖链'},{c:'#5a7fa8',t:'多萜醇 / 酶'}],
+    phases:[
+      {name:'① 寡糖前体装配',dur:1300,note:'在 ER 膜上，寡糖链连到磷酸多萜醇(dolichol)上。'},
+      {name:'② 转移到 Asn 残基',dur:1400,note:'当 Asn-X-Ser/Thr 序列出现，寡糖整体转移到天冬酰胺(Asn)上。'},
+      {name:'③ 修剪与加工',dur:1400,note:'在 ER 与高尔基体对糖链进行修剪、加工。'},
+      {name:'④ 成熟糖蛋白',dur:1300,note:'形成成熟糖蛋白，参与折叠、识别、稳定性等。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      var st=steps(W);AnimKit.pathway(ctx,W,H,st,phaseI);
+      var a=st[phaseI];
+      // sugar chain dots
+      for(var i=0;i<5;i++)AnimKit.circle(ctx,a.x+a.w/2-24+i*12,a.y-24,7,i<3?'#8e5bb5':'#b58ad0',null);
+      AnimKit.circle(ctx,a.x+a.w/2+34,a.y-24,9,'#5a7fa8','N');
+      AnimKit.label(ctx,'N-糖基化（起始于粗面内质网）',W/2,44,'#1f5c8b','bold 15px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

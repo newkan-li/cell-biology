@@ -68,6 +68,10 @@ table.tbl{border-collapse:collapse;width:100%;margin:.5em 0 1em;font-size:14px}
 #lightbox{position:fixed;inset:0;background:rgba(15,20,30,.9);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px}
 #lightbox.on{display:flex}
 #lightbox img{max-width:96vw;max-height:94vh;border-radius:8px}
+.animwrap{margin-top:12px;border-top:1px dashed #dbe4ee;padding-top:10px}
+.animhead{font-size:13px;color:var(--blue);font-weight:700;margin-bottom:6px}
+.animframe{width:100%;height:560px;border:1px solid var(--line);border-radius:10px;background:#fff;display:block}
+@media(max-width:760px){.animframe{height:460px}}
 
 /* questions */
 .q{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:12px 0;background:#fff}

@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>协同运输</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function P(t,nx,ny){return{type:t,nx:nx,ny:ny,tnx:nx,tny:ny};}
+  function set(o,x,y){o.tnx=x;o.tny=y;}
+  AnimKit.mount({
+    title:'协同运输（SGLT 同向转运）',
+    sub:'利用 Na⁺ 的电化学梯度，驱动葡萄糖逆浓度梯度进入细胞（小肠上皮）。',
+    legend:[{c:'#e8703a',t:'Na⁺'},{c:'#2e9e5b',t:'葡萄糖'},{c:'#5a7fa8',t:'SGLT / Na⁺-K⁺ 泵'}],
+    init:function(S){S.n=[P('Na',.20,.12),P('Na',.30,.18)];S.g=[P('G',.40,.10)];},
+    phases:[
+      {name:'① Na⁺ 与葡萄糖结合 SGLT',dur:1000,note:'细胞外 Na⁺（高）与葡萄糖结合到同向转运蛋白。',ap:function(S){set(S.n[0],.46,.38);set(S.n[1],.54,.38);set(S.g[0],.50,.34);}},
+      {name:'② 共同转运入胞',dur:1100,note:'Na⁺ 顺梯度内流，同时“拖”葡萄糖逆梯度进入细胞。',ap:function(S){set(S.n[0],.46,.66);set(S.n[1],.54,.66);set(S.g[0],.50,.70);}},
+      {name:'③ 释放到细胞内',dur:900,note:'Na⁺ 与葡萄糖释放到细胞内。',ap:function(S){set(S.n[0],.30,.86);set(S.n[1],.40,.88);set(S.g[0],.60,.86);}},
+      {name:'④ Na⁺/K⁺ 泵维持梯度',dur:1000,note:'基底面的 Na⁺/K⁺ 泵把 Na⁺ 泵出，维持胞内低 Na⁺，使协同运输可持续。'}
+    ],
+    update:function(S,e){S.n.concat(S.g).forEach(function(o){o.nx+=(o.tnx-o.nx)*e;o.ny+=(o.tny-o.ny)*e;});},
+    onLoop:function(S){S.n=[P('Na',.20,.12),P('Na',.30,.18)];S.g=[P('G',.40,.10)];},
+    draw:function(ctx,W,H,S){
+      var m=AnimKit.membrane(ctx,W,H,{gap:150});var cx=W/2,yT=m.yTop,yB=m.yBot,cy=(yT+yB)/2;
+      // SGLT
+      AnimKit.roundRect(ctx,cx-55,yT-30,110,(yB-yT)+60,20);ctx.fillStyle='#5a7fa8';ctx.fill();
+      AnimKit.label(ctx,'SGLT',cx,yB+50,'#33465c','12px "Microsoft YaHei"');
+      // Na/K pump on right
+      AnimKit.roundRect(ctx,W*.82-24,yT-26,48,(yB-yT)+52,14);ctx.fillStyle='#7a9bbd';ctx.fill();
+      AnimKit.label(ctx,'Na⁺/K⁺ 泵',W*.82,yB+50,'#33465c','11px "Microsoft YaHei"');
+      AnimKit.arrow(ctx,W*.82,yT-34,W*.82,yT-70,'#c0392b',2);AnimKit.label(ctx,'Na⁺ 出',W*.82+34,yT-52,'#c0392b','11px "Microsoft YaHei"');
+      S.n.concat(S.g).forEach(function(o){var c=o.type==='Na'?'#e8703a':'#2e9e5b';AnimKit.circle(ctx,o.nx*W,o.ny*H,13,c,o.type==='Na'?'Na⁺':'G');});
+      AnimKit.label(ctx,'高 Na⁺ / 葡萄糖',14,22,'#7a8aa0','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'低 Na⁺ / 葡萄糖',14,H-14,'#7a8aa0','12px "Microsoft YaHei"','left');
+    }
+  });
+})();
+</script></body></html>

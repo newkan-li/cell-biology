@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>分子伴侣折叠</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function steps(W){var m=16,g=14,n=4,bw=(W-2*m-g*(n-1))/n,by=200,bh=130,arr=[];
+    for(var i=0;i<n;i++)arr.push({x:m+i*(bw+g),y:by,w:bw,h:bh});return arr;}
+  AnimKit.mount({
+    title:'分子伴侣介导的蛋白质折叠',
+    sub:'分子伴侣（如 Bip/Hsp70）识别并结合新生肽，帮助其正确折叠、防止聚集。',
+    legend:[{c:'#5a7fa8',t:'新生肽'},{c:'#2e9e5b',t:'分子伴侣'}],
+    phases:[
+      {name:'① 新生肽（未折叠）',dur:1300,note:'新生肽链暴露疏水区，易错误折叠或聚集。'},
+      {name:'② 分子伴侣结合',dur:1300,note:'分子伴侣(Bip/Hsp70)识别并结合暴露的疏水区。'},
+      {name:'③ 帮助折叠',dur:1500,note:'在隔离环境中帮助肽链折叠，反复结合/释放。'},
+      {name:'④ 释放（正确构象）',dur:1300,note:'折叠完成后释放；最终三维构象仍由氨基酸序列决定。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      var st=steps(W);AnimKit.pathway(ctx,W,H,st,phaseI);
+      var a=st[phaseI],cx=a.x+a.w/2,cy=a.y+a.h/2;
+      // peptide squiggle
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=3;ctx.beginPath();
+      for(var i=0;i<=20;i++){var x=cx-34+i*3.4,y=cy+Math.sin(i*(phaseI>=3?0.4:1.1))*10;if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);}
+      ctx.stroke();
+      if(phaseI===1||phaseI===2){AnimKit.circle(ctx,cx-30,cy-24,12,'#2e9e5b','C');AnimKit.circle(ctx,cx+30,cy-24,12,'#2e9e5b','C');}
+      AnimKit.label(ctx,'分子伴侣帮助折叠，但不构成最终产物',W/2,44,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

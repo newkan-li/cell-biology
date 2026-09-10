@@ -1,0 +1,39 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Na⁺/K⁺-ATPase</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function P(t,nx,ny){return{type:t,nx:nx,ny:ny,tnx:nx,tny:ny};}
+  function set(o,x,y){o.tnx=x;o.tny=y;}
+  AnimKit.mount({
+    title:'Na⁺/K⁺-ATPase（钠钾泵）',
+    sub:'每水解 1 个 ATP：泵出 3 个 Na⁺、泵入 2 个 K⁺。',
+    legend:[{c:'#e8703a',t:'Na⁺'},{c:'#3b6fd6',t:'K⁺'},{c:'#c0392b',t:'ATP / Pi'}],
+    init:function(S){S.open='in';S.ph=false;S.atp=null;S.naOut=0;S.kIn=0;S.atpUsed=0;
+      S.na=[P('Na',.30,.82),P('Na',.50,.88),P('Na',.66,.80)];S.k=[P('K',.36,.14),P('K',.62,.11)];},
+    phases:[
+      {name:'① Na⁺ 结合',dur:1000,note:'细胞内 3 个 Na⁺ 结合到泵位点。',ap:function(S){S.open='in';set(S.na[0],.44,.63);set(S.na[1],.50,.60);set(S.na[2],.56,.63);}},
+      {name:'② ATP 水解 / 磷酸化',dur:1000,note:'ATP→ADP+Pi，Pi 结合到泵上。',ap:function(S){S.ph=true;S.atpUsed++;S.atp=0;}},
+      {name:'③ 构象改变（向外）',dur:700,note:'泵构象改变，开口转向细胞外。',ap:function(S){S.open='out';}},
+      {name:'④ 释放 Na⁺',dur:1000,note:'3 个 Na⁺ 释放到细胞外。',ap:function(S){set(S.na[0],.34,.12);set(S.na[1],.50,.08);set(S.na[2],.66,.14);S.naOut+=3;}},
+      {name:'⑤ K⁺ 结合',dur:1000,note:'细胞外 2 个 K⁺ 结合到泵位点。',ap:function(S){S.open='out';set(S.k[0],.46,.40);set(S.k[1],.54,.40);}},
+      {name:'⑥ 去磷酸化',dur:700,note:'Pi 脱落。',ap:function(S){S.ph=false;}},
+      {name:'⑦ 构象改变（向内）',dur:700,note:'开口转向细胞内。',ap:function(S){S.open='in';}},
+      {name:'⑧ 释放 K⁺',dur:1000,note:'2 个 K⁺ 释放到细胞内（完成循环）。',ap:function(S){set(S.k[0],.42,.86);set(S.k[1],.58,.84);S.kIn+=2;}}
+    ],
+    update:function(S,e){S.na.concat(S.k).forEach(function(o){o.nx+=(o.tnx-o.nx)*e;o.ny+=(o.tny-o.ny)*e;});if(S.atp!=null)S.atp=Math.min(1,S.atp+.02);},
+    onLoop:function(S){S.na=[P('Na',.30,.82),P('Na',.50,.88),P('Na',.66,.80)];S.k=[P('K',.36,.14),P('K',.62,.11)];S.open='in';S.ph=false;S.atp=null;},
+    draw:function(ctx,W,H,S){
+      var m=AnimKit.membrane(ctx,W,H,{gap:150}),cx=W/2,yT=m.yTop,yB=m.yBot,cy=(yT+yB)/2,pw=Math.min(150,W*.18);
+      AnimKit.roundRect(ctx,cx-pw/2,yT-35,pw,(yB-yT)+70,26);ctx.fillStyle=S.ph?'#6aa84f':'#5a7fa8';ctx.fill();
+      ctx.fillStyle='#fff';ctx.beginPath();
+      if(S.open==='in'){ctx.moveTo(cx-pw*.3,yB+30);ctx.lineTo(cx,cy+6);ctx.lineTo(cx+pw*.3,yB+30);}
+      else{ctx.moveTo(cx-pw*.3,yT-30);ctx.lineTo(cx,cy-6);ctx.lineTo(cx+pw*.3,yT-30);}ctx.closePath();ctx.fill();
+      if(S.ph)AnimKit.circle(ctx,cx-pw/2-2,cy+40,12,'#c0392b','P');
+      AnimKit.label(ctx,'Na⁺/K⁺-ATPase',cx,yB+58,'#33465c','13px "Microsoft YaHei"');
+      if(S.atp!=null)AnimKit.label(ctx,S.atp<.5?'ATP':'ADP + Pi',cx+pw/2+80,cy+70,'#c0392b','bold 15px "Microsoft YaHei"');
+      S.na.concat(S.k).forEach(function(o){AnimKit.circle(ctx,o.nx*W,o.ny*H,13,o.type==='Na'?'#e8703a':'#3b6fd6',o.type==='Na'?'Na⁺':'K⁺');});
+      AnimKit.label(ctx,'已泵出 Na⁺：'+S.naOut+'　已泵入 K⁺：'+S.kIn+'　已消耗 ATP：'+S.atpUsed,14,H*.5-6,'#33465c','13px "Microsoft YaHei"','left');
+    }
+  });
+})();
+</script></body></html>

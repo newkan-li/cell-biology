@@ -1,0 +1,34 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>线粒体蛋白导入</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function steps(W){var m=14,g=10,n=5,bw=(W-2*m-g*(n-1))/n,by=195,bh=125,arr=[];
+    for(var i=0;i<n;i++)arr.push({x:m+i*(bw+g),y:by,w:bw,h:bh});return arr;}
+  AnimKit.mount({
+    title:'线粒体蛋白质的翻译后转运（TOM/TIM）',
+    sub:'前体蛋白在胞质由 Hsp70 解折叠，N 端导肽引导，经 TOM/TIM 进入线粒体基质。',
+    legend:[{c:'#e8703a',t:'导肽'},{c:'#5a7fa8',t:'前体蛋白 / 转运子'},{c:'#2e9e5b',t:'Hsp70'}],
+    phases:[
+      {name:'① 前体蛋白 + Hsp70 解折叠',dur:1300,note:'胞质中前体蛋白与 Hsp70 结合、消耗 ATP 解折叠。'},
+      {name:'② 导肽识别 TOM',dur:1300,note:'N 端导肽与线粒体外膜受体/TOM 复合体识别。'},
+      {name:'③ 内外膜接触点',dur:1300,note:'在内外膜接触点转运。'},
+      {name:'④ TIM 进入基质',dur:1400,note:'经内膜 TIM 复合体进入基质。'},
+      {name:'⑤ 导肽切除 + 折叠',dur:1400,note:'导肽被切除，蛋白重新折叠成活性形式。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      var st=steps(W);AnimKit.pathway(ctx,W,H,st,phaseI);
+      var a=st[phaseI],cx=a.x+a.w/2,cy=a.y+a.h/2;
+      // two membranes
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(cx-55,cy-24);ctx.lineTo(cx+55,cy-24);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(cx-55,cy+24);ctx.lineTo(cx+55,cy+24);ctx.stroke();
+      AnimKit.label(ctx,'外膜',cx+62,cy-24,'#7a8aa0','11px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'内膜',cx+62,cy+28,'#7a8aa0','11px "Microsoft YaHei"','left');
+      AnimKit.roundRect(ctx,cx-10,cy-30,20,60,6);ctx.fillStyle='#7a9bbd';ctx.fill();
+      AnimKit.circle(ctx,cx-24,cy-40,7,'#e8703a','导');
+      if(phaseI===0)AnimKit.circle(ctx,cx+24,cy-40,9,'#2e9e5b','H');
+      AnimKit.label(ctx,'只有解折叠的蛋白能进入线粒体',W/2,44,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

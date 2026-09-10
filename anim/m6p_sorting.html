@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>M6P分选</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function steps(W){var m=14,g=10,n=5,bw=(W-2*m-g*(n-1))/n,by=195,bh=125,arr=[];
+    for(var i=0;i<n;i++)arr.push({x:m+i*(bw+g),y:by,w:bw,h:bh});return arr;}
+  AnimKit.mount({
+    title:'溶酶体酶的 M6P 分选途径',
+    sub:'溶酶体酶在高尔基体被加上 6-磷酸甘露糖(M6P)标志，被 M6P 受体识别并运往溶酶体。',
+    legend:[{c:'#5a7fa8',t:'溶酶体酶'},{c:'#c0392b',t:'M6P 标志'},{c:'#2e9e5b',t:'M6P 受体'}],
+    phases:[
+      {name:'① rER 合成溶酶体酶',dur:1300,note:'溶酶体酶在粗面内质网合成并 N-糖基化。'},
+      {name:'② 高尔基体加 M6P',dur:1400,note:'N-乙酰葡萄糖胺磷酸转移酶催化加上 M6P 标志。'},
+      {name:'③ M6P 受体识别',dur:1300,note:'M6P 受体特异识别并结合 M6P。'},
+      {name:'④ 包装入运输小泡',dur:1300,note:'经网格蛋白小泡运往胞内体。'},
+      {name:'⑤ 送达溶酶体',dur:1300,note:'释放到溶酶体，受体回收。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      var st=steps(W);AnimKit.pathway(ctx,W,H,st,phaseI);
+      var a=st[phaseI],cx=a.x+a.w/2,cy=a.y+a.h/2;
+      AnimKit.circle(ctx,cx-14,cy,13,'#5a7fa8','酶');
+      if(phaseI>=1)AnimKit.circle(ctx,cx+14,cy,10,'#c0392b','M');
+      if(phaseI===2)AnimKit.circle(ctx,cx+34,cy,11,'#2e9e5b','R');
+      AnimKit.label(ctx,'M6P = 6-磷酸甘露糖（溶酶体酶分选信号）',W/2,44,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

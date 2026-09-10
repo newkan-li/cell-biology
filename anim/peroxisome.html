@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>过氧化物酶体发生</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function steps(W){var m=20,g=18,n=4,bw=(W-2*m-g*(n-1))/n,by=200,bh=125,arr=[];
+    for(var i=0;i<n;i++)arr.push({x:m+i*(bw+g),y:by,w:bw,h:bh});return arr;}
+  AnimKit.mount({
+    title:'过氧化物酶体的发生与蛋白导入',
+    sub:'过氧化物酶体有两种发生途径：由 ER 出芽从头形成、由已有过氧化物酶体分裂；蛋白经 PTS 信号导入。',
+    legend:[{c:'#2e9e5b',t:'Pex 膜蛋白'},{c:'#5a7fa8',t:'过氧化物酶体'},{c:'#e8703a',t:'PTS 信号'}],
+    phases:[
+      {name:'① ER 出芽（从头形成）',dur:1300,note:'Pex3/Pex16 等膜蛋白来自 ER，出芽形成新的过氧化物酶体。'},
+      {name:'② 形成过氧化物酶体',dur:1300,note:'形成含氧化酶与过氧化氢酶的过氧化物酶体。'},
+      {name:'③ 分裂增殖',dur:1300,note:'也可由已有过氧化物酶体分裂产生。'},
+      {name:'④ PTS 导入蛋白',dur:1400,note:'蛋白经 PTS1(C端 SKL) / PTS2 信号被 Pex 受体识别并导入。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      var st=steps(W);AnimKit.pathway(ctx,W,H,st,phaseI);
+      var a=st[phaseI],cx=a.x+a.w/2,cy=a.y+a.h/2;
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,30,0,Math.PI*2);ctx.stroke();
+      AnimKit.circle(ctx,cx-10,cy-6,8,'#2e9e5b',null);AnimKit.circle(ctx,cx+10,cy+8,8,'#2e9e5b',null);
+      if(phaseI===0)AnimKit.label(ctx,'ER',cx-46,cy,'#7a8aa0','bold 12px "Microsoft YaHei"','right');
+      if(phaseI===2)AnimKit.label(ctx,'分裂',cx,cy-40,'#7a8aa0','12px "Microsoft YaHei"');
+      if(phaseI>=3){AnimKit.circle(ctx,cx+40,cy-34,9,'#e8703a','PTS');AnimKit.arrow(ctx,cx+34,cy-30,cx+20,cy-12,'#e8703a',2);}
+      AnimKit.label(ctx,'过氧化物酶体：含氧化酶与过氧化氢酶（又称微体）',W/2,44,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

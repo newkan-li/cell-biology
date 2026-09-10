@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>网格蛋白胞吞</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function steps(W){var m=14,g=10,n=5,bw=(W-2*m-g*(n-1))/n,by=195,bh=125,arr=[];
+    for(var i=0;i<n;i++)arr.push({x:m+i*(bw+g),y:by,w:bw,h:bh});return arr;}
+  AnimKit.mount({
+    title:'受体介导的胞吞（网格蛋白有被小泡）',
+    sub:'配体与受体结合→网格蛋白包被凹陷→dynamin 掐断→脱包被→与溶酶体融合。',
+    legend:[{c:'#e8703a',t:'配体'},{c:'#5a7fa8',t:'受体'},{c:'#8e5bb5',t:'网格蛋白'},{c:'#c0392b',t:'dynamin'}],
+    phases:[
+      {name:'① 配体结合受体',dur:1200,note:'细胞外配体（如 LDL）与质膜受体特异结合。'},
+      {name:'② 膜凹陷 / 网格蛋白包被',dur:1400,note:'网格蛋白组装成包被，膜向内凹陷。'},
+      {name:'③ dynamin 掐断',dur:1300,note:'发动蛋白(dynamin)收缩，将小泡从膜上掐断。'},
+      {name:'④ 脱包被',dur:1200,note:'小泡脱去网格蛋白包被。'},
+      {name:'⑤ 与溶酶体融合',dur:1300,note:'与溶酶体融合降解配体，受体可回收。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      var st=steps(W);AnimKit.pathway(ctx,W,H,st,phaseI);
+      var a=st[phaseI],cx=a.x+a.w/2,cy=a.y+a.h/2;
+      ctx.strokeStyle='#8e5bb5';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,30,Math.PI,0,false);ctx.stroke();
+      AnimKit.circle(ctx,cx-18,cy-24,9,'#5a7fa8','R');AnimKit.circle(ctx,cx+2,cy-30,8,'#e8703a','L');
+      if(phaseI===2){AnimKit.circle(ctx,cx,cy+30,10,'#c0392b','D');}
+      AnimKit.label(ctx,'网格蛋白三脚复合体 + 衔接蛋白AP + dynamin',W/2,44,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

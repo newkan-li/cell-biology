@@ -1,0 +1,53 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>膜流动性</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function drawLipid(ctx,x,y,flip,rot,tail){
+    var yTop=flip?y:y, dir=flip?-1:1;
+    ctx.fillStyle='#f2b950';ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fill();
+    ctx.strokeStyle='#e6c98f';ctx.lineWidth=2;
+    for(var s=-1;s<=1;s+=2){
+      ctx.beginPath();ctx.moveTo(x+s*2,y+dir*5);
+      ctx.quadraticCurveTo(x+s*(2+tail*4),y+dir*16,x+s*(2+tail*6),y+dir*26);ctx.stroke();
+    }
+  }
+  AnimKit.mount({
+    title:'膜脂的流动性（膜脂的运动方式）',
+    sub:'膜脂可侧向扩散、旋转、尾部摆动；翻转（flip-flop）很少发生。',
+    legend:[{c:'#f2b950',t:'磷脂分子'}],
+    init:function(S){S.mode=0;S.p=0;},
+    phases:[
+      {name:'① 侧向扩散（基本运动）',dur:1600,note:'同一侧单层内磷脂快速侧向移动，是膜流动性的基础。',ap:function(S){S.mode=0;}},
+      {name:'② 绕轴旋转',dur:1400,note:'磷脂绕自身长轴旋转。',ap:function(S){S.mode=1;}},
+      {name:'③ 尾部摆动',dur:1400,note:'脂肪酸尾部摆动（弯曲）。',ap:function(S){S.mode=2;}},
+      {name:'③ 翻转（flip-flop，罕见）',dur:1600,note:'磷脂从一层翻到另一层很慢、需酶协助，是膜不对称性的基础。',ap:function(S){S.mode=3;}}
+    ],
+    update:function(S,e){S.p+=0.02*e*2;if(S.p>1)S.p=0;},
+    draw:function(ctx,W,H,S){
+      var yTop=H*.42,yBot=H*.58,cy=(yTop+yBot)/2;
+      ctx.fillStyle='#fff7ef';ctx.fillRect(0,0,W,H);
+      ctx.fillStyle='#ffe9c9';ctx.fillRect(0,yTop,W,yBot-yTop);
+      var step=42, idx=0, hi=6;
+      for(var x=30;x<W-20;x+=step){
+        var tail=0,flip=false;
+        if(idx===hi){
+          if(S.mode===0){x+=Math.sin(S.p*Math.PI*2)*22;}
+          if(S.mode===2){tail=Math.abs(Math.sin(S.p*Math.PI*2));}
+        }
+        drawLipid(ctx,x,yTop,false,0,idx===hi&&S.mode===2?tail:0);
+        drawLipid(ctx,x,yBot,true,0,0);
+        idx++;
+      }
+      // highlighted rotating / flipping lipid at right
+      var hx=W-70;
+      if(S.mode===1){ctx.save();ctx.translate(hx,yTop);ctx.rotate(S.p*Math.PI*2);drawLipid(ctx,0,0,false,0,0);ctx.restore();}
+      else if(S.mode===3){var yy=AnimKit.lerp(yTop,yBot,Math.abs(Math.sin(S.p*Math.PI)));drawLipid(ctx,hx,yy,false,0,0);}
+      else {drawLipid(ctx,hx,yTop,false,0,0);}
+      AnimKit.label(ctx,'细胞外',14,22,'#7a8aa0','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'细胞内',14,H-14,'#7a8aa0','12px "Microsoft YaHei"','left');
+      var names=['侧向扩散','旋转','尾部摆动','翻转 flip-flop'];
+      AnimKit.label(ctx,'当前：'+names[S.mode],W/2,30,'#1f5c8b','bold 15px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

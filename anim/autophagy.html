@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>细胞自噬</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function steps(W){var m=16,g=14,n=4,bw=(W-2*m-g*(n-1))/n,by=200,bh=130,arr=[];
+    for(var i=0;i<n;i++)arr.push({x:m+i*(bw+g),y:by,w:bw,h:bh});return arr;}
+  AnimKit.mount({
+    title:'细胞自噬（autophagy）',
+    sub:'细胞在自噬基因调控下，把自身受损的细胞器/大分子包裹、运送到溶酶体降解并再利用。',
+    legend:[{c:'#c98a2b',t:'自噬体膜'},{c:'#5a7fa8',t:'受损细胞器'},{c:'#b04a9a',t:'溶酶体'}],
+    phases:[
+      {name:'① 形成隔离膜',dur:1300,note:'自噬信号刺激下形成隔离膜（phagophore）。'},
+      {name:'② 包裹形成自噬体',dur:1400,note:'隔离膜包裹受损细胞器/大分子，闭合成自噬体。'},
+      {name:'③ 与溶酶体融合',dur:1400,note:'自噬体与溶酶体融合形成自噬溶酶体。'},
+      {name:'④ 降解并再利用',dur:1400,note:'酸性水解酶降解内容物，产物被细胞再利用。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      var st=steps(W);AnimKit.pathway(ctx,W,H,st,phaseI);
+      var a=st[phaseI],cx=a.x+a.w/2,cy=a.y+a.h/2;
+      if(phaseI<2){ctx.strokeStyle='#c98a2b';ctx.lineWidth=3;ctx.beginPath();
+        ctx.arc(cx,cy,34,phaseI===0?-Math.PI*0.6:0,phaseI===0?Math.PI*0.2:Math.PI*2);ctx.stroke();}
+      if(phaseI>=1){AnimKit.circle(ctx,cx-10,cy+4,10,'#5a7fa8','M');AnimKit.circle(ctx,cx+12,cy-4,8,'#5a7fa8','M');}
+      if(phaseI>=2){ctx.strokeStyle='#b04a9a';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,40,0,Math.PI*2);ctx.stroke();}
+      if(phaseI>=3)AnimKit.label(ctx,'↓ 降解为氨基酸/单糖等，再利用',cx,cy+62,'#b04a9a','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'自噬相关基因(ATG)调控',W/2,44,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

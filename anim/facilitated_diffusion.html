@@ -1,0 +1,33 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>协助扩散</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function P(nx,ny){return{nx:nx,ny:ny,tnx:nx,tny:ny};}
+  function set(o,x,y){o.tnx=x;o.tny=y;}
+  AnimKit.mount({
+    title:'协助扩散（GLUT 载体蛋白）',
+    sub:'葡萄糖顺浓度梯度、经载体蛋白构象变化跨膜，不消耗 ATP。',
+    legend:[{c:'#2e9e5b',t:'葡萄糖'},{c:'#5a7fa8',t:'载体蛋白 GLUT'}],
+    init:function(S){S.open='out';S.g=[P(.15,.14),P(.30,.08),P(.70,.10),P(.85,.16),P(.25,.84),P(.75,.86)];},
+    phases:[
+      {name:'① 葡萄糖结合载体（外侧）',dur:1000,note:'细胞外葡萄糖浓度高，结合到载体蛋白。',ap:function(S){S.open='out';set(S.g[0],.46,.38);}},
+      {name:'② 载体构象改变',dur:800,note:'载体蛋白构象变化，把葡萄糖带向膜内侧。',ap:function(S){S.open='in';}},
+      {name:'③ 释放到细胞内',dur:1000,note:'葡萄糖释放到细胞内（顺浓度梯度）。',ap:function(S){set(S.g[0],.40,.86);}},
+      {name:'④ 载体恢复',dur:800,note:'载体恢复原构象，可再次转运。',ap:function(S){S.open='out';}}
+    ],
+    update:function(S,e){S.g.forEach(function(o){o.nx+=(o.tnx-o.nx)*e;o.ny+=(o.tny-o.ny)*e;});},
+    onLoop:function(S){S.g[0]=P(.15,.14);},
+    draw:function(ctx,W,H,S){
+      var m=AnimKit.membrane(ctx,W,H,{gap:120});var cx=W/2,yT=m.yTop,yB=m.yBot,cy=(yT+yB)/2,pw=110;
+      AnimKit.roundRect(ctx,cx-pw/2,yT-30,pw,(yB-yT)+60,22);ctx.fillStyle='#5a7fa8';ctx.fill();
+      ctx.fillStyle='#fff';ctx.beginPath();
+      if(S.open==='out'){ctx.moveTo(cx-pw*.3,yT-24);ctx.lineTo(cx,cy-4);ctx.lineTo(cx+pw*.3,yT-24);}
+      else{ctx.moveTo(cx-pw*.3,yB+24);ctx.lineTo(cx,cy+4);ctx.lineTo(cx+pw*.3,yB+24);}ctx.closePath();ctx.fill();
+      AnimKit.label(ctx,'GLUT',cx,yB+52,'#33465c','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'高浓度',W-14,22,'#7a8aa0','12px "Microsoft YaHei"','right');
+      AnimKit.label(ctx,'低浓度',W-14,H-14,'#7a8aa0','12px "Microsoft YaHei"','right');
+      S.g.forEach(function(o,i){AnimKit.circle(ctx,o.nx*W,o.ny*H,i===0?13:11,'#2e9e5b',i===0?'G':'G');});
+    }
+  });
+})();
+</script></body></html>

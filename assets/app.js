@@ -602,6 +602,9 @@
 
     // concept slides
     var seen = seenStore(cid);
+    var animIO = window.IntersectionObserver ? new IntersectionObserver(function (ents) {
+      ents.forEach(function (en) { if (en.isIntersecting) { var f = en.target; if (!f.src) f.src = f.getAttribute("data-src"); animIO.unobserve(f); } });
+    }, { rootMargin: "500px" }) : null;
     ch.modules.forEach(function (m) {
       var sec = el("section"); sec.id = "m" + m.i;
       sec.appendChild(el("h2", "", esc(m.name)));
@@ -618,6 +621,15 @@
         body.appendChild(img);
         body.appendChild(el("div", "notes", esc(s.notes)));
         card.appendChild(body);
+        if (s.anim) {
+          var aw = el("div", "animwrap");
+          aw.appendChild(el("div", "animhead", "🎬 动画演示（在老师原图下方）"));
+          var ifr = document.createElement("iframe");
+          ifr.className = "animframe"; ifr.loading = "lazy"; ifr.setAttribute("title", s.title);
+          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1");
+          aw.appendChild(ifr); card.appendChild(aw);
+          if (animIO) animIO.observe(ifr); else ifr.src = ifr.getAttribute("data-src");
+        }
         var db = el("button", "donebtn", seen[key] ? "✓ 已读" : "标记已读");
         if (seen[key]) { card.classList.add("done"); db.classList.add("on"); }
         db.onclick = function () {
