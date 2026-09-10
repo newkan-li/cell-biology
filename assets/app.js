@@ -268,19 +268,19 @@
       answerHTML = "<b>参考答案：</b><br>" + esc(kind === "calc" ? (q.steps || q.a) : q.a).replace(/\n/g, "<br>");
     }
     box.appendChild(el("p", "qq", title));
-    if (kind !== "term") {
-      var ta = el("textarea", "ta");
-      ta.placeholder = "在此用键盘输入你的答案要点（先自己写，再展开参考答案核对；内容会自动保存）";
-      ta.rows = 5;
-      ta.value = textStore(cid)[q.id] || "";
-      ta.addEventListener("input", function () { saveText(cid, q.id, ta.value); });
-      box.appendChild(ta);
-      var tbar = el("div", "self");
-      var bClr = el("button", "", "清空输入");
-      bClr.onclick = function () { if (confirm("清空已输入的答案？")) { ta.value = ""; saveText(cid, q.id, ""); } };
-      tbar.appendChild(bClr);
-      box.appendChild(tbar);
-    }
+    var ta = el("textarea", "ta");
+    ta.placeholder = (kind === "term")
+      ? "在此用键盘输入你的定义（先自己写，再展开标准定义核对；内容会自动保存）"
+      : "在此用键盘输入你的答案要点（先自己写，再展开参考答案核对；内容会自动保存）";
+    ta.rows = 5;
+    ta.value = textStore(cid)[q.id] || "";
+    ta.addEventListener("input", function () { saveText(cid, q.id, ta.value); });
+    box.appendChild(ta);
+    var tbar = el("div", "self");
+    var bClr = el("button", "", "清空输入");
+    bClr.onclick = function () { if (confirm("清空已输入的答案？")) { ta.value = ""; saveText(cid, q.id, ""); } };
+    tbar.appendChild(bClr);
+    box.appendChild(tbar);
     var det = el("details", "sol");
     det.innerHTML = '<summary>参考答案 / 踩分点</summary><div class="ansbox">' + answerHTML + "</div>" +
       (kps ? '<div class="kps">' + esc(kps) + "</div>" : "");
