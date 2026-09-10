@@ -393,7 +393,16 @@
     var aside = document.getElementById("sidebar"), main = document.getElementById("main");
     aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a>';
     aside.appendChild(el("div", "grp", "各模块（概念 + 考题）"));
-    ch.modules.forEach(function (m) { var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a); });
+    ch.modules.forEach(function (m) {
+      var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a);
+      var subs = [];
+      if (m.mcq && m.mcq.length) subs.push(["m" + m.i + "-mcq", "选择题"]);
+      if (m.fill && m.fill.length) subs.push(["m" + m.i + "-fill", "填空题"]);
+      if (m.short && m.short.length) subs.push(["m" + m.i + "-short", "简答题"]);
+      if (m.calc && m.calc.length) subs.push(["m" + m.i + "-calc", "论述/推导"]);
+      if (m.term && m.term.length) subs.push(["m" + m.i + "-term", "名词解释"]);
+      subs.forEach(function (x) { var sa = el("a", "sub", "· " + x[1]); sa.href = "#" + x[0]; aside.appendChild(sa); });
+    });
     var tools = el("div", "navbtns");
     function tb(label, fn) { var b = el("button", "navbtn", label); b.onclick = fn; tools.appendChild(b); }
     tb("📕 错题本", function () { openWrongDrawer(cid, ch); });
@@ -447,24 +456,25 @@
       });
       // 本模块考题：概念页后紧跟该模块的全部考题（选择/填空/简答/论述/名词）
       var qWrap = el("div", "modquiz");
+      function qh(id, text) { var h = el("h3", "", text); h.id = id; return h; }
       if (m.mcq && m.mcq.length) {
-        qWrap.appendChild(el("h3", "", "📝 本模块考题 · 选择题（点选项即时判分）"));
+        qWrap.appendChild(qh("m" + m.i + "-mcq", "📝 本模块考题 · 选择题（点选项即时判分）"));
         m.mcq.forEach(function (q, i) { qWrap.appendChild(renderMCQ(cid, q, i + 1)); });
       }
       if (m.fill && m.fill.length) {
-        qWrap.appendChild(el("h3", "", "📝 本模块考题 · 填空题（输入答案，自动模糊判分）"));
+        qWrap.appendChild(qh("m" + m.i + "-fill", "📝 本模块考题 · 填空题（输入答案，自动模糊判分）"));
         m.fill.forEach(function (q, i) { qWrap.appendChild(renderFill(cid, q, i + 1)); });
       }
       if (m.short && m.short.length) {
-        qWrap.appendChild(el("h3", "", "📝 本模块考题 · 简答题"));
+        qWrap.appendChild(qh("m" + m.i + "-short", "📝 本模块考题 · 简答题"));
         m.short.forEach(function (q, i) { qWrap.appendChild(renderSelf(cid, q, i + 1, "short")); });
       }
       if (m.calc && m.calc.length) {
-        qWrap.appendChild(el("h3", "", "📝 本模块考题 · 论述 / 推导题"));
+        qWrap.appendChild(qh("m" + m.i + "-calc", "📝 本模块考题 · 论述 / 推导题"));
         m.calc.forEach(function (q, i) { qWrap.appendChild(renderSelf(cid, q, i + 1, "calc")); });
       }
       if (m.term && m.term.length) {
-        qWrap.appendChild(el("h3", "", "📝 本模块考题 · 名词解释（含踩分点）"));
+        qWrap.appendChild(qh("m" + m.i + "-term", "📝 本模块考题 · 名词解释（含踩分点）"));
         m.term.forEach(function (q, i) { qWrap.appendChild(renderSelf(cid, q, i + 1, "term")); });
       }
       if (qWrap.children.length) sec.appendChild(qWrap);
