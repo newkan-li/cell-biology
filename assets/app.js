@@ -20,6 +20,7 @@
   function touch(cid) { jset(skey(cid, "last"), Date.now()); }
 
   function mcqStore(cid) { return jget(skey(cid, "mcq"), {}); }
+  function judgeStore(cid) { return jget(skey(cid, "judge"), {}); }
   function fillStore(cid) { return jget(skey(cid, "fill"), {}); }
   function selfStore(cid) { return jget(skey(cid, "self"), {}); }
   function seenStore(cid) { return jget(skey(cid, "seen"), {}); }
@@ -223,6 +224,44 @@
     }
   }
 
+  /* ================= 判断题 ================= */
+  function renderJudge(cid, q, idx) {
+    var box = el("div", "q"); box.id = "q_" + q.id;
+    box.appendChild(el("p", "qq", "第 " + idx + " 题（判断对错） " + esc(q.q)));
+    var opts = el("div", "mcq");
+    ["对", "错"].forEach(function (v) {
+      var b = el("button", "mopt", v); b.dataset.l = v;
+      b.onclick = function () { gradeJudge(cid, q, box, v); };
+      opts.appendChild(b);
+    });
+    box.appendChild(opts);
+    var res = el("div", "mres"); res.style.display = "none"; box.appendChild(res);
+    var cb = causeBox(cid, q.id); box.appendChild(cb);
+    box._cause = cb; box._res = res;
+    return box;
+  }
+  function gradeJudge(cid, q, box, chosen) {
+    var correct = String(q.a).trim();
+    var ok = chosen === correct;
+    var store = judgeStore(cid);
+    var rec = store[q.id] || { ok: 0, miss: 0 };
+    rec.last = chosen;
+    if (ok) { rec.ok++; rec.miss = Math.max(0, rec.miss - 1); } else { rec.miss++; rec.ok = Math.max(0, rec.ok - 1); }
+    store[q.id] = rec; jset(skey(cid, "judge"), store); touch(cid);
+    Array.prototype.forEach.call(box.querySelectorAll(".mopt"), function (b) {
+      b.classList.remove("sel", "right", "wrong");
+      if (b.dataset.l === chosen) b.classList.add(ok ? "right" : "wrong");
+      if (!ok && b.dataset.l === correct) b.classList.add("right");
+      if (b.dataset.l === chosen) b.classList.add("sel");
+    });
+    var res = box._res; res.style.display = "block";
+    res.innerHTML = (ok ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 错误</span>（正确答案：<b>' + esc(correct) + "</b>）") +
+      '<div style="margin-top:4px">解析：' + esc(q.e || "") + "</div>";
+    box._cause.style.display = ok ? "none" : "flex";
+    if (!ok) addWrong(cid, { id: q.id, type: "judge", q: q.q, correct: correct, chosen: chosen, cause: "", ts: Date.now() });
+    else clearWrong(cid, q.id);
+  }
+
   /* ================= fill ================= */
   function renderFill(cid, q, idx) {
     var box = el("div", "q"); box.id = "q_" + q.id;
@@ -315,7 +354,7 @@
     var seenN = 0; ch.modules.forEach(function (m) { m.slides.forEach(function (s) { if (seen[cid + "_s" + m.i + "_" + s.i]) seenN++; }); });
     var mc = mcqStore(cid), fi = fillStore(cid), se = selfStore(cid);
     var ok = 0, miss = 0;
-    [mc, fi, se].forEach(function (st) { Object.keys(st).forEach(function (k) { ok += st[k].ok || 0; miss += st[k].miss || 0; }); });
+    [mc, judgeStore(cid), fi, se].forEach(function (st) { Object.keys(st).forEach(function (k) { ok += st[k].ok || 0; miss += st[k].miss || 0; }); });
     var wb = wrongList(cid);
     return { slides: totalSlides, seen: seenN, ok: ok, miss: miss, wrong: wb.length,
              rate: (ok + miss) ? Math.round(ok * 100 / (ok + miss)) : null };
@@ -366,7 +405,7 @@
   /* ================= backup / restore ================= */
   function backupChapter(cid) {
     var out = {};
-    ["mcq", "fill", "self", "seen", "text", "wrong", "hw", "last"].forEach(function (k) {
+    ["mcq", "judge", "fill", "self", "seen", "text", "wrong", "hw", "last"].forEach(function (k) {
       var v = jget(skey(cid, k), null); if (v != null) out[skey(cid, k)] = v;
     });
     var blob = new Blob([JSON.stringify({ v: 1, cid: cid, data: out }, null, 1)], { type: "application/json" });
@@ -421,7 +460,7 @@
   }
 
   function buildChapterDoc(cid, ch) {
-    var mc = mcqStore(cid), fi = fillStore(cid), se = selfStore(cid), tx = textStore(cid);
+    var mc = mcqStore(cid), fi = fillStore(cid), se = selfStore(cid), tx = textStore(cid), jg = judgeStore(cid);
     var hw = jget(skey(cid, "hw"), {});
     var P = [];
     P.push('<h1>' + esc(ch.title) + '</h1>');
@@ -443,8 +482,19 @@
           P.push('</div>');
         });
       }
+      if (m.judge && m.judge.length) {
+        P.push('<h3>二、判断题</h3>');
+        m.judge.forEach(function (q, i) {
+          var rec = jg[q.id] || {};
+          P.push('<div class="q"><div class="qt">' + (i + 1) + '. ' + esc(q.q) + '</div>');
+          P.push('<div class="stu">我的作答：<b>' + esc(rec.last || "（未作答）") + '</b></div>');
+          P.push('<div class="ans">正确答案：' + esc(q.a) + '</div>');
+          if (q.e) P.push('<div class="exp">解析：' + esc(q.e) + '</div>');
+          P.push('</div>');
+        });
+      }
       if (m.fill && m.fill.length) {
-        P.push('<h3>二、填空题</h3>');
+        P.push('<h3>三、填空题</h3>');
         m.fill.forEach(function (q, i) {
           var rec = fi[q.id] || {};
           P.push('<div class="q"><div class="qt">' + (i + 1) + '. ' + esc(q.q) + '</div>');
@@ -472,9 +522,9 @@
           P.push('</div>');
         });
       }
-      selfSec("三、简答题", m.short, "short");
-      selfSec("四、论述 / 推导题", m.calc, "calc");
-      selfSec("五、名词解释", m.term, "term");
+      selfSec("四、简答题", m.short, "short");
+      selfSec("五、论述 / 推导题", m.calc, "calc");
+      selfSec("六、名词解释", m.term, "term");
       P.push('</section>');
     });
     return P.join("");
@@ -519,6 +569,7 @@
       var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a);
       var subs = [];
       if (m.mcq && m.mcq.length) subs.push(["m" + m.i + "-mcq", "选择题"]);
+      if (m.judge && m.judge.length) subs.push(["m" + m.i + "-judge", "判断题"]);
       if (m.fill && m.fill.length) subs.push(["m" + m.i + "-fill", "填空题"]);
       if (m.short && m.short.length) subs.push(["m" + m.i + "-short", "简答题"]);
       if (m.calc && m.calc.length) subs.push(["m" + m.i + "-calc", "论述/推导"]);
@@ -583,6 +634,10 @@
       if (m.mcq && m.mcq.length) {
         qWrap.appendChild(qh("m" + m.i + "-mcq", "📝 本模块考题 · 选择题（点选项即时判分）"));
         m.mcq.forEach(function (q, i) { qWrap.appendChild(renderMCQ(cid, q, i + 1)); });
+      }
+      if (m.judge && m.judge.length) {
+        qWrap.appendChild(qh("m" + m.i + "-judge", "📝 本模块考题 · 判断题（点“对/错”即时判分）"));
+        m.judge.forEach(function (q, i) { qWrap.appendChild(renderJudge(cid, q, i + 1)); });
       }
       if (m.fill && m.fill.length) {
         qWrap.appendChild(qh("m" + m.i + "-fill", "📝 本模块考题 · 填空题（输入答案，自动模糊判分）"));
@@ -659,7 +714,7 @@
   function backupAll() {
     var out = {};
     (window.MANIFEST || []).forEach(function (m) {
-      ["mcq", "fill", "self", "seen", "text", "wrong", "hw", "last"].forEach(function (k) {
+      ["mcq", "judge", "fill", "self", "seen", "text", "wrong", "hw", "last"].forEach(function (k) {
         var v = jget(skey(m.id, k), null); if (v != null) out[skey(m.id, k)] = v;
       });
     });
