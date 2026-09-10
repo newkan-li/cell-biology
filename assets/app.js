@@ -23,6 +23,10 @@
   function fillStore(cid) { return jget(skey(cid, "fill"), {}); }
   function selfStore(cid) { return jget(skey(cid, "self"), {}); }
   function seenStore(cid) { return jget(skey(cid, "seen"), {}); }
+  function textStore(cid) { return jget(skey(cid, "text"), {}); }
+  function saveText(cid, qid, val) {
+    var s = textStore(cid); s[qid] = val; jset(skey(cid, "text"), s); touch(cid);
+  }
   function wrongList(cid) { return jget(skey(cid, "wrong"), []); }
   function setWrong(cid, arr) { jset(skey(cid, "wrong"), arr); }
 
@@ -264,6 +268,19 @@
       answerHTML = "<b>参考答案：</b><br>" + esc(kind === "calc" ? (q.steps || q.a) : q.a).replace(/\n/g, "<br>");
     }
     box.appendChild(el("p", "qq", title));
+    if (kind !== "term") {
+      var ta = el("textarea", "ta");
+      ta.placeholder = "在此用键盘输入你的答案要点（先自己写，再展开参考答案核对；内容会自动保存）";
+      ta.rows = 5;
+      ta.value = textStore(cid)[q.id] || "";
+      ta.addEventListener("input", function () { saveText(cid, q.id, ta.value); });
+      box.appendChild(ta);
+      var tbar = el("div", "self");
+      var bClr = el("button", "", "清空输入");
+      bClr.onclick = function () { if (confirm("清空已输入的答案？")) { ta.value = ""; saveText(cid, q.id, ""); } };
+      tbar.appendChild(bClr);
+      box.appendChild(tbar);
+    }
     var det = el("details", "sol");
     det.innerHTML = '<summary>参考答案 / 踩分点</summary><div class="ansbox">' + answerHTML + "</div>" +
       (kps ? '<div class="kps">' + esc(kps) + "</div>" : "");
@@ -349,7 +366,7 @@
   /* ================= backup / restore ================= */
   function backupChapter(cid) {
     var out = {};
-    ["mcq", "fill", "self", "seen", "wrong", "hw", "last"].forEach(function (k) {
+    ["mcq", "fill", "self", "seen", "text", "wrong", "hw", "last"].forEach(function (k) {
       var v = jget(skey(cid, k), null); if (v != null) out[skey(cid, k)] = v;
     });
     var blob = new Blob([JSON.stringify({ v: 1, cid: cid, data: out }, null, 1)], { type: "application/json" });
@@ -511,7 +528,7 @@
   function backupAll() {
     var out = {};
     (window.MANIFEST || []).forEach(function (m) {
-      ["mcq", "fill", "self", "seen", "wrong", "hw", "last"].forEach(function (k) {
+      ["mcq", "fill", "self", "seen", "text", "wrong", "hw", "last"].forEach(function (k) {
         var v = jget(skey(m.id, k), null); if (v != null) out[skey(m.id, k)] = v;
       });
     });

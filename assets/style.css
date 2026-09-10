@@ -80,6 +80,8 @@ table.tbl{border-collapse:collapse;width:100%;margin:.5em 0 1em;font-size:14px}
 .mres{font-size:13px;margin-top:8px;padding:8px 10px;border-radius:8px;background:#f3f8ff;border:1px solid #cfe0ee}
 .mres .ok{color:var(--ok);font-weight:700}.mres .no{color:var(--acc);font-weight:700}
 input.ans{width:100%;padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px}
+textarea.ta{width:100%;min-height:112px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;font-family:inherit;line-height:1.65;resize:vertical;background:#fff;display:block}
+textarea.ta:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px #dbe8f6}
 input.ans.right{border-color:var(--ok);background:#f2fbf4}
 input.ans.wrong{border-color:var(--acc);background:#fdf3f2}
 details.sol{margin:.5em 0;border:1px solid var(--line);border-radius:8px;padding:6px 12px;background:#fff}
