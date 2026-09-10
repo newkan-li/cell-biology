@@ -392,10 +392,10 @@
     document.title = ch.title + " · 细胞生物学";
     var aside = document.getElementById("sidebar"), main = document.getElementById("main");
     aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a>';
-    aside.appendChild(el("div", "grp", "概念学习"));
+    aside.appendChild(el("div", "grp", "各模块（概念 + 考题）"));
     ch.modules.forEach(function (m) { var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a); });
-    aside.appendChild(el("div", "grp", "练习"));
-    [["q-mcq", "选择题"], ["q-fill", "填空题"], ["q-short", "简答题"], ["q-calc", "论述/推导"], ["q-term", "名词解释"]].forEach(function (x) {
+    aside.appendChild(el("div", "grp", "综合练习"));
+    [["q-fill", "填空题"], ["q-short", "简答题"], ["q-calc", "论述/推导"], ["q-term", "名词解释"]].forEach(function (x) {
       var a = el("a", "", x[1]); a.href = "#" + x[0]; aside.appendChild(a);
     });
     var tools = el("div", "navbtns");
@@ -449,28 +449,32 @@
         card.appendChild(db);
         sec.appendChild(card);
       });
+      // 本模块考题（与 PPT 一致：模块概念后紧跟该模块考题）
+      if (m.quiz && m.quiz.length) {
+        var qh = el("h3", "", "📝 本模块考题（选择题 · 点选项即时判分）");
+        qh.style.marginTop = "18px";
+        sec.appendChild(qh);
+        m.quiz.forEach(function (q, i) { sec.appendChild(renderMCQ(cid, q, i + 1)); });
+      }
       main.appendChild(sec);
     });
 
-    // practice
-    var p = el("section"); p.id = "q-mcq"; p.appendChild(el("h2", "", "二、练习题"));
-    p.appendChild(el("h3", "", "1. 选择题（点选项即时判分）"));
-    ch.mcq.forEach(function (q, i) { p.appendChild(renderMCQ(cid, q, i + 1)); });
-
-    p.appendChild(el("h3", "", "2. 填空题（输入答案，自动模糊判分）")); p.id = "q-mcq";
+    // 综合练习（填空题 / 简答题 / 论述 / 名词解释）
+    var p = el("section"); p.appendChild(el("h2", "", "综合练习（考研题型）"));
+    p.appendChild(el("h3", "", "填空题（输入答案，自动模糊判分）"));
     var fillWrap = el("div"); fillWrap.id = "q-fill";
     ch.fill.forEach(function (q, i) { fillWrap.appendChild(renderFill(cid, q, i + 1)); });
     p.appendChild(fillWrap);
 
-    var shortWrap = el("div"); shortWrap.id = "q-short"; shortWrap.appendChild(el("h3", "", "3. 简答题"));
+    var shortWrap = el("div"); shortWrap.id = "q-short"; shortWrap.appendChild(el("h3", "", "简答题"));
     ch.short.forEach(function (q, i) { shortWrap.appendChild(renderSelf(cid, q, i + 1, "short")); });
     p.appendChild(shortWrap);
 
-    var calcWrap = el("div"); calcWrap.id = "q-calc"; calcWrap.appendChild(el("h3", "", "4. 论述 / 推导题"));
+    var calcWrap = el("div"); calcWrap.id = "q-calc"; calcWrap.appendChild(el("h3", "", "论述 / 推导题"));
     ch.calc.forEach(function (q, i) { calcWrap.appendChild(renderSelf(cid, q, i + 1, "calc")); });
     p.appendChild(calcWrap);
 
-    var termWrap = el("div"); termWrap.id = "q-term"; termWrap.appendChild(el("h3", "", "5. 名词解释（含踩分点）"));
+    var termWrap = el("div"); termWrap.id = "q-term"; termWrap.appendChild(el("h3", "", "名词解释（含踩分点）"));
     ch.term.forEach(function (q, i) { termWrap.appendChild(renderSelf(cid, q, i + 1, "term")); });
     p.appendChild(termWrap);
 
