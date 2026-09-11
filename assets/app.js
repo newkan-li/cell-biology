@@ -40,6 +40,85 @@
     setWrong(cid, wrongList(cid).filter(function (e) { return e.id !== id; }));
   }
 
+  /* ---------- 间隔复习 / 掌握度 / 打卡 状态层 ---------- */
+  var SRS_KEY = PREFIX + "srs", KPS_KEY = PREFIX + "kpStats",
+    STREAK_KEY = PREFIX + "streak", TASK_KEY = PREFIX + "tasks";
+  var DAY = 86400000;
+
+  function srsAll() { return jget(SRS_KEY, {}); }
+  function srsSave(o) { jset(SRS_KEY, o); }
+  function srsGet(id) { return srsAll()[id]; }
+  /* rating: 2=会 1=模糊 0=不会 */
+  function srsRate(id, rating) {
+    if (!id) return null;
+    var o = srsAll();
+    var c = o[id] || { ease: 2.5, ivl: 0, reps: 0, lapses: 0, due: 0, last: 0 };
+    var now = Date.now();
+    if (rating >= 2) {
+      c.reps = (c.reps || 0) + 1;
+      if (c.reps <= 1) c.ivl = 1;
+      else if (c.reps === 2) c.ivl = 3;
+      else c.ivl = Math.round((c.ivl || 1) * (c.ease || 2.5));
+      c.ease = Math.min(2.8, (c.ease || 2.5) + 0.1);
+    } else if (rating === 1) {
+      c.ivl = Math.max(1, Math.round((c.ivl || 1) * 0.6));
+      c.ease = Math.max(1.3, (c.ease || 2.5) - 0.15);
+    } else {
+      c.reps = 0; c.ivl = 0; c.lapses = (c.lapses || 0) + 1;
+      c.ease = Math.max(1.3, (c.ease || 2.5) - 0.2);
+    }
+    c.last = now; c.due = now + c.ivl * DAY;
+    o[id] = c; srsSave(o);
+    bumpTask("review");
+    return c;
+  }
+  function srsDue() {
+    var now = Date.now(), o = srsAll(), out = [];
+    for (var k in o) if (o[k] && o[k].due <= now) out.push(k);
+    return out;
+  }
+  function srsCount() { return Object.keys(srsAll()).length; }
+
+  function kpAll() { return jget(KPS_KEY, {}); }
+  function kpRecord(kp, correct) {
+    if (!kp) return;
+    var o = kpAll(), c = o[kp] || { ok: 0, n: 0 };
+    c.n++; if (correct) c.ok++;
+    o[kp] = c; jset(KPS_KEY, o);
+    bumpTask("practice");
+    if (typeof window.__refreshHeat === "function") window.__refreshHeat();
+  }
+  /* 0~1 掌握度：正确率(0.6) + 复习强度(0.4) */
+  function kpMastery(kp) {
+    var c = kpAll()[kp], s = srsGet(kp);
+    var acc = (c && c.n) ? c.ok / c.n : null;
+    var strength = s ? Math.min(1, (s.reps || 0) / 4) : 0;
+    if (acc == null) return strength;
+    return 0.6 * acc + 0.4 * strength;
+  }
+
+  function todayStr(d) { d = d || new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+  function bumpTask(kind) {
+    var all = jget(TASK_KEY, {}), t = todayStr();
+    if (!all[t]) all[t] = { read: 0, review: 0, practice: 0 };
+    all[t][kind] = (all[t][kind] || 0) + 1;
+    jset(TASK_KEY, all);
+    var st = jget(STREAK_KEY, { days: {}, last: "" });
+    if (!st.days[t]) st.days[t] = 1; else st.days[t]++;
+    st.last = t; jset(STREAK_KEY, st);
+  }
+  function taskState() {
+    var all = jget(TASK_KEY, {}), t = todayStr();
+    return all[t] || { read: 0, review: 0, practice: 0 };
+  }
+  function streakCount() {
+    var st = jget(STREAK_KEY, { days: {} }), n = 0, d = new Date();
+    for (var i = 0; i < 3650; i++) {
+      if (st.days[todayStr(d)]) { n++; d.setDate(d.getDate() - 1); } else break;
+    }
+    return n;
+  }
+
   /* ---------- helpers ---------- */
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (m) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[m]; }); }
   function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
@@ -222,6 +301,8 @@
     } else {
       clearWrong(cid, q.id);
     }
+    kpRecord(q.kp, ok);
+    if (!ok) srsRate(q.id, 0); else if (srsGet(q.id)) srsRate(q.id, 2);
   }
 
   /* ================= 判断题 ================= */
@@ -260,6 +341,8 @@
     box._cause.style.display = ok ? "none" : "flex";
     if (!ok) addWrong(cid, { id: q.id, type: "judge", q: q.q, correct: correct, chosen: chosen, cause: "", ts: Date.now() });
     else clearWrong(cid, q.id);
+    kpRecord(q.kp, ok);
+    if (!ok) srsRate(q.id, 0); else if (srsGet(q.id)) srsRate(q.id, 2);
   }
 
   /* ================= fill ================= */
@@ -288,6 +371,8 @@
       res.innerHTML = ok ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 与参考答案不完全一致</span>，可点“显示答案”核对。';
       cb.style.display = ok ? "none" : "flex";
       if (ok) { clearWrong(cid, q.id); } else { addWrong(cid, { id: q.id, type: "fill", q: q.q, correct: q.a, chosen: inp.value, cause: "", ts: Date.now() }); }
+      kpRecord(q.kp, ok);
+      if (!ok) srsRate(q.id, 0); else if (srsGet(q.id)) srsRate(q.id, 2);
     };
     bChk.onclick = box._check;
     bShow.onclick = function () { det.open = true; };
@@ -339,6 +424,8 @@
       if (state === "no") {
         addWrong(cid, { id: q.id, type: kind, q: (kind === "term" ? q.term : q.q), correct: (kind === "term" ? q.def : (kind === "calc" ? (q.a || q.steps) : q.a)), chosen: "(自评不会)", cause: "", ts: Date.now() });
       } else { clearWrong(cid, q.id); }
+      kpRecord(q.kp, state === "ok");
+      if (state === "no") srsRate(q.id, 0); else if (srsGet(q.id)) srsRate(q.id, 2);
     }
     bOk.onclick = function () { mark("ok"); };
     bNo.onclick = function () { mark("no"); };
@@ -557,6 +644,67 @@
   }
 
   /* ================= chapter page ================= */
+  /* ---------- 本页自测（选做）与掌握度热力图 ---------- */
+  function pickCheckpoint(qByKp, kp) {
+    var arr = qByKp[kp]; if (!arr) return null;
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i].kind === "mcq" || arr[i].kind === "judge" || arr[i].kind === "fill") return arr[i];
+    }
+    return null;
+  }
+  function renderCheckpoint(cid, kp, qByKp) {
+    var pick = pickCheckpoint(qByKp, kp); if (!pick) return null;
+    var q = pick.q, kind = pick.kind;
+    var box = el("div", "checkpoint");
+    box.appendChild(el("div", "cp-h", "🎯 本页自测（选做，不计入已读）"));
+    var done = false;
+    var fb = el("div", "cp-fb");
+    function grade(correct) {
+      if (done) return; done = true;
+      kpRecord(kp, correct);
+      if (!correct) srsRate(q.id, 0); else if (srsGet(q.id)) srsRate(q.id, 2);
+      fb.innerHTML = (correct ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 再想想</span>') +
+        (q.e ? " " + esc(q.e) : "");
+    }
+    if (kind === "mcq") {
+      box.appendChild(el("div", "cp-q", esc(q.q)));
+      var opts = el("div", "cp-opts");
+      q.o.forEach(function (o, i) { var b = el("button", "cp-opt", esc(o)); b.onclick = function () { grade(i === q.a); }; opts.appendChild(b); });
+      box.appendChild(opts);
+    } else if (kind === "judge") {
+      box.appendChild(el("div", "cp-q", esc(q.q)));
+      var o2 = el("div", "cp-opts");
+      ["对", "错"].forEach(function (v) { var b = el("button", "cp-opt", v); b.onclick = function () { grade(v === q.a); }; o2.appendChild(b); });
+      box.appendChild(o2);
+    } else {
+      box.appendChild(el("div", "cp-q", esc(q.q)));
+      var inp = el("input", "cp-in"); inp.placeholder = "输入答案";
+      var bc = el("button", "cp-opt", "检查"); bc.onclick = function () { grade(fuzzyMatch(q.a, inp.value)); };
+      box.appendChild(inp); box.appendChild(bc);
+    }
+    box.appendChild(fb);
+    return box;
+  }
+  function renderHeatmap(cid, ch, host) {
+    function draw() {
+      var total = 0, mastered = 0, html = "";
+      ch.modules.forEach(function (m) {
+        html += '<div class="hm-mod"><div class="hm-name">' + esc(m.name) + '</div><div class="hm-grid">';
+        m.slides.forEach(function (s) {
+          var kp = cid + "_s" + m.i + "_" + s.i, v = kpMastery(kp);
+          total++; if (v >= 0.6) mastered++;
+          var cls = v >= 0.8 ? "hm-a" : v >= 0.6 ? "hm-b" : v > 0 ? "hm-c" : "hm-0";
+          html += '<a class="hm-cell ' + cls + '" href="#s_' + kp + '" title="' + esc(s.title) + '（掌握度 ' + Math.round(v * 100) + '%）"></a>';
+        });
+        html += "</div></div>";
+      });
+      host.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">' +
+        '<h3 style="margin:0">🧭 知识点掌握度</h3><span class="hint">已掌握 ' + mastered + "/" + total + ' ｜ 点方块跳到该页</span></div>' + html;
+    }
+    draw();
+    window.__refreshHeat = draw;
+  }
+
   function renderChapter(cid) {
     var ch = window.CHAPTERS[cid];
     if (!ch) { document.getElementById("main").innerHTML = "<p>数据未加载。</p>"; return; }
@@ -599,9 +747,14 @@
     main.appendChild(hero);
 
     var statsbox = el("div", "statsbox"); statsbox.id = "statsbox"; renderStats(cid, ch, statsbox); main.appendChild(statsbox);
+    var heat = el("div", "statsbox"); heat.id = "heatmap"; renderHeatmap(cid, ch, heat); main.appendChild(heat);
 
     // concept slides
     var seen = seenStore(cid);
+    var qByKp = {};
+    ["mcq", "judge", "fill", "short", "calc", "term"].forEach(function (kind) {
+      (ch[kind] || []).forEach(function (q) { if (q.kp) { (qByKp[q.kp] = qByKp[q.kp] || []).push({ q: q, kind: kind }); } });
+    });
     var animIO = window.IntersectionObserver ? new IntersectionObserver(function (ents) {
       ents.forEach(function (en) { if (en.isIntersecting) { var f = en.target; if (!f.src) f.src = f.getAttribute("data-src"); animIO.unobserve(f); } });
     }, { rootMargin: "500px" }) : null;
@@ -632,6 +785,8 @@
           fb.innerHTML = '<div class="fn-h">🔍 图注解读</div><p>' + esc(s.fig).replace(/\n/g, "<br>") + "</p>";
           card.appendChild(fb);
         }
+        var cp = renderCheckpoint(cid, key, qByKp);
+        if (cp) card.appendChild(cp);
         if (s.anim) {
           var aw = el("div", "animwrap");
           aw.appendChild(el("div", "animhead", "🎬 动画演示（在老师原图下方）"));
@@ -645,6 +800,10 @@
         if (seen[key]) { card.classList.add("done"); db.classList.add("on"); }
         db.onclick = function () {
           seen[key] = seen[key] ? 0 : 1; jset(skey(cid, "seen"), seen);
+          if (seen[key]) {
+            bumpTask("read");
+            if (!srsGet(key)) srsRate(key, 2);   // 首次标记已读 → 安排首次复习
+          }
           card.classList.toggle("done", !!seen[key]); db.classList.toggle("on", !!seen[key]);
           db.textContent = seen[key] ? "✓ 已读" : "标记已读"; refreshProgress();
         };
@@ -692,6 +851,125 @@
     var ch = window.CHAPTERS[cid], host = document.getElementById("statsbox");
     if (ch && host) renderStats(cid, ch, host);
     alert("已判分：本次检查 " + n + " 道填空题。选择题为点选即时判分。可在左侧查看『学习统计』或『错题本』。");
+  }
+
+  /* ================= review page (spaced repetition) ================= */
+  function kpIndex() {
+    var kp = {}, q = {}, titles = {};
+    (window.MANIFEST || []).forEach(function (m) {
+      var ch = window.CHAPTERS[m.id]; if (!ch) return;
+      titles[m.id] = m.title;
+      ch.modules.forEach(function (mod) {
+        mod.slides.forEach(function (s) { kp[m.id + "_s" + mod.i + "_" + s.i] = { cid: m.id, slide: s }; });
+      });
+      ["mcq", "judge", "fill", "short", "calc", "term"].forEach(function (kind) {
+        (ch[kind] || []).forEach(function (x) { q[x.id] = { cid: m.id, kind: kind, q: x }; });
+      });
+    });
+    return { kp: kp, q: q, titles: titles };
+  }
+  function kindName(k) { return { mcq: "选择题", judge: "判断题", fill: "填空题", short: "简答题", calc: "论述/推导", term: "名词解释" }[k] || k; }
+  function answerHtml(info) {
+    var q = info.q, k = info.kind, a = "";
+    if (k === "mcq") a = (q.o && q.o[q.a] != null) ? q.o[q.a] : "";
+    else if (k === "term") a = q.def || "";
+    else a = q.a != null ? q.a : "";
+    var h = "<div>答案：<b>" + esc(a) + "</b></div>";
+    if (q.e) h += '<div class="rev-exp">' + esc(q.e) + "</div>";
+    if (q.kps) h += '<div class="rev-kps">踩分点：' + esc(q.kps) + "</div>";
+    return h;
+  }
+  function renderReview() {
+    var host = document.getElementById("reviewhost"), dueEl = document.getElementById("duecount");
+    if (!host) return;
+    var idx = kpIndex();
+    function toggle(btn, box) {
+      return function () {
+        var open = box.style.display !== "none";
+        box.style.display = open ? "none" : "block";
+        btn.textContent = open ? btn.getAttribute("data-open") : "收起";
+      };
+    }
+    function rateRow(id) {
+      var row = el("div", "rev-rate");
+      row.appendChild(el("span", "rev-ratelbl", "记住程度："));
+      [["不会", 0, "no"], ["模糊", 1, "mid"], ["会", 2, "ok"]].forEach(function (o) {
+        var b = el("button", o[2], o[0]);
+        b.onclick = function () { srsRate(id, o[1]); render(); };
+        row.appendChild(b);
+      });
+      return row;
+    }
+    function kpCard(id, info) {
+      var s = info.slide, c = el("div", "rev-card");
+      c.innerHTML = '<div class="rev-meta">' + esc(idx.titles[info.cid] || info.cid) + " · " + esc(s.sec || "") + "</div>" +
+        '<div class="rev-title">' + esc(s.title) + "</div>" +
+        '<div class="rev-hint">先在心里回忆这一页讲了什么，再展开核对。</div>';
+      var body = el("div", "rev-body"); body.style.display = "none";
+      body.innerHTML = '<div class="notes">' + esc(s.notes) + "</div>" +
+        (s.points && s.points.length ? '<div class="points"><div class="pt-h">📌 本页要点</div><ul>' + s.points.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul></div>" : "") +
+        (s.fig ? '<div class="fignote"><div class="fn-h">🔍 图注解读</div><p>' + esc(s.fig).replace(/\n/g, "<br>") + "</p></div>" : "");
+      var rv = el("button", "rev-reveal", "展开讲解"); rv.setAttribute("data-open", "展开讲解");
+      rv.onclick = toggle(rv, body);
+      c.appendChild(rv); c.appendChild(body); c.appendChild(rateRow(id));
+      return c;
+    }
+    function qCard(id, info) {
+      var q = info.q, c = el("div", "rev-card");
+      c.innerHTML = '<div class="rev-meta">' + esc(idx.titles[info.cid] || info.cid) + " · " + esc(kindName(info.kind)) + "</div>" +
+        '<div class="rev-title">' + esc(q.q || q.term || "") + "</div>";
+      if (info.kind === "mcq" && q.o) {
+        var opts = el("div", "rev-opts");
+        q.o.forEach(function (o, i) {
+          var b = el("button", "rev-opt", esc(o));
+          b.onclick = function () {
+            Array.prototype.forEach.call(opts.children, function (x, j) { if (j === q.a) x.classList.add("right"); });
+            if (i !== q.a) b.classList.add("wrong");
+            ans.style.display = "block";
+          };
+          opts.appendChild(b);
+        });
+        c.appendChild(opts);
+      }
+      var ans = el("div", "rev-ans"); ans.style.display = "none"; ans.innerHTML = answerHtml(info);
+      var rv = el("button", "rev-reveal", "显示答案"); rv.setAttribute("data-open", "显示答案");
+      rv.onclick = toggle(rv, ans);
+      c.appendChild(rv); c.appendChild(ans); c.appendChild(rateRow(id));
+      return c;
+    }
+    function render() {
+      var due = srsDue().filter(function (id) { return idx.kp[id] || idx.q[id]; });
+      if (dueEl) dueEl.textContent = due.length;
+      host.innerHTML = "";
+      if (!due.length) {
+        host.innerHTML = '<p class="empty">今天没有待复习的内容。去各章学习，标记已读、做题或翻卡片后会自动安排复习。</p>';
+        return;
+      }
+      due.forEach(function (id) { host.appendChild(idx.kp[id] ? kpCard(id, idx.kp[id]) : qCard(id, idx.q[id])); });
+    }
+    render();
+  }
+
+  function renderDashboard() {
+    var host = document.getElementById("dashbody"); if (!host) return;
+    var due = srsDue().length, task = taskState(), streak = streakCount();
+    var total = 0, mastered = 0;
+    (window.MANIFEST || []).forEach(function (m) {
+      var ch = window.CHAPTERS[m.id]; if (!ch) return;
+      ch.modules.forEach(function (mod) {
+        mod.slides.forEach(function (s) {
+          total++;
+          if (kpMastery(m.id + "_s" + mod.i + "_" + s.i) >= 0.6) mastered++;
+        });
+      });
+    });
+    host.innerHTML = '<div class="dash">' +
+      '<div class="dcell"><b>' + due + '</b><span>待复习</span></div>' +
+      '<div class="dcell"><b>' + streak + '</b><span>连续打卡（天）</span></div>' +
+      '<div class="dcell"><b>' + (task.read || 0) + '</b><span>今日已读</span></div>' +
+      '<div class="dcell"><b>' + (task.practice || 0) + '</b><span>今日练习</span></div>' +
+      '<div class="dcell"><b>' + mastered + "/" + total + '</b><span>已掌握知识点</span></div>' +
+      '</div>';
   }
 
   /* ================= glossary page ================= */
@@ -746,6 +1024,7 @@
       list.appendChild(c);
     });
     renderOverview();
+    renderDashboard();
     var bAll = document.getElementById("backupAll"), rAll = document.getElementById("restoreAll"), fAll = document.getElementById("fileAll");
     if (bAll) bAll.onclick = backupAll;
     var bExp = document.getElementById("exportAll");
@@ -841,7 +1120,13 @@
     else if (page === "index") renderIndex();
     else if (page === "wrong") renderWrongPage();
     else if (page === "glossary") renderGlossary();
+    else if (page === "review") renderReview();
   });
 
-  window.CELL = { backupAll: backupAll, restoreAll: restoreAll, exportChapterPDF: exportChapterPDF, exportAllPDF: exportAllPDF, buildChapterDoc: buildChapterDoc };
+  window.CELL = {
+    backupAll: backupAll, restoreAll: restoreAll, exportChapterPDF: exportChapterPDF,
+    exportAllPDF: exportAllPDF, buildChapterDoc: buildChapterDoc,
+    srsRate: srsRate, srsDue: srsDue, srsCount: srsCount, srsGet: srsGet,
+    kpRecord: kpRecord, kpMastery: kpMastery, streakCount: streakCount, taskState: taskState
+  };
 })();

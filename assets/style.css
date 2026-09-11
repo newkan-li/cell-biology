@@ -147,6 +147,47 @@ canvas.hw.tall{height:230px}
 
 @media print{aside,.navbtns,.hwbar,.self,.causes,.no-print{display:none!important}.layout{display:block}main{max-width:none;padding:0}details.sol{display:block!important;border:none;padding:2px 0}details.sol summary{list-style:none}}
 
+/* ================= 本页自测 / 掌握度热力图 ================= */
+.checkpoint{margin-top:10px;border:1px dashed #b9d2e6;border-radius:10px;padding:8px 12px;background:#f7fbff}
+.checkpoint .cp-h{font-weight:700;color:var(--blue);font-size:13px;margin-bottom:4px}
+.checkpoint .cp-q{font-size:13px;margin-bottom:6px}
+.checkpoint .cp-opts{display:flex;gap:6px;flex-wrap:wrap}
+.checkpoint .cp-opt{border:1px solid #c6d8ea;background:#fff;color:var(--ink);border-radius:8px;padding:4px 12px;font-size:12.5px;cursor:pointer;text-align:left}
+.checkpoint .cp-in{width:100%;max-width:360px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;margin-bottom:6px}
+.checkpoint .cp-fb{margin-top:6px;font-size:12.5px}
+.checkpoint .cp-fb .ok{color:var(--ok);font-weight:700}
+.checkpoint .cp-fb .no{color:var(--acc);font-weight:700}
+.hm-mod{margin:8px 0}
+.hm-name{font-size:12px;color:var(--sub);margin-bottom:3px}
+.hm-grid{display:flex;flex-wrap:wrap;gap:3px}
+.hm-cell{width:16px;height:16px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.06)}
+.hm-0{background:#e6ecf2}.hm-c{background:#f6d9a8}.hm-b{background:#9ad3a8}.hm-a{background:#2e9e5b}
+
+/* ================= 今日学习 / 复习 ================= */
+.dash{display:flex;gap:10px;flex-wrap:wrap}
+.dcell{flex:1 1 120px;min-width:110px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px;text-align:center}
+.dcell b{display:block;font-size:20px;color:var(--blue)}
+.dcell span{font-size:12px;color:var(--sub)}
+.rev-card{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:12px 0;background:#fff}
+.rev-meta{font-size:12px;color:var(--sub)}
+.rev-title{font-size:15px;font-weight:700;color:var(--blue);margin:2px 0 4px}
+.rev-hint{font-size:12.5px;color:var(--sub)}
+.rev-reveal{margin-top:8px;border:1px solid var(--blue);background:#fff;color:var(--blue);border-radius:16px;padding:3px 12px;font-size:12.5px;cursor:pointer}
+.rev-body{margin-top:8px}
+.rev-ans{margin-top:8px;background:#f3f8ff;border:1px solid #cfe0ee;border-radius:8px;padding:8px 12px;font-size:13px}
+.rev-ans .rev-exp{color:var(--sub);margin-top:4px}
+.rev-ans .rev-kps{color:#7a5d00;margin-top:4px}
+.rev-opts{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.rev-opt{border:1px solid #c6d8ea;background:#fff;color:var(--ink);border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer;text-align:left}
+.rev-opt.right{background:#e7f5ea;border-color:var(--ok);font-weight:700}
+.rev-opt.wrong{background:#fdecea;border-color:var(--acc)}
+.rev-rate{margin-top:10px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.rev-ratelbl{font-size:12px;color:var(--sub)}
+.rev-rate button{border:1px solid var(--line);background:#fff;border-radius:16px;padding:3px 14px;font-size:12.5px;cursor:pointer}
+.rev-rate button.ok{border-color:var(--ok);color:var(--ok)}
+.rev-rate button.mid{border-color:var(--warn);color:var(--warn)}
+.rev-rate button.no{border-color:var(--acc);color:var(--acc)}
+
 /* ================= 主题选择器 ================= */
 #themebar{position:fixed;top:10px;right:12px;z-index:1500;display:flex;gap:2px;padding:3px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.88);backdrop-filter:blur(6px);box-shadow:0 1px 4px rgba(20,30,60,.08)}
 #themebar button{border:none;background:transparent;color:var(--sub);font-size:12.5px;padding:3px 10px;border-radius:16px;cursor:pointer;font-family:inherit}
@@ -180,6 +221,11 @@ html[data-theme="sepia"] canvas.hw{background:#fbf5e6;border-color:#cdbb95}
 html[data-theme="sepia"] .hero{background:linear-gradient(135deg,#6b4f24,#8a7a3a)}
 html[data-theme="sepia"] .mopt.sel{background:#6b4f24;color:#fff;border-color:#6b4f24}
 html[data-theme="sepia"] h3{color:#8a3a20}
+html[data-theme="sepia"] .rev-card,html[data-theme="sepia"] .rev-opt,html[data-theme="sepia"] .rev-reveal,html[data-theme="sepia"] .rev-rate button{background:#faf3e0}
+html[data-theme="sepia"] .rev-ans{background:#efe4c9;border-color:#ddcda6}
+html[data-theme="sepia"] .checkpoint{background:#f3e8cf;border-color:#ddcda6}
+html[data-theme="sepia"] .checkpoint .cp-opt{background:#faf3e0}
+html[data-theme="sepia"] .hm-0{background:#e6dcc2}
 
 /* ================= 深色 ================= */
 html[data-theme="dark"]{--ink:#d7dee8;--sub:#93a1b3;--acc:#e0715c;--blue:#6fb3e0;--line:#333d49;--bg:#181d24;--ok:#5cc07a;--warn:#e0b050;color-scheme:dark}
@@ -222,3 +268,10 @@ html[data-theme="dark"] .self button.ok{color:#8fd8a4}
 html[data-theme="dark"] .self button.no{color:#f0a99f}
 html[data-theme="dark"] h3{color:#e0907f}
 html[data-theme="dark"] #themebar button.on{color:#0e1318}
+html[data-theme="dark"] .rev-card,html[data-theme="dark"] .rev-opt,html[data-theme="dark"] .rev-reveal,html[data-theme="dark"] .rev-rate button{background:#1f262e;color:#d7dee8}
+html[data-theme="dark"] .rev-ans{background:#232c36;border-color:#33404d}
+html[data-theme="dark"] .rev-opt.right{background:#1c3324;border-color:#2e7d4a}
+html[data-theme="dark"] .rev-opt.wrong{background:#3a201d;border-color:#8a3a30}
+html[data-theme="dark"] .checkpoint{background:#1c2630;border-color:#33404d}
+html[data-theme="dark"] .checkpoint .cp-opt{background:#1f262e;color:#d7dee8}
+html[data-theme="dark"] .hm-0{background:#2a333d}
