@@ -1375,7 +1375,12 @@
         html += "<tr><td>" + esc(m.tb) + "</td><td>" + esc(m.modName || ("模块" + m.mod)) + "</td><td>" + esc(m.pages) + "</td><td>" + esc(cov) + "</td>" +
           '<td><a href="' + ch.web + '.html#' + anchor + '">去学习 →</a></td></tr>';
       });
-      html += "</tbody></table></div>";
+      html += "</tbody></table>";
+      if (ch.gaps && ch.gaps.length) {
+        html += '<div class="tb-gaps">⚠️ 教材未讲（需自己看书补）：<ul>' +
+          ch.gaps.map(function (g) { return "<li>" + esc(g) + "</li>"; }).join("") + "</ul></div>";
+      }
+      html += "</div>";
     });
     host.innerHTML = html;
   }
