@@ -901,9 +901,29 @@
   function cardMap() { var m = {}; buildCards().forEach(function (c) { m[c.id] = c; }); return m; }
 
   function renderFlashcards() {
-    var ctl = document.getElementById("fcctl"), host = document.getElementById("fchost");
+    var ctl = document.getElementById("fcctl"), host = document.getElementById("fchost"), progEl = document.getElementById("fcprog");
     if (!host) return;
     var cards = buildCards();
+    function renderProgress() {
+      if (!progEl) return;
+      var now = Date.now(), learned = 0, mastered = 0, due = 0, byTag = {};
+      cards.forEach(function (c) {
+        var s = srsGet(c.id);
+        var t = byTag[c.tag] = byTag[c.tag] || { n: 0, learned: 0 };
+        t.n++;
+        if (s) {
+          learned++; t.learned++;
+          if ((s.reps || 0) >= 3) mastered++;
+          if (s.due <= now) due++;
+        }
+      });
+      var tags = Object.keys(byTag).map(function (t) {
+        return '<span class="fcp-tag">' + esc(t) + " " + byTag[t].learned + "/" + byTag[t].n + "</span>";
+      }).join("");
+      progEl.innerHTML = '<div class="fcp"><span class="fcp-big">已学 ' + learned + "/" + cards.length + "</span>" +
+        "<span>掌握 <b>" + mastered + "</b></span><span>待复习 <b>" + due + "</b></span>" +
+        '<span class="fcp-tags">' + tags + "</span></div>";
+    }
     var names = { ch01: "绪论", ch02: "质膜", ch03: "内膜系统", ch04: "蛋白质运输", ch05: "后翻译转运" };
     var chs = {}, tags = {};
     cards.forEach(function (c) { if (c.ch) chs[c.ch] = 1; tags[c.tag] = 1; });
@@ -928,7 +948,7 @@
     function build() {
       deck = cards.filter(function (c) { return (curCh === "all" || c.ch === curCh) && (curTag === "all" || c.tag === curTag); });
       for (var i = deck.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = deck[i]; deck[i] = deck[j]; deck[j] = t; }
-      pos = 0; show();
+      pos = 0; renderProgress(); show();
     }
     function show() {
       if (!deck.length) { host.innerHTML = '<p class="empty">没有符合条件的卡片。</p>'; return; }
@@ -950,7 +970,7 @@
       };
       var rate = host.querySelector(".fc-rate");
       [["不会", 0], ["模糊", 1], ["会", 2]].forEach(function (o, i) {
-        rate.children[i].onclick = function () { srsRate(c.id, o[1]); pos++; show(); };
+        rate.children[i].onclick = function () { srsRate(c.id, o[1]); renderProgress(); pos++; show(); };
       });
     }
     sync(); build();

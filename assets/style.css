@@ -173,6 +173,10 @@ canvas.hw.tall{height:230px}
 .fc-rate button.mid{border-color:var(--warn);color:var(--warn)}
 .fc-rate button.no{border-color:var(--acc);color:var(--acc)}
 .fc-done{text-align:center;font-size:16px;color:var(--blue);padding:30px 0}
+.fcp{display:flex;gap:14px;flex-wrap:wrap;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:13px;margin:6px 0}
+.fcp .fcp-big{font-weight:700;color:var(--blue)}
+.fcp .fcp-tags{font-size:12px;color:var(--sub)}
+.fcp .fcp-tag{margin-right:10px}
 
 /* ================= 本页自测 / 掌握度热力图 ================= */
 .checkpoint{margin-top:10px;border:1px dashed #b9d2e6;border-radius:10px;padding:8px 12px;background:#f7fbff}
