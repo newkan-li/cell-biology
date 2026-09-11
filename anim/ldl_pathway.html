@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LDL 受体途径</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LDL 受体途径</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   function P(nx,ny){return{nx:nx,ny:ny,tnx:nx,tny:ny};}
@@ -10,10 +10,11 @@
     legend:[{c:'#e8703a',t:'LDL'},{c:'#5a7fa8',t:'LDL 受体'},{c:'#2e9e5b',t:'胆固醇'}],
     init:function(S){S.ldl=P(.5,.14);S.inside=false;S.late=false;S.chol=false;S.recycle=false;},
     phases:[
-      {name:'① LDL 结合细胞膜上的受体',dur:1300,note:'血液中的 LDL 颗粒结合到质膜上的 LDL 受体。',ap:function(S){set(S.ldl,.5,.26);S.inside=false;S.late=false;S.chol=false;S.recycle=false;}},
-      {name:'② 网格蛋白包被小泡内吞',dur:1300,note:'受体聚集在包被小窝中，形成网格蛋白有被小泡内吞。',ap:function(S){set(S.ldl,.5,.48);S.inside=true;}},
-      {name:'③ 内体 → 溶酶体降解',dur:1300,note:'小泡与内体融合，最终进入溶酶体，LDL 被降解。',ap:function(S){set(S.ldl,.5,.66);S.late=true;}},
-      {name:'④ 胆固醇释放；受体回收循环',dur:1400,note:'胆固醇被释放供细胞利用；LDL 受体回收并返回质膜循环使用。',ap:function(S){S.chol=true;S.recycle=true;}}
+      {name:'① 合成 LDL 受体并插入质膜',dur:1200,note:'当细胞需要胆固醇时，细胞合成 LDL 跨膜受体蛋白，并将其嵌插到质膜中。',ap:function(S){set(S.ldl,.5,.14);S.inside=false;S.late=false;S.chol=false;S.recycle=false;}},
+      {name:'② 受体结合 LDL，形成网格蛋白包被小泡',dur:1300,note:'受体与 LDL 颗粒结合后，形成网格蛋白包被小泡(clathrin)。',ap:function(S){set(S.ldl,.5,.30);}},
+      {name:'③ 脱衣被成光滑小泡，与早期胞内体融合',dur:1300,note:'进入细胞质的包被小泡随即脱掉网格蛋白衣被，成为光滑小泡，同早期胞内体(endosome)融合。',ap:function(S){set(S.ldl,.5,.50);S.inside=true;}},
+      {name:'④ 胞内体酸性 pH 使受体与 LDL 分离',dur:1300,note:'胞内体中 pH 值低(酸性)，使受体与 LDL 颗粒分离；再经晚期内体将 LDL 送入溶酶体。',ap:function(S){set(S.ldl,.5,.68);S.late=true;}},
+      {name:'⑤ 溶酶体水解胆固醇酯，释放胆固醇',dur:1400,note:'在溶酶体中，LDL 颗粒中的胆固醇酯被水解成游离的胆固醇而被利用(膜装配或合成类固醇激素)；受体回收循环。',ap:function(S){S.chol=true;S.recycle=true;}}
     ],
     update:function(S,e){S.ldl.nx+=(S.ldl.tnx-S.ldl.nx)*e*.5;S.ldl.ny+=(S.ldl.tny-S.ldl.ny)*e*.5;},
     draw:function(ctx,W,H,S){

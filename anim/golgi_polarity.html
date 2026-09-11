@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>高尔基体的极性区室</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>高尔基体的极性区室</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   AnimKit.mount({
@@ -8,10 +8,10 @@
     legend:[{c:'#2e9e5b',t:'顺面 CGN'},{c:'#3b6fd6',t:'中间区室'},{c:'#e8703a',t:'反面 TGN'}],
     init:function(S){S.hl=0;S.cargo=0;},
     phases:[
-      {name:'① 顺面（cis）高尔基体网络 CGN',dur:1200,note:'顺面接收来自 ER 的小泡，是高尔基体的入口。',ap:function(S){S.hl=0;S.cargo=0.08;}},
-      {name:'② 中间区室（medial）',dur:1200,note:'中间区室含各种糖基转移酶，对蛋白进行加工。',ap:function(S){S.hl=1;S.cargo=0.5;}},
-      {name:'③ 反面（trans）高尔基体网络 TGN',dur:1200,note:'反面是分选枢纽，把蛋白分选到不同去向。',ap:function(S){S.hl=2;S.cargo=0.9;}},
-      {name:'④ 极性：逐步加工',dur:1400,note:'顺面→反面各区室酶系不同，货物蛋白依次被修饰、成熟。',ap:function(S){S.hl=3;S.cargo=0;}}
+      {name:'① 顺面（cis）高尔基体网络 CGN',dur:1200,note:'顺面膜囊(cis Golgi)/顺面网状结构 CGN：接收内质网合成的新物质，大部分转入中间膜囊，小部分(含 KDEL/HDEL 驻留信号)返回 ER。',ap:function(S){S.hl=0;S.cargo=0.08;}},
+      {name:'② 中间区室（medial）',dur:1200,note:'中间膜囊(medial Golgi)：多数糖基化修饰、糖脂的形成、与 Golgi 有关的多糖合成都发生在此。',ap:function(S){S.hl=1;S.cargo=0.5;}},
+      {name:'③ 反面（trans）高尔基体网络 TGN',dur:1200,note:'反面膜囊(trans Golgi)/反面网状结构 TGN：蛋白质分类、集中、包装成不同小泡输出。',ap:function(S){S.hl=2;S.cargo=0.9;}},
+      {name:'④ 极性：逐步加工',dur:1400,note:'极性：cis→medial→trans 各区室酶系不同，货物被逐步加工。',ap:function(S){S.hl=3;S.cargo=0;}}
     ],
     update:function(S,e){if(S.hl===3)S.cargo=(S.cargo+0.012*e*3)%1;},
     draw:function(ctx,W,H,S){

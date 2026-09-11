@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>网格蛋白胞吞</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>网格蛋白胞吞</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   function steps(W){var m=14,g=10,n=5,bw=(W-2*m-g*(n-1))/n,by=195,bh=125,arr=[];
@@ -9,11 +9,11 @@
     sub:'配体与受体结合→网格蛋白包被凹陷→dynamin 掐断→脱包被→与溶酶体融合。',
     legend:[{c:'#e8703a',t:'配体'},{c:'#5a7fa8',t:'受体'},{c:'#8e5bb5',t:'网格蛋白'},{c:'#c0392b',t:'dynamin'}],
     phases:[
-      {name:'① 配体结合受体',dur:1200,note:'细胞外配体（如 LDL）与质膜受体特异结合。'},
-      {name:'② 膜凹陷 / 网格蛋白包被',dur:1400,note:'网格蛋白组装成包被，膜向内凹陷。'},
-      {name:'③ dynamin 掐断',dur:1300,note:'发动蛋白(dynamin)收缩，将小泡从膜上掐断。'},
-      {name:'④ 脱包被',dur:1200,note:'小泡脱去网格蛋白包被。'},
-      {name:'⑤ 与溶酶体融合',dur:1300,note:'与溶酶体融合降解配体，受体可回收。'}
+      {name:'① 配体结合受体',dur:1200,note:'网格蛋白有被小泡：内吞途径中，质膜→胞内体→溶酶体，小 G 蛋白 dynamin 参与。'},
+      {name:'② 膜凹陷 / 网格蛋白包被',dur:1400,note:'TGN 也是网格蛋白有被小泡的来源：Golgi TGN→质膜、溶酶体/植物液泡，小 G 蛋白 ARF 参与。'},
+      {name:'③ dynamin 掐断',dur:1300,note:'“Clathrin-coats”含 clathrin(形成结构支架)与 adaptors(多亚基，形成内壳)。'},
+      {name:'④ 脱包被',dur:1200,note:'dynamin 水解 GTP 将小泡从膜上掐断。'},
+      {name:'⑤ 与溶酶体融合',dur:1300,note:'脱包被后与溶酶体融合。'}
     ],
     draw:function(ctx,W,H,S,fc,phaseI){
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);

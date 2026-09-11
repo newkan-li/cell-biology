@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>停靠与融合两步</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>停靠与融合两步</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   AnimKit.mount({
@@ -8,10 +8,10 @@
     legend:[{c:'#2e9e5b',t:'Rab / 系链'},{c:'#e8703a',t:'v-SNARE'},{c:'#3b6fd6',t:'t-SNARE'}],
     init:function(S){S.vy=.20;S.tether=false;S.zip=0;S.fuse=false;},
     phases:[
-      {name:'① 运输小泡接近靶膜',dur:1200,note:'运输小泡携带货物靠近靶膜。',ap:function(S){S.vy=.20;S.tether=false;S.zip=0;S.fuse=false;}},
-      {name:'② 停靠：Rab 与系链蛋白',dur:1300,note:'小泡上的 Rab-GTP 与靶膜系链蛋白相互作用，把小泡锚定在靶膜附近（停靠）。',ap:function(S){S.vy=.42;S.tether=true;}},
-      {name:'③ v-SNARE / t-SNARE 拉链配对',dur:1300,note:'小泡上的 v-SNARE 与靶膜上的 t-SNARE 相互缠绕、拉链式配对。',ap:function(S){S.vy=.50;S.zip=1;}},
-      {name:'④ 膜融合，货物释放',dur:1400,note:'SNARE 配对提供能量，两膜融合，货物释放到靶区室。',ap:function(S){S.vy=.60;S.fuse=true;}}
+      {name:'① 运输小泡接近靶膜',dur:1200,note:'运输小泡接近靶膜。',ap:function(S){S.vy=.20;S.tether=false;S.zip=0;S.fuse=false;}},
+      {name:'② 停靠：Rab 与系链蛋白',dur:1300,note:'①识别、停靠锚定：运输小泡 Rab-GTP ⇔ 靶膜上的 Rab effector。',ap:function(S){S.vy=.42;S.tether=true;}},
+      {name:'③ v-SNARE / t-SNARE 拉链配对',dur:1300,note:'②进一步识别、融合：运输小泡 v-SNARE ⇔ 靶膜 t-SNARE 互补配对。',ap:function(S){S.vy=.50;S.zip=1;}},
+      {name:'④ 膜融合，货物释放',dur:1400,note:'③v-/t-SNARE 复合体解离：NSF + NSF 结合蛋白(SNAP)，ATP 水解；货物释放。',ap:function(S){S.vy=.60;S.fuse=true;}}
     ],
     update:function(S,e){},
     draw:function(ctx,W,H,S){

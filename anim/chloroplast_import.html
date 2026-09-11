@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>叶绿体蛋白分选</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>叶绿体蛋白分选</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   AnimKit.mount({
@@ -8,10 +8,10 @@
     legend:[{c:'#2e9e5b',t:'转运肽'},{c:'#e8703a',t:'成熟蛋白'},{c:'#5a7fa8',t:'TOC / TIC'}],
     init:function(S){S.step=0;},
     phases:[
-      {name:'① 前体蛋白含 N 端转运肽',dur:1200,note:'细胞质中合成的叶绿体前体蛋白，N 端带有转运肽。',ap:function(S){S.step=0;}},
-      {name:'② 经 TOC / TIC 进入基质',dur:1400,note:'转运肽先被外膜 TOC 识别，再经内膜 TIC 进入叶绿体基质。',ap:function(S){S.step=1;}},
-      {name:'③ 转运肽被切除',dur:1200,note:'进入基质后，转运肽被基质中的加工肽酶切除。',ap:function(S){S.step=2;}},
-      {name:'④ 分选到类囊体等部位',dur:1400,note:'成熟蛋白再被分选到类囊体腔、类囊体膜或基质。',ap:function(S){S.step=3;}}
+      {name:'① 前体蛋白含 N 端转运肽',dur:1200,note:'叶绿体前体蛋白 N 端含转运肽；①叶绿体基质蛋白的导入与转运肽切割。',ap:function(S){S.step=0;}},
+      {name:'② 经 TOC / TIC 进入基质',dur:1400,note:'经 TOC/TIC 进入基质；②类囊体腔蛋白的导入与转运肽切除(双区转运肽)。',ap:function(S){S.step=1;}},
+      {name:'③ 转运肽被切除',dur:1200,note:'③类囊体膜蛋白的合成与嵌入。',ap:function(S){S.step=2;}},
+      {name:'④ 分选到类囊体等部位',dur:1400,note:'内外膜间隙和基质中的 Hsp70、Hsp60 帮助蛋白伸展跨膜和正确折叠。',ap:function(S){S.step=3;}}
     ],
     draw:function(ctx,W,H,S){
       ctx.fillStyle='#eef7f0';ctx.fillRect(0,0,W,H);

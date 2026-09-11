@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>核孔运输</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>核孔运输</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   function steps(W){var m=14,g=10,n=5,bw=(W-2*m-g*(n-1))/n,by=195,bh=125,arr=[];
@@ -9,11 +9,11 @@
     sub:'亲核蛋白的 NLS 被 importin 识别，经核孔复合体入核，核内 Ran-GTP 使其释放货物。',
     legend:[{c:'#5a7fa8',t:'亲核蛋白'},{c:'#e8703a',t:'NLS / importin'},{c:'#2e9e5b',t:'Ran-GTP'}],
     phases:[
-      {name:'① 亲核蛋白带 NLS',dur:1200,note:'亲核蛋白含核定位信号(NLS)。'},
-      {name:'② importin 识别结合',dur:1300,note:'胞质中 importin(输入蛋白)识别并结合 NLS。'},
-      {name:'③ 经 NPC 入核',dur:1400,note:'转运复合物经核孔复合体(NPC)进入细胞核（耗能）。'},
-      {name:'④ Ran-GTP 释放货物',dur:1400,note:'核内 Ran-GTP 结合 importin，使其释放货物蛋白。'},
-      {name:'⑤ importin 回收',dur:1300,note:'importin 返回胞质循环使用。'}
+      {name:'① 亲核蛋白带 NLS',dur:1200,note:'基本概念：核蛋白、核定位信号(NLS)、核输出信号(NES)、输入蛋白(importin)、输出蛋白(exportin)。'},
+      {name:'② importin 识别结合',dur:1300,note:'importin 识别结合 NLS。'},
+      {name:'③ 经 NPC 入核',dur:1400,note:'经 NPC 入核。'},
+      {name:'④ Ran-GTP 释放货物',dur:1400,note:'Ran-GTP 使货物释放。'},
+      {name:'⑤ importin 回收',dur:1300,note:'importin 回收。'}
     ],
     draw:function(ctx,W,H,S,fc,phaseI){
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);

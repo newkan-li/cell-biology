@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>线粒体蛋白导入</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>线粒体蛋白导入</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   function steps(W){var m=14,g=10,n=5,bw=(W-2*m-g*(n-1))/n,by=195,bh=125,arr=[];
@@ -9,11 +9,11 @@
     sub:'前体蛋白在胞质由 Hsp70 解折叠，N 端导肽引导，经 TOM/TIM 进入线粒体基质。',
     legend:[{c:'#e8703a',t:'导肽'},{c:'#5a7fa8',t:'前体蛋白 / 转运子'},{c:'#2e9e5b',t:'Hsp70'}],
     phases:[
-      {name:'① 前体蛋白 + Hsp70 解折叠',dur:1300,note:'胞质中前体蛋白与 Hsp70 结合、消耗 ATP 解折叠。'},
-      {name:'② 导肽识别 TOM',dur:1300,note:'N 端导肽与线粒体外膜受体/TOM 复合体识别。'},
-      {name:'③ 内外膜接触点',dur:1300,note:'在内外膜接触点转运。'},
-      {name:'④ TIM 进入基质',dur:1400,note:'经内膜 TIM 复合体进入基质。'},
-      {name:'⑤ 导肽切除 + 折叠',dur:1400,note:'导肽被切除，蛋白重新折叠成活性形式。'}
+      {name:'① 前体蛋白 + Hsp70 解折叠',dur:1300,note:'N-端导肽必须先与线粒体膜上的受体识别；细胞质基质中 cytosolic Hsp70 帮助解析叠。'},
+      {name:'② 导肽识别 TOM',dur:1300,note:'导肽识别 TOM。'},
+      {name:'③ 内外膜接触点',dur:1300,note:'前体蛋白到基质的转移只发生在少数线粒体内外膜“接触点”。'},
+      {name:'④ TIM 进入基质',dur:1400,note:'穿过内膜需质子动力势与膜电位驱动；经 TIM 进入基质。'},
+      {name:'⑤ 导肽切除 + 折叠',dur:1400,note:'基质中 ATP 水解 + mHsp70/Hsp60 帮助重折叠；转运肽酶切除导肽。'}
     ],
     draw:function(ctx,W,H,S,fc,phaseI){
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);

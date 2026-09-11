@@ -79,7 +79,7 @@ window.AnimKit = (function () {
     function playAudio(src) { try { if (audioEl) { audioEl.pause(); audioEl = null; } audioEl = new Audio(src); audioEl.play().catch(function () { }); } catch (e) { } }
     function applyPhase(i) {
       if (cfg.phases[i].ap) cfg.phases[i].ap(S);
-      if (audioOn) playAudio('audio/' + animId + '_' + i + '.mp3');
+      if (audioOn) playAudio('audio/' + animId + '_' + i + '.mp3?v=20260911e');
       noteEl.innerHTML = '阶段：<b>' + cfg.phases[i].name + '</b>' + (cfg.phases[i].note ? ' —— ' + cfg.phases[i].note : '');
       reportH();
     }
@@ -104,9 +104,9 @@ window.AnimKit = (function () {
     bAudio.onclick = function () {
       audioOn = !audioOn;
       bAudio.textContent = audioOn ? '🔇 语音：开' : '🔊 语音：关';
-      if (audioOn) playAudio('audio/' + animId + '_' + phaseI + '.mp3');
+      if (audioOn) playAudio('audio/' + animId + '_' + phaseI + '.mp3?v=20260911e');
     };
-    wrap.querySelector('[data-act=title]').onclick = function () { playAudio('audio/' + animId + '_title.mp3'); };
+    wrap.querySelector('[data-act=title]').onclick = function () { playAudio('audio/' + animId + '_title.mp3?v=20260911e'); };
     function reportH() { try { parent.postMessage({ __animResize: true, h: document.body.scrollHeight }, '*'); } catch (e) { } }
     if (window.ResizeObserver) { try { new ResizeObserver(reportH).observe(document.body); } catch (e) { } }
     window.addEventListener('resize', reportH);

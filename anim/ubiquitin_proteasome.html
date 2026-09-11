@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>泛素-蛋白酶体</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>泛素-蛋白酶体</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   function steps(W){var m=14,g=8,n=6,bw=(W-2*m-g*(n-1))/n,by=200,bh=120,arr=[];
@@ -9,12 +9,12 @@
     sub:'E1→E2→E3 级联把泛素连到靶蛋白，形成多聚泛素链，被 26S 蛋白酶体降解。',
     legend:[{c:'#e8a13a',t:'泛素'},{c:'#5a7fa8',t:'酶 / 靶蛋白'},{c:'#c0392b',t:'蛋白酶体'}],
     phases:[
-      {name:'① 靶蛋白',dur:1200,note:'待降解的靶蛋白。'},
-      {name:'② E1 活化泛素（耗 ATP）',dur:1300,note:'泛素活化酶 E1 消耗 ATP 激活泛素。'},
-      {name:'③ E2 结合',dur:1200,note:'泛素结合酶 E2 接受活化泛素。'},
-      {name:'④ E3 连接酶',dur:1300,note:'泛素连接酶 E3 把泛素转移到靶蛋白的 Lys 残基上。'},
-      {name:'⑤ 多聚泛素链',dur:1300,note:'多轮循环形成 K48 多聚泛素链（降解信号）。'},
-      {name:'⑥ 26S 蛋白酶体降解',dur:1500,note:'26S 蛋白酶体识别泛素链，把蛋白降解为短肽。'}
+      {name:'① 靶蛋白',dur:1200,note:'靶蛋白。'},
+      {name:'② E1 活化泛素（耗 ATP）',dur:1300,note:'泛素活化酶 E1 活化泛素（消耗 ATP）。'},
+      {name:'③ E2 结合',dur:1200,note:'泛素结合酶/载体蛋白 E2 结合。'},
+      {name:'④ E3 连接酶',dur:1300,note:'泛素连接酶 E3 将泛素共价结合到靶蛋白的赖氨酸残基上。'},
+      {name:'⑤ 多聚泛素链',dur:1300,note:'多聚泛素化：泛素链连接在前一个泛素的特定赖氨酸(如 Lys48/Lys63)上。'},
+      {name:'⑥ 26S 蛋白酶体降解',dur:1500,note:'26S 蛋白酶体降解靶蛋白。'}
     ],
     draw:function(ctx,W,H,S,fc,phaseI){
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);

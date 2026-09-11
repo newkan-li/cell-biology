@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>细胞自噬</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>细胞自噬</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   function steps(W){var m=16,g=14,n=4,bw=(W-2*m-g*(n-1))/n,by=200,bh=130,arr=[];
@@ -9,10 +9,10 @@
     sub:'细胞在自噬基因调控下，把自身受损的细胞器/大分子包裹、运送到溶酶体降解并再利用。',
     legend:[{c:'#c98a2b',t:'自噬体膜'},{c:'#5a7fa8',t:'受损细胞器'},{c:'#b04a9a',t:'溶酶体'}],
     phases:[
-      {name:'① 形成隔离膜',dur:1300,note:'自噬信号刺激下形成隔离膜（phagophore）。'},
-      {name:'② 包裹形成自噬体',dur:1400,note:'隔离膜包裹受损细胞器/大分子，闭合成自噬体。'},
-      {name:'③ 与溶酶体融合',dur:1400,note:'自噬体与溶酶体融合形成自噬溶酶体。'},
-      {name:'④ 降解并再利用',dur:1400,note:'酸性水解酶降解内容物，产物被细胞再利用。'}
+      {name:'① 形成隔离膜',dur:1300,note:'自噬相关基因调控下，对细胞内受损或需要淘汰更新的物质进行再利用。'},
+      {name:'② 包裹形成自噬体',dur:1400,note:'在自噬信号刺激下，利用内质网、线粒体、高尔基体等的膜形成自噬小泡，包裹受损的蛋白质或细胞器。'},
+      {name:'③ 与溶酶体融合',dur:1400,note:'自噬小泡与溶酶体(动物)或液泡(酵母和植物)融合。'},
+      {name:'④ 降解并再利用',dur:1400,note:'内容物降解后循环利用；饥饿状态下自噬增强，为细胞提供能量。'}
     ],
     draw:function(ctx,W,H,S,fc,phaseI){
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);

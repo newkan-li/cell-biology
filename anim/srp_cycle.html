@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SRP 循环</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SRP 循环</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   AnimKit.mount({
@@ -8,11 +8,11 @@
     legend:[{c:'#f2b950',t:'SRP'},{c:'#8e44ad',t:'核糖体'},{c:'#2e9e5b',t:'信号肽'},{c:'#5a7fa8',t:'SRP 受体'}],
     init:function(S){S.riboY=.28;S.srp=false;S.docked=false;S.paused=false;S.thread=0;},
     phases:[
-      {name:'① 信号肽从核糖体露出',dur:1200,note:'新生肽链的信号肽从核糖体露出。',ap:function(S){S.riboY=.28;S.srp=false;S.docked=false;S.paused=false;S.thread=0;}},
-      {name:'② SRP 结合信号肽，翻译暂停',dur:1300,note:'信号识别颗粒(SRP)识别并结合信号肽，使翻译暂停。',ap:function(S){S.srp=true;S.paused=true;}},
-      {name:'③ 停泊到 ER 膜 SRP 受体',dur:1300,note:'SRP-核糖体复合体停泊到 ER 膜上的 SRP 受体（停泊蛋白）。',ap:function(S){S.riboY=.60;S.docked=true;}},
-      {name:'④ GTP 水解，SRP 释放',dur:1300,note:'GTP 水解，SRP 与受体解离，翻译恢复。',ap:function(S){S.srp=false;S.paused=false;}},
-      {name:'⑤ 新生肽进入 ER 腔',dur:1400,note:'肽链经易位子进入 ER 腔，信号肽随后被切除。',ap:function(S){S.thread=1;}}
+      {name:'① 信号肽从核糖体露出',dur:1200,note:'分泌蛋白 N 端信号肽从核糖体露出。',ap:function(S){S.riboY=.28;S.srp=false;S.docked=false;S.paused=false;S.thread=0;}},
+      {name:'② SRP 结合信号肽，翻译暂停',dur:1300,note:'SRP 由 6 种多肽和 1 个 7S(300 nt) RNA 组成，通常在细胞质基质中；p54 亚基(GTP 酶)结合信号肽疏水核心，使翻译暂停。',ap:function(S){S.srp=true;S.paused=true;}},
+      {name:'③ 停泊到 ER 膜 SRP 受体',dur:1300,note:'SRP-核糖体复合体停泊到 ER 膜上的 SRP 受体。',ap:function(S){S.riboY=.60;S.docked=true;}},
+      {name:'④ GTP 水解，SRP 释放',dur:1300,note:'GTP 水解，SRP 释放，翻译恢复。',ap:function(S){S.srp=false;S.paused=false;}},
+      {name:'⑤ 新生肽进入 ER 腔',dur:1400,note:'新生肽经易位子进入 ER 腔。',ap:function(S){S.thread=1;}}
     ],
     update:function(S,e){},
     draw:function(ctx,W,H,S){

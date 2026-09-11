@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rab 的定位与循环</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rab 的定位与循环</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   AnimKit.mount({
@@ -8,9 +8,9 @@
     legend:[{c:'#3b6fd6',t:'Rab-GDP'},{c:'#2e9e5b',t:'Rab-GTP'},{c:'#8d6e63',t:'GDI'}],
     init:function(S){S.state=0;S.rabY=.28;},
     phases:[
-      {name:'① 胞质中 Rab-GDP 结合 GDI',dur:1300,note:'失活的 Rab-GDP 在胞质中与 GDI 结合，便于运输。',ap:function(S){S.state=0;S.rabY=.28;}},
-      {name:'② 转运到膜上，GEF 活化 → Rab-GTP',dur:1300,note:'GDI 把 Rab 送到供体膜；膜上的 GEF 催化 GDP→GTP，Rab 被活化。',ap:function(S){S.state=1;S.rabY=.44;}},
-      {name:'③ Rab-GTP 结合效应蛋白参与停靠',dur:1300,note:'活化 Rab 结合效应蛋白（系链/马达等），决定小泡停靠的特异性。',ap:function(S){S.state=2;S.rabY=.44;}},
+      {name:'① Rab 高度选择性地定位于不同膜',dur:1400,note:'不同 Rab 蛋白高度选择性地分布在不同膜系统上（如 Rab1—ER/高尔基、Rab2—顺面高尔基、Rab5—早期内体、Rab7—晚期内体），是识别各膜类型的分子标志。',ap:function(S){S.state=0;S.rabY=.28;}},
+      {name:'② 转运到膜上，GEF 活化 → Rab-GTP',dur:1300,note:'胞质中失活的 Rab-GDP 与 GDI 结合被运送到供体膜；膜上的 GEF 催化 GDP→GTP，Rab 被活化。',ap:function(S){S.state=1;S.rabY=.44;}},
+      {name:'③ Rab-GTP 结合效应蛋白参与停靠',dur:1300,note:'活化 Rab 结合效应蛋白（系链/马达等），控制转运小泡在靶膜的识别、锚定与停靠(docking)。',ap:function(S){S.state=2;S.rabY=.44;}},
       {name:'④ GAP 水解 GTP，GDI 回收',dur:1400,note:'GAP 促使 Rab 水解 GTP 变回 Rab-GDP，GDI 将其从膜上提取、循环使用。',ap:function(S){S.state=3;S.rabY=.28;}}
     ],
     update:function(S,e){},

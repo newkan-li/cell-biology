@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>M6P分选</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>M6P分选</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   function steps(W){var m=14,g=10,n=5,bw=(W-2*m-g*(n-1))/n,by=195,bh=125,arr=[];
@@ -9,11 +9,11 @@
     sub:'溶酶体酶在高尔基体被加上 6-磷酸甘露糖(M6P)标志，被 M6P 受体识别并运往溶酶体。',
     legend:[{c:'#5a7fa8',t:'溶酶体酶'},{c:'#c0392b',t:'M6P 标志'},{c:'#2e9e5b',t:'M6P 受体'}],
     phases:[
-      {name:'① rER 合成溶酶体酶',dur:1300,note:'溶酶体酶在粗面内质网合成并 N-糖基化。'},
-      {name:'② 高尔基体加 M6P',dur:1400,note:'N-乙酰葡萄糖胺磷酸转移酶催化加上 M6P 标志。'},
-      {name:'③ M6P 受体识别',dur:1300,note:'M6P 受体特异识别并结合 M6P。'},
-      {name:'④ 包装入运输小泡',dur:1300,note:'经网格蛋白小泡运往胞内体。'},
-      {name:'⑤ 送达溶酶体',dur:1300,note:'释放到溶酶体，受体回收。'}
+      {name:'① rER 合成溶酶体酶',dur:1300,note:'溶酶体水解酶在 rER 合成，为 N-连接的糖蛋白。'},
+      {name:'② 高尔基体加 M6P',dur:1400,note:'在 Golgi 顺面膜上，其寡糖链上的甘露糖残基被磷酸化形成 M6P。'},
+      {name:'③ M6P 受体识别',dur:1300,note:'M6P 是溶酶体水解酶分选的重要识别信号，由 M6P 受体识别。'},
+      {name:'④ 包装入运输小泡',dur:1300,note:'每个水解酶上有特异的信号斑(signal patch)，通过 2 种催化酶识别其构象而形成 M6P。'},
+      {name:'⑤ 送达溶酶体',dur:1300,note:'包装入运输小泡送达溶酶体。'}
     ],
     draw:function(ctx,W,H,S,fc,phaseI){
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);

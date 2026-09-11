@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>过氧化物酶体发生</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>过氧化物酶体发生</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   function steps(W){var m=20,g=18,n=4,bw=(W-2*m-g*(n-1))/n,by=200,bh=125,arr=[];
@@ -9,10 +9,10 @@
     sub:'过氧化物酶体有两种发生途径：由 ER 出芽从头形成、由已有过氧化物酶体分裂；蛋白经 PTS 信号导入。',
     legend:[{c:'#2e9e5b',t:'Pex 膜蛋白'},{c:'#5a7fa8',t:'过氧化物酶体'},{c:'#e8703a',t:'PTS 信号'}],
     phases:[
-      {name:'① ER 出芽（从头形成）',dur:1300,note:'Pex3/Pex16 等膜蛋白来自 ER，出芽形成新的过氧化物酶体。'},
-      {name:'② 形成过氧化物酶体',dur:1300,note:'形成含氧化酶与过氧化氢酶的过氧化物酶体。'},
-      {name:'③ 分裂增殖',dur:1300,note:'也可由已有过氧化物酶体分裂产生。'},
-      {name:'④ PTS 导入蛋白',dur:1400,note:'蛋白经 PTS1(C端 SKL) / PTS2 信号被 Pex 受体识别并导入。'}
+      {name:'① ER 出芽（从头形成）',dur:1300,note:'过氧化物酶体发生途径①：一些膜蛋白 Pex3/Pex16 于内质网合成，前体膜来自 ER。'},
+      {name:'② 形成过氧化物酶体',dur:1300,note:'过氧化物酶体发生途径②：已有的过氧化物酶体分裂产生子代细胞器。'},
+      {name:'③ 分裂增殖',dur:1300,note:'分裂增殖(Pex11)。'},
+      {name:'④ PTS 导入蛋白',dur:1400,note:'PTS1/PTS2 引导基质蛋白导入(Pex5/Pex7 等)。'}
     ],
     draw:function(ctx,W,H,S,fc,phaseI){
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);

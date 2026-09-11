@@ -1,25 +1,43 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>共翻译转移</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>信号肽假说</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
-  function steps(W){var m=16,g=12,n=5,bw=(W-2*m-g*(n-1))/n,by=180,bh=120,arr=[];
-    for(var i=0;i<n;i++)arr.push({x:m+i*(bw+g),y:by,w:bw,h:bh});return arr;}
+  function seg(ctx,x,y,w,h,c,t,tc){AnimKit.roundRect(ctx,x,y,w,h,8);ctx.fillStyle=c;ctx.fill();if(t)AnimKit.label(ctx,t,x+w/2,y+h/2+5,tc||'#fff','bold 13px "Microsoft YaHei"');}
   AnimKit.mount({
-    title:'共翻译转移（信号肽假说）',
-    sub:'分泌蛋白在游离核糖体起始合成，靠 N 端信号肽引导到粗面内质网，边翻译边进入 ER 腔。',
-    legend:[{c:'#e8703a',t:'信号肽 / 新生肽'},{c:'#5a7fa8',t:'核糖体 / 蛋白因子'}],
+    title:'信号肽假说（signal peptide hypothesis）',
+    sub:'分泌蛋白 N 端有一段信号肽，指导蛋白进入内质网合成，合成结束前被切除；信号肽由 N 端、疏水核心(16–26 aa)、C 端三区构成。',
+    legend:[{c:'#3b6fd6',t:'N 端'},{c:'#2e9e5b',t:'疏水核心'},{c:'#8e44ad',t:'C 端'},{c:'#f2b950',t:'成熟蛋白'}],
+    init:function(S){S.hl=0;},
     phases:[
-      {name:'① 游离核糖体起始合成',dur:1300,note:'蛋白质在细胞质游离核糖体上开始合成。'},
-      {name:'② N 端信号肽伸出',dur:1300,note:'肽链生长到约 80 个氨基酸，N 端信号肽伸出。'},
-      {name:'③ SRP 识别结合',dur:1300,note:'信号识别颗粒(SRP)识别信号肽并结合核糖体，翻译暂停。'},
-      {name:'④ 结合 SRP 受体',dur:1300,note:'SRP 与内质网膜上的 SRP 受体（停泊蛋白）结合，核糖体附着到 ER 膜。'},
-      {name:'⑤ 易位子进入 ER 腔',dur:1500,note:'翻译恢复，肽链经易位子(Sec61)进入 ER 腔，信号肽被切除。'}
+      {name:'① Milstein 实验（1972）',dur:1300,note:'1972 年 C. Milstein 等发现：从细胞中提取的免疫球蛋白 N 端，比分泌到细胞外的免疫球蛋白 N 端多一截。',ap:function(S){S.hl=0;}},
+      {name:'② 提出信号肽假说（1975）',dur:1300,note:'1975 年提出：分泌性蛋白 N 端有一段序列作为信号肽(signal peptide/signal sequence)，指导蛋白进入内质网合成，合成结束前被切除。',ap:function(S){S.hl=1;}},
+      {name:'③ 信号肽的三区结构',dur:1400,note:'信号肽位于蛋白质 N 端，16–26 个氨基酸残基，有疏水的核心区；由 N 端、疏水核心、C 端三个区域构成。',ap:function(S){S.hl=2;}},
+      {name:'④ 信号肽酶切割 → 成熟蛋白',dur:1400,note:'信号肽在 C 端之后被信号肽酶(signal peptidase)切除，释放成熟蛋白。',ap:function(S){S.hl=3;}}
     ],
-    draw:function(ctx,W,H,S,fc,phaseI){
-      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
-      var st=steps(W);AnimKit.pathway(ctx,W,H,st,phaseI);
-      var a=st[phaseI];AnimKit.circle(ctx,a.x+a.w/2,a.y-22,10,'#e8703a','肽');
-      AnimKit.label(ctx,'细胞质 → 粗面内质网 (rER)',W/2,44,'#1f5c8b','bold 15px "Microsoft YaHei"');
+    update:function(S,e){},
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#fbfdff';ctx.fillRect(0,0,W,H);
+      var y=H*0.40,h=52,x=W*0.10,w=W*0.80;
+      var nw=w*0.22,cw=w*0.30,tw=w*0.16,mw=w*0.32;
+      seg(ctx,x,y,nw,h,'#3b6fd6','N 端');
+      seg(ctx,x+nw,y,cw,h,'#2e9e5b','疏水核心');
+      seg(ctx,x+nw+cw,y,tw,h,'#8e44ad','C 端');
+      seg(ctx,x+nw+cw+tw,y,mw,h,S.hl>=3?'#f2b950':'#e6e6e6','成熟蛋白','#7a5b00');
+      // signal peptidase site
+      var sx=x+nw+cw+tw;
+      ctx.strokeStyle='#c0392b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(sx,y-14);ctx.lineTo(sx,y+h+14);ctx.stroke();
+      AnimKit.arrow(ctx,sx,y-40,sx,y-14,'#c0392b',2);
+      AnimKit.label(ctx,'信号肽酶作用位点',sx,y-46,'#c0392b','12px "Microsoft YaHei"');
+      if(S.hl===0){
+        AnimKit.label(ctx,'胞内 Ig：N 端多一截',W/2,y+h+50,'#33465c','13px "Microsoft YaHei"');
+      } else if(S.hl===1){
+        AnimKit.label(ctx,'N 端信号肽 → 引导进入内质网，随后被切除',W/2,y+h+50,'#1f5c8b','13px "Microsoft YaHei"');
+      } else if(S.hl===2){
+        AnimKit.label(ctx,'16–26 个氨基酸残基，含疏水核心区',W/2,y+h+50,'#1f5c8b','13px "Microsoft YaHei"');
+      } else {
+        AnimKit.label(ctx,'信号肽被切除 → 成熟蛋白',W/2,y+h+50,'#2e9e5b','13px "Microsoft YaHei"');
+      }
+      AnimKit.label(ctx,'信号肽的一级结构序列',W/2,H-16,'#5b6b7b','12px "Microsoft YaHei"');
     }
   });
 })();

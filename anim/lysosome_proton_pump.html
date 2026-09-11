@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>溶酶体质子泵</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>溶酶体质子泵</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   AnimKit.mount({
@@ -9,9 +9,9 @@
     init:function(S){S.hIn=0;S.atp=0;S.degrade=false;},
     phases:[
       {name:'① 溶酶体结构',dur:1200,note:'溶酶体由单层膜包裹，内含多种酸性水解酶。',ap:function(S){S.hIn=0;S.degrade=false;}},
-      {name:'② V-型质子泵泵入 H⁺（耗 ATP）',dur:1400,note:'膜上的 V-型质子泵水解 ATP，把 H⁺ 泵入腔内。',ap:function(S){S.hIn=4;}},
-      {name:'③ 腔内 pH 降至约 5',dur:1300,note:'H⁺ 累积使腔内 pH 降至约 5（酸性）。',ap:function(S){S.hIn=8;}},
-      {name:'④ 酸性水解酶活化，降解底物',dur:1400,note:'酸性水解酶在 pH≈5 时活性最高，降解大分子。',ap:function(S){S.degrade=true;}}
+      {name:'② V-型质子泵泵入 H⁺（耗 ATP）',dur:1400,note:'膜上有 H⁺-ATPase 质子泵，维持酸性内环境（腔内 H⁺ 浓度比细胞质高约 100 倍）。',ap:function(S){S.hIn=4;}},
+      {name:'③ 腔内 pH 降至约 5',dur:1300,note:'腔内 pH≈5；膜蛋白高度糖基化、膜中含较多胆固醇，保护自身不被消化。',ap:function(S){S.hIn=8;}},
+      {name:'④ 酸性水解酶活化，降解底物',dur:1400,note:'酸性水解酶活化降解底物；多种转运蛋白把水解产物外运。',ap:function(S){S.degrade=true;}}
     ],
     update:function(S,e){S.atp=(S.atp+0.02*e*3)%1;},
     draw:function(ctx,W,H,S){

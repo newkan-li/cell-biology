@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>真核细胞分室化</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>真核细胞分室化</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   var ORG=[
@@ -16,10 +16,10 @@
     legend:[{c:'#8e44ad',t:'核'},{c:'#3b6fd6',t:'ER'},{c:'#2e9e5b',t:'高尔基体'},{c:'#e8703a',t:'溶酶体'},{c:'#c0392b',t:'线粒体'}],
     init:function(S){S.hl=0;S.labels=false;},
     phases:[
-      {name:'① 细胞由膜分隔成区室',dur:1200,note:'真核细胞内部被膜分隔成多个相对独立的区室。',ap:function(S){S.hl=0;S.labels=false;}},
-      {name:'② 主要膜性细胞器',dur:1400,note:'细胞核、内质网、高尔基体、溶酶体、线粒体、过氧化物酶体等各为独立区室。',ap:function(S){S.hl=1;S.labels=true;}},
-      {name:'③ 各区室环境不同',dur:1400,note:'如溶酶体腔呈酸性(pH≈5)、线粒体基质偏碱；各区室含不同酶系。',ap:function(S){S.hl=2;S.labels=true;}},
-      {name:'④ 分室化的意义',dur:1400,note:'提高代谢效率、隔离有害反应、保证各种反应互不干扰、有序进行。',ap:function(S){S.hl=3;S.labels=true;}}
+      {name:'① 细胞由膜分隔成区室',dur:1200,note:'真核细胞的细胞质被膜分隔成不同的区室。',ap:function(S){S.hl=0;S.labels=false;}},
+      {name:'② 主要膜性细胞器',dur:1400,note:'内膜系统：ER、Golgi、胞内体、溶酶体、植物液泡、分泌泡；其它膜被细胞器：线粒体、叶绿体、细胞核、过氧化物酶体。',ap:function(S){S.hl=1;S.labels=true;}},
+      {name:'③ 各区室环境不同',dur:1400,note:'各区室内环境与酶系不同（如溶酶体酸性、线粒体基质偏碱）。',ap:function(S){S.hl=2;S.labels=true;}},
+      {name:'④ 分室化的意义',dur:1400,note:'分室化使代谢高效、有序、互不干扰。',ap:function(S){S.hl=3;S.labels=true;}}
     ],
     draw:function(ctx,W,H,S){
       ctx.fillStyle='#eef7f0';ctx.fillRect(0,0,W,H);

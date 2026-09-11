@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>COPII出芽</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>COPII出芽</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   function steps(W){var m=20,g=18,n=4,bw=(W-2*m-g*(n-1))/n,by=200,bh=125,arr=[];
@@ -9,10 +9,10 @@
     sub:'Sar-GTP 结合 ER 膜，招募 COPII 蛋白组装、出芽，将货物运往高尔基体。',
     legend:[{c:'#2e9e5b',t:'Sar-GTP'},{c:'#5a7fa8',t:'COPII 蛋白'},{c:'#e8703a',t:'货物'}],
     phases:[
-      {name:'① Sar-GTP 结合 ER 膜',dur:1300,note:'GTP 结合使 Sar 活化并结合到 ER 膜。'},
-      {name:'② COPII 蛋白组装',dur:1400,note:'Sar-GTP 招募 COPII 亚单位(Sec23/24 等)在膜上组装。'},
-      {name:'③ 出芽',dur:1400,note:'膜变形出芽，包裹货物形成 COPII 小泡。'},
-      {name:'④ 与高尔基体融合',dur:1400,note:'小泡脱包被后与高尔基体融合，完成顺行运输。'}
+      {name:'① Sar-GTP 结合 ER 膜',dur:1300,note:'COPII 有被小泡负责 ER→Golgi 运输；Sar1-GTP 结合 ER 膜。'},
+      {name:'② COPII 蛋白组装',dur:1400,note:'COPII 为多亚基蛋白复合物，含 Sec23/24、Sec13/31 等。'},
+      {name:'③ 出芽',dur:1400,note:'衣被蛋白在膜表面聚合，诱导高度弯曲的芽体(highly curved buds)形成。'},
+      {name:'④ 与高尔基体融合',dur:1400,note:'小泡与高尔基体融合。'}
     ],
     draw:function(ctx,W,H,S,fc,phaseI){
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);

@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>N-连接糖基化</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>N-连接糖基化</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   function steps(W){var m=16,g=12,n=4,bw=(W-2*m-g*(n-1))/n,by=190,bh=130,arr=[];
@@ -9,10 +9,10 @@
     sub:'寡糖前体连在磷酸多萜醇上，整体转移到 Asn 残基（Asn-X-Ser/Thr），起始于粗面内质网。',
     legend:[{c:'#8e5bb5',t:'寡糖链'},{c:'#5a7fa8',t:'多萜醇 / 酶'}],
     phases:[
-      {name:'① 寡糖前体装配',dur:1300,note:'在 ER 膜上，寡糖链连到磷酸多萜醇(dolichol)上。'},
-      {name:'② 转移到 Asn 残基',dur:1400,note:'当 Asn-X-Ser/Thr 序列出现，寡糖整体转移到天冬酰胺(Asn)上。'},
-      {name:'③ 修剪与加工',dur:1400,note:'在 ER 与高尔基体对糖链进行修剪、加工。'},
-      {name:'④ 成熟糖蛋白',dur:1300,note:'形成成熟糖蛋白，参与折叠、识别、稳定性等。'}
+      {name:'① 寡糖前体装配',dur:1300,note:'rER 的蛋白质修饰包括糖基化、酰基化(形成脂锚定蛋白的重要方式)、羟基化(胶原蛋白形成羟脯氨酸/羟赖氨酸)。'},
+      {name:'② 转移到 Asn 残基',dur:1400,note:'糖基化伴随多肽合成同时进行，是 ER 最常见的蛋白修饰；在糖基转移酶作用下，将寡糖基由磷酸多萜醇转移到相应氨基酸残基上。'},
+      {name:'③ 修剪与加工',dur:1400,note:'修剪与加工。'},
+      {name:'④ 成熟糖蛋白',dur:1300,note:'成熟糖蛋白。'}
     ],
     draw:function(ctx,W,H,S,fc,phaseI){
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);

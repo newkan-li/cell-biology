@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ER质量监控</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ER质量监控</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   function steps(W){var m=20,g=18,n=4,bw=(W-2*m-g*(n-1))/n,by=200,bh=125,arr=[];
@@ -9,10 +9,10 @@
     sub:'只有正确折叠和装配的蛋白才能离开 ER；错误折叠蛋白经 ERAD→泛素化→26S 蛋白酶体降解。',
     legend:[{c:'#5a7fa8',t:'新生肽'},{c:'#2e9e5b',t:'分子伴侣 Bip'},{c:'#c0392b',t:'泛素 / 蛋白酶体'}],
     phases:[
-      {name:'① 新生肽进入 ER',dur:1300,note:'新生肽进入 ER 腔，开始折叠。'},
-      {name:'② Bip 帮助折叠',dur:1400,note:'分子伴侣 Bip/PDI 帮助折叠、形成二硫键。'},
-      {name:'③ 正确折叠 → 输出',dur:1400,note:'正确折叠、装配的蛋白才被允许运往高尔基体。'},
-      {name:'④ 错误折叠 → ERAD 降解',dur:1500,note:'错误折叠蛋白逆向转运至胞质→泛素化→26S 蛋白酶体降解。'}
+      {name:'① 新生肽进入 ER',dur:1300,note:'新生肽进入 ER。'},
+      {name:'② Bip 帮助折叠',dur:1400,note:'正确折叠：无需帮助，或需分子伴侣帮助。'},
+      {name:'③ 正确折叠 → 输出',dur:1400,note:'错误折叠：被蛋白酶体降解。'},
+      {name:'④ 错误折叠 → ERAD 降解',dur:1500,note:'或形成蛋白聚集体(protein aggregate)；随时间推移被分选处理。'}
     ],
     draw:function(ctx,W,H,S,fc,phaseI){
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);

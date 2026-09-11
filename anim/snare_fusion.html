@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SNARE融合</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SNARE融合</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   function steps(W){var m=20,g=18,n=4,bw=(W-2*m-g*(n-1))/n,by=195,bh=125,arr=[];
@@ -9,10 +9,10 @@
     sub:'Rab 引导小泡到正确靶膜；v-SNARE 与 t-SNARE 配对，驱动膜融合。',
     legend:[{c:'#2e9e5b',t:'v-SNARE（小泡）'},{c:'#e8703a',t:'t-SNARE（靶膜）'},{c:'#1f5c8b',t:'Rab'}],
     phases:[
-      {name:'① 小泡携带 v-SNARE',dur:1200,note:'运输小泡表面有 v-SNARE，并有 Rab-GTP。'},
-      {name:'② 靶膜有 t-SNARE',dur:1200,note:'靶膜上有互补的 t-SNARE 和 Rab 效应器。'},
-      {name:'③ 配对（反式 SNARE）',dur:1400,note:'Rab 引导停靠；v-SNARE 与 t-SNARE 配对形成反式 SNARE 复合物。'},
-      {name:'④ 膜融合',dur:1400,note:'SNARE 缠绕拉近两膜，驱动融合，内容物释放。'}
+      {name:'① 小泡携带 v-SNARE',dur:1200,note:'Rab 小 G 蛋白控制转运小泡在靶膜的识别、锚定、停靠(docking)。'},
+      {name:'② 靶膜有 t-SNARE',dur:1200,note:'v-SNARE/t-SNARE 蛋白的配对结合介导运输小泡和靶膜的进一步识别。'},
+      {name:'③ 配对（反式 SNARE）',dur:1400,note:'v-SNARE 与 t-SNARE 互补配对(反式 SNARE)。'},
+      {name:'④ 膜融合',dur:1400,note:'融合(fusion)；NSF+SNAP 水解 ATP 使 SNARE 复合体解离。'}
     ],
     draw:function(ctx,W,H,S,fc,phaseI){
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);

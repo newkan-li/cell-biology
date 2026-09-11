@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>核孔复合体结构</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>核孔复合体结构</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   AnimKit.mount({
@@ -8,10 +8,10 @@
     legend:[{c:'#5a7fa8',t:'NPC 结构蛋白'},{c:'#2e9e5b',t:'小分子'},{c:'#e8703a',t:'大分子货物'}],
     init:function(S){S.hl=0;S.t=0;},
     phases:[
-      {name:'① 核孔复合体位于核膜上',dur:1200,note:'内外核膜融合形成核孔，核孔复合体镶嵌其中。',ap:function(S){S.hl=0;}},
-      {name:'② 胞质环 + 辐 + 核质环',dur:1300,note:'胞质环在胞质面、核质环（核篮）在核质面，辐连接并围成中央通道。',ap:function(S){S.hl=1;}},
-      {name:'③ 中央通道',dur:1200,note:'中央通道是物质进出的通道，直径约 9 nm 的水相通道。',ap:function(S){S.hl=2;}},
-      {name:'④ 物质运输',dur:1500,note:'小分子自由扩散通过；大分子需核定位信号(NLS)与 importin 主动运输。',ap:function(S){S.hl=3;}}
+      {name:'① 核孔复合体位于核膜上',dur:1200,note:'内外核膜局部融合形成核孔，核孔复合体(NPC)镶嵌其中；核孔直径 80–120 nm。',ap:function(S){S.hl=0;}},
+      {name:'② 胞质环 + 辐 + 核质环',dur:1300,note:'胞质环 + 辐 + 核质环(核篮)；一个哺乳动物核膜上有 3000–4000 个核孔。',ap:function(S){S.hl=1;}},
+      {name:'③ 中央通道',dur:1200,note:'中央通道。',ap:function(S){S.hl=2;}},
+      {name:'④ 物质运输',dur:1500,note:'小分子自由扩散；大分子经 NLS/importin 主动运输；主要由核孔蛋白(nucleoporin，如 gp210、p62)特定排布而成。',ap:function(S){S.hl=3;}}
     ],
     update:function(S,e){S.t=(S.t+0.012*e*3)%1;},
     draw:function(ctx,W,H,S){

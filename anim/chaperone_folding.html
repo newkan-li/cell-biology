@@ -1,5 +1,5 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>分子伴侣折叠</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
-<script src="anim.js?v=20260911d"></script>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>分子伴侣折叠</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
 <script>
 (function(){
   function steps(W){var m=16,g=14,n=4,bw=(W-2*m-g*(n-1))/n,by=200,bh=130,arr=[];
@@ -9,10 +9,10 @@
     sub:'分子伴侣（如 Bip/Hsp70）识别并结合新生肽，帮助其正确折叠、防止聚集。',
     legend:[{c:'#5a7fa8',t:'新生肽'},{c:'#2e9e5b',t:'分子伴侣'}],
     phases:[
-      {name:'① 新生肽（未折叠）',dur:1300,note:'新生肽链暴露疏水区，易错误折叠或聚集。'},
-      {name:'② 分子伴侣结合',dur:1300,note:'分子伴侣(Bip/Hsp70)识别并结合暴露的疏水区。'},
-      {name:'③ 帮助折叠',dur:1500,note:'在隔离环境中帮助肽链折叠，反复结合/释放。'},
-      {name:'④ 释放（正确构象）',dur:1300,note:'折叠完成后释放；最终三维构象仍由氨基酸序列决定。'}
+      {name:'① 新生肽（未折叠）',dur:1300,note:'ER 功能③：新生多肽的折叠(folding)与装配(assembly)。'},
+      {name:'② 分子伴侣结合',dur:1300,note:'分子间/分子内二硫键(2Cys-SH→Cys-S-S-Cys)在 ER 腔中形成(而非胞质)，帮助稳定许多蛋白的三级和四级结构。'},
+      {name:'③ 帮助折叠',dur:1500,note:'许多分泌蛋白和膜蛋白由 2 个或多个多肽/亚基组成多聚体蛋白，它们都在 ER 中装配；亚基数量与相对位置决定四级结构。'},
+      {name:'④ 释放（正确构象）',dur:1300,note:'正确折叠的蛋白输出。'}
     ],
     draw:function(ctx,W,H,S,fc,phaseI){
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
