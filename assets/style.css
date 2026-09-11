@@ -187,6 +187,8 @@ html[data-theme="sepia"] .tb-gaps{background:#f6ecd2;border-color:#e6d3a3}
 .fc-catrow{margin:3px 0 3px 14px}
 .fc-go{border:1px solid var(--line);background:#fff;color:var(--blue);border-radius:14px;padding:2px 10px;font-size:12.5px;cursor:pointer;text-align:left;font-family:inherit}
 .fc-go:hover{background:#e7eef6}
+.fc-pdf{border:1px solid #e0b4a8;background:#fff;color:var(--acc);border-radius:14px;padding:2px 10px;font-size:12.5px;cursor:pointer;font-family:inherit}
+.fc-pdf:hover{background:#fdecea}
 html[data-theme="dark"] .fc-go{background:#1f262e;color:#7cc0ef}
 html[data-theme="sepia"] .fc-go{background:#faf3e0}
 .fc-chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}

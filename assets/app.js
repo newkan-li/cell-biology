@@ -650,8 +650,8 @@
     return P.join("");
   }
 
-  function printDoc(bodyHtml, title) {
-    var html = '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>' + esc(title) + '</title><style>' + PRINT_CSS + '</style></head><body>' + bodyHtml + '</body></html>';
+  function printDoc(bodyHtml, title, css) {
+    var html = '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>' + esc(title) + '</title><style>' + (css || PRINT_CSS) + '</style></head><body>' + bodyHtml + '</body></html>';
     var iframe = document.createElement("iframe");
     iframe.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;";
     document.body.appendChild(iframe);
@@ -674,6 +674,47 @@
     var P = ['<h1>细胞生物学 · 全部章节（题目与我的作答）</h1>', '<p class="meta">导出时间：' + esc(new Date().toLocaleString("zh-CN")) + '</p>'];
     M.forEach(function (m) { var ch = window.CHAPTERS[m.id]; if (ch) P.push(buildChapterDoc(m.id, ch)); });
     printDoc(P.join(""), "细胞生物学 全部题目与作答");
+  }
+
+  /* ================= 闪卡 PDF 导出（按章） ================= */
+  var CARDS_CSS =
+    "body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;color:#111;font-size:12px;line-height:1.6;margin:0}" +
+    "h1{font-size:20px;color:#1f5c8b;border-bottom:2px solid #1f5c8b;padding-bottom:6px;margin:0 0 6px}" +
+    "h2{font-size:15px;color:#7a2a24;border-left:5px solid #c0392b;padding-left:8px;margin:16px 0 8px;page-break-after:avoid}" +
+    ".meta{color:#666;font-size:11px;margin:4px 0 12px}" +
+    ".fc{padding:5px 10px;margin:5px 0;page-break-inside:avoid;border-bottom:1px dashed #ddd}" +
+    ".fcn{color:#1f5c8b;font-weight:700}" +
+    ".fcq{font-weight:700;color:#111}" +
+    ".fca{color:#0a6b2e;margin-top:2px}" +
+    ".fcm{color:#9a6b00;font-size:11px;margin-top:2px}" +
+    "@media print{@page{size:A4;margin:14mm}}";
+
+  function buildCardsDoc(cid, ch) {
+    var cards = buildCards().filter(function (c) { return c.ch === cid; });
+    var byMod = {};
+    cards.forEach(function (c) { var k = (c.mod == null ? "z" : c.mod); (byMod[k] = byMod[k] || []).push(c); });
+    var P = ['<h1>' + esc(ch.title) + ' · 闪卡</h1>',
+      '<p class="meta">共 ' + cards.length + ' 张 · 导出时间：' + esc(new Date().toLocaleString("zh-CN")) + ' · 数据存本机</p>'];
+    Object.keys(byMod).sort(function (a, b) { return (a === "z" ? 99 : a) - (b === "z" ? 99 : b); }).forEach(function (mi) {
+      var arr = byMod[mi];
+      P.push('<h2>' + esc(arr[0].modName || "其他") + "（" + arr.length + "）</h2>");
+      arr.forEach(function (c, i) {
+        var back = String(c.back || "").replace(/<img[^>]*>/g, "");
+        P.push('<div class="fc"><div class="fcq"><span class="fcn">' + (i + 1) + ".</span> " + esc(c.front) +
+          '</div><div class="fca">' + back + "</div></div>");
+      });
+    });
+    return P.join("");
+  }
+  function exportCardsPDF(cid) {
+    var ch = window.CHAPTERS[cid]; if (!ch) return;
+    printDoc(buildCardsDoc(cid, ch), ch.title + " 闪卡", CARDS_CSS);
+  }
+  function exportAllCardsPDF() {
+    var M = window.MANIFEST || [];
+    var P = ['<h1>细胞生物学 · 全部闪卡</h1>', '<p class="meta">导出时间：' + esc(new Date().toLocaleString("zh-CN")) + '</p>'];
+    M.forEach(function (m) { var ch = window.CHAPTERS[m.id]; if (ch) P.push(buildCardsDoc(m.id, ch)); });
+    printDoc(P.join(""), "细胞生物学 全部闪卡", CARDS_CSS);
   }
 
   /* ================= chapter page ================= */
@@ -1040,11 +1081,13 @@
         cat.total++;
         if (c.mod != null) { var mm = cat.mods[c.mod] = cat.mods[c.mod] || { name: c.modName || ("模块" + c.mod), count: 0 }; mm.count++; }
       });
-      var ch2 = '<div class="fc-catbox"><div class="fc-cathead">📂 分类学习（点「学这组」只练该章/该主题）</div>';
+      var ch2 = '<div class="fc-catbox"><div class="fc-cathead">📂 分类学习（点「学这组」只练该章/该主题） ' +
+        '<button class="fc-pdf" data-ch="">🖨 导出全部闪卡PDF</button></div>';
       Object.keys(cats).sort().forEach(function (cid) {
         var cat = cats[cid];
         ch2 += '<details class="fc-cat"><summary>' + esc(cat.name) + ' <span class="fc-cnt">' + cat.total + ' 张</span></summary>' +
-          '<div class="fc-catrow"><button class="fc-go" data-ch="' + cid + '" data-mod="">学整章（' + cat.total + '）</button></div>';
+          '<div class="fc-catrow"><button class="fc-go" data-ch="' + cid + '" data-mod="">学整章（' + cat.total + '）</button> ' +
+          '<button class="fc-pdf" data-ch="' + cid + '">🖨 导出本章PDF</button></div>';
         Object.keys(cat.mods).sort(function (a, b) { return a - b; }).forEach(function (mi) {
           var mm = cat.mods[mi];
           ch2 += '<div class="fc-catrow"><button class="fc-go" data-ch="' + cid + '" data-mod="' + mi + '">' + esc(mm.name) + '（' + mm.count + '）</button></div>';
@@ -1059,6 +1102,9 @@
           sync(); build();
           host.scrollIntoView({ behavior: "smooth" });
         };
+      });
+      Array.prototype.forEach.call(catsEl.querySelectorAll(".fc-pdf"), function (b) {
+        b.onclick = function () { if (b.dataset.ch) exportCardsPDF(b.dataset.ch); else exportAllCardsPDF(); };
       });
     }
     function sync() {
