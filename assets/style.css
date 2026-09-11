@@ -259,6 +259,8 @@ html[data-theme="sepia"] .confnote{background:#faf3e0}
 .dcell{flex:1 1 120px;min-width:110px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px;text-align:center}
 .dcell b{display:block;font-size:20px;color:var(--blue)}
 .dcell span{font-size:12px;color:var(--sub)}
+.dcell a{display:block;text-decoration:none;color:inherit}
+.dcell a:hover b{text-decoration:underline}
 .planrow{margin:6px 0;font-size:13.5px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .planrow input[type=date],.planrow input[type=number]{padding:4px 8px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:#fff;color:var(--ink);font-family:inherit}
 .pnum{width:60px}

@@ -1402,6 +1402,7 @@
     var host = document.getElementById("dashbody"); if (!host) return;
     var due = srsDue().length, task = taskState(), streak = streakCount();
     var confN = Object.keys(confusedAll()).length;
+    var fcDue = buildCards().filter(function (c) { var s = srsGet(c.id); return s && s.due <= Date.now(); }).length;
     var total = 0, mastered = 0;
     (window.MANIFEST || []).forEach(function (m) {
       var ch = window.CHAPTERS[m.id]; if (!ch) return;
@@ -1413,11 +1414,12 @@
       });
     });
     host.innerHTML = '<div class="dash">' +
-      '<div class="dcell"><b>' + due + '</b><span>待复习</span></div>' +
-      '<div class="dcell"><b>' + streak + '</b><span>连续打卡（天）</span></div>' +
+      '<div class="dcell"><a href="review.html"><b>' + due + '</b><span>待复习</span></a></div>' +
+      '<div class="dcell"><a href="flashcards.html?due=1"><b>' + fcDue + '</b><span>闪卡到期</span></a></div>' +
+      '<div class="dcell"><a href="flashcards.html"><b>' + streak + '</b><span>连续打卡（天）</span></a></div>' +
       '<div class="dcell"><b>' + (task.read || 0) + '</b><span>今日已读</span></div>' +
       '<div class="dcell"><b>' + (task.practice || 0) + '</b><span>今日练习</span></div>' +
-      '<div class="dcell"><b>' + confN + '</b><span>待问/不懂</span></div>' +
+      '<div class="dcell"><a href="review.html"><b>' + confN + '</b><span>待问/不懂</span></a></div>' +
       '<div class="dcell"><b>' + mastered + "/" + total + '</b><span>已掌握知识点</span></div>' +
       '</div>';
   }
