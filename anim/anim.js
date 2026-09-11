@@ -50,8 +50,7 @@ window.AnimKit = (function () {
     var wrap = document.createElement('div'); wrap.className = 'a-wrap';
     var html = '<h1 class="a-title">' + cfg.title + '</h1><p class="a-sub">' + (cfg.sub || '') + '</p>' +
       '<div class="a-stage"><canvas class="a-canvas"></canvas></div>' +
-      '<div class="a-bar"><button data-act="play">⏸ 暂停</button>' +
-      '<button class="ghost" data-act="step">⏭ 单步</button>' +
+      '<div class="a-bar"><button data-act="step">⏭ 单步</button>' +
       '<button class="ghost" data-act="reset">↺ 重置</button>' +
       '<button class="ghost" data-act="audio">🔊 语音：关</button>' +
       '<button class="ghost" data-act="title">🔈 本页讲解</button>' +
@@ -72,7 +71,7 @@ window.AnimKit = (function () {
     }
     window.addEventListener('resize', resize);
 
-    var S = {}, phaseI = 0, phaseT = 0, playing = true, speed = 1, fc = 0;
+    var S = {}, phaseI = 0, speed = 1, fc = 0;
     var noteEl = wrap.querySelector('[data-note]');
     var dbg = document.createElement('span'); dbg.style.display = 'none'; dbg.setAttribute('data-frames', '1'); document.body.appendChild(dbg);
     var animId = location.pathname.split('/').pop().replace('.html', '');
@@ -83,23 +82,18 @@ window.AnimKit = (function () {
       if (audioOn) playAudio('audio/' + animId + '_' + i + '.mp3');
       noteEl.innerHTML = '阶段：<b>' + cfg.phases[i].name + '</b>' + (cfg.phases[i].note ? ' —— ' + cfg.phases[i].note : '');
     }
-    function reset() { S = {}; if (cfg.init) cfg.init(S); phaseI = 0; phaseT = 0; applyPhase(0); }
+    function reset() { S = {}; if (cfg.init) cfg.init(S); phaseI = 0; applyPhase(0); }
     var last = performance.now();
     function tick() {
       var now = performance.now(), dt = now - last; last = now; if (dt > 200) dt = 33; fc++;
       dbg.textContent = 'f=' + fc + ' p=' + phaseI;
-      if (playing) {
-        phaseT += dt * speed / cfg.phases[phaseI].dur;
-        if (cfg.step) cfg.step(S, dt * speed);
-        if (phaseT >= 1) { phaseT = 0; phaseI = (phaseI + 1) % cfg.phases.length; if (phaseI === 0 && cfg.onLoop) cfg.onLoop(S); applyPhase(phaseI); }
-      }
+      if (cfg.step) cfg.step(S, dt * speed);
       if (cfg.update) cfg.update(S, Math.min(1, dt * speed / 16 * 0.18));
       ctx.clearRect(0, 0, W, H);
       if (cfg.draw) cfg.draw(ctx, W, H, S, fc, phaseI);
     }
-    wrap.querySelector('[data-act=play]').onclick = function () { playing = !playing; this.textContent = playing ? '⏸ 暂停' : '▶ 播放'; };
-    wrap.querySelector('[data-act=step]').onclick = function () { playing = false; wrap.querySelector('[data-act=play]').textContent = '▶ 播放'; phaseT = 0; phaseI = (phaseI + 1) % cfg.phases.length; if (phaseI === 0 && cfg.onLoop) cfg.onLoop(S); applyPhase(phaseI); };
-    wrap.querySelector('[data-act=reset]').onclick = function () { reset(); playing = true; wrap.querySelector('[data-act=play]').textContent = '⏸ 暂停'; };
+    wrap.querySelector('[data-act=step]').onclick = function () { phaseI = (phaseI + 1) % cfg.phases.length; if (phaseI === 0 && cfg.onLoop) cfg.onLoop(S); applyPhase(phaseI); };
+    wrap.querySelector('[data-act=reset]').onclick = function () { reset(); };
     Array.prototype.forEach.call(wrap.querySelectorAll('[data-act=speed] button'), function (b) {
       b.onclick = function () { speed = parseFloat(b.dataset.s);
         Array.prototype.forEach.call(wrap.querySelectorAll('[data-act=speed] button'), function (x) { x.classList.remove('on'); });
