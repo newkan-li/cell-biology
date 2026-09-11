@@ -1102,19 +1102,29 @@
       }).join("") + "</div>" +
       '<div class="ex-row"><b>题量：</b><select id="exCount"><option>10</option><option selected>20</option><option>30</option><option>50</option></select>' +
       '<b>时间：</b><select id="exMin"><option value="15">15 分钟</option><option value="30" selected>30 分钟</option><option value="60">60 分钟</option><option value="120">120 分钟</option></select>' +
+      '<button id="exFull" class="navbtn" style="width:auto;margin:0;background:#c0392b;border-color:#c0392b">📄 802 整套模拟</button>' +
       '<button id="exStart" class="navbtn" style="width:auto;margin:0">开始测验</button></div>';
     var timer = null, remain = 0, current = [];
     function stopTimer() { if (timer) { clearInterval(timer); timer = null; } }
     function fmt(s) { var m = Math.floor(s / 60), x = s % 60; return (m < 10 ? "0" : "") + m + ":" + (x < 10 ? "0" : "") + x; }
-    function start() {
+    function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+    function start(plan) {
       var chs = Array.prototype.map.call(ctl.querySelectorAll(".ex-ch:checked"), function (x) { return x.value; });
       var tys = Array.prototype.map.call(ctl.querySelectorAll(".ex-ty:checked"), function (x) { return x.value; });
-      if (!chs.length || !tys.length) { alert("请至少选择一个章节和一个题型。"); return; }
+      if (!plan && (!chs.length || !tys.length)) { alert("请至少选择一个章节和一个题型。"); return; }
       var n = parseInt(document.getElementById("exCount").value, 10);
       var mins = parseInt(document.getElementById("exMin").value, 10);
-      current = pool.filter(function (it) { return chs.indexOf(it.cid) >= 0 && tys.indexOf(it.kind) >= 0; });
-      for (var i = current.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = current[i]; current[i] = current[j]; current[j] = t; }
-      current = current.slice(0, n);
+      var cand = pool.filter(function (it) {
+        return (plan || chs.indexOf(it.cid) >= 0) && (plan || tys.indexOf(it.kind) >= 0);
+      });
+      if (plan) {
+        mins = plan.minutes || mins; current = [];
+        Object.keys(plan.counts).forEach(function (k) {
+          current = current.concat(shuffle(cand.filter(function (it) { return it.kind === k; })).slice(0, plan.counts[k]));
+        });
+      } else {
+        shuffle(cand); current = cand.slice(0, n);
+      }
       host.innerHTML = "";
       current.forEach(function (it, i) {
         var wrap = el("div", "ex-item");
@@ -1156,7 +1166,10 @@
       var res = el("div", "ex-result", h); host.appendChild(res);
       res.scrollIntoView({ behavior: "smooth" });
     }
-    document.getElementById("exStart").onclick = start;
+    document.getElementById("exStart").onclick = function () { start(); };
+    document.getElementById("exFull").onclick = function () {
+      start({ minutes: 180, counts: { term: 5, fill: 10, mcq: 15, judge: 10, short: 3, calc: 2 } });
+    };
   }
 
   /* ================= review page (spaced repetition) ================= */

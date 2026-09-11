@@ -7,8 +7,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>姜益泉《细胞生物学辅导与习题集》可搜索题库</title>
-<link rel="stylesheet" href="assets/style.css?v=20260912b">
-<script src="assets/theme.js?v=20260912b"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260912c">
+<script src="assets/theme.js?v=20260912c"></script>
 <style>
   .jsearch{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
   .jsearch input{flex:1;min-width:240px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;font-size:15px;background:var(--bg);color:var(--ink)}
@@ -43,12 +43,25 @@
     <button id="btnBrowse" class="ghost">浏览全部</button>
   </div>
   <div class="jchap" id="chapnav"></div>
+  <div class="jchap" id="papernav">
+    <b class="jhint">真题试卷：</b>
+    <a href="jiangyiquan.html?q=南京师范大学2010">南京师大2010</a>
+    <a href="jiangyiquan.html?q=北京师范大学2010">北京师大2010</a>
+    <a href="jiangyiquan.html?q=华东师范大学2010">华东师大2010</a>
+    <a href="jiangyiquan.html?q=浙江大学2010">浙江大学2010</a>
+    <a href="jiangyiquan.html?q=武汉大学2010年细胞生物学硕士学位研究生入学考试试题（A卷）">武大2010(A)</a>
+    <a href="jiangyiquan.html?q=武汉大学2010年细胞生物学硕士学位研究生入学考试试题（B卷）">武大2010(B)</a>
+    <a href="jiangyiquan.html?q=武汉大学2011年细胞生物学硕士学位研究生入学考试试题">武大2011</a>
+    <a href="jiangyiquan.html?q=武汉大学2012年细胞生物学硕士学位研究生入学考试试题（A卷）">武大2012(A)</a>
+    <a href="jiangyiquan.html?q=武汉大学2012年细胞生物学硕士学位研究生入学考试试题（B卷）">武大2012(B)</a>
+    <a href="jiangyiquan.html?q=武汉大学2013年细胞生物学博士学位研究生入学考试试题">武大2013(博)</a>
+  </div>
   <div id="status" class="jhint"></div>
   <div id="results"></div>
   <div id="browse" style="display:none"></div>
   <footer>仅供个人学习使用 · OCR 由本地工具生成</footer>
 </div>
-<script src="data/jiangyiquan.js?v=20260912b"></script>
+<script src="data/jiangyiquan.js?v=20260912c"></script>
 <script>
 (function(){
   var J = window.JYQ || {pages:[],chapters:[]};
