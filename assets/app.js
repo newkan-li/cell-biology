@@ -652,9 +652,12 @@
     }
     return null;
   }
-  function renderCheckpoint(cid, kp, qByKp) {
-    var pick = pickCheckpoint(qByKp, kp); if (!pick) return null;
-    var q = pick.q, kind = pick.kind;
+  function renderCheckpoint(cid, kp, qByKp, slide) {
+    var pick = pickCheckpoint(qByKp, kp);
+    var q, kind;
+    if (pick) { q = pick.q; kind = pick.kind; }
+    else if (slide && slide.check) { q = slide.check; kind = "mcq"; }
+    else return null;
     var box = el("div", "checkpoint");
     box.appendChild(el("div", "cp-h", "🎯 本页自测（选做，不计入已读）"));
     var done = false;
@@ -801,7 +804,7 @@
           fb.innerHTML = '<div class="fn-h">🔍 图注解读</div><p>' + esc(s.fig).replace(/\n/g, "<br>") + "</p>";
           card.appendChild(fb);
         }
-        var cp = renderCheckpoint(cid, key, qByKp);
+        var cp = renderCheckpoint(cid, key, qByKp, s);
         if (cp) card.appendChild(cp);
         if (s.anim) {
           var aw = el("div", "animwrap");
