@@ -146,3 +146,79 @@ canvas.hw.tall{height:230px}
 .gitem .gd{font-size:13px;color:var(--ink);margin-top:3px;line-height:1.6}
 
 @media print{aside,.navbtns,.hwbar,.self,.causes,.no-print{display:none!important}.layout{display:block}main{max-width:none;padding:0}details.sol{display:block!important;border:none;padding:2px 0}details.sol summary{list-style:none}}
+
+/* ================= 主题选择器 ================= */
+#themebar{position:fixed;top:10px;right:12px;z-index:1500;display:flex;gap:2px;padding:3px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.88);backdrop-filter:blur(6px);box-shadow:0 1px 4px rgba(20,30,60,.08)}
+#themebar button{border:none;background:transparent;color:var(--sub);font-size:12.5px;padding:3px 10px;border-radius:16px;cursor:pointer;font-family:inherit}
+#themebar button:hover{color:var(--blue)}
+#themebar button.on{background:var(--blue);color:#fff}
+html[data-theme="dark"] #themebar{background:rgba(31,38,46,.92)}
+html[data-theme="sepia"] #themebar{background:rgba(250,243,224,.94)}
+
+/* ================= 护眼（米黄） ================= */
+html[data-theme="sepia"]{--ink:#3b3226;--sub:#6f6047;--acc:#a2482a;--blue:#8a6431;--line:#e2d6bb;--bg:#efe6cf;--ok:#4a7a3a;--warn:#9a6b00}
+html[data-theme="sepia"] body{background:#f4ecd6;color:#3b3226}
+html[data-theme="sepia"] .card,html[data-theme="sepia"] .slide,html[data-theme="sepia"] .q,html[data-theme="sepia"] .statsbox,html[data-theme="sepia"] .wb-entry,html[data-theme="sepia"] .gitem,html[data-theme="sepia"] details.sol,html[data-theme="sepia"] .navbtn,html[data-theme="sepia"] .self button,html[data-theme="sepia"] .causes button,html[data-theme="sepia"] .hwbar button,html[data-theme="sepia"] input.ans,html[data-theme="sepia"] textarea.ta,html[data-theme="sepia"] .slide .donebtn,html[data-theme="sepia"] .mopt{background:#faf3e0;color:#3b3226}
+html[data-theme="sepia"] .slide .body img{background:#faf3e0;border-color:#e2d6bb}
+html[data-theme="sepia"] .notice{background:#f3e8cf;border-color:#e2d0a8;color:#4a3f2c}
+html[data-theme="sepia"] .mopt:hover,html[data-theme="sepia"] aside a:hover,html[data-theme="sepia"] .navbtn:hover{background:#ece0c4}
+html[data-theme="sepia"] aside a.act{background:#e6d8b8}
+html[data-theme="sepia"] .mres,html[data-theme="sepia"] details.sol .ansbox,html[data-theme="sepia"] .pill{background:#efe4c9;border-color:#ddcda6;color:#6b4f24}
+html[data-theme="sepia"] .tbl th{background:#6b4f24;color:#f7efdd;border-color:#d8c8a4}
+html[data-theme="sepia"] .tbl td{border-color:#d8c8a4}
+html[data-theme="sepia"] .tbl tr:nth-child(even) td{background:#f2e8d2}
+html[data-theme="sepia"] .slide .sh{border-bottom-color:#e2d6bb}
+html[data-theme="sepia"] .animwrap{border-top-color:#e2d6bb}
+html[data-theme="sepia"] .points{background:#f6ecd2;border-color:#e6d3a3}
+html[data-theme="sepia"] .fignote{background:#eaf0da;border-color:#cddcae}
+html[data-theme="sepia"] .fignote p{color:#3a4526}
+html[data-theme="sepia"] .fignote .fn-h{color:#4a6a2a}
+html[data-theme="sepia"] .gitem .gch{background:#8a6431}
+html[data-theme="sepia"] .badge{background:#f2e8d2;border-color:#ddcda6;color:#6b4f24}
+html[data-theme="sepia"] .prog{background:#e6dcc2}
+html[data-theme="sepia"] canvas.hw{background:#fbf5e6;border-color:#cdbb95}
+html[data-theme="sepia"] .hero{background:linear-gradient(135deg,#6b4f24,#8a7a3a)}
+html[data-theme="sepia"] .mopt.sel{background:#6b4f24;color:#fff;border-color:#6b4f24}
+html[data-theme="sepia"] h3{color:#8a3a20}
+
+/* ================= 深色 ================= */
+html[data-theme="dark"]{--ink:#d7dee8;--sub:#93a1b3;--acc:#e0715c;--blue:#6fb3e0;--line:#333d49;--bg:#181d24;--ok:#5cc07a;--warn:#e0b050}
+html[data-theme="dark"] body{background:#12161b;color:#d7dee8}
+html[data-theme="dark"] .card,html[data-theme="dark"] .slide,html[data-theme="dark"] .q,html[data-theme="dark"] .statsbox,html[data-theme="dark"] .wb-entry,html[data-theme="dark"] .gitem,html[data-theme="dark"] details.sol,html[data-theme="dark"] .navbtn,html[data-theme="dark"] .self button,html[data-theme="dark"] .causes button,html[data-theme="dark"] .hwbar button,html[data-theme="dark"] input.ans,html[data-theme="dark"] textarea.ta,html[data-theme="dark"] .slide .donebtn,html[data-theme="dark"] .mopt{background:#1f262e;color:#d7dee8}
+html[data-theme="dark"] .animframe{background:#1f262e}
+html[data-theme="dark"] .slide .body img{background:#1f262e;border-color:#333d49}
+html[data-theme="dark"] .notice{background:#1e2730;border-color:#2f3d4c;color:#b9c6d6}
+html[data-theme="dark"] .mopt:hover,html[data-theme="dark"] aside a:hover,html[data-theme="dark"] .navbtn:hover{background:#2a333d}
+html[data-theme="dark"] aside a.act{background:#2d3a48}
+html[data-theme="dark"] .mres,html[data-theme="dark"] details.sol .ansbox,html[data-theme="dark"] .pill{background:#232c36;border-color:#33404d;color:#b9c6d6}
+html[data-theme="dark"] .tbl th{background:#2b3743;color:#e6edf5;border-color:#3a4756}
+html[data-theme="dark"] .tbl td{border-color:#3a4756}
+html[data-theme="dark"] .tbl tr:nth-child(even) td{background:#1c242c}
+html[data-theme="dark"] .slide .sh{border-bottom-color:#333d49}
+html[data-theme="dark"] .animwrap{border-top-color:#333d49}
+html[data-theme="dark"] .points{background:#2a2618;border-color:#4a4326}
+html[data-theme="dark"] .points li{color:#d8cfa8}
+html[data-theme="dark"] .points .pt-h{color:#e0c060}
+html[data-theme="dark"] .fignote{background:#182a20;border-color:#2c4a38}
+html[data-theme="dark"] .fignote p{color:#a8d8bc}
+html[data-theme="dark"] .fignote .fn-h{color:#6fd09a}
+html[data-theme="dark"] .gitem .gch{background:#2b3743}
+html[data-theme="dark"] .badge{background:#1e2730;border-color:#2f3d4c;color:#7cc0ef}
+html[data-theme="dark"] .prog{background:#232c36}
+html[data-theme="dark"] canvas.hw{background:#1c2229;border-color:#3a4756}
+html[data-theme="dark"] .hero{background:linear-gradient(135deg,#1c3346,#17515c)}
+html[data-theme="dark"] .mopt.sel{background:#2b5a80;color:#fff;border-color:#2b5a80}
+html[data-theme="dark"] .mopt.right{background:#1c3324;color:#8fd8a4}
+html[data-theme="dark"] .mopt.wrong{background:#3a201d;color:#f0a99f}
+html[data-theme="dark"] .mres .ok{color:#8fd8a4}
+html[data-theme="dark"] .mres .no{color:#f0a99f}
+html[data-theme="dark"] input.ans.right{background:#1c3324}
+html[data-theme="dark"] input.ans.wrong{background:#3a201d}
+html[data-theme="dark"] .slide.done{outline-color:#2f6b45}
+html[data-theme="dark"] #lightbox{background:rgba(5,8,12,.94)}
+html[data-theme="dark"] .causes button.on,html[data-theme="dark"] .wb-entry .cause-tag{background:#3a3320;border-color:#6b5d2a;color:#e0c060}
+html[data-theme="dark"] details.sol .kps{color:#e0c060}
+html[data-theme="dark"] .self button.ok{color:#8fd8a4}
+html[data-theme="dark"] .self button.no{color:#f0a99f}
+html[data-theme="dark"] h3{color:#e0907f}
+html[data-theme="dark"] #themebar button.on{color:#0e1318}
