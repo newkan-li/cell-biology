@@ -752,7 +752,7 @@
     HW.init(cid);
     document.title = ch.title + " · 细胞生物学";
     var aside = document.getElementById("sidebar"), main = document.getElementById("main");
-    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
+    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="textbook.html">📚 教材对照表</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
     aside.appendChild(el("div", "grp", "各模块（概念 + 考题）"));
     ch.modules.forEach(function (m) {
       var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a);
@@ -1360,6 +1360,24 @@
     }
   }
 
+  /* ================= textbook cross-reference page ================= */
+  function renderTextbook() {
+    var host = document.getElementById("tbhost"); if (!host) return;
+    var T = window.TEXTBOOK; if (!T) { host.innerHTML = '<p class="empty">数据未加载。</p>'; return; }
+    var html = '<p class="hint">' + esc(T.source) + " ｜ " + esc(T.note) + "</p>";
+    (T.chapters || []).forEach(function (ch) {
+      html += '<div class="tb-chapter"><h3>' + esc(ch.title) + "</h3>" +
+        '<table class="tbl"><thead><tr><th>教材章节（第4版）</th><th>本站模块</th><th>页号</th><th></th></tr></thead><tbody>';
+      (ch.maps || []).forEach(function (m) {
+        var anchor = "s_" + ch.web + "_s" + m.mod + "_0";
+        html += "<tr><td>" + esc(m.tb) + "</td><td>" + esc(m.modName || ("模块" + m.mod)) + "</td><td>" + esc(m.pages) + "</td>" +
+          '<td><a href="' + ch.web + '.html#' + anchor + '">去学习 →</a></td></tr>';
+      });
+      html += "</tbody></table></div>";
+    });
+    host.innerHTML = html;
+  }
+
   /* ================= glossary page ================= */
   function renderGlossary() {
     var data = window.GLOSSARY || [];
@@ -1514,6 +1532,7 @@
     else if (page === "review") renderReview();
     else if (page === "flashcards") renderFlashcards();
     else if (page === "exam") renderExam();
+    else if (page === "textbook") renderTextbook();
   });
 
   window.CELL = {
