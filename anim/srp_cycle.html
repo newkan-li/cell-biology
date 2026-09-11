@@ -1,0 +1,47 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SRP 循环</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'SRP-信号肽循环（信号肽假说）',
+    sub:'SRP 识别信号肽并暂停翻译 → 停泊到 ER 膜上的 SRP 受体 → GTP 水解后 SRP 释放、翻译继续，肽链进入 ER。',
+    legend:[{c:'#f2b950',t:'SRP'},{c:'#8e44ad',t:'核糖体'},{c:'#2e9e5b',t:'信号肽'},{c:'#5a7fa8',t:'SRP 受体'}],
+    init:function(S){S.riboY=.28;S.srp=false;S.docked=false;S.paused=false;S.thread=0;},
+    phases:[
+      {name:'① 信号肽从核糖体露出',dur:1200,note:'新生肽链的信号肽从核糖体露出。',ap:function(S){S.riboY=.28;S.srp=false;S.docked=false;S.paused=false;S.thread=0;}},
+      {name:'② SRP 结合信号肽，翻译暂停',dur:1300,note:'信号识别颗粒(SRP)识别并结合信号肽，使翻译暂停。',ap:function(S){S.srp=true;S.paused=true;}},
+      {name:'③ 停泊到 ER 膜 SRP 受体',dur:1300,note:'SRP-核糖体复合体停泊到 ER 膜上的 SRP 受体（停泊蛋白）。',ap:function(S){S.riboY=.60;S.docked=true;}},
+      {name:'④ GTP 水解，SRP 释放',dur:1300,note:'GTP 水解，SRP 与受体解离，翻译恢复。',ap:function(S){S.srp=false;S.paused=false;}},
+      {name:'⑤ 新生肽进入 ER 腔',dur:1400,note:'肽链经易位子进入 ER 腔，信号肽随后被切除。',ap:function(S){S.thread=1;}}
+    ],
+    update:function(S,e){},
+    draw:function(ctx,W,H,S){
+      var yER=H*.72,cx=W/2;
+      // cytosol / ER
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,W,yER);
+      ctx.fillStyle='#fff7ef';ctx.fillRect(0,yER,W,H-yER);
+      ctx.fillStyle='#ffe9c9';ctx.fillRect(0,yER-16,W,32);
+      AnimKit.label(ctx,'胞质',14,22,'#7a8aa0','13px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'ER 腔',14,H-14,'#7a8aa0','13px "Microsoft YaHei"','left');
+      // SRP receptor on ER
+      AnimKit.roundRect(ctx,cx-30,yER-34,60,68,10);ctx.fillStyle='#5a7fa8';ctx.fill();
+      AnimKit.label(ctx,'SRP 受体',cx,yER+58,'#33465c','12px "Microsoft YaHei"');
+      // ribosome
+      var ry=S.riboY*H;
+      AnimKit.roundRect(ctx,cx-52,ry-40,104,54,18);ctx.fillStyle='#8e44ad';ctx.fill();
+      AnimKit.roundRect(ctx,cx-40,ry-52,80,24,12);ctx.fillStyle='#a569c4';ctx.fill();
+      ctx.strokeStyle='#c9a0dc';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(cx-36,ry-44);ctx.lineTo(cx+36,ry-44);ctx.stroke();
+      AnimKit.label(ctx,'核糖体',cx,ry-60,'#6c3483','12px "Microsoft YaHei"');
+      // mRNA
+      ctx.strokeStyle='#9bb6cc';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx-46,ry+18);ctx.lineTo(cx+46,ry+18);ctx.stroke();
+      // signal peptide
+      if(!S.docked)AnimKit.circle(ctx,cx+52,ry+6,9,'#2e9e5b','S');
+      // SRP
+      if(S.srp){AnimKit.circle(ctx,cx+70,ry+2,16,'#f2b950','SRP');AnimKit.label(ctx,'翻译暂停',cx+70,ry-24,'#c0392b','11.5px "Microsoft YaHei"');}
+      // thread into ER
+      if(S.thread){ctx.strokeStyle='#e8703a';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(cx,ry+14);ctx.lineTo(cx,yER+40);ctx.stroke();AnimKit.circle(ctx,cx,yER+44,7,'#e8703a','');}
+      AnimKit.label(ctx,'信号肽假说：信号肽引导蛋白到 ER',W/2,26,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

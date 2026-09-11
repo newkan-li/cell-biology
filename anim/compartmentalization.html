@@ -1,0 +1,56 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>真核细胞分室化</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  var ORG=[
+    {x:.30,y:.34,r:52,c:'#8e44ad',t:'细胞核'},
+    {x:.62,y:.30,r:40,c:'#3b6fd6',t:'内质网'},
+    {x:.74,y:.58,r:34,c:'#2e9e5b',t:'高尔基体'},
+    {x:.30,y:.66,r:32,c:'#e8703a',t:'溶酶体'},
+    {x:.52,y:.72,r:34,c:'#c0392b',t:'线粒体'},
+    {x:.16,y:.52,r:20,c:'#8d6e63',t:'过氧化物酶体'}
+  ];
+  AnimKit.mount({
+    title:'真核细胞的分室化',
+    sub:'膜把细胞分隔成许多区室（细胞器），各具独特的酶系与内环境，使代谢高效、有序、互不干扰。',
+    legend:[{c:'#8e44ad',t:'核'},{c:'#3b6fd6',t:'ER'},{c:'#2e9e5b',t:'高尔基体'},{c:'#e8703a',t:'溶酶体'},{c:'#c0392b',t:'线粒体'}],
+    init:function(S){S.hl=0;S.labels=false;},
+    phases:[
+      {name:'① 细胞由膜分隔成区室',dur:1200,note:'真核细胞内部被膜分隔成多个相对独立的区室。',ap:function(S){S.hl=0;S.labels=false;}},
+      {name:'② 主要膜性细胞器',dur:1400,note:'细胞核、内质网、高尔基体、溶酶体、线粒体、过氧化物酶体等各为独立区室。',ap:function(S){S.hl=1;S.labels=true;}},
+      {name:'③ 各区室环境不同',dur:1400,note:'如溶酶体腔呈酸性(pH≈5)、线粒体基质偏碱；各区室含不同酶系。',ap:function(S){S.hl=2;S.labels=true;}},
+      {name:'④ 分室化的意义',dur:1400,note:'提高代谢效率、隔离有害反应、保证各种反应互不干扰、有序进行。',ap:function(S){S.hl=3;S.labels=true;}}
+    ],
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#eef7f0';ctx.fillRect(0,0,W,H);
+      var cx=W/2,cy=H/2;
+      ctx.beginPath();ctx.ellipse(cx,cy,W*.44,H*.44,0,0,7);ctx.fillStyle='#fbfefc';ctx.fill();
+      ctx.strokeStyle='#7fc79a';ctx.lineWidth=5;ctx.stroke();
+      AnimKit.label(ctx,'细胞膜',cx-W*.44+4,cy-H*.44+2,'#4f9e6d','12px "Microsoft YaHei"','left');
+      ORG.forEach(function(o,i){
+        var on=(S.hl===0)||(S.hl>=1);
+        ctx.globalAlpha=on?1:.25;
+        var x=o.x*W,y=o.y*H;
+        if(i===1){ // ER wavy
+          ctx.strokeStyle=o.c;ctx.lineWidth=6;ctx.beginPath();
+          for(var k=0;k<=12;k++){var t=k/12;var xx=x-o.r+t*o.r*2;var yy=y+Math.sin(t*6.28*1.5)*10;if(k===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}
+          ctx.stroke();
+          ctx.beginPath();ctx.arc(x-o.r,y,5,0,7);ctx.fillStyle=o.c;ctx.fill();ctx.beginPath();ctx.arc(x+o.r,y,5,0,7);ctx.fill();
+        } else if(i===2){ // golgi stacks
+          for(var g=0;g<3;g++){AnimKit.roundRect(ctx,x-o.r,y-8+g*10,o.r*2,7,3);ctx.fillStyle=o.c;ctx.fill();}
+        } else {
+          ctx.beginPath();ctx.arc(x,y,o.r,0,7);ctx.fillStyle=o.c;ctx.fill();
+          if(i===5)ctx.beginPath();ctx.arc(x,y,o.r*.5,0,7),ctx.fillStyle='#fff',ctx.fill();
+        }
+        if(S.labels)AnimKit.label(ctx,o.t,x,y-(i===2?o.r+10:o.r)-4,'#33465c','12px "Microsoft YaHei"');
+        ctx.globalAlpha=1;
+      });
+      if(S.hl===2){
+        AnimKit.label(ctx,'溶酶体 pH≈5',ORG[3].x*W,ORG[3].y*H+ORG[3].r+18,'#e8703a','11.5px "Microsoft YaHei"');
+        AnimKit.label(ctx,'线粒体基质偏碱',ORG[4].x*W,ORG[4].y*H+ORG[4].r+18,'#c0392b','11.5px "Microsoft YaHei"');
+      }
+      if(S.hl===3)AnimKit.label(ctx,'分室化 → 高效 · 有序 · 互不干扰',cx,H-16,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

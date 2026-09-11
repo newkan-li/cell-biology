@@ -1,0 +1,52 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>跨膜蛋白的形成</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'起始/停止转移序列与跨膜蛋白拓扑',
+    sub:'起始转移序列（信号肽）决定穿膜，停止转移序列（疏水锚）决定停在膜上，二者组合形成单次或多次跨膜蛋白。',
+    legend:[{c:'#2e9e5b',t:'起始转移序列'},{c:'#e8703a',t:'停止转移序列'},{c:'#5a7fa8',t:'易位子'}],
+    init:function(S){S.mode=0;},
+    phases:[
+      {name:'① 起始转移序列引导穿膜',dur:1300,note:'起始转移序列（信号肽）引导肽链进入 ER 腔。',ap:function(S){S.mode=0;}},
+      {name:'② 停止转移序列锚定在膜上',dur:1300,note:'疏水的停止转移序列留在脂双层中，成为跨膜锚。',ap:function(S){S.mode=1;}},
+      {name:'③ 单次跨膜蛋白',dur:1300,note:'一个起始 + 一个停止序列 → 单次跨膜蛋白（N 端在腔内，C 端在胞质）。',ap:function(S){S.mode=2;}},
+      {name:'④ 多次跨膜蛋白',dur:1400,note:'多个起始/停止序列交替 → 多次跨膜蛋白（如 7 次跨膜受体）。',ap:function(S){S.mode=3;}}
+    ],
+    draw:function(ctx,W,H,S){
+      var m=AnimKit.membrane(ctx,W,H,{gap:110,outLabel:'胞质',inLabel:'ER 腔'});
+      var cx=W/2,yT=m.yTop,yB=m.yBot;
+      // translocon
+      AnimKit.roundRect(ctx,cx-40,yT-20,80,(yB-yT)+40,12);ctx.fillStyle='#5a7fa8';ctx.fill();
+      AnimKit.roundRect(ctx,cx-12,yT-20,24,(yB-yT)+40,6);ctx.fillStyle='#eaf3fb';ctx.fill();
+      AnimKit.label(ctx,'易位子',cx,yB+50,'#33465c','12px "Microsoft YaHei"');
+      function chain(pts,col,w){ctx.strokeStyle=col;ctx.lineWidth=w;ctx.beginPath();
+        pts.forEach(function(p,i){if(i===0)ctx.moveTo(p[0],p[1]);else ctx.lineTo(p[0],p[1]);});ctx.stroke();}
+      var yTop=40,yBot=H-40;
+      if(S.mode===0){
+        chain([[cx,yTop],[cx,yT],[cx,yB],[cx,yBot]],'#2e9e5b',5);
+        AnimKit.label(ctx,'N',cx+12,yTop,'#2e9e5b','bold 12px Arial');AnimKit.label(ctx,'C',cx+12,yBot,'#33465c','bold 12px Arial');
+      } else if(S.mode===1){
+        chain([[cx,yTop],[cx,yT]],'#2e9e5b',5);
+        chain([[cx,yT],[cx+90,yT],[cx+90,yB],[cx,yB],[cx,yBot]],'#e8703a',5);
+        AnimKit.label(ctx,'停止转移序列',cx+118,(yT+yB)/2,'#e8703a','11.5px "Microsoft YaHei"');
+      } else if(S.mode===2){
+        chain([[cx,yTop],[cx,yT]],'#e8703a',5);           // C 端在胞质(上)
+        chain([[cx,yT],[cx-80,yT],[cx-80,yB],[cx+40,yB]],'#e8703a',5);
+        AnimKit.label(ctx,'C 端（胞质）',cx+16,yTop,'#33465c','11.5px "Microsoft YaHei"','left');
+        AnimKit.label(ctx,'N 端（腔）',cx-90,yBot,'#2e9e5b','11.5px "Microsoft YaHei"');
+        AnimKit.label(ctx,'单次跨膜蛋白',W/2,H-16,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      } else {
+        var xs=[cx-110,cx-40,cx+40,cx+110],k=0;
+        ctx.strokeStyle='#e8703a';ctx.lineWidth=5;ctx.beginPath();
+        var yy=yTop;ctx.moveTo(cx,yTop);ctx.lineTo(cx,yT);
+        xs.forEach(function(xx,i){ctx.lineTo(xx,i%2===0?yT:yB);});
+        ctx.lineTo(cx,yBot);ctx.stroke();
+        // membrane-spanning segments highlighted
+        xs.forEach(function(xx){AnimKit.roundRect(ctx,xx-8,(yT+yB)/2-14,16,28,5);ctx.fillStyle='rgba(46,158,91,.5)';ctx.fill();});
+        AnimKit.label(ctx,'多次跨膜蛋白（如 7 次跨膜受体）',W/2,H-16,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      }
+    }
+  });
+})();
+</script></body></html>

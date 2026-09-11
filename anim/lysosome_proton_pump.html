@@ -1,0 +1,40 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>溶酶体质子泵</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'溶酶体膜的质子泵（V-ATPase）',
+    sub:'V-型质子泵消耗 ATP 把 H⁺ 泵入溶酶体腔，维持腔内 pH≈5，激活酸性水解酶。',
+    legend:[{c:'#e8703a',t:'H⁺'},{c:'#5a7fa8',t:'V-ATPase'},{c:'#2e9e5b',t:'酸性水解酶'}],
+    init:function(S){S.hIn=0;S.atp=0;S.degrade=false;},
+    phases:[
+      {name:'① 溶酶体结构',dur:1200,note:'溶酶体由单层膜包裹，内含多种酸性水解酶。',ap:function(S){S.hIn=0;S.degrade=false;}},
+      {name:'② V-型质子泵泵入 H⁺（耗 ATP）',dur:1400,note:'膜上的 V-型质子泵水解 ATP，把 H⁺ 泵入腔内。',ap:function(S){S.hIn=4;}},
+      {name:'③ 腔内 pH 降至约 5',dur:1300,note:'H⁺ 累积使腔内 pH 降至约 5（酸性）。',ap:function(S){S.hIn=8;}},
+      {name:'④ 酸性水解酶活化，降解底物',dur:1400,note:'酸性水解酶在 pH≈5 时活性最高，降解大分子。',ap:function(S){S.degrade=true;}}
+    ],
+    update:function(S,e){S.atp=(S.atp+0.02*e*3)%1;},
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#fff7ef';ctx.fillRect(0,0,W,H);
+      var cx=W/2,cy=H*.5,R=Math.min(W,H)*.30;
+      AnimKit.circle(ctx,cx,cy,R,'#fdeee0','');
+      ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.strokeStyle='#e8b98a';ctx.lineWidth=6;ctx.stroke();
+      // pumps around membrane
+      for(var a=0;a<12;a++){var an=a/12*6.28;var px=cx+Math.cos(an)*R,py=cy+Math.sin(an)*R;
+        ctx.save();ctx.translate(px,py);ctx.rotate(an);AnimKit.roundRect(ctx,-6,-9,12,18,3);ctx.fillStyle='#5a7fa8';ctx.fill();ctx.restore();}
+      AnimKit.label(ctx,'V-ATPase',cx+R+30,cy,'#33465c','11.5px "Microsoft YaHei"');
+      // H+ inside
+      for(var i=0;i<S.hIn;i++){var an2=i/S.hIn*6.28*1.5;var rr=R*.55*(i/S.hIn+0.2);
+        AnimKit.circle(ctx,cx+Math.cos(an2)*rr,cy+Math.sin(an2)*rr,7,'#e8703a','H⁺');}
+      // ATP consumption
+      AnimKit.label(ctx,'ATP → ADP + Pi',14,22,'#c0392b','12px "Microsoft YaHei"','left');
+      // pH
+      var ph=S.hIn>=8?'pH ≈ 5':(S.hIn>=4?'pH ≈ 6':'pH ≈ 7');
+      AnimKit.label(ctx,ph,cx,cy+R+40,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      // hydrolases
+      if(S.degrade){for(var k=0;k<4;k++){AnimKit.circle(ctx,cx-R*.5+k*R*.33,cy+R*.35,12,'#2e9e5b','酶');}
+        AnimKit.label(ctx,'酸性水解酶活化 → 降解底物',cx,cy-R-22,'#2e9e5b','bold 13px "Microsoft YaHei"');}
+    }
+  });
+})();
+</script></body></html>

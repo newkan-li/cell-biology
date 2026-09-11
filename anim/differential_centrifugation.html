@@ -1,0 +1,48 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>差速离心</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'差速离心分离细胞组分',
+    sub:'逐级提高离心速度，按大小/密度依次沉淀：核 → 线粒体 → 微粒体 → 核糖体。',
+    legend:[{c:'#8e44ad',t:'核'},{c:'#c0392b',t:'线粒体等'},{c:'#3b6fd6',t:'微粒体(ER)'},{c:'#2e9e5b',t:'核糖体/可溶蛋白'}],
+    init:function(S){S.pellets=[];S.spin=0;},
+    phases:[
+      {name:'① 组织匀浆',dur:1200,note:'破碎细胞制成匀浆，各组分均匀悬浮。',ap:function(S){S.pellets=[];}},
+      {name:'② 低速离心（~1000g）',dur:1300,note:'细胞核、未破碎细胞先沉淀。',ap:function(S){S.pellets=[{c:'#8e44ad',t:'细胞核、未破碎细胞'}];}},
+      {name:'③ 中速离心（~10000g）',dur:1300,note:'线粒体、溶酶体、过氧化物酶体沉淀。',ap:function(S){S.pellets=[{c:'#8e44ad',t:'细胞核'},{c:'#c0392b',t:'线粒体/溶酶体/过氧化物酶体'}];}},
+      {name:'④ 高速离心（~100000g）',dur:1300,note:'内质网膜碎片形成的微粒体沉淀。',ap:function(S){S.pellets=[{c:'#8e44ad',t:'细胞核'},{c:'#c0392b',t:'线粒体等'},{c:'#3b6fd6',t:'微粒体（ER 膜碎片）'}];}},
+      {name:'⑤ 超速离心',dur:1300,note:'核糖体、可溶性蛋白等更小成分分离。',ap:function(S){S.pellets=[{c:'#8e44ad',t:'细胞核'},{c:'#c0392b',t:'线粒体等'},{c:'#3b6fd6',t:'微粒体'},{c:'#2e9e5b',t:'核糖体/可溶蛋白'}];}}
+    ],
+    update:function(S,e){S.spin+=0.25*e;},
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var x=W*.42,w=W*.20,yT=H*.12,yB=H*.88;
+      // tube
+      AnimKit.roundRect(ctx,x,yT,w,yB-yT,w*.3);ctx.fillStyle='#eaf3fb';ctx.fill();ctx.strokeStyle='#b9d2e6';ctx.lineWidth=3;ctx.stroke();
+      // liquid
+      ctx.save();AnimKit.roundRect(ctx,x,yT,w,yB-yT,w*.3);ctx.clip();ctx.fillStyle='#f0f7fc';ctx.fillRect(x,yT,w,yB-yT);
+      var n=S.pellets.length;var ph=(yB-yT)*0.12;
+      S.pellets.forEach(function(p,i){
+        var yy=yB-8-(i+1)*ph;
+        AnimKit.roundRect(ctx,x+6,yy,w-12,ph-3,6);ctx.fillStyle=p.c;ctx.fill();
+      });
+      ctx.restore();
+      // labels
+      S.pellets.forEach(function(p,i){
+        var yy=yB-8-(i+1)*ph;
+        AnimKit.label(ctx,p.t,x+w+14,yy+ph/2,'#33465c','12px "Microsoft YaHei"','left');
+        AnimKit.arrow(ctx,x+w+6,yy+ph/2,x+w+12,yy+ph/2,p.c,2);
+      });
+      // rotor
+      var rx=W*.80,ry=H*.30;
+      ctx.save();ctx.translate(rx,ry);ctx.rotate(S.spin);ctx.strokeStyle='#9bb6cc';ctx.lineWidth=4;
+      ctx.beginPath();ctx.arc(0,0,34,0,7);ctx.stroke();ctx.beginPath();ctx.moveTo(-34,0);ctx.lineTo(34,0);ctx.moveTo(0,-34);ctx.lineTo(0,34);ctx.stroke();ctx.restore();
+      AnimKit.label(ctx,'离心机',rx,ry+58,'#7a8aa0','12px "Microsoft YaHei"');
+      if(S.pellets.length===0)AnimKit.label(ctx,'均匀悬液',x+w/2,yT+30,'#7a8aa0','12px "Microsoft YaHei"');
+      var sp=['—','1000×g','10000×g','100000×g','超速'];
+      AnimKit.label(ctx,'转速：'+sp[S.pellets.length],W/2,26,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

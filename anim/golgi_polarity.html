@@ -1,0 +1,41 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>高尔基体的极性区室</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'高尔基体的极性区室',
+    sub:'从顺面(cis)到反面(trans)依次为 CGN、中间区室、TGN；各区室含不同酶，货物蛋白被逐步加工。',
+    legend:[{c:'#2e9e5b',t:'顺面 CGN'},{c:'#3b6fd6',t:'中间区室'},{c:'#e8703a',t:'反面 TGN'}],
+    init:function(S){S.hl=0;S.cargo=0;},
+    phases:[
+      {name:'① 顺面（cis）高尔基体网络 CGN',dur:1200,note:'顺面接收来自 ER 的小泡，是高尔基体的入口。',ap:function(S){S.hl=0;S.cargo=0.08;}},
+      {name:'② 中间区室（medial）',dur:1200,note:'中间区室含各种糖基转移酶，对蛋白进行加工。',ap:function(S){S.hl=1;S.cargo=0.5;}},
+      {name:'③ 反面（trans）高尔基体网络 TGN',dur:1200,note:'反面是分选枢纽，把蛋白分选到不同去向。',ap:function(S){S.hl=2;S.cargo=0.9;}},
+      {name:'④ 极性：逐步加工',dur:1400,note:'顺面→反面各区室酶系不同，货物蛋白依次被修饰、成熟。',ap:function(S){S.hl=3;S.cargo=0;}}
+    ],
+    update:function(S,e){if(S.hl===3)S.cargo=(S.cargo+0.012*e*3)%1;},
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var cx=W*.56,yT=H*.18,gap=H*.16;
+      var names=['顺面 cis-Golgi (CGN)','中间区室 medial','反面 trans-Golgi (TGN)',''];
+      var cols=['#2e9e5b','#3b6fd6','#e8703a'];
+      for(var i=0;i<3;i++){
+        var y=yT+i*gap,w=W*.42-i*W*.03;
+        var on=(S.hl===i||S.hl===3);
+        ctx.globalAlpha=on?1:.28;
+        AnimKit.roundRect(ctx,cx-w/2,y,w,26,13);ctx.fillStyle=cols[i];ctx.fill();
+        ctx.globalAlpha=1;
+        AnimKit.label(ctx,names[i],cx-w/2-14,y+18,'#33465c','12px "Microsoft YaHei"','right');
+      }
+      // cargo vesicle
+      var cyy=yT+S.cargo*(gap*2)+13;
+      AnimKit.circle(ctx,cx,cyy,12,'#8e44ad','●');
+      AnimKit.label(ctx,'货物蛋白',cx,cyy-22,'#6c3483','11px "Microsoft YaHei"');
+      // entry from ER (top) and exit (bottom)
+      AnimKit.arrow(ctx,cx,yT-40,cx,yT-6,'#8aa0b8',2);AnimKit.label(ctx,'来自 ER',cx,yT-46,'#7a8aa0','11.5px "Microsoft YaHei"');
+      AnimKit.arrow(ctx,cx,yT+gap*2+30,cx,yT+gap*2+66,'#8aa0b8',2);AnimKit.label(ctx,'分选到溶酶体/分泌/膜',cx,yT+gap*2+82,'#7a8aa0','11.5px "Microsoft YaHei"');
+      if(S.hl===3)AnimKit.label(ctx,'极性：cis → trans，酶系不同、逐步加工',W/2,H-14,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

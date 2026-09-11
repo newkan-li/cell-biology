@@ -1,0 +1,47 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>易位子 Sec61</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'易位子（Translocon）与 Sec61 复合体',
+    sub:'粗面内质网膜上的蛋白质通道，由 Sec61α/β/γ 组成，介导新生肽链进入 ER 腔。',
+    legend:[{c:'#5a7fa8',t:'Sec61 易位子'},{c:'#8e44ad',t:'核糖体'},{c:'#2e9e5b',t:'信号肽'},{c:'#e8703a',t:'新生肽链'}],
+    init:function(S){S.ribo=false;S.sig=false;S.thread=0;S.cleaved=false;},
+    phases:[
+      {name:'① Sec61 复合体形成孔道',dur:1200,note:'Sec61 由 α、β、γ 三亚基组成，在 ER 膜上形成蛋白质通道（易位子）。',ap:function(S){S.ribo=false;S.sig=false;S.thread=0;S.cleaved=false;}},
+      {name:'② 核糖体停靠',dur:1200,note:'携带新生肽链的核糖体停靠到易位子上。',ap:function(S){S.ribo=true;}},
+      {name:'③ 信号肽进入孔道',dur:1200,note:'信号肽引导新生肽链进入 Sec61 孔道。',ap:function(S){S.sig=true;}},
+      {name:'④ 肽链穿入 ER 腔，信号肽被切除',dur:1500,note:'肽链进入 ER 腔；信号肽被信号肽酶切除。',ap:function(S){S.cleaved=true;}}
+    ],
+    update:function(S,e){if(S.ribo&&S.thread<1)S.thread=Math.min(1,S.thread+0.02*e*3);},
+    draw:function(ctx,W,H,S){
+      var m=AnimKit.membrane(ctx,W,H,{gap:96,outLabel:'胞质',inLabel:'ER 腔'});
+      var cx=W/2,yT=m.yTop,yB=m.yBot,cy=(yT+yB)/2;
+      // Sec61 channel
+      AnimKit.roundRect(ctx,cx-46,yT-22,92,(yB-yT)+44,14);ctx.fillStyle='#5a7fa8';ctx.fill();
+      AnimKit.roundRect(ctx,cx-16,yT-22,32,(yB-yT)+44,8);ctx.fillStyle='#eaf3fb';ctx.fill();
+      AnimKit.label(ctx,'Sec61 (α β γ)',cx,yB+52,'#33465c','12px "Microsoft YaHei"');
+      // ribosome
+      if(S.ribo){
+        AnimKit.roundRect(ctx,cx-56,yT-92,112,58,20);ctx.fillStyle='#8e44ad';ctx.fill();
+        AnimKit.roundRect(ctx,cx-44,yT-104,88,26,13);ctx.fillStyle='#a569c4';ctx.fill();
+        AnimKit.label(ctx,'核糖体',cx,yT-116,'#6c3483','12px "Microsoft YaHei"');
+        ctx.strokeStyle='#c9a0dc';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(cx-40,yT-96);ctx.lineTo(cx+40,yT-96);ctx.stroke();
+      }
+      // polypeptide chain through pore into lumen
+      if(S.thread>0){
+        ctx.strokeStyle='#e8703a';ctx.lineWidth=4;ctx.beginPath();
+        var pts=[];var top=S.ribo?yT-88:yT-30;
+        for(var k=0;k<=10;k++){var t=k/10;var yy=AnimKit.lerp(top,yB+40,t);var xx=cx+Math.sin(t*10)*8;pts.push([xx,yy]);}
+        var upto=Math.round(S.thread*pts.length);
+        for(var j=0;j<upto;j++){if(j===0)ctx.moveTo(pts[j][0],pts[j][1]);else ctx.lineTo(pts[j][0],pts[j][1]);}
+        ctx.stroke();
+      }
+      // signal peptide
+      if(S.sig&&!S.cleaved)AnimKit.label(ctx,'信号肽',cx+58,yT-4,'#2e9e5b','12px "Microsoft YaHei"');
+      if(S.cleaved)AnimKit.label(ctx,'信号肽已被切除',cx+86,yB+30,'#2e9e5b','11.5px "Microsoft YaHei"');
+      AnimKit.label(ctx,'共翻译转移：边翻译边进入 ER',W/2,26,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>
