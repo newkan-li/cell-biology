@@ -1,0 +1,50 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>停靠与融合两步</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'小泡运输的停靠与融合（两步）',
+    sub:'第一步停靠：Rab 与系链蛋白把小泡拉近靶膜；第二步融合：v-SNARE/t-SNARE 拉链配对，驱动膜融合。',
+    legend:[{c:'#2e9e5b',t:'Rab / 系链'},{c:'#e8703a',t:'v-SNARE'},{c:'#3b6fd6',t:'t-SNARE'}],
+    init:function(S){S.vy=.20;S.tether=false;S.zip=0;S.fuse=false;},
+    phases:[
+      {name:'① 运输小泡接近靶膜',dur:1200,note:'运输小泡携带货物靠近靶膜。',ap:function(S){S.vy=.20;S.tether=false;S.zip=0;S.fuse=false;}},
+      {name:'② 停靠：Rab 与系链蛋白',dur:1300,note:'小泡上的 Rab-GTP 与靶膜系链蛋白相互作用，把小泡锚定在靶膜附近（停靠）。',ap:function(S){S.vy=.42;S.tether=true;}},
+      {name:'③ v-SNARE / t-SNARE 拉链配对',dur:1300,note:'小泡上的 v-SNARE 与靶膜上的 t-SNARE 相互缠绕、拉链式配对。',ap:function(S){S.vy=.50;S.zip=1;}},
+      {name:'④ 膜融合，货物释放',dur:1400,note:'SNARE 配对提供能量，两膜融合，货物释放到靶区室。',ap:function(S){S.vy=.60;S.fuse=true;}}
+    ],
+    update:function(S,e){},
+    draw:function(ctx,W,H,S){
+      var yT=H*.68,cx=W/2;
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,yT);
+      ctx.fillStyle='#eaf3fb';ctx.fillRect(0,yT,W,H-yT);
+      // target membrane
+      ctx.strokeStyle='#b9d2e6';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(60,yT);ctx.lineTo(W-60,yT);ctx.stroke();
+      AnimKit.label(ctx,'靶膜',14,yT-14,'#7a8aa0','12px "Microsoft YaHei"','left');
+      var vy=S.vy*H;
+      // vesicle
+      ctx.globalAlpha=S.fuse?.5:1;
+      AnimKit.circle(ctx,cx,vy,42,'#8e44ad','');
+      AnimKit.label(ctx,'运输小泡',cx,vy-54,'#6c3483','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'货物',cx,vy+4,'#fff','11px "Microsoft YaHei"');
+      ctx.globalAlpha=1;
+      // Rab + tether
+      if(S.tether){
+        AnimKit.circle(ctx,cx-24,vy+34,10,'#2e9e5b','Rab');
+        ctx.strokeStyle='#2e9e5b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(cx-24,vy+40);ctx.lineTo(cx-40,yT-4);ctx.stroke();
+        AnimKit.label(ctx,'系链蛋白',cx-70,(vy+yT)/2,'#2e9e5b','11.5px "Microsoft YaHei"');
+      }
+      // SNAREs
+      if(S.zip>0){
+        ctx.strokeStyle='#e8703a';ctx.lineWidth=5;
+        ctx.beginPath();ctx.moveTo(cx+14,vy+38);ctx.lineTo(cx+10,yT-4);ctx.stroke();
+        ctx.strokeStyle='#3b6fd6';ctx.lineWidth=5;
+        ctx.beginPath();ctx.moveTo(cx+24,yT+4);ctx.lineTo(cx+16,vy+40);ctx.stroke();
+        AnimKit.label(ctx,'v-SNARE',cx+44,vy+18,'#e8703a','11.5px "Microsoft YaHei"','left');
+        AnimKit.label(ctx,'t-SNARE',cx+44,yT+34,'#3b6fd6','11.5px "Microsoft YaHei"','left');
+      }
+      if(S.fuse)AnimKit.label(ctx,'膜融合 → 货物释放',cx,H-24,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

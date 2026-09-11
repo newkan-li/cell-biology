@@ -1,0 +1,43 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rab 的定位与循环</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'Rab 蛋白的定位与 GTP 酶循环',
+    sub:'Rab-GDP 由 GDI 带到膜上，GEF 活化转为 Rab-GTP 并结合效应蛋白参与停靠，GAP 水解后由 GDI 回收。',
+    legend:[{c:'#3b6fd6',t:'Rab-GDP'},{c:'#2e9e5b',t:'Rab-GTP'},{c:'#8d6e63',t:'GDI'}],
+    init:function(S){S.state=0;S.rabY=.28;},
+    phases:[
+      {name:'① 胞质中 Rab-GDP 结合 GDI',dur:1300,note:'失活的 Rab-GDP 在胞质中与 GDI 结合，便于运输。',ap:function(S){S.state=0;S.rabY=.28;}},
+      {name:'② 转运到膜上，GEF 活化 → Rab-GTP',dur:1300,note:'GDI 把 Rab 送到供体膜；膜上的 GEF 催化 GDP→GTP，Rab 被活化。',ap:function(S){S.state=1;S.rabY=.44;}},
+      {name:'③ Rab-GTP 结合效应蛋白参与停靠',dur:1300,note:'活化 Rab 结合效应蛋白（系链/马达等），决定小泡停靠的特异性。',ap:function(S){S.state=2;S.rabY=.44;}},
+      {name:'④ GAP 水解 GTP，GDI 回收',dur:1400,note:'GAP 促使 Rab 水解 GTP 变回 Rab-GDP，GDI 将其从膜上提取、循环使用。',ap:function(S){S.state=3;S.rabY=.28;}}
+    ],
+    update:function(S,e){},
+    draw:function(ctx,W,H,S){
+      var yM=H*.52,cx=W/2;
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,yM);
+      ctx.fillStyle='#eaf3fb';ctx.fillRect(0,yM,W,H-yM);
+      ctx.strokeStyle='#b9d2e6';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(60,yM);ctx.lineTo(W-60,yM);ctx.stroke();
+      AnimKit.label(ctx,'供体膜',14,yM-14,'#7a8aa0','12px "Microsoft YaHei"','left');
+      // GEF / GAP labels on membrane
+      AnimKit.pill(ctx,cx+90,yM-18,70,26,'#9bb6cc','GEF','#fff');
+      AnimKit.pill(ctx,cx+180,yM-18,70,26,'#9bb6cc','GAP','#fff');
+      var ry=S.rabY*H;
+      var rabC=(S.state===1||S.state===2)?'#2e9e5b':'#3b6fd6';
+      var rabT=(S.state===1||S.state===2)?'GTP':'GDP';
+      // GDI in cytosol states 0 and 3
+      if(S.state===0||S.state===3){AnimKit.circle(ctx,cx-30,ry+18,14,'#8d6e63','GDI');}
+      AnimKit.circle(ctx,cx,ry,18,rabC,'Rab');
+      AnimKit.label(ctx,rabT,cx,ry+34,rabC,'11.5px "Microsoft YaHei"');
+      if(S.state===2){
+        AnimKit.roundRect(ctx,cx+26,ry-16,58,32,10);ctx.fillStyle='#f2b950';ctx.fill();
+        AnimKit.label(ctx,'效应蛋白',cx+55,ry,'#7a5b00','11.5px "Microsoft YaHei"');
+        AnimKit.arrow(ctx,cx+18,ry,cx+26,ry,'#7a5b00',2);
+      }
+      var caps=['胞质：Rab-GDP·GDI','膜上：GEF 活化 → Rab-GTP','Rab-GTP 结合效应蛋白','GAP 水解 → Rab-GDP，GDI 回收'];
+      AnimKit.label(ctx,caps[S.state],W/2,26,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

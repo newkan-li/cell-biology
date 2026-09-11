@@ -1,0 +1,46 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LDL 受体途径</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function P(nx,ny){return{nx:nx,ny:ny,tnx:nx,tny:ny};}
+  function set(o,x,y){o.tnx=x;o.tny=y;}
+  AnimKit.mount({
+    title:'LDL 受体介导的胞吞与胆固醇摄取',
+    sub:'LDL 结合受体 → 网格蛋白小泡内吞 → 内体/溶酶体降解释放胆固醇 → 受体回收循环。',
+    legend:[{c:'#e8703a',t:'LDL'},{c:'#5a7fa8',t:'LDL 受体'},{c:'#2e9e5b',t:'胆固醇'}],
+    init:function(S){S.ldl=P(.5,.14);S.inside=false;S.late=false;S.chol=false;S.recycle=false;},
+    phases:[
+      {name:'① LDL 结合细胞膜上的受体',dur:1300,note:'血液中的 LDL 颗粒结合到质膜上的 LDL 受体。',ap:function(S){set(S.ldl,.5,.26);S.inside=false;S.late=false;S.chol=false;S.recycle=false;}},
+      {name:'② 网格蛋白包被小泡内吞',dur:1300,note:'受体聚集在包被小窝中，形成网格蛋白有被小泡内吞。',ap:function(S){set(S.ldl,.5,.48);S.inside=true;}},
+      {name:'③ 内体 → 溶酶体降解',dur:1300,note:'小泡与内体融合，最终进入溶酶体，LDL 被降解。',ap:function(S){set(S.ldl,.5,.66);S.late=true;}},
+      {name:'④ 胆固醇释放；受体回收循环',dur:1400,note:'胆固醇被释放供细胞利用；LDL 受体回收并返回质膜循环使用。',ap:function(S){S.chol=true;S.recycle=true;}}
+    ],
+    update:function(S,e){S.ldl.nx+=(S.ldl.tnx-S.ldl.nx)*e*.5;S.ldl.ny+=(S.ldl.tny-S.ldl.ny)*e*.5;},
+    draw:function(ctx,W,H,S){
+      var yM=H*.30,cx=W/2;
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,W,yM);
+      ctx.fillStyle='#fff7ef';ctx.fillRect(0,yM,W,H-yM);
+      ctx.fillStyle='#ffe9c9';ctx.fillRect(0,yM-8,W,16);
+      AnimKit.label(ctx,'细胞外（血液）',14,22,'#7a8aa0','13px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'细胞质',14,H-14,'#7a8aa0','13px "Microsoft YaHei"','left');
+      // receptor (Y)
+      var rx=cx,ry=yM;
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=5;
+      ctx.beginPath();ctx.moveTo(rx,ry);ctx.lineTo(rx,ry+22);ctx.moveTo(rx,ry+8);ctx.lineTo(rx-12,ry-10);ctx.moveTo(rx,ry+8);ctx.lineTo(rx+12,ry-10);ctx.stroke();
+      AnimKit.label(ctx,'LDL 受体',rx+34,ry+14,'#33465c','11.5px "Microsoft YaHei"','left');
+      // coated pit / vesicle
+      if(S.inside){AnimKit.circle(ctx,cx,yM+ (S.ldl.ny*H - yM),34,'rgba(59,111,214,.15)','');}
+      // LDL
+      var x=S.ldl.nx*W,y=S.ldl.ny*H;
+      AnimKit.circle(ctx,x,y,20,'#e8703a','LDL');
+      // endosome/lysosome
+      if(S.late){AnimKit.circle(ctx,cx,H*.72,44,'rgba(232,112,58,.15)','');
+        AnimKit.label(ctx,'溶酶体',cx+58,H*.72,'#c0392b','12px "Microsoft YaHei"','left');}
+      if(S.chol){for(var k=0;k<5;k++){AnimKit.circle(ctx,cx-70+k*35,H*.84,8,'#2e9e5b','');}
+        AnimKit.label(ctx,'胆固醇释放',cx,H*.84+26,'#2e9e5b','12px "Microsoft YaHei"');}
+      if(S.recycle){AnimKit.arrow(ctx,cx+90,H*.66,cx+90,yM-6,'#5a7fa8',2.5);
+        AnimKit.label(ctx,'受体回收',cx+118,(H*.66+yM)/2,'#5a7fa8','11.5px "Microsoft YaHei"');}
+    }
+  });
+})();
+</script></body></html>

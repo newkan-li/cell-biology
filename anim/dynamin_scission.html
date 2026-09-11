@@ -1,0 +1,50 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>发动蛋白 dynamin 剪切</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'发动蛋白（dynamin）剪切小泡',
+    sub:'网格蛋白小泡内陷后，dynamin 在颈部组装成环，水解 GTP 收缩，把小泡从膜上掐断。',
+    legend:[{c:'#3b6fd6',t:'网格蛋白'},{c:'#c0392b',t:'dynamin'},{c:'#8e44ad',t:'小泡'}],
+    init:function(S){S.pit=0;S.ring=false;S.ringR=1;S.scission=false;},
+    phases:[
+      {name:'① 网格蛋白包被小泡内陷',dur:1300,note:'网格蛋白在膜内侧组装，膜向内凹陷形成有被小窝。',ap:function(S){S.pit=.6;S.ring=false;S.scission=false;S.ringR=1;}},
+      {name:'② 发动蛋白在颈部组装成环',dur:1300,note:'dynamin 在凹陷小泡的颈部聚集成环。',ap:function(S){S.pit=1;S.ring=true;S.ringR=1;}},
+      {name:'③ GTP 水解，环收缩',dur:1300,note:'dynamin 水解 GTP，环收缩使颈部变细。',ap:function(S){S.ringR=.45;}},
+      {name:'④ 小泡从膜上掐断（scission）',dur:1400,note:'颈部被掐断，小泡脱离质膜进入细胞。',ap:function(S){S.scission=true;S.ring=false;}}
+    ],
+    update:function(S,e){},
+    draw:function(ctx,W,H,S){
+      var cx=W/2,yT=H*.36,yB=H*.46;
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,W,yT);
+      ctx.fillStyle='#fff7ef';ctx.fillRect(0,yB,W,H-yB);
+      ctx.fillStyle='#ffe9c9';ctx.fillRect(0,yT,W,yB-yT);
+      AnimKit.label(ctx,'细胞外',14,22,'#7a8aa0','13px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'细胞质',14,H-14,'#7a8aa0','13px "Microsoft YaHei"','left');
+      var dpth=S.pit*90, hw=72;
+      // pit curve
+      ctx.strokeStyle='#e6c98f';ctx.lineWidth=6;ctx.beginPath();
+      ctx.moveTo(cx-hw-160,yB);ctx.lineTo(cx-hw,yB);
+      ctx.quadraticCurveTo(cx-hw,yB+dpth,cx,yB+dpth);
+      ctx.quadraticCurveTo(cx+hw,yB+dpth,cx+hw,yB);
+      ctx.lineTo(cx+hw+160,yB);ctx.stroke();
+      // clathrin dots along pit
+      if(S.pit>0){for(var k=0;k<=10;k++){var t=k/10;
+        var x=cx-hw+2*hw*t, y=yB+dpth*Math.sin(Math.PI*t);
+        AnimKit.circle(ctx,x,y+12,6,'#3b6fd6','');}}
+      // dynamin ring
+      if(S.ring){var rr=26*S.ringR;
+        ctx.strokeStyle='#c0392b';ctx.lineWidth=7;
+        ctx.beginPath();ctx.ellipse(cx,yB+4,rr,10,0,0,7);ctx.stroke();
+        AnimKit.label(ctx,'dynamin 环',cx+70,yB+2,'#c0392b','11.5px "Microsoft YaHei"','left');}
+      // scission vesicle
+      if(S.scission){var vy=yB+dpth+70;
+        AnimKit.circle(ctx,cx,vy,26,'#8e44ad','');AnimKit.circle(ctx,cx,vy,26,'#8e44ad','');
+        for(var a=0;a<10;a++){var an=a/10*6.28;AnimKit.circle(ctx,cx+Math.cos(an)*30,vy+Math.sin(an)*30,5,'#3b6fd6','');}
+        AnimKit.label(ctx,'游离小泡',cx+50,vy,'#6c3483','12px "Microsoft YaHei"','left');
+        AnimKit.label(ctx,'GTP 水解 → 掐断',cx,vy+50,'#c0392b','12px "Microsoft YaHei"');}
+      AnimKit.label(ctx,'dynamin：GTP 依赖的膜剪切',W/2,26,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

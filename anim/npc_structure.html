@@ -1,0 +1,60 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>核孔复合体结构</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'核孔复合体（NPC）的结构',
+    sub:'由胞质环、辐、核质环（核篮）与中央通道组成；小分子自由扩散，大分子经 NLS/importin 主动运输。',
+    legend:[{c:'#5a7fa8',t:'NPC 结构蛋白'},{c:'#2e9e5b',t:'小分子'},{c:'#e8703a',t:'大分子货物'}],
+    init:function(S){S.hl=0;S.t=0;},
+    phases:[
+      {name:'① 核孔复合体位于核膜上',dur:1200,note:'内外核膜融合形成核孔，核孔复合体镶嵌其中。',ap:function(S){S.hl=0;}},
+      {name:'② 胞质环 + 辐 + 核质环',dur:1300,note:'胞质环在胞质面、核质环（核篮）在核质面，辐连接并围成中央通道。',ap:function(S){S.hl=1;}},
+      {name:'③ 中央通道',dur:1200,note:'中央通道是物质进出的通道，直径约 9 nm 的水相通道。',ap:function(S){S.hl=2;}},
+      {name:'④ 物质运输',dur:1500,note:'小分子自由扩散通过；大分子需核定位信号(NLS)与 importin 主动运输。',ap:function(S){S.hl=3;}}
+    ],
+    update:function(S,e){S.t=(S.t+0.012*e*3)%1;},
+    draw:function(ctx,W,H,S){
+      var cx=W/2,yOut=H*.42,yIn=H*.54;
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,yOut,W,yOut);
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,W,yOut);
+      ctx.fillStyle='#eef2fb';ctx.fillRect(0,yOut,W,yIn-yOut);
+      ctx.fillStyle='#fff7ef';ctx.fillRect(0,yIn,W,H-yIn);
+      ctx.fillStyle='#eaf3fb';ctx.fillRect(0,yIn,W,H-yIn);
+      AnimKit.label(ctx,'胞质',14,22,'#7a8aa0','13px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'核质',14,H-14,'#7a8aa0','13px "Microsoft YaHei"','left');
+      // nuclear envelope (two membranes) with pore gap
+      ctx.strokeStyle='#b9d2e6';ctx.lineWidth=6;
+      ctx.beginPath();ctx.moveTo(40,yOut);ctx.lineTo(cx-58,yOut);ctx.moveTo(cx+58,yOut);ctx.lineTo(W-40,yOut);
+      ctx.moveTo(40,yIn);ctx.lineTo(cx-58,yIn);ctx.moveTo(cx+58,yIn);ctx.lineTo(W-40,yIn);ctx.stroke();
+      AnimKit.label(ctx,'外核膜',40,yOut-10,'#7a8aa0','11.5px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'内核膜',40,yIn+18,'#7a8aa0','11.5px "Microsoft YaHei"','left');
+      var onRing=S.hl!==2, onChan=S.hl>=2;
+      // cytoplasmic ring
+      ctx.globalAlpha=onRing?1:.35;ctx.strokeStyle='#5a7fa8';ctx.lineWidth=8;
+      ctx.beginPath();ctx.ellipse(cx,yOut-16,54,12,0,0,7);ctx.stroke();
+      // nuclear ring
+      ctx.beginPath();ctx.ellipse(cx,yIn+16,54,12,0,0,7);ctx.stroke();
+      // spokes
+      for(var s=-2;s<=2;s++){ctx.beginPath();ctx.moveTo(cx+s*20,yOut-6);ctx.lineTo(cx+s*20,yIn+6);ctx.stroke();}
+      // basket
+      ctx.beginPath();ctx.moveTo(cx-44,yIn+24);ctx.quadraticCurveTo(cx,yIn+70,cx+44,yIn+24);ctx.stroke();
+      ctx.globalAlpha=1;
+      // central channel
+      ctx.fillStyle=onChan?'#fff':'#eef2fb';ctx.fillRect(cx-14,yOut-16,28,yIn-yOut+32);
+      ctx.strokeStyle='#c9d8e8';ctx.lineWidth=2;ctx.strokeRect(cx-14,yOut-16,28,yIn-yOut+32);
+      if(S.hl===0)AnimKit.label(ctx,'核孔复合体',cx,yOut-42,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      if(S.hl===1){AnimKit.label(ctx,'胞质环',cx+70,yOut-16,'#33465c','11.5px "Microsoft YaHei"','left');
+        AnimKit.label(ctx,'核质环（核篮）',cx+70,yIn+30,'#33465c','11.5px "Microsoft YaHei"','left');}
+      if(S.hl===2)AnimKit.label(ctx,'中央通道',cx+34,yOut-30,'#c0392b','12px "Microsoft YaHei"','left');
+      if(S.hl===3){
+        var ty=AnimKit.lerp(yOut-40,yIn+50,S.t);
+        AnimKit.circle(ctx,cx-24,ty,8,'#2e9e5b','');
+        AnimKit.circle(ctx,cx+24,AnimKit.lerp(yOut-40,yIn+50,(S.t+0.5)%1),10,'#e8703a','');
+        AnimKit.label(ctx,'小分子自由扩散',cx-70,yOut-34,'#2e9e5b','11.5px "Microsoft YaHei"','right');
+        AnimKit.label(ctx,'大分子 + importin 主动运输',cx+70,yIn+46,'#e8703a','11.5px "Microsoft YaHei"','left');
+      }
+    }
+  });
+})();
+</script></body></html>

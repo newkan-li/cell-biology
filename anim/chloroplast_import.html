@@ -1,0 +1,48 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>叶绿体蛋白分选</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'叶绿体蛋白的转运与分选',
+    sub:'前体蛋白 N 端的转运肽引导其经 TOC/TIC 进入叶绿体基质，转运肽被切除后再分选到类囊体等部位。',
+    legend:[{c:'#2e9e5b',t:'转运肽'},{c:'#e8703a',t:'成熟蛋白'},{c:'#5a7fa8',t:'TOC / TIC'}],
+    init:function(S){S.step=0;},
+    phases:[
+      {name:'① 前体蛋白含 N 端转运肽',dur:1200,note:'细胞质中合成的叶绿体前体蛋白，N 端带有转运肽。',ap:function(S){S.step=0;}},
+      {name:'② 经 TOC / TIC 进入基质',dur:1400,note:'转运肽先被外膜 TOC 识别，再经内膜 TIC 进入叶绿体基质。',ap:function(S){S.step=1;}},
+      {name:'③ 转运肽被切除',dur:1200,note:'进入基质后，转运肽被基质中的加工肽酶切除。',ap:function(S){S.step=2;}},
+      {name:'④ 分选到类囊体等部位',dur:1400,note:'成熟蛋白再被分选到类囊体腔、类囊体膜或基质。',ap:function(S){S.step=3;}}
+    ],
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#eef7f0';ctx.fillRect(0,0,W,H);
+      var cx=W/2,cy=H*.54,rw=W*.34,rh=H*.30;
+      // outer + inner membranes
+      AnimKit.roundRect(ctx,cx-rw,cy-rh,rw*2,rh*2,60);ctx.fillStyle='#bfe6cb';ctx.fill();ctx.strokeStyle='#4f9e6d';ctx.lineWidth=6;ctx.stroke();
+      AnimKit.roundRect(ctx,cx-rw+12,cy-rh+12,rw*2-24,rh*2-24,50);ctx.fillStyle='#e8f8ee';ctx.fill();ctx.strokeStyle='#2e9e5b';ctx.lineWidth=4;ctx.stroke();
+      AnimKit.label(ctx,'外膜',cx-rw-6,cy-rh-6,'#4f9e6d','11.5px "Microsoft YaHei"','right');
+      AnimKit.label(ctx,'内膜',cx-rw+30,cy-rh+34,'#2e9e5b','11.5px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'基质',cx+rw-40,cy+rh-20,'#4f9e6d','12px "Microsoft YaHei"');
+      // thylakoid stacks
+      for(var g=0;g<3;g++){for(var s=0;s<3;s++){
+        AnimKit.roundRect(ctx,cx-10+s*26,cy-10+g*12,22,8,3);ctx.fillStyle='#2e9e5b';ctx.fill();}}
+      AnimKit.label(ctx,'类囊体',cx+80,cy+8,'#2e9e5b','11.5px "Microsoft YaHei"','left');
+      // TOC / TIC
+      AnimKit.roundRect(ctx,cx-rw-6,cy-30,20,60,6);ctx.fillStyle='#5a7fa8';ctx.fill();
+      AnimKit.label(ctx,'TOC',cx-rw-16,cy-42,'#33465c','11.5px "Microsoft YaHei"','right');
+      AnimKit.roundRect(ctx,cx-rw+14,cy-26,18,52,6);ctx.fillStyle='#5a7fa8';ctx.fill();
+      AnimKit.label(ctx,'TIC',cx-rw+40,cy-40,'#33465c','11.5px "Microsoft YaHei"','left');
+      // preprotein chain
+      var x0=cx-rw-90,y0=cy, x1=cx-rw-6;
+      ctx.strokeStyle='#e8703a';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y0);ctx.stroke();
+      if(S.step>=1){ctx.beginPath();ctx.moveTo(x1,y0);ctx.lineTo(cx-rw+16,y0);ctx.lineTo(cx-40,y0+20);ctx.stroke();}
+      if(S.step>=2){ctx.beginPath();ctx.moveTo(cx-40,y0+20);ctx.lineTo(cx+20,y0+40);ctx.stroke();}
+      if(S.step<2)AnimKit.circle(ctx,x0,y0,10,'#2e9e5b','T');  // transit peptide
+      AnimKit.label(ctx,'前体蛋白',x0-6,y0-18,'#33465c','11.5px "Microsoft YaHei"','right');
+      if(S.step>=2)AnimKit.label(ctx,'转运肽已切除',x0+30,y0-18,'#2e9e5b','11.5px "Microsoft YaHei"');
+      if(S.step>=3){AnimKit.circle(ctx,cx+20,y0+40,10,'#e8703a','');AnimKit.label(ctx,'成熟蛋白',cx+40,y0+44,'#e8703a','11.5px "Microsoft YaHei"','left');}
+      var caps=['① 前体蛋白带 N 端转运肽','② 经 TOC/TIC 进入基质','③ 转运肽被切除','④ 分选到类囊体/基质'];
+      AnimKit.label(ctx,caps[S.step],W/2,26,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>
