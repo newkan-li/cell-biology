@@ -1,0 +1,65 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ERAD 内质网相关降解</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  function squiggle(ctx,x,y,amp,col,lw){
+    ctx.strokeStyle=col;ctx.lineWidth=lw||4;ctx.beginPath();
+    for(var i=0;i<=24;i++){var t=i/24,xx=x-34+t*68,yy=y+Math.sin(t*10)*amp;if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}
+    ctx.stroke();
+  }
+  AnimKit.mount({
+    title:'ERAD——内质网相关降解',
+    sub:'错误折叠蛋白经 Sec61p 易位子逆向转运到胞质，被 N-聚糖酶切除糖链并泛素化后，由 26S 蛋白酶体降解。',
+    legend:[{c:'#c0392b',t:'错误折叠蛋白'},{c:'#e8a13a',t:'泛素'},{c:'#2e9e5b',t:'分子伴侣'},{c:'#3b6fd6',t:'易位子'}],
+    init:function(S){S.stage=0;S.prog=0;},
+    phases:[
+      {name:'① 折叠失败被识别',dur:1400,note:'分子伴侣反复协助折叠；不能正确折叠的畸形肽链或未组装亚基被识别。',ap:function(S){S.stage=0;S.prog=0;}},
+      {name:'② Sec61p 逆向易位到胞质',dur:1500,note:'错误折叠蛋白经 Sec61p 复合体从内质网腔/膜逆向转运到细胞质基质。',ap:function(S){S.stage=1;S.prog=0;}},
+      {name:'③ 去糖基化 + 泛素化',dur:1500,note:'N-聚糖酶切除糖链；多个泛素分子共价连接到底物上，形成多聚泛素链。',ap:function(S){S.stage=2;S.prog=0;}},
+      {name:'④ 26S 蛋白酶体降解',dur:1600,note:'多聚泛素化的底物被 26S 蛋白酶体识别并降解成短肽。',ap:function(S){S.stage=3;S.prog=0;}}
+    ],
+    update:function(S,e){S.prog=Math.min(1,S.prog+e*0.03);},
+    draw:function(ctx,W,H,S){
+      var yMem=H*0.60;
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,W,yMem-8);
+      ctx.fillStyle='#ffe9c9';ctx.fillRect(0,yMem-8,W,16);
+      ctx.fillStyle='#fff7ef';ctx.fillRect(0,yMem+8,W,H-yMem-8);
+      AnimKit.label(ctx,'细胞质基质',14,22,'#7a8aa0','13px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'内质网腔',14,H-14,'#7a8aa0','13px "Microsoft YaHei"','left');
+      var cx=W*0.34;
+      // translocon
+      ctx.fillStyle='#3b6fd6';AnimKit.roundRect(ctx,cx-16,yMem-20,32,40,6);ctx.fill();
+      AnimKit.label(ctx,'Sec61p',cx,yMem+46,'#1f5c8b','11.5px "Microsoft YaHei"');
+      // misfolded protein position
+      var py;
+      if(S.stage===0)py=yMem+52;
+      else if(S.stage===1)py=yMem+52-(yMem+52-(yMem-56))*AnimKit.easeOut(S.prog);
+      else py=yMem-56;
+      if(S.stage<3){squiggle(ctx,cx,py,7,'#c0392b',4);}
+      else {squiggle(ctx,cx,py,7,'#c0392b',4);}
+      if(S.stage===0){
+        AnimKit.circle(ctx,cx+40,py+4,12,'#2e9e5b','C');
+        AnimKit.label(ctx,'分子伴侣',cx+40,py+28,'#3d7a5a','11px "Microsoft YaHei"');
+      }
+      // glycan removal + ubiquitin
+      if(S.stage>=2){
+        AnimKit.label(ctx,'N-聚糖酶',cx-60,py-20,'#8d6e63','11px "Microsoft YaHei"');
+        AnimKit.arrow(ctx,cx-52,py-14,cx-14,py-4,'#8d6e63',1.6);
+        for(var u=0;u<4;u++)AnimKit.circle(ctx,cx+30+u*14,py-14,6,'#e8a13a',null);
+        AnimKit.label(ctx,'多聚泛素链',cx+80,py-14,'#a9781f','11px "Microsoft YaHei"','left');
+      }
+      // proteasome
+      var px0=W*0.74,py0=H*0.42;
+      ctx.fillStyle='#5a7fa8';
+      for(var d=0;d<5;d++){AnimKit.roundRect(ctx,px0-30,py0-40+d*16,60,13,4);ctx.fill();}
+      AnimKit.label(ctx,'26S 蛋白酶体',px0,py0+52,'#33465c','12px "Microsoft YaHei"');
+      if(S.stage===3){
+        AnimKit.arrow(ctx,cx+40,py-6,px0-34,py0-10,'#c0392b',2);
+        for(var s=0;s<4;s++)AnimKit.circle(ctx,px0+34,py0-30+s*18,4,'#c0392b',null);
+        AnimKit.label(ctx,'短肽',px0+46,py0,'#c0392b','11.5px "Microsoft YaHei"','left');
+      }
+      AnimKit.label(ctx,'错误折叠蛋白→胞质→泛素化→蛋白酶体降解',W/2,24,'#1f5c8b','bold 13.5px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

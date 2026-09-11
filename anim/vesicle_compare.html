@@ -1,0 +1,41 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>三种膜泡的比较</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'三种膜泡的比较',
+    sub:'COPII 顺行 ER→Golgi（SAR）；网格蛋白 TGN→质膜/内体/溶酶体（ARF；胞吞用 dynamin）；COPI 逆行 Golgi→ER（ARF）。',
+    legend:[{c:'#e8a13a',t:'COPII'},{c:'#3b8fd6',t:'网格蛋白'},{c:'#9b59b6',t:'COPI'}],
+    init:function(S){S.hl=0;},
+    phases:[
+      {name:'① COPII：ER→Golgi 顺行',dur:1400,note:'COPII 有被小泡负责从内质网到高尔基体的顺行转运，小 G 蛋白为 SAR。',ap:function(S){S.hl=1;}},
+      {name:'② 网格蛋白：TGN→质膜/内体/溶酶体',dur:1500,note:'网格蛋白介导由高尔基体 TGN 向质膜、胞内体或溶酶体的顺行转运(小 G 蛋白 ARF)，以及受体介导的胞吞(小 G 蛋白 dynamin)。',ap:function(S){S.hl=2;}},
+      {name:'③ COPI：Golgi→ER 逆行',dur:1500,note:'COPI 有被小泡负责从高尔基体到内质网的逆行转运，捕获逃逸蛋白回到内质网，小 G 蛋白为 ARF。',ap:function(S){S.hl=3;}},
+      {name:'④ 三者对照',dur:1500,note:'COPII 顺行、COPI 逆行、网格蛋白负责 TGN 出发的运输与胞吞。',ap:function(S){S.hl=4;}}
+    ],
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var rows=[
+        {c:'#e8a13a',t:'COPII',dir:'ER → Golgi',g:'SAR',note:'顺行转运(anterograde)',ex:'ER 出芽'},
+        {c:'#3b8fd6',t:'网格蛋白',dir:'TGN → 质膜/内体/溶酶体',g:'ARF / dynamin',note:'顺行 + 受体介导胞吞',ex:'受体摄取'},
+        {c:'#9b59b6',t:'COPI',dir:'Golgi → ER',g:'ARF',note:'逆行转运(retrograde)',ex:'回收逃逸蛋白'}
+      ];
+      var y0=52,rh=(H-y0-24)/3;
+      rows.forEach(function(o,i){
+        var active=(S.hl===0||S.hl===i+1||S.hl===4);
+        ctx.globalAlpha=active?1:0.3;
+        AnimKit.roundRect(ctx,20,y0+i*rh,W-40,rh-10,10);
+        ctx.fillStyle=active?'#eef4fa':'#f2f6fa';ctx.fill();
+        ctx.strokeStyle=o.c;ctx.lineWidth=active?2.5:1;ctx.stroke();
+        AnimKit.pill(ctx,34,y0+i*rh+rh/2-24,84,26,o.c,o.t,'#fff');
+        AnimKit.label(ctx,o.dir,140,y0+i*rh+rh/2-4,'#1f2a37','13px "Microsoft YaHei"','left');
+        AnimKit.label(ctx,o.note,140,y0+i*rh+rh/2+16,'#5b6b7b','11.5px "Microsoft YaHei"','left');
+        AnimKit.label(ctx,'小 G 蛋白：'+o.g,W-40,y0+i*rh+rh/2-4,'#33465c','12px "Microsoft YaHei"','right');
+        AnimKit.label(ctx,o.ex,W-40,y0+i*rh+rh/2+16,'#7a8aa0','11.5px "Microsoft YaHei"','right');
+        ctx.globalAlpha=1;
+      });
+      AnimKit.label(ctx,'三种膜泡的比较',W/2,26,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

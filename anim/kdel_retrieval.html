@@ -1,0 +1,49 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KDEL 回收信号</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  function prot(ctx,x,y,col){ctx.strokeStyle=col;ctx.lineWidth=4;ctx.beginPath();
+    for(var i=0;i<=16;i++){var t=i/16,xx=x-20+t*40,yy=y+Math.sin(t*8)*6;if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}ctx.stroke();}
+  AnimKit.mount({
+    title:'KDEL 回收信号与 COPI 逆行运输',
+    sub:'ER 驻留蛋白（Bip、PDI 等）C 端含 KDEL(Lys-Asp-Glu-Leu)；若逃逸到高尔基体，被 KDEL 受体识别，经 COPI 小泡回收回 ER。',
+    legend:[{c:'#3b6fd6',t:'ER 驻留蛋白'},{c:'#c0392b',t:'KDEL 信号'},{c:'#2e9e5b',t:'KDEL 受体'},{c:'#9b59b6',t:'COPI 小泡'}],
+    init:function(S){S.stage=0;S.prog=0;},
+    phases:[
+      {name:'① ER 驻留蛋白含 C 端 KDEL',dur:1400,note:'ER 腔中的二硫键异构酶(PDI)、分子伴侣 Bip 等驻留蛋白，C 端都有一段回收信号 KDEL。',ap:function(S){S.stage=0;S.prog=0;}},
+      {name:'② 逃逸到高尔基体',dur:1400,note:'若驻留蛋白意外进入转运泡被运到高尔基体顺面(CGN)，就会“越狱”。',ap:function(S){S.stage=1;S.prog=0;}},
+      {name:'③ KDEL 受体识别',dur:1400,note:'高尔基体 CGN 有特异的 KDEL 受体，识别并结合逃逸蛋白的 KDEL 信号。',ap:function(S){S.stage=2;S.prog=0;}},
+      {name:'④ COPI 小泡回收 → ER',dur:1500,note:'KDEL 受体把逃逸蛋白装入 COPI 小泡，从高尔基体逆行运回内质网，实现回收。',ap:function(S){S.stage=3;S.prog=0;}}
+    ],
+    update:function(S,e){S.prog=Math.min(1,S.prog+e*0.03);},
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var yG=H*0.20,yE=H*0.80,cx=W*0.42;
+      // Golgi
+      AnimKit.label(ctx,'高尔基体（CGN）',14,yG+4,'#3d7a5a','12.5px "Microsoft YaHei"','left');
+      for(var g=0;g<4;g++){AnimKit.roundRect(ctx,cx-70,yG-24+g*13,140,9,4);ctx.fillStyle='#a9d8bd';ctx.fill();}
+      // ER
+      AnimKit.label(ctx,'内质网腔',14,yE+22,'#6c3483','12.5px "Microsoft YaHei"','left');
+      ctx.strokeStyle='#c9a0dc';ctx.lineWidth=6;
+      for(var k=0;k<2;k++){ctx.beginPath();for(var j=0;j<=16;j++){var t=j/16,xx=cx-90+t*180,yy=yE+k*20+Math.sin(t*8)*6;if(j===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}ctx.stroke();}
+      // KDEL receptor on golgi
+      AnimKit.circle(ctx,cx+44,yG+22,12,'#2e9e5b','R');
+      AnimKit.label(ctx,'KDEL 受体',cx+60,yG+30,'#3d7a5a','11px "Microsoft YaHei"','left');
+      // protein position
+      var py;
+      if(S.stage===0)py=yE-6;
+      else if(S.stage===1)py=AnimKit.lerp(yE-6,yG+40,AnimKit.easeOut(S.prog));
+      else if(S.stage===2)py=yG+40;
+      else py=AnimKit.lerp(yG+40,yE-6,AnimKit.easeOut(S.prog));
+      prot(ctx,cx,py,'#3b6fd6');
+      AnimKit.label(ctx,'KDEL',cx+26,py+4,'#c0392b','11px "Microsoft YaHei"','left');
+      // escape arrow
+      if(S.stage===1)AnimKit.arrow(ctx,cx+70,yE-20,cx+70,yG+30,'#c0392b',2);
+      AnimKit.label(ctx,'逃逸',cx+84,(yE+yG)/2,'#c0392b','11px "Microsoft YaHei"','left');
+      // COPI vesicle
+      if(S.stage===3){AnimKit.circle(ctx,cx-90,py,14,'#9b59b6','COPI');AnimKit.arrow(ctx,cx-90,py+16,cx-90,yE-14,'#9b59b6',2);}
+      AnimKit.label(ctx,'KDEL 回收：Golgi → ER 逆行（ER is an open prison）',W/2,20,'#1f5c8b','bold 13.5px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

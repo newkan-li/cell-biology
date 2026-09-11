@@ -1,0 +1,63 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>放射自显影脉冲追踪</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  function rERv(t){return t<3?0:100*Math.exp(-(t-3)/26);}
+  function golgiv(t){return 92*Math.exp(-Math.pow((t-20)/24,2));}
+  function granv(t){return t<20?0:92*(1-Math.exp(-(t-20)/45));}
+  AnimKit.mount({
+    title:'放射自显影脉冲追踪（Palade 实验）',
+    sub:'胰腺腺泡细胞用放射性亮氨酸脉冲标记 3 min，放射性依次出现在 粗面内质网→高尔基体→分泌泡，证明分泌蛋白的运输顺序。',
+    legend:[{c:'#c0392b',t:'放射性'},{c:'#8e44ad',t:'粗面内质网'},{c:'#2e9e5b',t:'高尔基体'},{c:'#e8a13a',t:'分泌泡'}],
+    init:function(S){S.stage=0;},
+    phases:[
+      {name:'① 脉冲标记 3 min',dur:1400,note:'胰腺腺泡细胞在含放射性氨基酸的培养基中孵育 3 min，新合成的蛋白被脉冲标记。',ap:function(S){S.stage=0;}},
+      {name:'② 3 min：粗面内质网',dur:1400,note:'3 min 时放射性集中在粗面内质网，分泌蛋白在此合成。',ap:function(S){S.stage=1;}},
+      {name:'③ 20 min：高尔基体',dur:1400,note:'20 min 时放射性转移到高尔基体。',ap:function(S){S.stage=2;}},
+      {name:'④ 120 min：分泌泡',dur:1400,note:'120 min 时放射性出现在分泌泡（分泌颗粒），即将分泌到细胞外。',ap:function(S){S.stage=3;}},
+      {name:'⑤ 追踪曲线',dur:1600,note:'定量曲线显示放射性依次在粗面内质网、高尔基体、分泌泡达峰，证明分泌蛋白的运输顺序。',ap:function(S){S.stage=4;}}
+    ],
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var cX=22,cW=W*0.54,cY=46,cH=H-72;
+      AnimKit.roundRect(ctx,cX,cY,cW,cH,26);ctx.fillStyle='#fbfefc';ctx.fill();
+      ctx.strokeStyle='#7fc79a';ctx.lineWidth=4;ctx.stroke();
+      AnimKit.label(ctx,'腺泡腔',cX+cW/2,cY-8,'#4f9e6d','12px "Microsoft YaHei"');
+      ctx.strokeStyle='#cfe8d8';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cX+30,cY+16);ctx.lineTo(cX+cW-30,cY+16);ctx.stroke();
+      var gx=cX+cW*0.40,gy=cY+cH*0.18;
+      for(var i=0;i<4;i++){AnimKit.circle(ctx,gx+(i%2)*22-11,gy+Math.floor(i/2)*20,9,(S.stage===3?'#e8a13a':'#f0d9b0'),null);}
+      AnimKit.label(ctx,'分泌泡',gx+40,gy,'#a9781f','11.5px "Microsoft YaHei"','left');
+      var ox=cX+cW*0.40,oy=cY+cH*0.47;
+      for(var g=0;g<3;g++){AnimKit.roundRect(ctx,ox-34,oy-10+g*11,68,8,4);ctx.fillStyle=(S.stage===2?'#2e9e5b':'#a9d8bd');ctx.fill();}
+      AnimKit.label(ctx,'高尔基体',ox+44,oy,'#3d7a5a','11.5px "Microsoft YaHei"','left');
+      var ex=cX+cW*0.38,ey=cY+cH*0.75;
+      ctx.strokeStyle=(S.stage===1?'#8e44ad':'#c9a0dc');ctx.lineWidth=5;
+      for(var k=0;k<3;k++){ctx.beginPath();for(var j=0;j<=14;j++){var tt=j/14;var xx=ex-46+tt*92;var yy=ey-12+k*13+Math.sin(tt*10)*4;if(j===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}ctx.stroke();}
+      AnimKit.label(ctx,'粗面内质网',ex+56,ey+4,'#6c3483','11.5px "Microsoft YaHei"','left');
+      AnimKit.circle(ctx,cX+cW*0.74,cY+cH*0.72,26,'#c9b6e4',null);
+      AnimKit.label(ctx,'核',cX+cW*0.74,cY+cH*0.72+2,'#5b3d7a','12px "Microsoft YaHei"');
+      function hot(x,y){AnimKit.circle(ctx,x,y,5,'#c0392b','');}
+      if(S.stage===0){for(var d=0;d<10;d++)hot(cX+40+(d%5)*24,cY+50+Math.floor(d/5)*24);}
+      if(S.stage===1){for(var a=0;a<8;a++)hot(ex-40+(a%4)*26,ey-18+Math.floor(a/4)*22);}
+      if(S.stage===2){for(var b=0;b<6;b++)hot(ox-26+(b%3)*24,oy-8+Math.floor(b/3)*13);}
+      if(S.stage===3){for(var c=0;c<5;c++)hot(gx-14+(c%3)*20,gy-8+Math.floor(c/3)*18);}
+      var x0=W*0.62,y0=H-38,x1=W-16,y1=48;
+      ctx.strokeStyle='#c9d8e8';ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(x0,y1);ctx.lineTo(x0,y0);ctx.lineTo(x1,y0);ctx.stroke();
+      AnimKit.label(ctx,'时间 (min)',(x0+x1)/2,y0+20,'#7a8aa0','11px "Microsoft YaHei"');
+      [0,40,80,120].forEach(function(t){var xx=x0+(t/120)*(x1-x0);ctx.strokeStyle='#eef2f7';ctx.beginPath();ctx.moveTo(xx,y1);ctx.lineTo(xx,y0);ctx.stroke();AnimKit.label(ctx,''+t,xx,y0+13,'#9aa9b8','10px Arial');});
+      function px(t){return x0+(t/120)*(x1-x0);}
+      function py(v){return y0-(v/100)*(y0-y1);}
+      function curve(fn,col){ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.beginPath();for(var t=3;t<=120;t+=2){var xx=px(t),yy=py(fn(t));if(t===3)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}ctx.stroke();}
+      ctx.globalAlpha=(S.stage===4)?1:0.4;
+      curve(rERv,'#8e44ad');curve(golgiv,'#2e9e5b');curve(granv,'#e8a13a');
+      ctx.globalAlpha=1;
+      AnimKit.label(ctx,'rER',px(6),py(rERv(6))-6,'#6c3483','10.5px "Microsoft YaHei"');
+      AnimKit.label(ctx,'Golgi',px(20),py(golgiv(20))-6,'#3d7a5a','10.5px "Microsoft YaHei"');
+      AnimKit.label(ctx,'分泌泡',px(112),py(granv(112))-6,'#a9781f','10.5px "Microsoft YaHei"');
+      if(S.stage>=1&&S.stage<=3){var tt=[3,20,120][S.stage-1];var xx=px(tt);ctx.strokeStyle='#c0392b';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(xx,y1);ctx.lineTo(xx,y0);ctx.stroke();ctx.setLineDash([]);AnimKit.label(ctx,tt+' min',xx,y1-4,'#c0392b','11px "Microsoft YaHei"');}
+      AnimKit.label(ctx,'放射性在 rER→Golgi→分泌泡 依次达峰',W/2,24,'#1f5c8b','bold 13.5px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

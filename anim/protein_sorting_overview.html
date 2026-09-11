@@ -1,0 +1,65 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>蛋白质定向转运与分选</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'蛋白质的定向转运与分选',
+    sub:'信号序列决定蛋白质的合成部位与运输方向：信号肽→内膜系统；导肽/转运肽→线粒体、叶绿体、过氧化物酶体；核定位信号→细胞核。',
+    legend:[{c:'#5a7fa8',t:'新生蛋白'},{c:'#2e9e5b',t:'信号肽'},{c:'#e8703a',t:'导肽/转运肽'},{c:'#8e44ad',t:'核定位信号'}],
+    init:function(S){S.hl=0;},
+    phases:[
+      {name:'① 胞质中合成',dur:1200,note:'核基因编码的蛋白质在细胞质游离核糖体上合成。',ap:function(S){S.hl=0;}},
+      {name:'② 信号肽 → 内膜系统',dur:1400,note:'信号肽引导新生肽链共翻译转运进入内质网，再经内膜系统(ER→高尔基体→…)运输。',ap:function(S){S.hl=1;}},
+      {name:'③ 导肽/转运肽 → 线粒体等',dur:1400,note:'导肽(线粒体)或转运肽(叶绿体)引导蛋白翻译后转运进入线粒体、叶绿体、过氧化物酶体。',ap:function(S){S.hl=2;}},
+      {name:'④ 核定位信号 → 细胞核',dur:1400,note:'核定位信号(NLS)引导亲核蛋白经核孔复合体进入细胞核。',ap:function(S){S.hl=3;}}
+    ],
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var cx=W*0.5,cy=H*0.5;
+      var dest={
+        er:{x:W*0.19,y:H*0.24},
+        mito:{x:W*0.18,y:H*0.76},
+        nuc:{x:W*0.83,y:H*0.5}
+      };
+      function on(k){return S.hl===0||(S.hl===1&&k==='er')||(S.hl===2&&k==='mito')||(S.hl===3&&k==='nuc');}
+      // ER + Golgi
+      ctx.globalAlpha=on('er')?1:0.3;
+      ctx.strokeStyle='#3b6fd6';ctx.lineWidth=6;ctx.beginPath();
+      for(var j=0;j<=14;j++){var tt=j/14,xx=dest.er.x-52+tt*104,yy=dest.er.y+Math.sin(tt*9)*9;if(j===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}
+      ctx.stroke();
+      for(var g=0;g<3;g++){AnimKit.roundRect(ctx,dest.er.x-30,dest.er.y+26+g*10,60,7,3);ctx.fillStyle='#2e9e5b';ctx.fill();}
+      AnimKit.label(ctx,'内质网/高尔基体',dest.er.x,dest.er.y-24,'#1f5c8b','12px "Microsoft YaHei"');
+      ctx.globalAlpha=1;
+      // mitochondria + chloroplast + peroxisome
+      ctx.globalAlpha=on('mito')?1:0.3;
+      AnimKit.roundRect(ctx,dest.mito.x-58,dest.mito.y-24,58,26,12);ctx.fillStyle='#c0392b';ctx.fill();
+      ctx.fillStyle='#f2b950';ctx.beginPath();for(var m=0;m<6;m++){ctx.arc(dest.mito.x-54+m*9,dest.mito.y-11,3,0,7);}ctx.fill();
+      AnimKit.circle(ctx,dest.mito.x+28,dest.mito.y-8,16,'#2e9e5b',null);
+      AnimKit.circle(ctx,dest.mito.x-24,dest.mito.y+24,11,'#8d6e63',null);
+      AnimKit.label(ctx,'线粒体·叶绿体·过氧化物酶体',dest.mito.x,dest.mito.y+50,'#7a4a2a','12px "Microsoft YaHei"');
+      ctx.globalAlpha=1;
+      // nucleus
+      ctx.globalAlpha=on('nuc')?1:0.3;
+      AnimKit.circle(ctx,dest.nuc.x,dest.nuc.y,46,'#c9b6e4',null);
+      ctx.strokeStyle='#8e44ad';ctx.lineWidth=4;ctx.beginPath();ctx.arc(dest.nuc.x,dest.nuc.y,46,0,7);ctx.stroke();
+      AnimKit.label(ctx,'细胞核',dest.nuc.x,dest.nuc.y+2,'#5b3d7a','13px "Microsoft YaHei"');
+      ctx.globalAlpha=1;
+      // central ribosome + proteins
+      AnimKit.circle(ctx,cx,cy,30,'#8e44ad',null);
+      AnimKit.circle(ctx,cx,cy-26,22,'#a569c4',null);
+      AnimKit.label(ctx,'核糖体',cx,cy+4,'#fff','12px "Microsoft YaHei"');
+      var cols=['#2e9e5b','#e8703a','#8e44ad','#5a7fa8'];
+      for(var p=0;p<4;p++)AnimKit.circle(ctx,cx+42+(p%2)*16,cy-14+Math.floor(p/2)*16,7,cols[p],null);
+      AnimKit.label(ctx,'新生蛋白',cx+70,cy+6,'#33465c','11.5px "Microsoft YaHei"','left');
+      // arrows
+      AnimKit.arrow(ctx,cx-30,cy-10,dest.er.x+44,dest.er.y+16,'#3b6fd6',2);
+      AnimKit.arrow(ctx,cx-26,cy+16,dest.mito.x+30,dest.mito.y-4,'#e8703a',2);
+      AnimKit.arrow(ctx,cx+34,cy,dest.nuc.x-48,dest.nuc.y,'#8e44ad',2);
+      AnimKit.label(ctx,'② 信号肽',(cx+dest.er.x)/2-20,(cy+dest.er.y)/2,'#2e9e5b','11.5px "Microsoft YaHei"');
+      AnimKit.label(ctx,'③ 导肽/转运肽',(cx+dest.mito.x)/2+10,(cy+dest.mito.y)/2+6,'#e8703a','11.5px "Microsoft YaHei"');
+      AnimKit.label(ctx,'④ NLS',(cx+dest.nuc.x)/2,(cy+dest.nuc.y)/2-8,'#8e44ad','11.5px "Microsoft YaHei"');
+      AnimKit.label(ctx,'信号序列决定合成部位与运输方向',W/2,24,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

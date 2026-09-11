@@ -1,0 +1,57 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>蛋白质输入细胞器的三种途径</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'蛋白质输入细胞器的三种途径',
+    sub:'核编码蛋白在胞质合成后，经核孔运输（细胞核）、跨膜运输（线粒体/叶绿体/过氧化物酶体）和膜泡运输（内膜系统）到达目的地。',
+    legend:[{c:'#8e44ad',t:'核孔运输'},{c:'#e8703a',t:'跨膜运输'},{c:'#2e9e5b',t:'膜泡运输'}],
+    init:function(S){S.hl=0;},
+    phases:[
+      {name:'① 胞质中合成',dur:1200,note:'蛋白质在细胞质游离核糖体上合成。',ap:function(S){S.hl=0;}},
+      {name:'② 核孔运输 → 细胞核',dur:1400,note:'①核孔运输：蛋白质经核孔复合体进入细胞核。',ap:function(S){S.hl=1;}},
+      {name:'③ 跨膜运输 → 线粒体等',dur:1400,note:'②跨膜运输：线粒体、叶绿体、过氧化物酶体；此外信号肽引导新生肽链进入内质网。',ap:function(S){S.hl=2;}},
+      {name:'④ 膜泡运输 → 内膜系统',dur:1400,note:'③膜泡运输：在内膜系统（内质网、高尔基体、溶酶体等）各细胞器之间及与细胞膜之间运输。',ap:function(S){S.hl=3;}}
+    ],
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,W,H);
+      var cx=W/2,cy=H*0.56;
+      var nuc={x:W*0.5,y:H*0.17}, mito={x:W*0.17,y:H*0.62}, er={x:W*0.83,y:H*0.66};
+      function on(k){return S.hl===0||(S.hl===1&&k==='n')||(S.hl===2&&k==='m')||(S.hl===3&&k==='e');}
+      // nucleus
+      ctx.globalAlpha=on('n')?1:0.3;
+      AnimKit.circle(ctx,nuc.x,nuc.y,40,'#c9b6e4',null);
+      ctx.strokeStyle='#8e44ad';ctx.lineWidth=4;ctx.beginPath();ctx.arc(nuc.x,nuc.y,40,0,7);ctx.stroke();
+      AnimKit.label(ctx,'细胞核',nuc.x,nuc.y+2,'#5b3d7a','13px "Microsoft YaHei"');
+      ctx.globalAlpha=1;
+      // mitochondria / chloroplast / peroxisome
+      ctx.globalAlpha=on('m')?1:0.3;
+      AnimKit.roundRect(ctx,mito.x-46,mito.y-18,54,26,12);ctx.fillStyle='#c0392b';ctx.fill();
+      AnimKit.circle(ctx,mito.x+28,mito.y-6,15,'#2e9e5b',null);
+      AnimKit.circle(ctx,mito.x-24,mito.y+24,11,'#8d6e63',null);
+      AnimKit.label(ctx,'线粒体·叶绿体·过氧化物酶体',mito.x,mito.y+50,'#7a4a2a','11.5px "Microsoft YaHei"');
+      ctx.globalAlpha=1;
+      // ER/Golgi
+      ctx.globalAlpha=on('e')?1:0.3;
+      ctx.strokeStyle='#3b6fd6';ctx.lineWidth=5;ctx.beginPath();
+      for(var j=0;j<=14;j++){var t=j/14,xx=er.x-50+t*100,yy=er.y+Math.sin(t*9)*8;if(j===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}
+      ctx.stroke();
+      for(var g=0;g<3;g++){AnimKit.roundRect(ctx,er.x-30,er.y+24+g*10,60,7,3);ctx.fillStyle='#2e9e5b';ctx.fill();}
+      AnimKit.label(ctx,'内质网·高尔基体',er.x,er.y-22,'#1f5c8b','12px "Microsoft YaHei"');
+      ctx.globalAlpha=1;
+      // ribosome
+      AnimKit.circle(ctx,cx,cy,28,'#8e44ad',null);
+      AnimKit.circle(ctx,cx,cy-24,20,'#a569c4',null);
+      AnimKit.label(ctx,'核糖体',cx,cy+4,'#fff','12px "Microsoft YaHei"');
+      // arrows
+      AnimKit.arrow(ctx,cx,cy-30,nuc.x,nuc.y+44,'#8e44ad',2.5);
+      AnimKit.arrow(ctx,cx-28,cy+8,mito.x+30,mito.y+4,'#e8703a',2.5);
+      AnimKit.arrow(ctx,cx+28,cy+8,er.x-46,er.y+6,'#2e9e5b',2.5);
+      AnimKit.label(ctx,'①核孔运输',(cx+nuc.x)/2+54,(cy+nuc.y)/2,'#8e44ad','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'②跨膜运输',(cx+mito.x)/2-4,(cy+mito.y)/2+18,'#e8703a','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'③膜泡运输',(cx+er.x)/2+6,(cy+er.y)/2+18,'#2e9e5b','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'蛋白质输入细胞器的三种途径',W/2,24,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

@@ -1,0 +1,64 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>三种包被小泡</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  function triskelion(ctx,x,y,s,col){
+    ctx.strokeStyle=col;ctx.lineWidth=5;
+    for(var a=0;a<3;a++){var ang=-Math.PI/2+a*2.094;
+      var x2=x+Math.cos(ang)*s,y2=y+Math.sin(ang)*s;
+      ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();
+      AnimKit.circle(ctx,x2,y2,6,col,null);
+      AnimKit.circle(ctx,x2+Math.cos(ang+2.6)*10,y2+Math.sin(ang+2.6)*10,4,col,null);
+    }
+    AnimKit.circle(ctx,x,y,5,col,null);
+  }
+  function lattice(ctx,x,y,r,col,hex){
+    ctx.strokeStyle=col;ctx.lineWidth=1.6;
+    var n=6;
+    for(var k=0;k<n;k++){var a=k/n*6.283;
+      ctx.beginPath();ctx.arc(x,y,r,a,a+0.9);ctx.stroke();
+      if(hex){var mx=x+Math.cos(a+0.45)*r,my=y+Math.sin(a+0.45)*r;
+        ctx.beginPath();ctx.arc(mx,my,r*0.45,a+2,a+4);ctx.stroke();}
+    }
+    ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.stroke();
+  }
+  AnimKit.mount({
+    title:'三种包被小泡（网格蛋白·COPII·COPI）',
+    sub:'网格蛋白由 3 重链+3 轻链组成三脚复合体；COPII 由 Sec23/24 与 Sec13/31 组成；COPI 由 β′/α 等组成。',
+    legend:[{c:'#3b8fd6',t:'网格蛋白'},{c:'#e8a13a',t:'COPII'},{c:'#9b59b6',t:'COPI'}],
+    init:function(S){S.hl=0;},
+    phases:[
+      {name:'① 网格蛋白（clathrin）',dur:1400,note:'网格蛋白由 3 条重链和 3 条轻链组成三脚复合体(triskelion)，组装成蜂巢状网格包被。',ap:function(S){S.hl=1;}},
+      {name:'② COPII 包被',dur:1400,note:'COPII 由 Sec23/Sec24 复合物与 Sec13/Sec31 复合物组成，介导内质网到高尔基体的顺行运输。',ap:function(S){S.hl=2;}},
+      {name:'③ COPI 包被',dur:1400,note:'COPI 由 β′、α 等亚基组成，介导高尔基体到内质网的逆向运输。',ap:function(S){S.hl=3;}},
+      {name:'④ 三种小泡的电镜形态',dur:1500,note:'电镜下可见三种不同包被蛋白包裹的小泡，直径约 50–100 nm。',ap:function(S){S.hl=4;}}
+    ],
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var cols=[{x:W*0.2,c:'#3b8fd6',t:'网格蛋白',sub:'3 重链 + 3 轻链'},
+                {x:W*0.5,c:'#e8a13a',t:'COPII',sub:'Sec23/24 + Sec13/31'},
+                {x:W*0.8,c:'#9b59b6',t:'COPI',sub:'β′ / α 等亚基'}];
+      var hlIdx=[0,1,2,3];
+      cols.forEach(function(o,i){
+        var active=(S.hl===0||S.hl===i+1||S.hl===4);
+        ctx.globalAlpha=active?1:0.3;
+        AnimKit.roundRect(ctx,o.x-72,34,144,H-70,12);ctx.fillStyle='#fff';ctx.fill();
+        ctx.strokeStyle=o.c;ctx.lineWidth=active?2.5:1;ctx.stroke();
+        if(i===0)triskelion(ctx,o.x,86,26,o.c);
+        else if(i===1){AnimKit.roundRect(ctx,o.x-40,74,80,14,7);ctx.fillStyle=o.c;ctx.fill();
+          AnimKit.roundRect(ctx,o.x-30,94,60,12,6);ctx.fillStyle='#f0c988';ctx.fill();}
+        else {AnimKit.roundRect(ctx,o.x-38,72,50,14,7);ctx.fillStyle=o.c;ctx.fill();
+          AnimKit.roundRect(ctx,o.x-4,90,44,13,6);ctx.fillStyle='#c9a0dc';ctx.fill();}
+        // vesicle
+        AnimKit.circle(ctx,o.x,H*0.56,40,'#eef4fa',null);
+        lattice(ctx,o.x,H*0.56,40,o.c,i===0);
+        AnimKit.label(ctx,o.t,o.x,44,'#1f2a37','bold 13px "Microsoft YaHei"');
+        AnimKit.label(ctx,o.sub,o.x,H-22,'#5b6b7b','11px "Microsoft YaHei"');
+        ctx.globalAlpha=1;
+      });
+      if(S.hl===4)AnimKit.label(ctx,'≈ 50–100 nm',W/2,H-8,'#5b6b7b','11px "Microsoft YaHei"');
+      AnimKit.label(ctx,'三种包被小泡：网格蛋白 / COPII / COPI',W/2,20,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

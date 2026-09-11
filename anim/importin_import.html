@@ -1,0 +1,51 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>亲核蛋白入核转运</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'亲核蛋白经 NPC 的入核转运',
+    sub:'NLS-亲核蛋白与 importin 结合成转运复合物 → 结合 NPC 胞质纤维、NPC 构象改变 → 到核质面与 Ran-GTP 结合、释放货物 → 受体回收。',
+    legend:[{c:'#c0392b',t:'NLS-货物'},{c:'#3b6fd6',t:'importin'},{c:'#2e9e5b',t:'Ran-GTP'},{c:'#5a7fa8',t:'NPC'}],
+    init:function(S){S.stage=0;S.prog=0;},
+    phases:[
+      {name:'① 形成转运复合物',dur:1400,note:'胞质中 NLS-亲核蛋白被受体输入蛋白(importin)识别并结合，形成转运复合物。',ap:function(S){S.stage=0;S.prog=0;}},
+      {name:'② 结合 NPC 胞质纤维',dur:1400,note:'importin 介导转运复合物与核孔复合体胞质面的胞质纤维结合，NPC 发生构象改变。',ap:function(S){S.stage=1;S.prog=0;}},
+      {name:'③ 由胞质面转到核质面',dur:1400,note:'转运复合物由核孔的胞质面转到核质面。',ap:function(S){S.stage=2;S.prog=0;}},
+      {name:'④ Ran-GTP 结合，释放货物',dur:1500,note:'在核质面，转运复合物与 Ran-GTP 结合，复合物解离，释放货物蛋白到核内。',ap:function(S){S.stage=3;S.prog=0;}},
+      {name:'⑤ 受体回收',dur:1500,note:'importin α、β 与 Ran-GTP 返回胞质，此时 Ran-GTP 水解成 Ran-GDP，与 importin 解离，完成循环。',ap:function(S){S.stage=4;S.prog=0;}}
+    ],
+    update:function(S,e){S.prog=Math.min(1,S.prog+e*0.03);},
+    draw:function(ctx,W,H,S){
+      var yO=H*0.38,yI=H*0.58,cx=W*0.46;
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,W,yO-8);
+      ctx.fillStyle='#eef2fb';ctx.fillRect(0,yO-8,W,yI-yO+16);
+      ctx.fillStyle='#f4eefb';ctx.fillRect(0,yI+8,W,H-yI-8);
+      AnimKit.label(ctx,'胞质',14,22,'#7a8aa0','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'核质',14,H-14,'#7a8aa0','12px "Microsoft YaHei"','left');
+      ctx.strokeStyle='#b9d2e6';ctx.lineWidth=6;
+      ctx.beginPath();ctx.moveTo(30,yO);ctx.lineTo(cx-40,yO);ctx.moveTo(cx+40,yO);ctx.lineTo(W-30,yO);
+      ctx.moveTo(30,yI);ctx.lineTo(cx-40,yI);ctx.moveTo(cx+40,yI);ctx.lineTo(W-30,yI);ctx.stroke();
+      // NPC with cytoplasmic filaments
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=5;
+      ctx.beginPath();ctx.moveTo(cx-40,yO);ctx.lineTo(cx-40,yI);ctx.moveTo(cx+40,yO);ctx.lineTo(cx+40,yI);ctx.stroke();
+      for(var f=0;f<4;f++){ctx.beginPath();ctx.moveTo(cx-30+f*20,yO);ctx.lineTo(cx-30+f*20,yO-22);ctx.stroke();}
+      AnimKit.label(ctx,'NPC 胞质纤维',cx+52,yO-24,'#33465c','11.5px "Microsoft YaHei"','left');
+      // complex position
+      var py;
+      if(S.stage===0)py=yO-70;
+      else if(S.stage===1)py=AnimKit.lerp(yO-70,yO-30,AnimKit.easeOut(S.prog));
+      else if(S.stage===2)py=AnimKit.lerp(yO-30,yI+34,AnimKit.easeOut(S.prog));
+      else py=yI+34;
+      AnimKit.roundRect(ctx,cx-26,py-14,52,28,8);ctx.fillStyle='#3b6fd6';ctx.fill();
+      AnimKit.label(ctx,'importin',cx,py,'#fff','11px "Microsoft YaHei"');
+      AnimKit.circle(ctx,cx-40,py,8,'#c0392b','C');
+      AnimKit.label(ctx,'NLS 货物',cx-54,py-16,'#c0392b','10.5px "Microsoft YaHei"','right');
+      if(S.stage===1){ctx.strokeStyle='#e8703a';ctx.lineWidth=2;ctx.setLineDash([4,3]);ctx.beginPath();ctx.arc(cx,py,34,0,7);ctx.stroke();ctx.setLineDash([]);AnimKit.label(ctx,'NPC 构象改变',cx+58,py,'#a3401a','11px "Microsoft YaHei"','left');}
+      if(S.stage>=3){AnimKit.circle(ctx,cx+70,py-6,14,'#2e9e5b','Ran');AnimKit.arrow(ctx,cx+54,py-6,cx+28,py,'#2e9e5b',2);
+        AnimKit.circle(ctx,cx-56,py+34,8,'#c0392b','C');AnimKit.label(ctx,'货物释放到核内',cx-68,py+40,'#c0392b','11px "Microsoft YaHei"','right');}
+      if(S.stage===4){AnimKit.arrow(ctx,cx+30,yI+34,cx+120,H*0.20,'#8e44ad',2);AnimKit.label(ctx,'importin α/β + Ran-GTP 返回胞质',cx+130,H*0.24,'#5b2c6f','11.5px "Microsoft YaHei"','left');}
+      AnimKit.label(ctx,'NLS → importin → NPC → Ran-GTP 释放货物',W/2,22,'#1f5c8b','bold 13.5px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

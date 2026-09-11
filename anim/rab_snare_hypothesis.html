@@ -1,0 +1,47 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rab-SNARE 假说</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'Rab–SNARE 假说：囊泡靶向与融合',
+    sub:'①货物蛋白的信号序列与包被蛋白特异结合（选择性装载）；②Rab GTPase 控制小泡在靶膜的停靠；③成对的 v-/t-SNARE 介导膜融合。',
+    legend:[{c:'#c0392b',t:'货物蛋白'},{c:'#5a7fa8',t:'包被蛋白'},{c:'#2e9e5b',t:'Rab-GTP'},{c:'#e8703a',t:'SNARE'}],
+    init:function(S){S.stage=0;S.vy=0.28;},
+    phases:[
+      {name:'① 信号序列 ↔ 包被蛋白（选择性装载）',dur:1500,note:'货物蛋白上的信号序列与包被蛋白发生特异的分子接触，保证只有正确的货物被装入小泡。',ap:function(S){S.stage=0;S.vy=0.28;}},
+      {name:'② Rab GTPase 控制停靠',dur:1400,note:'Rab GTPase 高度选择性地分布在不同膜上，控制小泡在靶膜上的停靠(docking)。',ap:function(S){S.stage=1;S.vy=0.55;}},
+      {name:'③ v-/t-SNARE 配对',dur:1400,note:'成对的 SNARE 蛋白（小泡上的 v-SNARE 与靶膜上的 t-SNARE）互补配对。',ap:function(S){S.stage=2;S.vy=0.70;}},
+      {name:'④ 膜融合',dur:1500,note:'SNARE 配对拉近两膜并介导融合，把货物送入靶区室。',ap:function(S){S.stage=3;S.vy=0.78;}}
+    ],
+    draw:function(ctx,W,H,S){
+      var yD=H*0.20,yT=H*0.82,cx=W/2;
+      // donor
+      ctx.fillStyle='#eaf3fb';AnimKit.roundRect(ctx,cx-150,yD-30,300,54,16);ctx.fill();
+      ctx.strokeStyle='#b9d2e6';ctx.lineWidth=4;ctx.stroke();
+      AnimKit.label(ctx,'供体区室',cx-150+8,yD-38,'#7a8aa0','11.5px "Microsoft YaHei"','left');
+      // target
+      ctx.fillStyle='#fff2e8';AnimKit.roundRect(ctx,cx-150,yT-24,300,54,16);ctx.fill();
+      ctx.strokeStyle='#f0c39a';ctx.lineWidth=4;ctx.stroke();
+      AnimKit.label(ctx,'靶膜',cx-150+8,yT+44,'#a9781f','11.5px "Microsoft YaHei"','left');
+      // cargo in donor
+      for(var i=0;i<5;i++)AnimKit.circle(ctx,cx-100+i*22,yD-4,5,'#c0392b',null);
+      // vesicle
+      var vy=S.vy*H;
+      AnimKit.circle(ctx,cx,vy,34,'#eef4fa',null);
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,vy,34,0,7);ctx.stroke();
+      for(var c=0;c<5;c++)AnimKit.circle(ctx,cx-16+(c%3)*16,vy-8+Math.floor(c/3)*16,5,'#c0392b',null);
+      if(S.stage===0){for(var k=0;k<6;k++)AnimKit.circle(ctx,cx+Math.cos(k/6*6.28)*38,vy+Math.sin(k/6*6.28)*38,6,'#5a7fa8',null);}
+      // Rab
+      if(S.stage>=1)AnimKit.circle(ctx,cx-34,vy+30,10,'#2e9e5b','R');
+      // SNARE
+      if(S.stage>=2){ctx.strokeStyle='#e8703a';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(cx-16,vy+32);ctx.lineTo(cx-16,yT-6);ctx.moveTo(cx+16,vy+32);ctx.lineTo(cx+16,yT-6);ctx.stroke();}
+      if(S.stage===3){ctx.fillStyle='#e8703a';ctx.globalAlpha=0.25;ctx.beginPath();ctx.arc(cx,yT,46,0,7);ctx.fill();ctx.globalAlpha=1;}
+      AnimKit.label(ctx,'货物蛋白',cx-100,yD-40,'#c0392b','11.5px "Microsoft YaHei"');
+      if(S.stage===0)AnimKit.label(ctx,'包被蛋白识别信号序列',cx+110,yD-40,'#33465c','11.5px "Microsoft YaHei"');
+      if(S.stage>=1)AnimKit.label(ctx,'Rab-GTP',cx-56,vy+34,'#3d7a5a','11px "Microsoft YaHei"','right');
+      if(S.stage>=2)AnimKit.label(ctx,'v-/t-SNARE 配对',cx+40,vy+80,'#a3401a','11.5px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'Rab–SNARE 假说',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

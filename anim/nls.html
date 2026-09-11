@@ -1,0 +1,49 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>核定位信号 NLS</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'核定位信号（NLS）——T 抗原实验',
+    sub:'SV40 T 抗原的 NLS(Pro-Pro-Lys-Lys-Lys-Arg-Lys-Val) 是入核所必需的：正常 NLS 时蛋白集中于核；把 Lys 突变为 Thr 后蛋白滞留胞质。',
+    legend:[{c:'#2e9e5b',t:'正常 NLS'},{c:'#c0392b',t:'突变 NLS'}],
+    init:function(S){S.hl=0;},
+    phases:[
+      {name:'① T 抗原含正常 NLS',dur:1300,note:'SV40 T 抗原含一段 7 个氨基酸的核定位信号：Pro-Pro-Lys-Lys-Lys-Arg-Lys-Val。',ap:function(S){S.hl=0;}},
+      {name:'② 正常 NLS → 蛋白入核',dur:1400,note:'正常 NLS 引导 T 抗原进入细胞核，荧光集中在核内。',ap:function(S){S.hl=1;}},
+      {name:'③ NLS 突变（Lys→Thr）',dur:1400,note:'把 NLS 中的赖氨酸(Lys)突变为苏氨酸(Thr)，NLS 失活。',ap:function(S){S.hl=2;}},
+      {name:'④ 突变后滞留胞质',dur:1400,note:'突变型 NLS 不能引导入核，蛋白滞留在细胞质中，证明 NLS 是入核必需的信号。',ap:function(S){S.hl=3;}}
+    ],
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var panels=[{x:W*0.27,t:'(A) 正常 NLS',ok:true},{x:W*0.73,t:'(B) NLS 突变',ok:false}];
+      panels.forEach(function(p,pi){
+        var active=(S.hl===0)||(p.ok&&(S.hl===1))||(!p.ok&&(S.hl===2||S.hl===3));
+        ctx.globalAlpha=active?1:0.4;
+        // cell
+        AnimKit.roundRect(ctx,p.x-150,70,300,H-100,18);ctx.fillStyle='#fbfefc';ctx.fill();
+        ctx.strokeStyle='#7fc79a';ctx.lineWidth=3;ctx.stroke();
+        // nucleus
+        var inNuc=p.ok?(S.hl>=1):false;
+        AnimKit.circle(ctx,p.x,p.y||H*0.45,42,'#e5d6f2',null);
+        ctx.strokeStyle='#8e44ad';ctx.lineWidth=3;ctx.beginPath();ctx.arc(p.x,H*0.45,42,0,7);ctx.stroke();
+        AnimKit.label(ctx,'核',p.x,H*0.45+2,'#5b3d7a','12px "Microsoft YaHei"');
+        // protein dots
+        var n=6;
+        for(var i=0;i<n;i++){
+          var x,y;
+          if(p.ok&&S.hl>=1){x=p.x-24+(i%3)*24;y=H*0.45-16+Math.floor(i/3)*24;}
+          else {x=p.x-110+(i%3)*36;y=H*0.78+Math.floor(i/3)*20;}
+          AnimKit.circle(ctx,x,y,7,p.ok?'#2e9e5b':'#c0392b',null);
+        }
+        AnimKit.label(ctx,p.t,p.x,54,'#1f2a37','bold 13px "Microsoft YaHei"');
+        // sequence
+        var seq=p.ok?'Pro-Pro-Lys-Lys-Lys-Arg-Lys-Val':'Pro-Pro-Lys-Thr-Lys-Arg-Lys-Val';
+        AnimKit.label(ctx,seq,p.x,H-22,'#33465c','11px Arial');
+        ctx.globalAlpha=1;
+      });
+      if(S.hl===2)AnimKit.label(ctx,'Lys → Thr',W*0.73,H*0.45-56,'#c0392b','bold 12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'NLS 是入核必需的信号',W/2,24,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

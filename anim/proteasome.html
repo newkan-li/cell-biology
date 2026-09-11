@@ -1,0 +1,46 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>26S 蛋白酶体</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'26S 蛋白酶体的结构与功能',
+    sub:'由 20S 催化核心（α7β7β7α7 圆筒）和两个 19S 调节帽组成，识别多聚泛素链，将底物解析叠并切割成短肽。',
+    legend:[{c:'#5a7fa8',t:'20S 催化核心'},{c:'#e8703a',t:'19S 调节帽'},{c:'#e8a13a',t:'泛素'},{c:'#c0392b',t:'底物蛋白'}],
+    init:function(S){S.stage=0;S.prog=0;},
+    phases:[
+      {name:'① 26S 蛋白酶体结构',dur:1400,note:'26S 蛋白酶体＝1 个 20S 催化核心（4 个七聚体环 α7β7β7α7 堆叠成圆筒）＋2 个 19S 调节帽。',ap:function(S){S.stage=0;S.prog=0;}},
+      {name:'② 多聚泛素链标记底物',dur:1400,note:'底物蛋白被连上多聚泛素链（多个泛素分子，如 Lys48 连接），作为降解信号。',ap:function(S){S.stage=1;S.prog=0;}},
+      {name:'③ 19S 帽识别、去泛素化、解析叠',dur:1500,note:'19S 帽识别多聚泛素链，去泛素化酶回收泛素，并把底物解析叠送入核心。',ap:function(S){S.stage=2;S.prog=0;}},
+      {name:'④ 20S 核心腔降解成短肽',dur:1500,note:'底物在 20S 核心腔内被蛋白酶活性位点切割成短肽。',ap:function(S){S.stage=3;S.prog=0;}}
+    ],
+    update:function(S,e){S.prog=Math.min(1,S.prog+e*0.03);},
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var cx=W/2,cy=H*0.56;
+      // 19S caps (top and bottom)
+      ctx.fillStyle='#e8703a';
+      AnimKit.roundRect(ctx,cx-38,cy-92,76,26,8);ctx.fill();
+      AnimKit.roundRect(ctx,cx-38,cy+66,76,26,8);ctx.fill();
+      AnimKit.label(ctx,'19S 调节帽',cx+56,cy-79,'#a3401a','12px "Microsoft YaHei"','left');
+      // 20S core = stacked rings
+      var ringCols=['#8fb0cf','#5a7fa8','#3f5f86','#3f5f86','#5a7fa8','#8fb0cf'];
+      for(var i=0;i<6;i++){AnimKit.roundRect(ctx,cx-34,cy-64+i*22,68,19,4);ctx.fillStyle=ringCols[i];ctx.fill();}
+      AnimKit.label(ctx,'20S 催化核心（α7β7β7α7）',cx,cy+8,'#fff','11.5px "Microsoft YaHei"');
+      // substrate
+      if(S.stage<3){
+        var sy=cy-130;
+        if(S.stage===2)sy=AnimKit.lerp(cy-130,cy-70,AnimKit.easeOut(S.prog));
+        ctx.strokeStyle='#c0392b';ctx.lineWidth=4;ctx.beginPath();
+        for(var j=0;j<=20;j++){var t=j/20,xx=cx-30+t*60,yy=sy+Math.sin(t*9)*6;if(j===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}
+        ctx.stroke();
+        AnimKit.label(ctx,'底物蛋白',cx-58,sy,'#c0392b','11.5px "Microsoft YaHei"','right');
+        if(S.stage>=1){for(var u=0;u<4;u++)AnimKit.circle(ctx,cx+34+u*13,sy-12,6,'#e8a13a',null);AnimKit.label(ctx,'多聚泛素链',cx+66,sy-12,'#a9781f','11px "Microsoft YaHei"','left');}
+      } else {
+        for(var s=0;s<5;s++)AnimKit.circle(ctx,cx-30+s*16,cy+108,5,'#c0392b',null);
+        AnimKit.label(ctx,'短肽',cx+62,cy+108,'#c0392b','11.5px "Microsoft YaHei"','left');
+      }
+      AnimKit.label(ctx,'26S 蛋白酶体＝20S 核心＋2×19S 帽',W/2,24,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

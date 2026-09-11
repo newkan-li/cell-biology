@@ -1,0 +1,57 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>小泡与靶膜的停靠和融合</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'运输小泡与靶膜的停靠和融合',
+    sub:'①停靠：VAMP(v-SNARE)+Rab-GTP+Rab effector；②组装 SNARE 复合体：Syntaxin(t-SNARE)+SNAP-25；③膜融合；④NSF/α-SNAP/ATP 水解解离 SNARE 复合体。',
+    legend:[{c:'#2e9e5b',t:'Rab-GTP'},{c:'#e8703a',t:'SNARE'},{c:'#3b6fd6',t:'v-SNARE/VAMP'},{c:'#c0392b',t:'NSF/SNAP'}],
+    init:function(S){S.stage=0;S.gap=1;},
+    phases:[
+      {name:'① 停靠（docking）',dur:1400,note:'小泡上的 VAMP(v-SNARE) 与 Rab-GTP、Rab 效应蛋白协同，使小泡停靠在靶膜上。',ap:function(S){S.stage=0;S.gap=1;}},
+      {name:'② 组装 SNARE 复合体',dur:1400,note:'靶膜上的 Syntaxin(t-SNARE) 与 SNAP-25 和小泡上的 VAMP 组装成 SNARE 复合体。',ap:function(S){S.stage=1;S.gap=0.45;}},
+      {name:'③ 膜融合',dur:1400,note:'SNARE 复合体拉近两膜，介导小泡与靶膜融合，货物释放。',ap:function(S){S.stage=2;S.gap=0.12;}},
+      {name:'④ 解离 SNARE 复合体',dur:1500,note:'融合后，NSF 与 α-SNAP 结合 cis-SNARE 复合体，由 ATP 水解驱动其解离，供下一轮使用。',ap:function(S){S.stage=3;S.gap=0.12;}}
+    ],
+    draw:function(ctx,W,H,S){
+      var cx=W/2,yT=H*0.72,vy=yT-S.gap*H*0.5;
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      // target membrane
+      ctx.fillStyle='#fff2e8';ctx.fillRect(cx-170,yT+16,340,26);
+      ctx.strokeStyle='#f0c39a';ctx.lineWidth=3;ctx.strokeRect(cx-170,yT+16,340,26);
+      AnimKit.label(ctx,'靶膜',cx-170+8,yT+58,'#a9781f','11.5px "Microsoft YaHei"','left');
+      // vesicle
+      AnimKit.circle(ctx,cx,vy,40,'#eef4fa',null);
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,vy,40,0,7);ctx.stroke();
+      AnimKit.label(ctx,'运输小泡',cx-150,vy-30,'#33465c','11.5px "Microsoft YaHei"','left');
+      // v-SNARE (VAMP) on vesicle bottom
+      ctx.strokeStyle='#3b6fd6';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(cx-14,vy+36);ctx.lineTo(cx-14,vy+58);ctx.stroke();
+      AnimKit.label(ctx,'VAMP(v-SNARE)',cx-20,vy+72,'#1f5c8b','11px "Microsoft YaHei"','right');
+      // t-SNARE on target: Syntaxin + SNAP-25
+      ctx.strokeStyle='#e8703a';ctx.lineWidth=5;
+      ctx.beginPath();ctx.moveTo(cx+14,yT+16);ctx.lineTo(cx+14,yT-6);ctx.stroke();
+      ctx.strokeStyle='#f0a06a';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(cx+26,yT+16);ctx.lineTo(cx+20,yT-2);ctx.stroke();
+      AnimKit.label(ctx,'Syntaxin + SNAP-25 (t-SNARE)',cx+34,yT+34,'#a3401a','11px "Microsoft YaHei"','left');
+      // Rab
+      AnimKit.circle(ctx,cx-56,vy+30,12,'#2e9e5b','R');
+      AnimKit.label(ctx,'Rab-GTP',cx-72,vy+34,'#3d7a5a','11px "Microsoft YaHei"','right');
+      if(S.stage>=1){
+        // SNARE complex zipper
+        ctx.strokeStyle='#c0392b';ctx.lineWidth=3;
+        ctx.beginPath();ctx.moveTo(cx-14,vy+58);ctx.lineTo(cx+14,yT-6);ctx.stroke();
+        AnimKit.label(ctx,'SNARE 复合体',cx+70,(vy+yT)/2,'#a3401a','11.5px "Microsoft YaHei"','left');
+      }
+      if(S.stage===2){ctx.fillStyle='#e8703a';ctx.globalAlpha=0.22;ctx.beginPath();ctx.arc(cx,yT,58,0,7);ctx.fill();ctx.globalAlpha=1;
+        for(var d=0;d<4;d++)AnimKit.circle(ctx,cx-24+d*16,yT+30,5,'#c0392b',null);}
+      if(S.stage===3){
+        AnimKit.circle(ctx,cx-60,yT-30,16,'#c0392b','NSF');
+        AnimKit.circle(ctx,cx+60,yT-30,14,'#c0392b','SNAP');
+        AnimKit.label(ctx,'ATP → ADP + Pi',cx,yT-56,'#c0392b','12px "Microsoft YaHei"');
+        AnimKit.arrow(ctx,cx-44,yT-30,cx-20,yT-8,'#c0392b',2);
+        AnimKit.arrow(ctx,cx+46,yT-30,cx+20,yT-8,'#c0392b',2);
+      }
+      AnimKit.label(ctx,'停靠 → SNARE 组装 → 融合 → NSF/α-SNAP/ATP 解离',W/2,22,'#1f5c8b','bold 13.5px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

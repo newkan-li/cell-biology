@@ -1,0 +1,57 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ran GTPase 循环</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'Ran GTPase 与核质转运',
+    sub:'核内 Ran-GTP 浓度高、胞质 Ran-GDP 高。Ran-GTP 结合入核受体使其释放货物；胞质中 Ran-GTP 水解成 Ran-GDP 使出核受体释放货物。',
+    legend:[{c:'#2e9e5b',t:'Ran-GTP（核内）'},{c:'#e8703a',t:'Ran-GDP（胞质）'},{c:'#3b6fd6',t:'入核受体'},{c:'#8e44ad',t:'出核受体'}],
+    init:function(S){S.hl=0;},
+    phases:[
+      {name:'① 核内 Ran-GEF 生成 Ran-GTP',dur:1400,note:'核内 Ran-GEF(RCC1) 催化 Ran-GDP 转变成 Ran-GTP，使核内 Ran-GTP 浓度高；胞质 Ran-GAP 则促使 Ran-GTP 水解，使胞质 Ran-GDP 高。',ap:function(S){S.hl=0;}},
+      {name:'② 入核：Ran-GTP 释放货物',dur:1500,note:'NLS-货物与输入蛋白(importin)结合进入核内；核内 Ran-GTP 结合 importin，使复合物解离、货物释放。',ap:function(S){S.hl=1;}},
+      {name:'③ 出核：exportin + Ran-GTP',dur:1500,note:'核内 NES-货物与输出蛋白(exportin)及 Ran-GTP 结合，形成复合物经核孔运出。',ap:function(S){S.hl=2;}},
+      {name:'④ 胞质 Ran-GAP 水解，释放货物',dur:1500,note:'胞质中 Ran-GAP 使 Ran-GTP 水解成 Ran-GDP，复合物解离、货物释放到胞质。',ap:function(S){S.hl=3;}}
+    ],
+    draw:function(ctx,W,H,S){
+      var yN=H*0.52,cx=W/2;
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,W,yN-8);
+      ctx.fillStyle='#f4eefb';ctx.fillRect(0,yN+8,W,H-yN-8);
+      ctx.strokeStyle='#b9d2e6';ctx.lineWidth=6;
+      ctx.beginPath();ctx.moveTo(30,yN);ctx.lineTo(cx-40,yN);ctx.moveTo(cx+40,yN);ctx.lineTo(W-30,yN);ctx.stroke();
+      AnimKit.label(ctx,'胞质（Ran-GDP 高）',14,22,'#7a8aa0','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'核质（Ran-GTP 高）',14,H-14,'#7a8aa0','12px "Microsoft YaHei"','left');
+      // NPC
+      AnimKit.roundRect(ctx,cx-34,yN-26,68,52,8);ctx.fillStyle='#cfd9e6';ctx.fill();
+      AnimKit.label(ctx,'核孔',cx,yN+2,'#33465c','11px "Microsoft YaHei"');
+      // Ran in nucleus
+      AnimKit.circle(ctx,cx-150,H*0.80,16,'#2e9e5b','Ran');
+      AnimKit.label(ctx,'GTP',cx-150,H*0.80+28,'#3d7a5a','11px "Microsoft YaHei"');
+      // Ran in cytosol
+      AnimKit.circle(ctx,cx+150,H*0.18,16,'#e8703a','Ran');
+      AnimKit.label(ctx,'GDP',cx+150,H*0.18+28,'#a3401a','11px "Microsoft YaHei"');
+      AnimKit.label(ctx,'Ran-GEF',cx-40,H*0.80,'#3d7a5a','11px "Microsoft YaHei"');
+      AnimKit.label(ctx,'Ran-GAP',cx+40,H*0.20,'#a3401a','11px "Microsoft YaHei"');
+      // import cycle (left)
+      var impA=S.hl===0||S.hl===1;
+      ctx.globalAlpha=impA?1:0.3;
+      var iy=(S.hl===1)?AnimKit.lerp(H*0.20,H*0.78,0.7):H*0.20;
+      AnimKit.roundRect(ctx,cx-110,iy-14,54,28,8);ctx.fillStyle='#3b6fd6';ctx.fill();
+      AnimKit.label(ctx,'importin',cx-83,iy,'#fff','11px "Microsoft YaHei"');
+      AnimKit.circle(ctx,cx-124,iy,8,'#c0392b','C');
+      ctx.globalAlpha=1;
+      if(S.hl===1){AnimKit.arrow(ctx,cx-83,iy+18,cx-150,H*0.80-22,'#2e9e5b',2);AnimKit.label(ctx,'货物释放',cx-160,(iy+H*0.80)/2,'#3d7a5a','11px "Microsoft YaHei"','right');}
+      // export cycle (right)
+      var expA=S.hl===2||S.hl===3;
+      ctx.globalAlpha=expA?1:0.3;
+      var ey=(S.hl===3)?AnimKit.lerp(H*0.78,H*0.20,0.7):H*0.78;
+      AnimKit.roundRect(ctx,cx+56,ey-14,58,28,8);ctx.fillStyle='#8e44ad';ctx.fill();
+      AnimKit.label(ctx,'exportin',cx+85,ey,'#fff','11px "Microsoft YaHei"');
+      AnimKit.circle(ctx,cx+126,ey,8,'#2e9e5b','G');
+      ctx.globalAlpha=1;
+      if(S.hl===3){AnimKit.arrow(ctx,cx+85,ey-18,cx+150,H*0.20+22,'#e8703a',2);AnimKit.label(ctx,'货物释放',cx+160,(ey+H*0.20)/2,'#a3401a','11px "Microsoft YaHei"','left');}
+      AnimKit.label(ctx,'Ran-GTP 结合受体 → 释放货物；Ran-GAP 水解 → 回收',W/2,22,'#1f5c8b','bold 13.5px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

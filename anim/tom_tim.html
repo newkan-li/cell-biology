@@ -1,0 +1,58 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>线粒体蛋白转运器</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  function prot(ctx,x,y,col){ctx.strokeStyle=col;ctx.lineWidth=4;ctx.beginPath();
+    for(var i=0;i<=16;i++){var t=i/16,xx=x-16+t*32,yy=y+Math.sin(t*8)*5;if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}ctx.stroke();}
+  AnimKit.mount({
+    title:'线粒体膜上的蛋白转运器',
+    sub:'外膜：TOM 复合体（受体+转位通道）与 SAM；内膜：TIM23、TIM22、OXA；Hsp70 分子伴侣驱动转位。',
+    legend:[{c:'#c0392b',t:'TOM/SAM（外膜）'},{c:'#7d3c98',t:'TIM/OXA（内膜）'},{c:'#3b6fd6',t:'前体蛋白'},{c:'#2e9e5b',t:'Hsp70'}],
+    init:function(S){S.stage=0;S.prog=0;},
+    phases:[
+      {name:'① 前体蛋白在胞质',dur:1300,note:'核基因编码的前体蛋白含 N 端导肽，在胞质游离核糖体合成，由 Hsp70 维持解析叠状态。',ap:function(S){S.stage=0;S.prog=0;}},
+      {name:'② TOM 复合体（外膜）',dur:1400,note:'前体蛋白被线粒体外膜上的 TOM 复合体（受体 + 转位通道）识别并转运进入。',ap:function(S){S.stage=1;S.prog=0;}},
+      {name:'③ TIM23 → 基质，Hsp70 驱动',dur:1500,note:'经内膜 TIM23 复合体进入基质，由基质 Hsp70 和内膜两侧的膜电位、ATP 共同驱动。',ap:function(S){S.stage=2;S.prog=0;}},
+      {name:'④ 内膜蛋白经 OXA，外膜蛋白经 SAM',dur:1500,note:'内膜蛋白由 OXA 复合体插入内膜；外膜蛋白由 SAM 复合体插入外膜。导肽随后被切除。',ap:function(S){S.stage=3;S.prog=0;}}
+    ],
+    update:function(S,e){S.prog=Math.min(1,S.prog+e*0.03);},
+    draw:function(ctx,W,H,S){
+      var yO=H*0.34,yI=H*0.64,cx=W*0.42;
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,W,yO-8);
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,yO+8,W,yI-yO-16);
+      ctx.fillStyle='#fdeee0';ctx.fillRect(0,yI+8,W,H-yI-8);
+      AnimKit.label(ctx,'胞质',14,22,'#7a8aa0','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'膜间隙',14,(yO+yI)/2,'#7a8aa0','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'基质',14,H-14,'#a9781f','12px "Microsoft YaHei"','left');
+      // membranes
+      ctx.fillStyle='#e8c98f';ctx.fillRect(0,yO-8,W,16);
+      ctx.fillStyle='#e8c98f';ctx.fillRect(0,yI-8,W,16);
+      // TOM (outer) receptors + channel
+      AnimKit.roundRect(ctx,cx-70,yO-24,44,32,8);ctx.fillStyle='#c0392b';ctx.fill();
+      AnimKit.roundRect(ctx,cx-16,yO-24,44,32,8);ctx.fillStyle='#e06666';ctx.fill();
+      AnimKit.label(ctx,'TOM',cx-24,yO+34,'#a3301f','12px "Microsoft YaHei"');
+      // SAM
+      AnimKit.roundRect(ctx,cx+120,yO-20,40,26,8);ctx.fillStyle='#c0392b';ctx.fill();
+      AnimKit.label(ctx,'SAM',cx+140,yO+34,'#a3301f','11.5px "Microsoft YaHei"');
+      // TIM23 / TIM22 / OXA
+      AnimKit.roundRect(ctx,cx-70,yI-16,44,32,8);ctx.fillStyle='#7d3c98';ctx.fill();
+      AnimKit.label(ctx,'TIM23',cx-48,yI+40,'#5b2c6f','11.5px "Microsoft YaHei"');
+      AnimKit.roundRect(ctx,cx+20,yI-16,44,32,8);ctx.fillStyle='#a569c4';ctx.fill();
+      AnimKit.label(ctx,'TIM22',cx+42,yI+40,'#5b2c6f','11.5px "Microsoft YaHei"');
+      AnimKit.roundRect(ctx,cx+110,yI-16,44,32,8);ctx.fillStyle='#6c3483';ctx.fill();
+      AnimKit.label(ctx,'OXA',cx+132,yI+40,'#5b2c6f','11.5px "Microsoft YaHei"');
+      // protein position
+      var py;
+      if(S.stage===0)py=yO-70;
+      else if(S.stage===1)py=AnimKit.lerp(yO-70,yO,AnimKit.easeOut(S.prog));
+      else if(S.stage===2)py=AnimKit.lerp(yO,yI+40,AnimKit.easeOut(S.prog));
+      else py=yI+40;
+      prot(ctx,cx-48,py,'#3b6fd6');
+      AnimKit.label(ctx,'导肽',cx-72,py,'#1f5c8b','10.5px "Microsoft YaHei"','right');
+      if(S.stage>=1)AnimKit.circle(ctx,cx-88,py+18,9,'#2e9e5b','H');
+      AnimKit.label(ctx,'Hsp70',cx-104,py+34,'#3d7a5a','10.5px "Microsoft YaHei"','right');
+      AnimKit.label(ctx,'TOM/TIM/SAM/OXA 转运器',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>
