@@ -774,6 +774,19 @@
     if (!total) host.innerHTML = '<p class="empty">还没有错题记录。去各章练习，答错的题会自动进入这里。</p>';
   }
 
+  /* ---------- 动画自适应高度（消除内层滚动） ---------- */
+  window.addEventListener("message", function (ev) {
+    var d = ev.data;
+    if (!d || !d.__animResize || typeof d.h !== "number") return;
+    var frames = document.querySelectorAll("iframe.animframe");
+    for (var i = 0; i < frames.length; i++) {
+      if (frames[i].contentWindow === ev.source) {
+        frames[i].style.height = Math.max(140, Math.ceil(d.h)) + "px";
+        break;
+      }
+    }
+  });
+
   /* ================= boot ================= */
   document.addEventListener("DOMContentLoaded", function () {
     var page = document.body.dataset.page;

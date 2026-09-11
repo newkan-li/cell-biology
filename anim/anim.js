@@ -81,6 +81,7 @@ window.AnimKit = (function () {
       if (cfg.phases[i].ap) cfg.phases[i].ap(S);
       if (audioOn) playAudio('audio/' + animId + '_' + i + '.mp3');
       noteEl.innerHTML = '阶段：<b>' + cfg.phases[i].name + '</b>' + (cfg.phases[i].note ? ' —— ' + cfg.phases[i].note : '');
+      reportH();
     }
     function reset() { S = {}; if (cfg.init) cfg.init(S); phaseI = 0; applyPhase(0); }
     var last = performance.now();
@@ -106,6 +107,11 @@ window.AnimKit = (function () {
       if (audioOn) playAudio('audio/' + animId + '_' + phaseI + '.mp3');
     };
     wrap.querySelector('[data-act=title]').onclick = function () { playAudio('audio/' + animId + '_title.mp3'); };
+    function reportH() { try { parent.postMessage({ __animResize: true, h: document.body.scrollHeight }, '*'); } catch (e) { } }
+    if (window.ResizeObserver) { try { new ResizeObserver(reportH).observe(document.body); } catch (e) { } }
+    window.addEventListener('resize', reportH);
+    window.addEventListener('load', reportH);
+    setTimeout(reportH, 60); setTimeout(reportH, 500); setTimeout(reportH, 1600);
     resize(); reset(); setInterval(tick, 33);
   }
   function membrane(ctx, W, H, opt) {
