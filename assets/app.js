@@ -100,6 +100,18 @@
   }
   function srsCount() { return Object.keys(srsAll()).length; }
 
+  /* ---------- 闪卡作答记录 ---------- */
+  function fcAnsAll() { return jget(PREFIX + "fcans", {}); }
+  function fcAnsGet(id) { return fcAnsAll()[id]; }
+  function fcAnsSave(id, mode, input, ok) {
+    var o = fcAnsAll(), c = o[id] || { n: 0, okN: 0, attempts: [] };
+    c.n++; if (ok) c.okN++;
+    c.last = input; c.lastOk = ok; c.lastTs = Date.now(); c.lastMode = mode;
+    c.attempts.push({ ts: Date.now(), mode: mode, input: input, ok: ok });
+    if (c.attempts.length > 10) c.attempts.shift();
+    o[id] = c; jset(PREFIX + "fcans", o);
+  }
+
   function kpAll() { return jget(KPS_KEY, {}); }
   function kpRecord(kp, correct) {
     if (!kp) return;
@@ -1076,7 +1088,10 @@
         var b = document.getElementById("fcAgain"); if (b) b.onclick = build; return;
       }
       var c = deck[pos];
-      var head = '<div class="fc-progress">第 ' + (pos + 1) + " / " + deck.length + " 张 · " + esc(c.tag) + " · " + mode + "</div>";
+      var rec = fcAnsGet(c.id);
+      var recLine = rec ? '<div class="fc-rec">📝 已答 ' + rec.n + " 次 · 正确 " + rec.okN + " 次" +
+        (rec.last ? " ｜ 上次：" + esc(String(rec.last).slice(0, 24)) + (rec.lastOk ? " ✓" : " ✗") : "") + "</div>" : "";
+      var head = '<div class="fc-progress">第 ' + (pos + 1) + " / " + deck.length + " 张 · " + esc(c.tag) + " · " + mode + "</div>" + recLine;
       if (mode === "背") {
         host.innerHTML = head + '<div class="fc-card" id="fcCard"><div class="fc-front">' + esc(c.front) + '</div>' +
           '<div class="fc-back" style="display:none">' + c.back + "</div></div>" +
@@ -1097,6 +1112,7 @@
         var doCheck = function () {
           var ok = fuzzyMatch(c.plain || "", inp.value);
           inp.classList.remove("right", "wrong"); inp.classList.add(ok ? "right" : "wrong");
+          fcAnsSave(c.id, "写", inp.value, ok);
           bk.style.display = "block"; rr2.style.display = "flex";
         };
         host.querySelector(".fc-check").onclick = doCheck;
@@ -1126,10 +1142,13 @@
         var rr3 = rateRow(c); host.appendChild(rr3);
         var inps = host.querySelectorAll(".fc-ans"), bk3 = host.querySelector(".fc-back");
         var doCheck3 = function () {
+          var allOk = true, joined = [];
           Array.prototype.forEach.call(inps, function (inp, i) {
             var ok = fuzzyMatch(answers[i], inp.value);
             inp.classList.remove("right", "wrong"); inp.classList.add(ok ? "right" : "wrong");
+            joined.push(inp.value); if (!ok) allOk = false;
           });
+          fcAnsSave(c.id, "填空", joined.join(" / "), allOk);
           bk3.style.display = "block"; rr3.style.display = "flex";
         };
         host.querySelector(".fc-check").onclick = doCheck3;
