@@ -234,6 +234,11 @@ html[data-theme="sepia"] .confnote{background:#faf3e0}
 .dcell{flex:1 1 120px;min-width:110px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 12px;text-align:center}
 .dcell b{display:block;font-size:20px;color:var(--blue)}
 .dcell span{font-size:12px;color:var(--sub)}
+.planrow{margin:6px 0;font-size:13.5px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.planrow input[type=date],.planrow input[type=number]{padding:4px 8px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:#fff;color:var(--ink);font-family:inherit}
+.pnum{width:60px}
+html[data-theme="dark"] .planrow input{background:#1f262e;color:#d7dee8}
+html[data-theme="sepia"] .planrow input{background:#faf3e0}
 .rev-card{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:12px 0;background:#fff}
 .rev-meta{font-size:12px;color:var(--sub)}
 .rev-title{font-size:15px;font-weight:700;color:var(--blue);margin:2px 0 4px}

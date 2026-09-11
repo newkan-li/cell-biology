@@ -1299,6 +1299,54 @@
       '</div>';
   }
 
+  /* ---------- 学习计划 / 提醒 ---------- */
+  function planGet() { return jget(PREFIX + "plan", { exam: "2027-12-20", read: 3, cards: 30, qs: 10 }); }
+  function renderPlan() {
+    var host = document.getElementById("planbody"); if (!host) return;
+    var p = planGet(), task = taskState();
+    var days = Math.max(0, Math.ceil((new Date(p.exam + "T00:00:00") - new Date()) / 86400000));
+    host.innerHTML =
+      '<div class="planrow">考试日期 <input type="date" id="planExam" value="' + p.exam + '"> ' +
+      '<span class="hint">距考试 <b>' + days + '</b> 天</span></div>' +
+      '<div class="planrow">每日目标：读 <input type="number" id="planRead" min="0" value="' + p.read + '" class="pnum"> 页 · ' +
+      '卡片 <input type="number" id="planCards" min="0" value="' + p.cards + '" class="pnum"> 张 · ' +
+      '题 <input type="number" id="planQs" min="0" value="' + p.qs + '" class="pnum"> 道</div>' +
+      '<div class="planrow hint">今日进度：已读 <b>' + (task.read || 0) + "/" + p.read + '</b> · 练习 <b>' + (task.practice || 0) + "</b> · 复习 <b>" + (task.review || 0) + "</b></div>" +
+      '<div class="planrow"><button class="navbtn" style="width:auto;margin:0" id="planRemind">🔔 每日提醒</button> <span id="planRemindMsg" class="hint"></span></div>';
+    function save() {
+      var q = planGet();
+      q.exam = document.getElementById("planExam").value || q.exam;
+      q.read = +document.getElementById("planRead").value || 0;
+      q.cards = +document.getElementById("planCards").value || 0;
+      q.qs = +document.getElementById("planQs").value || 0;
+      jset(PREFIX + "plan", q); renderPlan();
+    }
+    ["planExam", "planRead", "planCards", "planQs"].forEach(function (id) { document.getElementById(id).onchange = save; });
+    document.getElementById("planRemind").onclick = setupReminder;
+    var rm = jget(PREFIX + "remind", null);
+    if (rm && rm.on) document.getElementById("planRemindMsg").textContent = "已开启：" + rm.time + "（页面打开时提醒）";
+  }
+  function setupReminder() {
+    var msg = document.getElementById("planRemindMsg");
+    if (!("Notification" in window)) { msg.textContent = "此浏览器不支持通知"; return; }
+    Notification.requestPermission().then(function (perm) {
+      if (perm === "granted") {
+        var t = window.prompt("每天几点提醒？（24 小时制，如 20:00）", "20:00") || "20:00";
+        jset(PREFIX + "remind", { on: true, time: t, last: "" });
+        msg.textContent = "已开启：" + t + "（需保持页面打开）";
+      } else { msg.textContent = "未授权通知"; }
+    });
+  }
+  function maybeRemind() {
+    var rm = jget(PREFIX + "remind", null);
+    if (!rm || !rm.on || !("Notification" in window) || Notification.permission !== "granted") return;
+    var now = new Date(), hm = ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2), today = todayStr();
+    if (hm >= rm.time && rm.last !== today) {
+      rm.last = today; jset(PREFIX + "remind", rm);
+      try { new Notification("细胞生物学 · 今日复习", { body: "该复习啦：打开网站完成今日任务。" }); } catch (e) { }
+    }
+  }
+
   /* ================= glossary page ================= */
   function renderGlossary() {
     var data = window.GLOSSARY || [];
@@ -1352,6 +1400,7 @@
     });
     renderOverview();
     renderDashboard();
+    renderPlan();
     var bAll = document.getElementById("backupAll"), rAll = document.getElementById("restoreAll"), fAll = document.getElementById("fileAll");
     if (bAll) bAll.onclick = backupAll;
     var bExp = document.getElementById("exportAll");
@@ -1442,6 +1491,8 @@
 
   /* ================= boot ================= */
   document.addEventListener("DOMContentLoaded", function () {
+    if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () { }); } catch (e) { } }
+    maybeRemind(); setInterval(maybeRemind, 60000);
     var page = document.body.dataset.page;
     if (page === "chapter") renderChapter(document.body.dataset.ch);
     else if (page === "index") renderIndex();
