@@ -924,8 +924,9 @@
     (window.MANIFEST || []).forEach(function (m) {
       var ch = window.CHAPTERS[m.id]; if (!ch) return;
       (ch.term || []).forEach(function (q) {
+        var modName = (q.modI != null && ch.modules[q.modI]) ? ch.modules[q.modI].name : "";
         cards.push({
-          id: "fc_term_" + q.id, ch: m.id, tag: "名词解释", front: q.term,
+          id: "fc_term_" + q.id, ch: m.id, mod: (q.modI != null ? q.modI : null), modName: modName, tag: "名词解释", front: q.term,
           back: "<b>定义</b><br>" + esc(q.def).replace(/\n/g, "<br>") + (q.kps ? '<div class="fc-kps">踩分点：' + esc(q.kps) + "</div>" : ""),
           plain: q.def, blank: q.term
         });
@@ -937,20 +938,20 @@
             var back = esc(c.back).replace(/\n/g, "<br>");
             if (c.mnemonic) back += '<div class="fc-mn">💡 ' + esc(c.mnemonic) + "</div>";
             if (c.useImg && s.img) back += '<img class="fc-img" src="' + s.img + '" loading="lazy" alt="">';
-            cards.push({ id: "fc_s_" + kp0 + "_" + i, ch: m.id, tag: "掌握卡片", front: c.front, back: back, plain: c.back, blank: c.blank || "" });
+            cards.push({ id: "fc_s_" + kp0 + "_" + i, ch: m.id, mod: mod.i, modName: mod.name, tag: "掌握卡片", front: c.front, back: back, plain: c.back, blank: c.blank || "" });
           });
           if (!s.points && !s.fig) return;
           var kp = m.id + "_s" + mod.i + "_" + s.i, back = "";
           if (s.points && s.points.length) back += "<ul>" + s.points.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>";
           if (s.fig) back += '<div class="fc-fig">' + esc(s.fig).replace(/\n/g, "<br>") + "</div>";
-          cards.push({ id: "fc_kp_" + kp, ch: m.id, tag: "本页要点", front: s.title, back: back,
+          cards.push({ id: "fc_kp_" + kp, ch: m.id, mod: mod.i, modName: mod.name, tag: "本页要点", front: s.title, back: back,
             plain: (s.points ? s.points.join("；") : "") + (s.fig ? " " + s.fig : ""), blank: "" });
         });
       });
     });
     (window.GLOSSARY || []).forEach(function (g, i) {
       cards.push({
-        id: "fc_gloss_" + i, ch: g.ch, tag: "术语", front: g.t,
+        id: "fc_gloss_" + i, ch: g.ch, mod: null, modName: "", tag: "术语", front: g.t,
         back: (g.en ? "<b>" + esc(g.en) + "</b><br>" : "") + esc(g.d),
         plain: g.d, blank: g.t
       });
@@ -986,7 +987,7 @@
     var names = { ch01: "绪论", ch02: "质膜", ch03: "内膜系统", ch04: "蛋白质运输", ch05: "后翻译转运" };
     var chs = {}, tags = {};
     cards.forEach(function (c) { if (c.ch) chs[c.ch] = 1; tags[c.tag] = 1; });
-    var curCh = "all", curTag = "all", mode = "背", deck = [], pos = 0;
+    var curCh = "all", curTag = "all", curMod = "all", mode = "背", deck = [], pos = 0;
     try { var qp = new URLSearchParams(location.search).get("ch"); if (qp && chs[qp]) curCh = qp; } catch (e) { }
     ctl.innerHTML = "";
     var row1 = el("div", "fc-chips"), row2 = el("div", "fc-chips"), row3 = el("div", "fc-chips");
@@ -1004,13 +1005,47 @@
     Object.keys(tags).forEach(function (t) { row2.appendChild(mk(t, t, "tag")); });
     [["背", "背"], ["填空", "填空"], ["写", "写"]].forEach(function (o) { row3.appendChild(mk("模式：" + o[0], o[1], "mode")); });
     ctl.appendChild(row1); ctl.appendChild(row2); ctl.appendChild(row3);
+    // 分类学习：按章 / 主题（模块）
+    var catsEl = document.getElementById("fccats");
+    if (catsEl) {
+      var cats = {};
+      cards.forEach(function (c) {
+        if (!c.ch) return;
+        var cat = cats[c.ch] = cats[c.ch] || { name: names[c.ch] || c.ch, total: 0, mods: {} };
+        cat.total++;
+        if (c.mod != null) { var mm = cat.mods[c.mod] = cat.mods[c.mod] || { name: c.modName || ("模块" + c.mod), count: 0 }; mm.count++; }
+      });
+      var ch2 = '<div class="fc-catbox"><div class="fc-cathead">📂 分类学习（点「学这组」只练该章/该主题）</div>';
+      Object.keys(cats).sort().forEach(function (cid) {
+        var cat = cats[cid];
+        ch2 += '<details class="fc-cat"><summary>' + esc(cat.name) + ' <span class="fc-cnt">' + cat.total + ' 张</span></summary>' +
+          '<div class="fc-catrow"><button class="fc-go" data-ch="' + cid + '" data-mod="">学整章（' + cat.total + '）</button></div>';
+        Object.keys(cat.mods).sort(function (a, b) { return a - b; }).forEach(function (mi) {
+          var mm = cat.mods[mi];
+          ch2 += '<div class="fc-catrow"><button class="fc-go" data-ch="' + cid + '" data-mod="' + mi + '">' + esc(mm.name) + '（' + mm.count + '）</button></div>';
+        });
+        ch2 += "</details>";
+      });
+      ch2 += "</div>";
+      catsEl.innerHTML = ch2;
+      Array.prototype.forEach.call(catsEl.querySelectorAll(".fc-go"), function (b) {
+        b.onclick = function () {
+          curCh = b.dataset.ch; curMod = b.dataset.mod === "" ? "all" : b.dataset.mod; curTag = "all";
+          sync(); build();
+          host.scrollIntoView({ behavior: "smooth" });
+        };
+      });
+    }
     function sync() {
       Array.prototype.forEach.call(row1.children, function (b) { b.classList.toggle("on", b.dataset.v === curCh); });
       Array.prototype.forEach.call(row2.children, function (b) { b.classList.toggle("on", b.dataset.v === curTag); });
       Array.prototype.forEach.call(row3.children, function (b) { b.classList.toggle("on", b.dataset.v === mode); });
     }
     function build() {
-      deck = cards.filter(function (c) { return (curCh === "all" || c.ch === curCh) && (curTag === "all" || c.tag === curTag); });
+      deck = cards.filter(function (c) {
+        return (curCh === "all" || c.ch === curCh) && (curTag === "all" || c.tag === curTag) &&
+          (curMod === "all" || String(c.mod) === String(curMod));
+      });
       for (var i = deck.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = deck[i]; deck[i] = deck[j]; deck[j] = t; }
       pos = 0; renderProgress(); show();
     }
