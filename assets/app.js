@@ -999,7 +999,7 @@
     var names = { ch01: "绪论", ch02: "质膜", ch03: "内膜系统", ch04: "蛋白质运输", ch05: "后翻译转运" };
     var chs = {}, tags = {};
     cards.forEach(function (c) { if (c.ch) chs[c.ch] = 1; tags[c.tag] = 1; });
-    var curCh = "all", curTag = "all", curMod = "all", mode = "填空", dueOnly = false, deck = [], pos = 0;
+    var curCh = "all", curTag = "all", curMod = "all", mode = "填空", dueOnly = false, wrongOnly = false, deck = [], pos = 0;
     try {
       var usp = new URLSearchParams(location.search);
       var qp = usp.get("ch"); if (qp && chs[qp]) curCh = qp;
@@ -1009,8 +1009,12 @@
     var row1 = el("div", "fc-chips"), row2 = el("div", "fc-chips"), row3 = el("div", "fc-chips"), row0 = el("div", "fc-chips");
     var dueN = cards.filter(function (c) { var s = srsGet(c.id); return s && s.due <= Date.now(); }).length;
     var bDue = el("button", "fc-chip" + (dueOnly ? " on" : ""), "📅 今日卡片（" + dueN + " 张到期）");
-    bDue.onclick = function () { dueOnly = !dueOnly; curCh = "all"; curTag = "all"; curMod = "all"; sync(); build(); };
+    bDue.onclick = function () { dueOnly = !dueOnly; wrongOnly = false; curCh = "all"; curTag = "all"; curMod = "all"; sync(); build(); };
     row0.appendChild(bDue);
+    var wrongN = cards.filter(function (c) { var a = fcAnsGet(c.id); return a && !a.lastOk; }).length;
+    var bWrong = el("button", "fc-chip" + (wrongOnly ? " on" : ""), "❌ 重练错卡（" + wrongN + "）");
+    bWrong.onclick = function () { wrongOnly = !wrongOnly; dueOnly = false; curCh = "all"; curTag = "all"; curMod = "all"; sync(); build(); };
+    row0.appendChild(bWrong);
     function mk(label, val, group) {
       var b = el("button", "fc-chip", label); b.dataset.v = val;
       b.onclick = function () {
@@ -1059,13 +1063,15 @@
     }
     function sync() {
       bDue.classList.toggle("on", dueOnly);
-      Array.prototype.forEach.call(row1.children, function (b) { b.classList.toggle("on", !dueOnly && b.dataset.v === curCh); });
-      Array.prototype.forEach.call(row2.children, function (b) { b.classList.toggle("on", !dueOnly && b.dataset.v === curTag); });
+      bWrong.classList.toggle("on", wrongOnly);
+      Array.prototype.forEach.call(row1.children, function (b) { b.classList.toggle("on", !dueOnly && !wrongOnly && b.dataset.v === curCh); });
+      Array.prototype.forEach.call(row2.children, function (b) { b.classList.toggle("on", !dueOnly && !wrongOnly && b.dataset.v === curTag); });
       Array.prototype.forEach.call(row3.children, function (b) { b.classList.toggle("on", b.dataset.v === mode); });
     }
     function build() {
       deck = cards.filter(function (c) {
         if (dueOnly) { var s = srsGet(c.id); if (!s || s.due > Date.now()) return false; }
+        if (wrongOnly) { var a = fcAnsGet(c.id); if (!a || a.lastOk) return false; }
         return (curCh === "all" || c.ch === curCh) && (curTag === "all" || c.tag === curTag) &&
           (curMod === "all" || String(c.mod) === String(curMod));
       });
@@ -1112,7 +1118,7 @@
         var doCheck = function () {
           var ok = fuzzyMatch(c.plain || "", inp.value);
           inp.classList.remove("right", "wrong"); inp.classList.add(ok ? "right" : "wrong");
-          fcAnsSave(c.id, "写", inp.value, ok);
+          fcAnsSave(c.id, "写", inp.value, ok); renderRecords();
           bk.style.display = "block"; rr2.style.display = "flex";
         };
         host.querySelector(".fc-check").onclick = doCheck;
@@ -1148,13 +1154,40 @@
             inp.classList.remove("right", "wrong"); inp.classList.add(ok ? "right" : "wrong");
             joined.push(inp.value); if (!ok) allOk = false;
           });
-          fcAnsSave(c.id, "填空", joined.join(" / "), allOk);
+          fcAnsSave(c.id, "填空", joined.join(" / "), allOk); renderRecords();
           bk3.style.display = "block"; rr3.style.display = "flex";
         };
         host.querySelector(".fc-check").onclick = doCheck3;
         Array.prototype.forEach.call(inps, function (inp) { inp.addEventListener("keydown", function (e) { if (e.key === "Enter") doCheck3(); }); });
       }
     }
+    var recEl = document.getElementById("fcrec");
+    function renderRecords() {
+      if (!recEl) return;
+      var ans = fcAnsAll();
+      var answered = cards.filter(function (c) { return ans[c.id]; });
+      if (!answered.length) {
+        recEl.innerHTML = '<div class="fc-recb"><div class="fc-cathead">📊 作答记录</div>' +
+          '<div class="fc-recsum">还没有作答记录。做几道「填空 / 写」后，这里会显示正确率与错卡。</div></div>';
+        return;
+      }
+      var okN = answered.filter(function (c) { return ans[c.id].lastOk; }).length;
+      var wrongCards = answered.filter(function (c) { return !ans[c.id].lastOk; });
+      var byCh = {};
+      answered.forEach(function (c) { var a = ans[c.id]; var t = byCh[c.ch] = byCh[c.ch] || { n: 0, ok: 0 }; t.n++; if (a.lastOk) t.ok++; });
+      var h = '<div class="fc-recb"><div class="fc-cathead">📊 作答记录</div>' +
+        '<div class="fc-recsum">已答 <b>' + answered.length + "</b> 张 · 正确 <b>" + okN + "</b> · 错 <b>" + wrongCards.length +
+        "</b>（正确率 " + Math.round(okN * 100 / answered.length) + "%）</div>" +
+        '<div class="fc-recsum">' + Object.keys(byCh).sort().map(function (cid) { var t = byCh[cid]; return esc(names[cid] || cid) + " " + t.ok + "/" + t.n; }).join(" ｜ ") + "</div>";
+      if (wrongCards.length) {
+        h += '<details class="fc-cat"><summary>错卡 ' + wrongCards.length + ' 张（点上方「重练错卡」专练）</summary><ul class="fc-wlist">' +
+          wrongCards.slice(0, 60).map(function (c) { return "<li>" + esc(c.front) + ' <span class="fc-recans">你答：' + esc(String(ans[c.id].last).slice(0, 20)) + "</span></li>"; }).join("") +
+          "</ul></details>";
+      }
+      h += "</div>";
+      recEl.innerHTML = h;
+    }
+    renderRecords();
     sync(); build();
   }
 
