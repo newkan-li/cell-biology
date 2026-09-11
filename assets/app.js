@@ -620,18 +620,18 @@
         img.onclick = function () { document.getElementById("lbimg").src = s.img; document.getElementById("lightbox").classList.add("on"); };
         body.appendChild(img);
         body.appendChild(el("div", "notes", esc(s.notes)));
+        card.appendChild(body);
         if (s.points && s.points.length) {
           var pb = el("div", "points");
           pb.innerHTML = '<div class="pt-h">📌 本页要点</div><ul>' +
             s.points.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>";
-          body.appendChild(pb);
+          card.appendChild(pb);
         }
         if (s.fig) {
           var fb = el("div", "fignote");
           fb.innerHTML = '<div class="fn-h">🔍 图注解读</div><p>' + esc(s.fig).replace(/\n/g, "<br>") + "</p>";
-          body.appendChild(fb);
+          card.appendChild(fb);
         }
-        card.appendChild(body);
         if (s.anim) {
           var aw = el("div", "animwrap");
           aw.appendChild(el("div", "animhead", "🎬 动画演示（在老师原图下方）"));
