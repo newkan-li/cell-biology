@@ -987,13 +987,22 @@
     var names = { ch01: "绪论", ch02: "质膜", ch03: "内膜系统", ch04: "蛋白质运输", ch05: "后翻译转运" };
     var chs = {}, tags = {};
     cards.forEach(function (c) { if (c.ch) chs[c.ch] = 1; tags[c.tag] = 1; });
-    var curCh = "all", curTag = "all", curMod = "all", mode = "背", deck = [], pos = 0;
-    try { var qp = new URLSearchParams(location.search).get("ch"); if (qp && chs[qp]) curCh = qp; } catch (e) { }
+    var curCh = "all", curTag = "all", curMod = "all", mode = "背", dueOnly = false, deck = [], pos = 0;
+    try {
+      var usp = new URLSearchParams(location.search);
+      var qp = usp.get("ch"); if (qp && chs[qp]) curCh = qp;
+      if (usp.get("due") === "1") dueOnly = true;
+    } catch (e) { }
     ctl.innerHTML = "";
-    var row1 = el("div", "fc-chips"), row2 = el("div", "fc-chips"), row3 = el("div", "fc-chips");
+    var row1 = el("div", "fc-chips"), row2 = el("div", "fc-chips"), row3 = el("div", "fc-chips"), row0 = el("div", "fc-chips");
+    var dueN = cards.filter(function (c) { var s = srsGet(c.id); return s && s.due <= Date.now(); }).length;
+    var bDue = el("button", "fc-chip" + (dueOnly ? " on" : ""), "📅 今日卡片（" + dueN + " 张到期）");
+    bDue.onclick = function () { dueOnly = !dueOnly; curCh = "all"; curTag = "all"; curMod = "all"; sync(); build(); };
+    row0.appendChild(bDue);
     function mk(label, val, group) {
       var b = el("button", "fc-chip", label); b.dataset.v = val;
       b.onclick = function () {
+        dueOnly = false;
         if (group === "ch") curCh = val; else if (group === "tag") curTag = val; else mode = val;
         sync(); build();
       };
@@ -1004,7 +1013,7 @@
     row2.appendChild(mk("全部类型", "all", "tag"));
     Object.keys(tags).forEach(function (t) { row2.appendChild(mk(t, t, "tag")); });
     [["背", "背"], ["填空", "填空"], ["写", "写"]].forEach(function (o) { row3.appendChild(mk("模式：" + o[0], o[1], "mode")); });
-    ctl.appendChild(row1); ctl.appendChild(row2); ctl.appendChild(row3);
+    ctl.appendChild(row0); ctl.appendChild(row1); ctl.appendChild(row2); ctl.appendChild(row3);
     // 分类学习：按章 / 主题（模块）
     var catsEl = document.getElementById("fccats");
     if (catsEl) {
@@ -1037,12 +1046,14 @@
       });
     }
     function sync() {
-      Array.prototype.forEach.call(row1.children, function (b) { b.classList.toggle("on", b.dataset.v === curCh); });
-      Array.prototype.forEach.call(row2.children, function (b) { b.classList.toggle("on", b.dataset.v === curTag); });
+      bDue.classList.toggle("on", dueOnly);
+      Array.prototype.forEach.call(row1.children, function (b) { b.classList.toggle("on", !dueOnly && b.dataset.v === curCh); });
+      Array.prototype.forEach.call(row2.children, function (b) { b.classList.toggle("on", !dueOnly && b.dataset.v === curTag); });
       Array.prototype.forEach.call(row3.children, function (b) { b.classList.toggle("on", b.dataset.v === mode); });
     }
     function build() {
       deck = cards.filter(function (c) {
+        if (dueOnly) { var s = srsGet(c.id); if (!s || s.due > Date.now()) return false; }
         return (curCh === "all" || c.ch === curCh) && (curTag === "all" || c.tag === curTag) &&
           (curMod === "all" || String(c.mod) === String(curMod));
       });
