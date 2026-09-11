@@ -1,0 +1,43 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>葡萄糖-Na⁺同向转运</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'葡萄糖-Na⁺同向转运（小肠吸收）',
+    sub:'Na⁺ 顺浓度梯度内流，驱动葡萄糖逆浓度梯度进入细胞，属继发性主动运输。',
+    legend:[{c:'#e8703a',t:'Na⁺'},{c:'#8e44ad',t:'葡萄糖'},{c:'#2e9e5b',t:'Na⁺/K⁺泵'}],
+    init:function(S){},
+    phases:[
+      {name:'① Na⁺/K⁺ 泵维持 Na⁺ 梯度',dur:1300,note:'基底侧 Na⁺/K⁺ 泵把 Na⁺ 泵出，使胞外(肠腔)Na⁺ 浓度高于胞内。',ap:function(){}},
+      {name:'② 管腔侧 SGLT 同向转运',dur:1400,note:'SGLT 让 Na⁺ 顺浓度梯度内流，同时把葡萄糖逆浓度梯度带入细胞(协同运输)。',ap:function(){}},
+      {name:'③ 基底侧 GLUT2 运出',dur:1300,note:'葡萄糖经基底侧 GLUT2 顺浓度梯度扩散到血液。',ap:function(){}},
+      {name:'④ 结果：葡萄糖被吸收',dur:1300,note:'Na⁺ 被泵回肠腔侧循环利用，葡萄糖被吸收进入血液。',ap:function(){}},
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var yT=H*0.24,yB=H*0.80,cx=W/2;
+      ctx.fillStyle='#eaf3fb';ctx.fillRect(0,0,W,yT-8);ctx.fillStyle='#fff2e8';ctx.fillRect(0,yB+8,W,H-yB-8);
+      AnimKit.label(ctx,'肠腔（Na⁺ 高）',14,20,'#7a8aa0','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'血液',14,H-12,'#a9781f','12px "Microsoft YaHei"','left');
+      AnimKit.roundRect(ctx,cx-260,yT,520,yB-yT,10);ctx.fillStyle='#fbfefc';ctx.fill();ctx.strokeStyle='#7fc79a';ctx.lineWidth=3;ctx.stroke();
+      // SGLT on apical
+      AnimKit.roundRect(ctx,cx-80,yT-14,54,28,8);ctx.fillStyle='#3b6fd6';ctx.fill();
+      AnimKit.label(ctx,'SGLT',cx-53,yT+2,'#fff','11px "Microsoft YaHei"');
+      // GLUT2 basolateral
+      AnimKit.roundRect(ctx,cx-30,yB-14,60,28,8);ctx.fillStyle='#8e44ad';ctx.fill();
+      AnimKit.label(ctx,'GLUT2',cx,yB+2,'#fff','11px "Microsoft YaHei"');
+      // pump basolateral
+      AnimKit.roundRect(ctx,cx+120,yB-14,64,28,8);ctx.fillStyle='#2e9e5b';ctx.fill();
+      AnimKit.label(ctx,'Na⁺/K⁺泵',cx+152,yB+2,'#fff','11px "Microsoft YaHei"');
+      // flows
+      if(phaseI>=1){AnimKit.arrow(ctx,cx-110,yT-20,cx-70,yT+2,'#e8703a',2.5);AnimKit.arrow(ctx,cx-110,yT-40,cx-70,yT+2,'#8e44ad',2.5);}
+      if(phaseI>=2)AnimKit.arrow(ctx,cx,yB+16,cx,yB+40,'#8e44ad',2.5);
+      if(phaseI>=0){AnimKit.arrow(ctx,cx+152,yB+16,cx+152,yB+40,'#e8703a',2.5);AnimKit.arrow(ctx,cx+120,yB+40,cx+120,yB+16,'#2e9e5b',2.5);}
+      AnimKit.label(ctx,'Na⁺',cx-126,yT-22,'#e8703a','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'葡萄糖',cx-140,yT-42,'#8e44ad','12px "Microsoft YaHei"');
+      if(phaseI>=3)AnimKit.label(ctx,'葡萄糖被吸收进入血液',cx+180,yB+30,'#8e44ad','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'协同运输 + 钠钾泵（继发性主动运输）',W/2,22,'#1f5c8b','bold 13.5px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

@@ -1,0 +1,40 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>膜脂的合成与运输</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'膜脂的合成与运输',
+    sub:'膜脂在 sER 的胞质面合成，经囊泡运输、磷脂交换蛋白(PITP)或膜接触点分配到其他膜。',
+    legend:[{c:'#2e9e5b',t:'新合成膜脂'},{c:'#3b6fd6',t:'囊泡运输'},{c:'#8e44ad',t:'PITP/接触点'}],
+    init:function(S){},
+    phases:[
+      {name:'① sER 胞质面合成膜脂',dur:1400,note:'甘油磷脂、胆固醇主要在光面内质网的胞质面合成。',ap:function(){}},
+      {name:'② 插入 ER 膜',dur:1300,note:'新合成的脂质插入 ER 膜的胞质侧。',ap:function(){}},
+      {name:'③ 经囊泡随膜流运输',dur:1400,note:'脂质随膜流经囊泡运输到高尔基体等细胞器。',ap:function(){}},
+      {name:'④ 经 PITP / 接触点转移',dur:1400,note:'脂质也可由磷脂交换蛋白(PITP)在膜间搬运，或在 ER 与线粒体等接触点直接转移。',ap:function(){}},
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var yM=H*0.52,cx=W*0.40;
+      // ER membrane
+      ctx.strokeStyle='#c9a0dc';ctx.lineWidth=6;ctx.beginPath();for(var j=0;j<=14;j++){var t=j/14,xx=cx-120+t*240,yy=yM+Math.sin(t*8)*6;if(j===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}ctx.stroke();
+      AnimKit.label(ctx,'光面内质网',cx-120,yM-16,'#6c3483','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'胞质',14,22,'#7a8aa0','12px "Microsoft YaHei"','left');
+      // synthesis
+      if(phaseI>=0){AnimKit.circle(ctx,cx-60,yM-24,7,'#2e9e5b',null);AnimKit.label(ctx,'合成',cx-60,yM-40,'#2e9e5b','11px "Microsoft YaHei"');}
+      if(phaseI>=1){AnimKit.circle(ctx,cx,yM+2,7,'#2e9e5b',null);AnimKit.label(ctx,'插入膜',cx+40,yM-4,'#2e9e5b','11px "Microsoft YaHei"','left');}
+      // Golgi target
+      var gx=W*0.80,gy=H*0.26;
+      for(var g=0;g<3;g++){AnimKit.roundRect(ctx,gx-44,gy-12+g*12,88,8,4);ctx.fillStyle='#a9d8bd';ctx.fill();}
+      AnimKit.label(ctx,'高尔基体',gx,gy+40,'#3d7a5a','12px "Microsoft YaHei"');
+      if(phaseI>=2){AnimKit.circle(ctx,cx+70,yM-70,10,'#3b6fd6','V');AnimKit.arrow(ctx,cx+40,yM-30,gx-30,gy+30,'#3b6fd6',2);AnimKit.label(ctx,'囊泡运输',(cx+gx)/2-10,(yM+gy)/2-10,'#3b6fd6','11.5px "Microsoft YaHei"');}
+      // mitochondria contact / PITP
+      var mx=W*0.78,my=H*0.80;
+      AnimKit.roundRect(ctx,mx-56,my-16,70,32,14);ctx.fillStyle='#c0392b';ctx.fill();
+      AnimKit.label(ctx,'线粒体',mx-21,my+40,'#a3301f','12px "Microsoft YaHei"');
+      if(phaseI>=3){AnimKit.circle(ctx,cx+90,yM+40,10,'#8e44ad','P');AnimKit.arrow(ctx,cx+90,yM+40,mx-60,my-6,'#8e44ad',2);AnimKit.label(ctx,'PITP/接触点',(cx+90+mx)/2-20,(yM+my)/2+20,'#5b2c6f','11.5px "Microsoft YaHei"');}
+      AnimKit.label(ctx,'膜脂合成于 sER 胞质面，再分配到各膜',W/2,22,'#1f5c8b','bold 13.5px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

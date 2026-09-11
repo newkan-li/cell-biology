@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>钠钾泵维持渗透平衡</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'Na⁺/K⁺ 泵维持渗透平衡',
+    sub:'每水解 1 个 ATP 泵出 3 个 Na⁺、泵入 2 个 K⁺，使胞内渗透压略低，防止细胞吸水涨破。',
+    legend:[{c:'#e8703a',t:'Na⁺'},{c:'#2e9e5b',t:'K⁺'},{c:'#3b6fd6',t:'水'}],
+    init:function(S){},
+    phases:[
+      {name:'① 泵出 3 Na⁺、泵入 2 K⁺',dur:1400,note:'Na⁺/K⁺-ATPase 每水解 1 个 ATP，泵出 3 个 Na⁺、泵入 2 个 K⁺。',ap:function(){}},
+      {name:'② 胞内溶质略少、渗透压略低',dur:1300,note:'净向外泵出离子，使细胞内溶质浓度略低于胞外，渗透压略低。',ap:function(){}},
+      {name:'③ 水不易进入',dur:1300,note:'胞外渗透压略高，水倾向于留在胞外，细胞不易吸水膨胀。',ap:function(){}},
+      {name:'④ 维持体积，不涨破',dur:1300,note:'泵持续工作维持渗透平衡，细胞保持正常体积、不涨破。',ap:function(){}},
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var cx=W/2,cy=H*0.54,R=Math.min(W,H)*0.30;
+      ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.fillStyle='#fbfefc';ctx.fill();ctx.strokeStyle='#7fc79a';ctx.lineWidth=4;ctx.stroke();
+      // pump
+      AnimKit.roundRect(ctx,cx-40,cy-R-14,80,28,8);ctx.fillStyle='#2e9e5b';ctx.fill();
+      AnimKit.label(ctx,'Na⁺/K⁺泵',cx,cy-R+2,'#fff','12px "Microsoft YaHei"');
+      // ions inside/outside
+      for(var i=0;i<6;i++)AnimKit.circle(ctx,cx-70+(i%3)*60,cy-30+Math.floor(i/3)*50,7,'#2e9e5b','');
+      if(phaseI>=0){AnimKit.arrow(ctx,cx-60,cy-R-30,cx-30,cy-R-14,'#e8703a',2.5);AnimKit.arrow(ctx,cx+60,cy-R-30,cx+30,cy-R-14,'#e8703a',2.5);AnimKit.arrow(ctx,cx+20,cy-R-14,cx+20,cy-R-30,'#2e9e5b',2.5);}
+      AnimKit.label(ctx,'3 Na⁺ 出',cx-110,cy-R-34,'#e8703a','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'2 K⁺ 入',cx+70,cy-R-34,'#2e9e5b','12px "Microsoft YaHei"');
+      if(phaseI>=2){for(var w=0;w<5;w++){var wx=cx-160+w*80;AnimKit.arrow(ctx,wx,cy-R-46,wx,cy-R-20,'#3b6fd6',2);}AnimKit.label(ctx,'水不易进入',cx,cy-R-56,'#3b6fd6','12px "Microsoft YaHei"');}
+      if(phaseI>=1)AnimKit.label(ctx,'胞内渗透压略低',cx,cy+4,'#33465c','12.5px "Microsoft YaHei"');
+      if(phaseI>=3)AnimKit.label(ctx,'✓ 维持体积、不涨破',cx,cy+R+30,'#2e7d32','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,'Na⁺/K⁺ 泵的渗透调节作用',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

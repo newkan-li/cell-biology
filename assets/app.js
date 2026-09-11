@@ -563,7 +563,7 @@
     HW.init(cid);
     document.title = ch.title + " · 细胞生物学";
     var aside = document.getElementById("sidebar"), main = document.getElementById("main");
-    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a>';
+    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="glossary.html">📖 术语表</a>';
     aside.appendChild(el("div", "grp", "各模块（概念 + 考题）"));
     ch.modules.forEach(function (m) {
       var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a);
@@ -620,6 +620,17 @@
         img.onclick = function () { document.getElementById("lbimg").src = s.img; document.getElementById("lightbox").classList.add("on"); };
         body.appendChild(img);
         body.appendChild(el("div", "notes", esc(s.notes)));
+        if (s.points && s.points.length) {
+          var pb = el("div", "points");
+          pb.innerHTML = '<div class="pt-h">📌 本页要点</div><ul>' +
+            s.points.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>";
+          body.appendChild(pb);
+        }
+        if (s.fig) {
+          var fb = el("div", "fignote");
+          fb.innerHTML = '<div class="fn-h">🔍 图注解读</div><p>' + esc(s.fig).replace(/\n/g, "<br>") + "</p>";
+          body.appendChild(fb);
+        }
         card.appendChild(body);
         if (s.anim) {
           var aw = el("div", "animwrap");
@@ -681,6 +692,42 @@
     var ch = window.CHAPTERS[cid], host = document.getElementById("statsbox");
     if (ch && host) renderStats(cid, ch, host);
     alert("已判分：本次检查 " + n + " 道填空题。选择题为点选即时判分。可在左侧查看『学习统计』或『错题本』。");
+  }
+
+  /* ================= glossary page ================= */
+  function renderGlossary() {
+    var data = window.GLOSSARY || [];
+    var host = document.getElementById("glist");
+    var chips = document.getElementById("gchips");
+    var search = document.getElementById("gsearch");
+    var cnt = document.getElementById("gcount");
+    if (!host) return;
+    if (cnt) cnt.textContent = data.length;
+    var names = { ch01: "绪论", ch02: "质膜", ch03: "内膜系统", ch04: "蛋白质运输", ch05: "后翻译转运" };
+    var cur = "all";
+    var chs = {}; data.forEach(function (g) { if (g.ch) chs[g.ch] = 1; });
+    var bAll = el("button", "on", "全部"); bAll.dataset.ch = "all";
+    bAll.onclick = function () { cur = "all"; syncChips(); render(); }; chips.appendChild(bAll);
+    Object.keys(chs).sort().forEach(function (c) {
+      var b = el("button", "", names[c] || c); b.dataset.ch = c;
+      b.onclick = function () { cur = c; syncChips(); render(); }; chips.appendChild(b);
+    });
+    function syncChips() { Array.prototype.forEach.call(chips.children, function (b) { b.classList.toggle("on", (b.dataset.ch || "all") === cur); }); }
+    function render() {
+      var q = (search && search.value || "").trim().toLowerCase();
+      var html = "";
+      data.filter(function (g) {
+        return (cur === "all" || g.ch === cur) && (!q || (g.t + " " + (g.en || "") + " " + g.d).toLowerCase().indexOf(q) >= 0);
+      }).forEach(function (g) {
+        html += '<div class="gitem"><div class="gt">' + esc(g.t) +
+          (g.en ? ' <span class="gen">' + esc(g.en) + "</span>" : "") +
+          '<span class="gch">' + esc(names[g.ch] || g.ch || "") + "</span></div>" +
+          '<div class="gd">' + esc(g.d) + "</div></div>";
+      });
+      host.innerHTML = html || '<p class="empty">没有匹配的术语。</p>';
+    }
+    if (search) search.oninput = render;
+    render();
   }
 
   /* ================= index page ================= */
@@ -793,6 +840,7 @@
     if (page === "chapter") renderChapter(document.body.dataset.ch);
     else if (page === "index") renderIndex();
     else if (page === "wrong") renderWrongPage();
+    else if (page === "glossary") renderGlossary();
   });
 
   window.CELL = { backupAll: backupAll, restoreAll: restoreAll, exportChapterPDF: exportChapterPDF, exportAllPDF: exportAllPDF, buildChapterDoc: buildChapterDoc };

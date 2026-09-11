@@ -1,0 +1,39 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>N-与O-连接糖基化</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'N-连接与 O-连接糖基化',
+    sub:'N-连接起始于 rER（连 Asn，供体为磷酸多萜醇）；O-连接发生在高尔基体（连 Ser/Thr）。',
+    legend:[{c:'#3b6fd6',t:'N-连接糖链'},{c:'#e8703a',t:'O-连接糖链'},{c:'#8d6e63',t:'磷酸多萜醇'}],
+    init:function(S){},
+    phases:[
+      {name:'① 磷酸多萜醇组装寡糖前体',dur:1400,note:'在 rER 膜上，磷酸多萜醇(dolichol)先组装寡糖前体。',ap:function(){}},
+      {name:'② 整体转移给 Asn → N-连接',dur:1400,note:'寡糖前体整体转移给新生肽链的 Asn 残基，形成 N-连接糖链。',ap:function(){}},
+      {name:'③ O-连接在高尔基体连到 Ser/Thr',dur:1400,note:'O-连接糖基化在高尔基体进行，糖链连到 Ser/Thr 的羟基氧上。',ap:function(){}},
+      {name:'④ 糖链在高尔基体逐步加工',dur:1400,note:'N-连接糖链到高尔基体后被修剪和延伸，逐步加工成成熟糖链。',ap:function(){}},
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var yG=H*0.20,yE=H*0.72,cx=W*0.42;
+      // Golgi
+      AnimKit.label(ctx,'高尔基体',14,yG+4,'#3d7a5a','12px "Microsoft YaHei"','left');
+      for(var g=0;g<3;g++){AnimKit.roundRect(ctx,cx-70,yG-18+g*13,140,9,4);ctx.fillStyle='#a9d8bd';ctx.fill();}
+      // ER
+      AnimKit.label(ctx,'粗面内质网',14,yE+34,'#6c3483','12px "Microsoft YaHei"','left');
+      ctx.strokeStyle='#c9a0dc';ctx.lineWidth=6;ctx.beginPath();for(var j=0;j<=16;j++){var t=j/16,xx=cx-90+t*180,yy=yE+Math.sin(t*8)*6;if(j===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}ctx.stroke();
+      // dolichol
+      if(phaseI<=1){ctx.strokeStyle='#8d6e63';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(cx-90,yE-4);ctx.lineTo(cx-90,yE-30);ctx.stroke();AnimKit.circle(ctx,cx-90,yE-34,8,'#8d6e63',null);AnimKit.label(ctx,'磷酸多萜醇',cx-90,yE-48,'#8d6e63','11px "Microsoft YaHei"');}
+      // protein with N-glycan
+      var py=phaseI<=1?yE-10:yG+40;
+      if(phaseI<=1){prot:AnimKit.roundRect(ctx,cx-60,yE-22,40,26,6);ctx.fillStyle='#3b6fd6';ctx.fill();AnimKit.label(ctx,'Asn',cx-40,yE-4,'#fff','10px "Microsoft YaHei"');}
+      if(phaseI>=1&&phaseI<=1){for(var s=0;s<3;s++)AnimKit.circle(ctx,cx-40,yE-30-s*10,5,'#3b6fd6',null);}
+      if(phaseI===1)AnimKit.arrow(ctx,cx-90,yE-34,cx-46,yE-30,'#3b6fd6',2);
+      // Golgi N-glycan processing
+      if(phaseI>=3){AnimKit.roundRect(ctx,cx-60,yG+30,40,26,6);ctx.fillStyle='#3b6fd6';ctx.fill();for(var k=0;k<4;k++)AnimKit.circle(ctx,cx-40,yG+22-k*9,5,'#3b6fd6',null);AnimKit.label(ctx,'N-糖链加工',cx+40,yG+44,'#1f5c8b','11.5px "Microsoft YaHei"','left');}
+      if(phaseI===2){AnimKit.roundRect(ctx,cx+40,yG+30,40,26,6);ctx.fillStyle='#e8703a';ctx.fill();AnimKit.label(ctx,'Ser/Thr',cx+60,yG+48,'#fff','10px "Microsoft YaHei"');for(var o=0;o<2;o++)AnimKit.circle(ctx,cx+60,yG+22-o*9,5,'#e8703a',null);AnimKit.label(ctx,'O-连接',cx+90,yG+40,'#a3401a','11.5px "Microsoft YaHei"','left');}
+      AnimKit.label(ctx,'N-连接在 rER；O-连接在高尔基体',W/2,22,'#1f5c8b','bold 13.5px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

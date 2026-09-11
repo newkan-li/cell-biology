@@ -1,0 +1,41 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>脂锚定蛋白</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  function prot(ctx,x,y,col,label){AnimKit.roundRect(ctx,x-24,y-16,48,32,8);ctx.fillStyle=col;ctx.fill();AnimKit.label(ctx,label,x,y+4,'#fff','11px "Microsoft YaHei"');}
+  AnimKit.mount({
+    title:'脂锚定蛋白的三种锚定方式',
+    sub:'GPI 锚定于质膜外侧；脂肪酸锚、异戊二烯基锚定于胞质侧。',
+    legend:[{c:'#e8703a',t:'GPI 锚(外侧)'},{c:'#3b6fd6',t:'脂肪酸锚(胞质侧)'},{c:'#8e44ad',t:'异戊二烯基锚(胞质侧)'}],
+    init:function(S){},
+    phases:[
+      {name:'① GPI 锚定蛋白（膜外侧）',dur:1400,note:'蛋白经糖基磷脂酰肌醇(GPI)锚定在质膜外侧，如许多细胞表面蛋白。',ap:function(){}},
+      {name:'② 脂肪酸锚（胞质侧）',dur:1400,note:'蛋白 N 端经豆蔻酰化/棕榈酰化连上脂肪酸，锚在胞质侧，如 Src。',ap:function(){}},
+      {name:'③ 异戊二烯基锚（胞质侧）',dur:1400,note:'蛋白 C 端经异戊二烯化(法尼基/香叶基)锚在胞质侧，如 Ras。',ap:function(){}},
+      {name:'④ 三种方式对比',dur:1400,note:'GPI 锚在膜外侧，脂肪酸锚和异戊二烯基锚在胞质侧；都是共价连接脂质锚。',ap:function(){}},
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var yO=H*0.40,yI=H*0.60;
+      ctx.fillStyle='#ffe9c9';ctx.fillRect(0,yO,W,yI-yO);
+      AnimKit.label(ctx,'细胞外',14,yO-12,'#7a8aa0','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'胞质',14,yI+24,'#7a8aa0','12px "Microsoft YaHei"','left');
+      var cols=[{x:W*0.22,side:'out',c:'#e8703a',t:'GPI 锚'},{x:W*0.5,side:'in',c:'#3b6fd6',t:'脂肪酸锚'},{x:W*0.78,side:'in',c:'#8e44ad',t:'异戊二烯基锚'}];
+      cols.forEach(function(o,i){
+        var on=(phaseI===0&&i===0)||(phaseI===1&&i===1)||(phaseI===2&&i===2)||phaseI===3;
+        ctx.globalAlpha=on?1:0.3;
+        var py=o.side==='out'?yO-30:yI+30;
+        prot(ctx,o.x,py,o.c,o.side==='out'?'GPI':'');
+        // anchor
+        ctx.strokeStyle=o.c;ctx.lineWidth=4;ctx.beginPath();
+        if(o.side==='out'){ctx.moveTo(o.x,py+16);ctx.lineTo(o.x,yO+4);}else{ctx.moveTo(o.x,py-16);ctx.lineTo(o.x,yI-4);}
+        ctx.stroke();
+        AnimKit.circle(ctx,o.x,o.side==='out'?yO+6:yI-6,5,o.c,null);
+        AnimKit.label(ctx,o.t,o.x,o.side==='out'?py-26:py+40,'#33465c','11.5px "Microsoft YaHei"');
+        ctx.globalAlpha=1;
+      });
+      AnimKit.label(ctx,'脂锚定蛋白：通过共价连接的脂质锚附着在膜上',W/2,22,'#1f5c8b','bold 13.5px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

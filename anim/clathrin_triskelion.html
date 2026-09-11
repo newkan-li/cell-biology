@@ -1,0 +1,40 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>网格蛋白三脚复合体</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  function arm(ctx,x,y,ang,s,col){var x2=x+Math.cos(ang)*s,y2=y+Math.sin(ang)*s;ctx.strokeStyle=col;ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();AnimKit.circle(ctx,x2,y2,7,col,null);}
+  AnimKit.mount({
+    title:'网格蛋白三脚复合体（triskelion）',
+    sub:'网格蛋白由 3 条重链和 3 条轻链组成三脚复合体，组装成五/六边形网格包被。',
+    legend:[{c:'#3b8fd6',t:'重链'},{c:'#8fc7ef',t:'轻链'}],
+    init:function(S){},
+    phases:[
+      {name:'① 3 条重链 + 3 条轻链',dur:1300,note:'网格蛋白的基本组成：3 条重链和 3 条轻链。',ap:function(){}},
+      {name:'② 组成三脚复合体',dur:1400,note:'3 条重链以中心为节点向外伸出，各带 1 条轻链，形成三脚复合体。',ap:function(){}},
+      {name:'③ 相互连接成网格',dur:1400,note:'三脚复合体的臂端相互连接，组装成五边形/六边形网格。',ap:function(){}},
+      {name:'④ 包裹膜形成有被小泡',dur:1400,note:'网格弯曲包裹膜，形成网格蛋白有被小泡。',ap:function(){}},
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var cx=W/2,cy=H*0.46;
+      if(phaseI===0){
+        for(var i=0;i<3;i++){arm(ctx,cx-120,cy-30+i*30,0,50,'#3b8fd6');arm(ctx,cx-120,cy-30+i*30,0,30,'#8fc7ef');}
+        AnimKit.label(ctx,'重链',cx-60,cy-50,'#1f5c8b','12px "Microsoft YaHei"');AnimKit.label(ctx,'轻链',cx-50,cy-50+40,'#3b8fd6','12px "Microsoft YaHei"');
+      } else if(phaseI===1){
+        for(var a=0;a<3;a++){var ang=-Math.PI/2+a*2.094;arm(ctx,cx,cy,ang,70,'#3b8fd6');
+          var ex=cx+Math.cos(ang)*50,ey=cy+Math.sin(ang)*50;AnimKit.circle(ctx,ex+Math.cos(ang)*14,ey+Math.sin(ang)*14,5,'#8fc7ef',null);}
+        AnimKit.label(ctx,'三脚复合体',cx,cy+90,'#1f5c8b','13px "Microsoft YaHei"');
+      } else {
+        // lattice
+        ctx.strokeStyle='#3b8fd6';ctx.lineWidth=3;
+        var R=70;
+        for(var k=0;k<6;k++){var a2=k/6*6.283;ctx.beginPath();ctx.arc(cx,cy,R,a2,a2+0.9);ctx.stroke();}
+        ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.stroke();
+        if(phaseI===2){AnimKit.label(ctx,'组装成五/六边形网格',cx,cy+R+30,'#1f5c8b','13px "Microsoft YaHei"');}
+        if(phaseI===3){ctx.fillStyle='#eef4fa';ctx.beginPath();ctx.arc(cx,cy,R-8,0,7);ctx.fill();AnimKit.label(ctx,'有被小泡',cx,cy+4,'#33465c','12px "Microsoft YaHei"');AnimKit.label(ctx,'网格蛋白包裹膜形成小泡',cx,cy+R+30,'#1f5c8b','13px "Microsoft YaHei"');}
+      }
+      AnimKit.label(ctx,'网格蛋白：3 重链 + 3 轻链 → 三脚复合体',W/2,22,'#1f5c8b','bold 13.5px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

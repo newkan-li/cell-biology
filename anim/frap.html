@@ -1,0 +1,39 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>荧光漂白恢复 FRAP</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'荧光漂白恢复（FRAP）',
+    sub:'用激光漂白膜上一小块荧光蛋白，观察周围荧光扩散回来，证明膜具有流动性。',
+    legend:[{c:'#2e9e5b',t:'荧光蛋白'},{c:'#22303f',t:'被漂白区'}],
+    init:function(S){},
+    phases:[
+      {name:'① 膜上均匀分布荧光蛋白',dur:1300,note:'用荧光标记膜蛋白，荧光在膜上均匀分布。',ap:function(){}},
+      {name:'② 激光漂白一小块区域',dur:1300,note:'用激光把膜上一小块区域的荧光漂白(破坏荧光基团)。',ap:function(){}},
+      {name:'③ 周围蛋白侧向扩散进入',dur:1300,note:'周围未被漂白的荧光蛋白侧向扩散进入漂白区。',ap:function(){}},
+      {name:'④ 荧光恢复 → 膜是流动的',dur:1400,note:'漂白区荧光逐渐恢复，证明膜蛋白能在膜上侧向扩散，膜具有流动性。',ap:function(){}},
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var y0=H*0.42,y1=H*0.62,cx=W/2;
+      AnimKit.label(ctx,'质膜',14,y0-14,'#7a8aa0','12px "Microsoft YaHei"','left');
+      ctx.fillStyle='#ffe9c9';ctx.fillRect(0,y0,W,y1-y0);
+      for(var x=8;x<W;x+=18){ctx.fillStyle='#f2b950';ctx.beginPath();ctx.arc(x,y0+4,3,0,7);ctx.fill();ctx.beginPath();ctx.arc(x,y1-4,3,0,7);ctx.fill();}
+      var recover=phaseI<=1?0:(phaseI===2?0.55:1);
+      for(var gx=20;gx<W-10;gx+=22){
+        for(var gy=0;gy<3;gy++){
+          var y=y0+10+gy*((y1-y0-20)/2);
+          var inBleach=Math.abs(gx-cx)<70;
+          var col='#2e9e5b';
+          if(inBleach){ if(phaseI===1)col='#22303f'; else if(phaseI===2)col=(gy===1&&(gx-cx)%44===0)?'#2e9e5b':'#22303f'; }
+          AnimKit.circle(ctx,gx,y,4,col,null);
+        }
+      }
+      if(phaseI===1){ctx.strokeStyle='#c0392b';ctx.lineWidth=2;ctx.strokeRect(cx-70,y0-6,140,y1-y0+12);AnimKit.label(ctx,'激光漂白',cx,y0-14,'#c0392b','12px "Microsoft YaHei"');}
+      if(phaseI===2)AnimKit.label(ctx,'侧向扩散进入',cx,y0-14,'#1f5c8b','12px "Microsoft YaHei"');
+      if(phaseI===3)AnimKit.label(ctx,'荧光恢复 → 膜具有流动性',cx,y0-14,'#2e7d32','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,'FRAP：荧光漂白恢复实验',W/2,24,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>
