@@ -203,7 +203,7 @@ html[data-theme="sepia"] .fc-go{background:#faf3e0}
 .fc-done{text-align:center;font-size:16px;color:var(--blue);padding:30px 0}
 .fc-mn{margin-top:8px;background:#fff8e8;border:1px solid #f0d9a8;border-radius:8px;padding:6px 10px;font-size:13px;color:#9a6b00}
 .fc-img{display:block;max-width:100%;margin-top:10px;border:1px solid var(--line);border-radius:8px}
-.fc-input{display:flex;gap:8px;margin-top:10px}
+.fc-input{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .fc-ans{flex:1;padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:#fff;font-family:inherit}
 .fc-ans.right{border-color:var(--ok);background:#f2fbf4}
 .fc-ans.wrong{border-color:var(--acc);background:#fdf3f2}

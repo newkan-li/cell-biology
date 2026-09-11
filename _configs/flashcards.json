@@ -7,7 +7,8 @@
     "mnemonic": "发现—学说—经典—实验—超微—分子",
     "type": "流程",
     "useImg": false,
-    "blank": "细胞学说"
+    "blank": "细胞学说",
+    "blank2": "经典时期"
    }
   ],
   "3": [
@@ -17,7 +18,8 @@
     "mnemonic": "胡克看软木，蜂窝叫细胞",
     "type": "例证",
     "useImg": true,
-    "blank": "胡克"
+    "blank": "胡克",
+    "blank2": "软木塞"
    }
   ],
   "4": [
@@ -27,7 +29,8 @@
     "mnemonic": "虎克看死壁，文虎克看活物",
     "type": "例证",
     "useImg": false,
-    "blank": "列文虎克"
+    "blank": "列文虎克",
+    "blank2": "血细胞"
    }
   ],
   "5": [
@@ -37,7 +40,8 @@
     "mnemonic": "登植物，旺动物，肖补分裂",
     "type": "流程",
     "useImg": false,
-    "blank": "细胞来自已有细胞的分裂"
+    "blank": "细胞来自已有细胞的分裂",
+    "blank2": "施莱登"
    }
   ],
   "6": [
@@ -57,7 +61,8 @@
     "mnemonic": "一分裂，二细胞器",
     "type": "组成数字",
     "useImg": false,
-    "blank": "细胞分裂"
+    "blank": "细胞分裂",
+    "blank2": "细胞器的发现"
    }
   ],
   "11": [
@@ -67,7 +72,8 @@
     "mnemonic": "遗传—生理—化学",
     "type": "对比",
     "useImg": false,
-    "blank": "细胞遗传"
+    "blank": "细胞遗传",
+    "blank2": "细胞生理"
    }
   ],
   "12": [
@@ -77,7 +83,8 @@
     "mnemonic": "膜—DNA—核糖体—元素",
     "type": "组成数字",
     "useImg": true,
-    "blank": "核糖体"
+    "blank": "核糖体",
+    "blank2": "双链DNA"
    }
   ],
   "14": [
@@ -87,7 +94,8 @@
     "mnemonic": "代谢靠酶，能量靠太阳",
     "type": "功能",
     "useImg": false,
-    "blank": "酶"
+    "blank": "酶",
+    "blank2": "物质和能量代谢"
    },
    {
     "front": "细胞功能共性中的运动性表现在哪些方面？",
@@ -95,7 +103,8 @@
     "mnemonic": "内运外动",
     "type": "功能",
     "useImg": false,
-    "blank": "细胞内各种物质运输"
+    "blank": "细胞内各种物质运输",
+    "blank2": "细胞自身整体运动"
    }
   ],
   "19": [
@@ -105,7 +114,8 @@
     "mnemonic": "原35，真15",
     "type": "对比",
     "useImg": false,
-    "blank": "原核细胞"
+    "blank": "原核细胞",
+    "blank2": "真核细胞"
    },
    {
     "front": "细菌、原生生物、真菌、植物、动物分别属于哪类细胞？",
@@ -113,7 +123,8 @@
     "mnemonic": "细菌原核，其余真核",
     "type": "例证",
     "useImg": false,
-    "blank": "真核细胞"
+    "blank": "真核细胞",
+    "blank2": "原生生物"
    }
   ],
   "20": [
@@ -123,7 +134,8 @@
     "mnemonic": "古、细、真",
     "type": "组成数字",
     "useImg": true,
-    "blank": "真核生物"
+    "blank": "真核生物",
+    "blank2": "古核生物"
    },
    {
     "front": "古核细胞与细菌、真核生物的进化关系如何？",
@@ -131,7 +143,8 @@
     "mnemonic": "古核近真核",
     "type": "对比",
     "useImg": true,
-    "blank": "古核细胞"
+    "blank": "古核细胞",
+    "blank2": "细菌"
    }
   ],
   "22": [
@@ -141,7 +154,8 @@
     "mnemonic": "无核膜核仁，只有拟核",
     "type": "定义",
     "useImg": false,
-    "blank": "拟核"
+    "blank": "拟核",
+    "blank2": "核膜和核仁"
    },
    {
     "front": "原核细胞的基本特点中，遗传信息量和内部结构如何？",
@@ -149,7 +163,8 @@
     "mnemonic": "基因少，结构简",
     "type": "组成数字",
     "useImg": false,
-    "blank": "内部结构简单"
+    "blank": "内部结构简单",
+    "blank2": "遗传信息量少"
    }
   ],
   "23": [
@@ -159,7 +174,8 @@
     "mnemonic": "真细菌、古细菌",
     "type": "组成数字",
     "useImg": false,
-    "blank": "真细菌"
+    "blank": "真细菌",
+    "blank2": "古细菌"
    },
    {
     "front": "已知最小的细胞是什么？大小多少？",
@@ -167,7 +183,8 @@
     "mnemonic": "最小支原体，0.1到0.3",
     "type": "组成数字",
     "useImg": false,
-    "blank": "支原体"
+    "blank": "支原体",
+    "blank2": "0.1~0.3μm"
    },
    {
     "front": "古细菌通常出现在什么环境？举例说明。",
@@ -175,7 +192,8 @@
     "mnemonic": "古菌爱极端",
     "type": "例证",
     "useImg": false,
-    "blank": "极端环境"
+    "blank": "极端环境",
+    "blank2": "产甲烷菌"
    }
   ],
   "25": [
@@ -185,7 +203,8 @@
     "mnemonic": "结构、繁殖、遗传",
     "type": "对比",
     "useImg": false,
-    "blank": "分裂繁殖"
+    "blank": "分裂繁殖",
+    "blank2": "遗传"
    },
    {
     "front": "原核细胞与真核细胞在结构上的共同点是什么？",
@@ -193,7 +212,8 @@
     "mnemonic": "膜、核酸、核糖体",
     "type": "对比",
     "useImg": false,
-    "blank": "核糖体"
+    "blank": "核糖体",
+    "blank2": "细胞膜"
    }
   ],
   "26": [
@@ -203,7 +223,8 @@
     "mnemonic": "原核边转边译，真核分室分工",
     "type": "对比",
     "useImg": false,
-    "blank": "边转录边翻译"
+    "blank": "边转录边翻译",
+    "blank2": "拟核区"
    },
    {
     "front": "原核细胞与真核细胞在复杂性上有何差异？",
@@ -211,7 +232,8 @@
     "mnemonic": "原简真繁",
     "type": "对比",
     "useImg": false,
-    "blank": "简单"
+    "blank": "简单",
+    "blank2": "真核细胞"
    }
   ],
   "28": [
@@ -221,7 +243,8 @@
     "mnemonic": "真核染色体，原核裸环单",
     "type": "对比",
     "useImg": false,
-    "blank": "染色体"
+    "blank": "染色体",
+    "blank2": "单链、环状、裸露的DNA染色体"
    },
    {
     "front": "真核细胞与原核细胞的DNA数量差异如何？举例说明。",
@@ -229,7 +252,8 @@
     "mnemonic": "原核毫米级，真核米级",
     "type": "组成数字",
     "useImg": false,
-    "blank": "DNA"
+    "blank": "DNA",
+    "blank2": "DNA/RNA"
    }
   ],
   "30": [
@@ -239,7 +263,8 @@
     "mnemonic": "真核有膜有骨架，原核只有小核糖体",
     "type": "对比",
     "useImg": false,
-    "blank": "细胞骨架蛋白"
+    "blank": "细胞骨架蛋白",
+    "blank2": "核糖体"
    },
    {
     "front": "真核与原核的繁殖方式和运动方式分别是什么？",
@@ -247,7 +272,8 @@
     "mnemonic": "真核有丝，原核无丝；鞭毛同名不同源",
     "type": "对比",
     "useImg": false,
-    "blank": "无丝分裂"
+    "blank": "无丝分裂",
+    "blank2": "有丝分裂"
    }
   ],
   "31": [
@@ -257,7 +283,8 @@
     "mnemonic": "原核一根蛋白丝，真核九加二微管",
     "type": "对比",
     "useImg": true,
-    "blank": "flagellin"
+    "blank": "flagellin",
+    "blank2": "微管结构"
    },
    {
     "front": "为什么说原核与真核鞭毛是趋同进化的经典例子？",
@@ -265,7 +292,8 @@
     "mnemonic": "同名不同源，功能相似是趋同",
     "type": "例证",
     "useImg": false,
-    "blank": "趋同进化"
+    "blank": "趋同进化",
+    "blank2": "功能相似"
    }
   ],
   "32": [
@@ -275,7 +303,8 @@
     "mnemonic": "骨架撑形态，网络通运输",
     "type": "组成",
     "useImg": true,
-    "blank": "细胞质骨架"
+    "blank": "细胞质骨架",
+    "blank2": "维持细胞形态"
    },
    {
     "front": "生物膜体系包括哪些结构？其核心意义是什么？",
@@ -283,7 +312,8 @@
     "mnemonic": "膜系分房间，各室各司职",
     "type": "组成",
     "useImg": true,
-    "blank": "细胞分室化"
+    "blank": "细胞分室化",
+    "blank2": "质膜"
    }
   ],
   "34": [
@@ -293,7 +323,8 @@
     "mnemonic": "共同祖先、基因保守、以易推难",
     "type": "定义",
     "useImg": false,
-    "blank": "重要功能基因进化上高度保守"
+    "blank": "重要功能基因进化上高度保守",
+    "blank2": "共同祖先进化而来"
    },
    {
     "front": "常用的模式生物有哪些？",
@@ -301,7 +332,8 @@
     "mnemonic": "大肠酵母拟南芥，线虫果蝇鼠斑马",
     "type": "例证",
     "useImg": false,
-    "blank": "大肠杆菌"
+    "blank": "大肠杆菌",
+    "blank2": "酵母"
    }
   ],
   "35": [
@@ -311,7 +343,8 @@
     "mnemonic": "快繁简基因组，高表达好工具",
     "type": "例证",
     "useImg": false,
-    "blank": "基因组简单"
+    "blank": "基因组简单",
+    "blank2": "外源基因表达量可达总蛋白5%-30%"
    },
    {
     "front": "为什么说大肠杆菌是分子生物学研究的奠基模式生物？",
@@ -319,7 +352,8 @@
     "mnemonic": "分子机制先在大肠杆菌讲清楚",
     "type": "功能",
     "useImg": false,
-    "blank": "大肠杆菌"
+    "blank": "大肠杆菌",
+    "blank2": "DNA复制"
    }
   ],
   "36": [
@@ -329,7 +363,8 @@
     "mnemonic": "最小真核，同源人多，突变体全",
     "type": "例证",
     "useImg": false,
-    "blank": "最小真核模式生物"
+    "blank": "最小真核模式生物",
+    "blank2": "含大量与人同源蛋白"
    },
    {
     "front": "啤酒酵母常用于研究哪些细胞过程？",
@@ -337,7 +372,8 @@
     "mnemonic": "酵母管周期，凋亡也拿手",
     "type": "功能",
     "useImg": false,
-    "blank": "细胞分裂周期调控"
+    "blank": "细胞分裂周期调控",
+    "blank2": "细胞凋亡"
    }
   ],
   "38": [
@@ -347,7 +383,8 @@
     "mnemonic": "小基因组短世代，首测序的被子植物",
     "type": "例证",
     "useImg": false,
-    "blank": "首个完成全基因组测定的被子植物"
+    "blank": "首个完成全基因组测定的被子植物",
+    "blank2": "5条染色体"
    },
    {
     "front": "拟南芥在植物学研究中的主要用途是什么？",
@@ -355,7 +392,8 @@
     "mnemonic": "拟南芥筛遍植物生命各面",
     "type": "功能",
     "useImg": false,
-    "blank": "遗传筛选"
+    "blank": "遗传筛选",
+    "blank2": "基因"
    }
   ],
   "39": [
@@ -365,7 +403,8 @@
     "mnemonic": "1090生，959留，131凋亡",
     "type": "组成数字",
     "useImg": false,
-    "blank": "凋亡"
+    "blank": "凋亡",
+    "blank2": "受精卵"
    },
    {
     "front": "线虫作为模式生物的优势及其对凋亡研究的意义是什么？",
@@ -373,7 +412,8 @@
     "mnemonic": "透明短世代，凋亡从虫到人保守",
     "type": "例证",
     "useImg": false,
-    "blank": "体壁透明可活体观察"
+    "blank": "体壁透明可活体观察",
+    "blank2": "世代短"
    }
   ],
   "44": [
@@ -383,7 +423,8 @@
     "mnemonic": "果蝇小，基因少，染色体先发现，发育基因它最灵",
     "type": "功能",
     "useImg": false,
-    "blank": "最早用于发现染色体特性"
+    "blank": "最早用于发现染色体特性",
+    "blank2": "约13600个基因"
    },
    {
     "front": "果蝇主要用于研究什么生物学问题？",
@@ -391,7 +432,8 @@
     "mnemonic": "一卵变多细胞，果蝇帮你找基因",
     "type": "功能",
     "useImg": false,
-    "blank": "胚胎发育"
+    "blank": "胚胎发育",
+    "blank2": "发育生物学"
    }
   ],
   "50": [
@@ -401,7 +443,8 @@
     "mnemonic": "小鼠近人，免疫遗传发育全能问",
     "type": "功能",
     "useImg": false,
-    "blank": "进化上最接近人类"
+    "blank": "进化上最接近人类",
+    "blank2": "哺乳动物遗传"
    },
    {
     "front": "小鼠的胚胎发育和性成熟时间分别是多少？",
@@ -409,7 +452,8 @@
     "mnemonic": "二十天出生，六周就成年",
     "type": "组成数字",
     "useImg": false,
-    "blank": "6周"
+    "blank": "6周",
+    "blank2": "胚胎发育"
    }
   ],
   "52": [
@@ -419,7 +463,8 @@
     "mnemonic": "透明快、基因半、三月代、脊椎同",
     "type": "功能",
     "useImg": true,
-    "blank": "胚胎透明"
+    "blank": "胚胎透明",
+    "blank2": "发育快"
    },
    {
     "front": "为什么斑马鱼适合观察胚胎发育过程？",
@@ -427,7 +472,8 @@
     "mnemonic": "透明两周，细胞步步可见",
     "type": "功能",
     "useImg": true,
-    "blank": "胚胎透明"
+    "blank": "胚胎透明",
+    "blank2": "可跟踪观察每个细胞的发育"
    }
   ]
  },
@@ -439,7 +485,8 @@
     "mnemonic": "膜=外膜+内膜",
     "type": "组成",
     "useImg": false,
-    "blank": "质膜"
+    "blank": "质膜",
+    "blank2": "细胞内膜系统"
    },
    {
     "front": "质膜的形成在进化上有何意义？",
@@ -447,7 +494,8 @@
     "mnemonic": "",
     "type": "定义",
     "useImg": false,
-    "blank": "分界点"
+    "blank": "分界点",
+    "blank2": "非细胞生命"
    }
   ],
   "2": [
@@ -457,7 +505,8 @@
     "mnemonic": "屏障+交流",
     "type": "功能",
     "useImg": false,
-    "blank": "半透膜"
+    "blank": "半透膜",
+    "blank2": "屏障"
    }
   ],
   "3": [
@@ -467,7 +516,8 @@
     "mnemonic": "",
     "type": "定义",
     "useImg": false,
-    "blank": "Singer & Nicolson"
+    "blank": "Singer & Nicolson",
+    "blank2": "1972年"
    },
    {
     "front": "流动镶嵌模型的四个要点是什么？",
@@ -475,7 +525,8 @@
     "mnemonic": "双层、蛋白、流动、限制",
     "type": "组成",
     "useImg": true,
-    "blank": "磷脂双分子层"
+    "blank": "磷脂双分子层",
+    "blank2": "膜蛋白位置/作用方式不同"
    }
   ],
   "6": [
@@ -493,7 +544,8 @@
     "mnemonic": "胆固醇+鞘磷脂=脂筏",
     "type": "定义",
     "useImg": true,
-    "blank": "膜上胆固醇、鞘磷脂富集的微区域"
+    "blank": "膜上胆固醇、鞘磷脂富集的微区域",
+    "blank2": "异质性"
    }
   ],
   "7": [
@@ -503,7 +555,8 @@
     "mnemonic": "脂+糖+蛋白",
     "type": "组成",
     "useImg": false,
-    "blank": "膜脂"
+    "blank": "膜脂",
+    "blank2": "膜蛋白"
    },
    {
     "front": "膜脂中含量最多的成分是什么？",
@@ -511,7 +564,8 @@
     "mnemonic": "",
     "type": "组成数字",
     "useImg": false,
-    "blank": "甘油磷脂"
+    "blank": "甘油磷脂",
+    "blank2": "占膜脂50%以上"
    }
   ],
   "8": [
@@ -521,7 +575,8 @@
     "mnemonic": "甘油、鞘、固醇",
     "type": "组成",
     "useImg": true,
-    "blank": "甘油磷脂"
+    "blank": "甘油磷脂",
+    "blank2": "鞘磷脂和糖脂"
    },
    {
     "front": "膜脂分子为何能形成脂双层？",
@@ -529,7 +584,8 @@
     "mnemonic": "两性分子=一头亲水一头疏水",
     "type": "定义",
     "useImg": false,
-    "blank": "两性分子"
+    "blank": "两性分子",
+    "blank2": "亲水和疏水性质"
    }
   ],
   "9": [
@@ -539,7 +595,8 @@
     "mnemonic": "胆丝乙肌",
     "type": "组成",
     "useImg": false,
-    "blank": "磷脂酰胆碱"
+    "blank": "磷脂酰胆碱",
+    "blank2": "磷脂酰丝氨酸"
    },
    {
     "front": "甘油磷脂的结构特点是什么？",
@@ -547,7 +604,8 @@
     "mnemonic": "一头两尾",
     "type": "定义",
     "useImg": true,
-    "blank": "极性头"
+    "blank": "极性头",
+    "blank2": "疏水尾"
    }
   ],
   "10": [
@@ -557,7 +615,8 @@
     "mnemonic": "鞘氨醇骨架，高尔基合成",
     "type": "定位",
     "useImg": false,
-    "blank": "鞘氨醇"
+    "blank": "鞘氨醇",
+    "blank2": "高尔基体"
    },
    {
     "front": "鞘脂分为哪两类？",
@@ -565,7 +624,8 @@
     "mnemonic": "",
     "type": "组成",
     "useImg": false,
-    "blank": "鞘磷脂"
+    "blank": "鞘磷脂",
+    "blank2": "鞘糖脂"
    }
   ],
   "11": [
@@ -575,7 +635,8 @@
     "mnemonic": "四环一羟基",
     "type": "组成数字",
     "useImg": true,
-    "blank": "碳氢化合物"
+    "blank": "碳氢化合物",
+    "blank2": "羟基"
    },
    {
     "front": "胆固醇在生物膜中有哪些作用？",
@@ -583,7 +644,8 @@
     "mnemonic": "插磷脂、调流动、做前体",
     "type": "功能",
     "useImg": false,
-    "blank": "脂筏"
+    "blank": "脂筏",
+    "blank2": "磷脂"
    },
    {
     "front": "动物、植物、真菌、细菌质膜的固醇分别是什么？",
@@ -591,7 +653,8 @@
     "mnemonic": "动胆植豆真麦角，细菌多半没有它",
     "type": "对比",
     "useImg": false,
-    "blank": "胆固醇"
+    "blank": "胆固醇",
+    "blank2": "豆固醇"
    }
   ],
   "13": [
@@ -601,7 +664,8 @@
     "mnemonic": "糖在外，胆均分",
     "type": "对比",
     "useImg": true,
-    "blank": "糖脂"
+    "blank": "糖脂",
+    "blank2": "胆固醇"
    },
    {
     "front": "膜脂不对称性的定义是什么？",
@@ -609,7 +673,8 @@
     "mnemonic": "同脂两侧量不同",
     "type": "定义",
     "useImg": false,
-    "blank": "膜脂"
+    "blank": "膜脂",
+    "blank2": "脂双层"
    }
   ],
   "16": [
@@ -619,7 +684,8 @@
     "mnemonic": "侧翻摆旋",
     "type": "流程",
     "useImg": true,
-    "blank": "翻转运动"
+    "blank": "翻转运动",
+    "blank2": "侧向运动"
    },
    {
     "front": "膜脂运动性赋予膜什么性质？",
@@ -637,7 +703,8 @@
     "mnemonic": "不流两字记心间",
     "type": "对比",
     "useImg": false,
-    "blank": "不对称性"
+    "blank": "不对称性",
+    "blank2": "流动性"
    }
   ],
   "19": [
@@ -647,7 +714,8 @@
     "mnemonic": "头亲水尾怕水，自动排成双层",
     "type": "流程",
     "useImg": true,
-    "blank": "两性分子"
+    "blank": "两性分子",
+    "blank2": "疏水尾"
    },
    {
     "front": "脂双层自我装配的结构特点是什么？",
@@ -665,7 +733,8 @@
     "mnemonic": "磷脂入水成小球",
     "type": "定义",
     "useImg": true,
-    "blank": "脂双层结构"
+    "blank": "脂双层结构",
+    "blank2": "封闭球形小泡"
    },
    {
     "front": "脂质体在膜研究中的意义是什么？",
@@ -683,7 +752,8 @@
     "mnemonic": "骨架加舞台，一般不演戏",
     "type": "功能",
     "useImg": false,
-    "blank": "基本骨架"
+    "blank": "基本骨架",
+    "blank2": "膜蛋白"
    }
   ],
   "25": [
@@ -693,7 +763,8 @@
     "mnemonic": "内在、外周、脂锚定",
     "type": "组成数字",
     "useImg": true,
-    "blank": "膜蛋白"
+    "blank": "膜蛋白",
+    "blank2": "外周膜蛋白"
    },
    {
     "front": "生物膜的功能主要由什么决定？",
@@ -701,7 +772,8 @@
     "mnemonic": "蛋白多，功能强",
     "type": "功能",
     "useImg": false,
-    "blank": "膜蛋白"
+    "blank": "膜蛋白",
+    "blank2": "功能越复杂的膜"
    }
   ],
   "26": [
@@ -711,7 +783,8 @@
     "mnemonic": "去垢剂像楔子，撬开膜脂与蛋白",
     "type": "功能",
     "useImg": false,
-    "blank": "两亲性分子"
+    "blank": "两亲性分子",
+    "blank2": "疏水相互作用"
    },
    {
     "front": "离子型与非离子型去垢剂有何区别？",
@@ -719,7 +792,8 @@
     "mnemonic": "SDS猛，Triton温柔",
     "type": "对比",
     "useImg": false,
-    "blank": "离子型"
+    "blank": "离子型",
+    "blank2": "非离子型"
    }
   ],
   "28": [
@@ -729,7 +803,8 @@
     "mnemonic": "α螺旋穿膜，β桶成孔",
     "type": "组成",
     "useImg": true,
-    "blank": "α-螺旋跨膜"
+    "blank": "α-螺旋跨膜",
+    "blank2": "β-折叠跨膜"
    },
    {
     "front": "膜内在蛋白的典型例子有哪些？",
@@ -737,7 +812,8 @@
     "mnemonic": "受体通道载体孔，都是内在蛋白",
     "type": "例证",
     "useImg": false,
-    "blank": "跨膜受体"
+    "blank": "跨膜受体",
+    "blank2": "通道蛋白"
    }
   ],
   "30": [
@@ -747,7 +823,8 @@
     "mnemonic": "非共价，贴在外",
     "type": "定义",
     "useImg": true,
-    "blank": "非共价键"
+    "blank": "非共价键",
+    "blank2": "膜脂极性头部"
    },
    {
     "front": "人红细胞膜骨架中的外周蛋白有哪些？",
@@ -755,7 +832,8 @@
     "mnemonic": "血影加肌动，网架撑红膜",
     "type": "例证",
     "useImg": false,
-    "blank": "血影蛋白"
+    "blank": "血影蛋白",
+    "blank2": "肌动蛋白"
    }
   ],
   "32": [
@@ -765,7 +843,8 @@
     "mnemonic": "共价锚，脂中藏",
     "type": "定义",
     "useImg": false,
-    "blank": "共价键"
+    "blank": "共价键",
+    "blank2": "膜脂特定脂类"
    },
    {
     "front": "脂锚定蛋白为何不能用高盐或改变pH去除？",
@@ -773,7 +852,8 @@
     "mnemonic": "共价锚定，酶才能解",
     "type": "定位",
     "useImg": false,
-    "blank": "特定酶"
+    "blank": "特定酶",
+    "blank2": "小G蛋白Ras"
    }
   ],
   "34": [
@@ -783,7 +863,8 @@
     "mnemonic": "骨架、基质、屏障、结合",
     "type": "流程",
     "useImg": true,
-    "blank": "扩散屏障"
+    "blank": "扩散屏障",
+    "blank2": "胞内骨架成分"
    }
   ],
   "36": [
@@ -793,7 +874,8 @@
     "mnemonic": "流动才有活力",
     "type": "功能",
     "useImg": false,
-    "blank": "物质运输"
+    "blank": "物质运输",
+    "blank2": "信号转导"
    }
   ],
   "37": [
@@ -803,7 +885,8 @@
     "mnemonic": "漂白再恢复，速度测流动",
     "type": "流程",
     "useImg": true,
-    "blank": "荧光恢复速度"
+    "blank": "荧光恢复速度",
+    "blank2": "激光漂白局部"
    }
   ],
   "38": [
@@ -813,7 +896,8 @@
     "mnemonic": "热则流，冷则凝",
     "type": "定义",
     "useImg": false,
-    "blank": "相变温度"
+    "blank": "相变温度",
+    "blank2": "液晶态"
    }
   ],
   "40": [
@@ -823,7 +907,8 @@
     "mnemonic": "短链多双键，流动更顺畅",
     "type": "组成数字",
     "useImg": false,
-    "blank": "胆固醇"
+    "blank": "胆固醇",
+    "blank2": "不饱和程度"
    }
   ],
   "42": [
@@ -833,7 +918,8 @@
     "mnemonic": "饱和直紧硬，不饱和弯松软",
     "type": "对比",
     "useImg": false,
-    "blank": "不饱和脂肪酸"
+    "blank": "不饱和脂肪酸",
+    "blank2": "饱和脂肪酸"
    }
   ],
   "45": [
@@ -843,7 +929,8 @@
     "mnemonic": "高温刹车，低温防冻——膜的缓冲器",
     "type": "功能",
     "useImg": false,
-    "blank": "相变温度"
+    "blank": "相变温度",
+    "blank2": "流动性"
    }
   ],
   "46": [
@@ -853,7 +940,8 @@
     "mnemonic": "被动顺流不耗能，主动逆流要供能",
     "type": "流程",
     "useImg": false,
-    "blank": "被动运输"
+    "blank": "被动运输",
+    "blank2": "主动运输"
    }
   ],
   "47": [
@@ -863,7 +951,8 @@
     "mnemonic": "疏水易过，离子难行",
     "type": "对比",
     "useImg": true,
-    "blank": "疏水分子"
+    "blank": "疏水分子",
+    "blank2": "离子"
    }
   ],
   "49": [
@@ -873,7 +962,8 @@
     "mnemonic": "简单靠自由，协助靠蛋白",
     "type": "对比",
     "useImg": false,
-    "blank": "协助扩散"
+    "blank": "协助扩散",
+    "blank2": "简单扩散"
    }
   ],
   "50": [
@@ -883,7 +973,8 @@
     "mnemonic": "通道不结合，最快被动运；电压配体应力三开门",
     "type": "功能",
     "useImg": true,
-    "blank": "跨膜亲水通道"
+    "blank": "跨膜亲水通道",
+    "blank2": "被动运输"
    }
   ],
   "51": [
@@ -893,7 +984,8 @@
     "mnemonic": "GLUT变构运糖，Glut1进红细胞和脑",
     "type": "例证",
     "useImg": false,
-    "blank": "GLUT家族"
+    "blank": "GLUT家族",
+    "blank2": "构象变化"
    }
   ],
   "54": [
@@ -903,7 +995,8 @@
     "mnemonic": "Agre水，MacKinnon钾",
     "type": "例证",
     "useImg": false,
-    "blank": "水通道"
+    "blank": "水通道",
+    "blank2": "钾通道结构"
    }
   ],
   "55": [
@@ -913,7 +1006,8 @@
     "mnemonic": "注mRNA，低渗胀破",
     "type": "流程",
     "useImg": true,
-    "blank": "非洲爪蟾卵母细胞"
+    "blank": "非洲爪蟾卵母细胞",
+    "blank2": "低渗溶液"
    }
   ],
   "59": [
@@ -923,7 +1017,8 @@
     "mnemonic": "四亚基围一孔，滤器把关",
     "type": "组成数字",
     "useImg": true,
-    "blank": "选择性滤器"
+    "blank": "选择性滤器",
+    "blank2": "离子通道"
    }
   ],
   "60": [
@@ -943,7 +1038,8 @@
     "mnemonic": "内钾外钠，膜电位之基",
     "type": "对比",
     "useImg": false,
-    "blank": "高K+"
+    "blank": "高K+",
+    "blank2": "高Na+"
    }
   ],
   "64": [
@@ -953,7 +1049,8 @@
     "mnemonic": "耗能逆流，泵来搬",
     "type": "定义",
     "useImg": false,
-    "blank": "离子梯度"
+    "blank": "离子梯度",
+    "blank2": "逆浓度梯度"
    }
   ],
   "65": [
@@ -963,7 +1060,8 @@
     "mnemonic": "ATP、梯度、光，三力驱动",
     "type": "流程",
     "useImg": false,
-    "blank": "ATP驱动泵"
+    "blank": "ATP驱动泵",
+    "blank2": "协同运输"
    }
   ],
   "66": [
@@ -973,7 +1071,8 @@
     "mnemonic": "同向并肩走，反向背对行",
     "type": "对比",
     "useImg": true,
-    "blank": "同向"
+    "blank": "同向",
+    "blank2": "反向"
    }
   ],
   "67": [
@@ -983,7 +1082,8 @@
     "mnemonic": "三钠出，二钾进，一ATP",
     "type": "组成数字",
     "useImg": true,
-    "blank": "3个Na+"
+    "blank": "3个Na+",
+    "blank2": "2个K+"
    },
    {
     "front": "Na+/K+泵建立的胞内外离子浓度梯度是什么？",
@@ -991,7 +1091,8 @@
     "mnemonic": "钠外高，钾内高",
     "type": "功能",
     "useImg": false,
-    "blank": "胞内Na+低"
+    "blank": "胞内Na+低",
+    "blank2": "胞外Na+高"
    }
   ],
   "69": [
@@ -1001,7 +1102,8 @@
     "mnemonic": "二α二β四聚体",
     "type": "组成数字",
     "useImg": true,
-    "blank": "α亚基"
+    "blank": "α亚基",
+    "blank2": "β亚基"
    },
    {
     "front": "Na+/K+泵中α亚基的功能是什么？",
@@ -1009,7 +1111,8 @@
     "mnemonic": "α管水解与转运",
     "type": "功能",
     "useImg": true,
-    "blank": "ATP水解"
+    "blank": "ATP水解",
+    "blank2": "构象变化"
    }
   ],
   "70": [
@@ -1019,7 +1122,8 @@
     "mnemonic": "电位、渗透、pH、协同",
     "type": "功能",
     "useImg": false,
-    "blank": "膜电位"
+    "blank": "膜电位",
+    "blank2": "渗透平衡"
    }
   ],
   "72": [
@@ -1029,7 +1133,8 @@
     "mnemonic": "钾漏钠难，外流成电位",
     "type": "流程",
     "useImg": true,
-    "blank": "K+外流"
+    "blank": "K+外流",
+    "blank2": "静息电位"
    },
    {
     "front": "静息电位由膜上多厚的离子层产生？",
@@ -1047,7 +1152,8 @@
     "mnemonic": "漏开闸关",
     "type": "对比",
     "useImg": true,
-    "blank": "K+泄漏通道"
+    "blank": "K+泄漏通道",
+    "blank2": "门控通道"
    },
    {
     "front": "K+泄漏通道开放导致什么结果？",
@@ -1055,7 +1161,8 @@
     "mnemonic": "钾出成静息",
     "type": "功能",
     "useImg": false,
-    "blank": "K+外流"
+    "blank": "K+外流",
+    "blank2": "静息电位"
    }
   ],
   "78": [
@@ -1073,7 +1180,8 @@
     "mnemonic": "钾脱水有补偿，钠脱水白费力",
     "type": "流程",
     "useImg": true,
-    "blank": "去水化"
+    "blank": "去水化",
+    "blank2": "羰基氧"
    }
   ],
   "80": [
@@ -1083,7 +1191,8 @@
     "mnemonic": "刺激一来，电位翻转",
     "type": "定义",
     "useImg": true,
-    "blank": "膜电位"
+    "blank": "膜电位",
+    "blank2": "去极化"
    },
    {
     "front": "如何揭示动作电位的幅度和时程？",
@@ -1091,7 +1200,8 @@
     "mnemonic": "记电位—时间曲线",
     "type": "流程",
     "useImg": false,
-    "blank": "膜电位"
+    "blank": "膜电位",
+    "blank2": "轴突膜电位"
    }
   ],
   "82": [
@@ -1101,7 +1211,8 @@
     "mnemonic": "泵加载体，协同转运",
     "type": "定义",
     "useImg": true,
-    "blank": "主动运输"
+    "blank": "主动运输",
+    "blank2": "载体蛋白"
    },
    {
     "front": "协同运输的直接动力是什么？",
@@ -1109,7 +1220,8 @@
     "mnemonic": "电化学梯度驱动",
     "type": "功能",
     "useImg": false,
-    "blank": "电化学梯度"
+    "blank": "电化学梯度",
+    "blank2": "离子"
    }
   ],
   "84": [
@@ -1119,7 +1231,8 @@
     "mnemonic": "钠顺流，糖逆上",
     "type": "功能",
     "useImg": true,
-    "blank": "Na+电化学梯度"
+    "blank": "Na+电化学梯度",
+    "blank2": "H+梯度"
    }
   ],
   "85": [
@@ -1129,7 +1242,8 @@
     "mnemonic": "顶SGLT进，底Glut2出",
     "type": "流程",
     "useImg": true,
-    "blank": "SGLT"
+    "blank": "SGLT",
+    "blank2": "Glut2"
    },
    {
     "front": "小肠上皮细胞如何实现葡萄糖从肠腔到血液的逆浓度吸收？",
@@ -1137,7 +1251,8 @@
     "mnemonic": "先主动进，再被动出",
     "type": "流程",
     "useImg": true,
-    "blank": "SGLT"
+    "blank": "SGLT",
+    "blank2": "Glut2"
    }
   ],
   "88": [
@@ -1147,7 +1262,8 @@
     "mnemonic": "钠在外，水不进来",
     "type": "功能",
     "useImg": true,
-    "blank": "渗透压平衡"
+    "blank": "渗透压平衡",
+    "blank2": "Na+泵"
    },
    {
     "front": "若Na+/K+-ATPase停止工作，动物细胞会怎样？",
@@ -1155,7 +1271,8 @@
     "mnemonic": "泵停水入，细胞爆",
     "type": "例证",
     "useImg": false,
-    "blank": "离子泵"
+    "blank": "离子泵",
+    "blank2": "渗透平衡"
    }
   ],
   "90": [
@@ -1165,7 +1282,8 @@
     "mnemonic": "泵钠带碱，中和酸",
     "type": "功能",
     "useImg": false,
-    "blank": "Na+HCO3-/Cl-交换"
+    "blank": "Na+HCO3-/Cl-交换",
+    "blank2": "胞内pH稳定"
    }
   ],
   "91": [
@@ -1175,7 +1293,8 @@
     "mnemonic": "动物钠钾，植物氢",
     "type": "对比",
     "useImg": true,
-    "blank": "H+泵"
+    "blank": "H+泵",
+    "blank2": "质子梯度"
    },
    {
     "front": "动物细胞与植物细胞在质膜离子泵上的主要区别是什么？",
@@ -1183,7 +1302,8 @@
     "mnemonic": "动物钠钾，植物氢",
     "type": "对比",
     "useImg": true,
-    "blank": "Na+/K+泵"
+    "blank": "Na+/K+泵",
+    "blank2": "H+泵"
    }
   ]
  },
@@ -1195,7 +1315,8 @@
     "mnemonic": "分室—分选—三运输",
     "type": "组成数字",
     "useImg": false,
-    "blank": "膜泡运输"
+    "blank": "膜泡运输",
+    "blank2": "跨膜运输"
    }
   ],
   "2": [
@@ -1205,7 +1326,8 @@
     "mnemonic": "膜隔区室，专工出高效",
     "type": "功能",
     "useImg": true,
-    "blank": "细胞质"
+    "blank": "细胞质",
+    "blank2": "细胞器功能专一化"
    }
   ],
   "3": [
@@ -1215,7 +1337,8 @@
     "mnemonic": "单层膜、相关联、可流动",
     "type": "定义",
     "useImg": false,
-    "blank": "单层膜"
+    "blank": "单层膜",
+    "blank2": "膜相互流动"
    },
    {
     "front": "内膜系统包括哪些细胞器？不包括哪些？",
@@ -1223,7 +1346,8 @@
     "mnemonic": "内高溶体液泡泡，线叶过不算",
     "type": "组成数字",
     "useImg": false,
-    "blank": "内质网"
+    "blank": "内质网",
+    "blank2": "高尔基体"
    }
   ],
   "4": [
@@ -1233,7 +1357,8 @@
     "mnemonic": "质早晚溶，由外到内降解",
     "type": "流程",
     "useImg": true,
-    "blank": "溶酶体"
+    "blank": "溶酶体",
+    "blank2": "胞内体"
    }
   ],
   "6": [
@@ -1243,7 +1368,8 @@
     "mnemonic": "自显、荧光、离心、分离",
     "type": "流程",
     "useImg": false,
-    "blank": "差速离心"
+    "blank": "差速离心",
+    "blank2": "密度梯度离心"
    }
   ],
   "7": [
@@ -1253,7 +1379,8 @@
     "mnemonic": "脉冲标记追分泌，ER高泡出细胞",
     "type": "例证",
     "useImg": true,
-    "blank": "分泌蛋白"
+    "blank": "分泌蛋白",
+    "blank2": "分泌小泡"
    }
   ],
   "9": [
@@ -1263,7 +1390,8 @@
     "mnemonic": "越大越先沉，越小转速高",
     "type": "流程",
     "useImg": false,
-    "blank": "微粒体"
+    "blank": "微粒体",
+    "blank2": "线粒体"
    },
    {
     "front": "微粒体是什么？",
@@ -1271,7 +1399,8 @@
     "mnemonic": "碎ER自融合成微粒体",
     "type": "定义",
     "useImg": false,
-    "blank": "囊泡"
+    "blank": "囊泡",
+    "blank2": "内质网"
    }
   ],
   "11": [
@@ -1281,7 +1410,8 @@
     "mnemonic": "粗有核糖合分泌，光无核糖管脂质",
     "type": "对比",
     "useImg": true,
-    "blank": "核糖体"
+    "blank": "核糖体",
+    "blank2": "分泌蛋白"
    }
   ],
   "13": [
@@ -1291,7 +1421,8 @@
     "mnemonic": "匀浆离心，ER自融成球",
     "type": "定义",
     "useImg": false,
-    "blank": "球形囊泡"
+    "blank": "球形囊泡",
+    "blank2": "差速离心"
    }
   ],
   "14": [
@@ -1301,7 +1432,8 @@
     "mnemonic": "管囊成网，腔在其中",
     "type": "组成",
     "useImg": true,
-    "blank": "ER腔"
+    "blank": "ER腔",
+    "blank2": "rER"
    }
   ],
   "15": [
@@ -1311,7 +1443,8 @@
     "mnemonic": "解、钙、脂",
     "type": "功能",
     "useImg": false,
-    "blank": "解毒"
+    "blank": "解毒",
+    "blank2": "储钙"
    }
   ],
   "16": [
@@ -1321,7 +1454,8 @@
     "mnemonic": "P450，肝里解毒王",
     "type": "例证",
     "useImg": false,
-    "blank": "细胞色素P450"
+    "blank": "细胞色素P450",
+    "blank2": "氧化作用"
    }
   ],
   "17": [
@@ -1331,7 +1465,8 @@
     "mnemonic": "钙泵入腔，三毫摩尔",
     "type": "流程",
     "useImg": true,
-    "blank": "Ca2+-ATPase"
+    "blank": "Ca2+-ATPase",
+    "blank2": "ER膜"
    }
   ],
   "18": [
@@ -1341,7 +1476,8 @@
     "mnemonic": "膜脂工厂在sER",
     "type": "功能",
     "useImg": false,
-    "blank": "磷脂酰胆碱"
+    "blank": "磷脂酰胆碱",
+    "blank2": "甘油磷脂"
    }
   ],
   "20": [
@@ -1351,7 +1487,8 @@
     "mnemonic": "边翻译边进腔",
     "type": "流程",
     "useImg": true,
-    "blank": "易位子"
+    "blank": "易位子",
+    "blank2": "ER腔"
    }
   ],
   "21": [
@@ -1361,7 +1498,8 @@
     "mnemonic": "2纳米小孔，多肽进门",
     "type": "组成数字",
     "useImg": true,
-    "blank": "蛋白复合体"
+    "blank": "蛋白复合体",
+    "blank2": "孔道"
    }
   ],
   "24": [
@@ -1371,7 +1509,8 @@
     "mnemonic": "一切从游离核糖体起步",
     "type": "定位",
     "useImg": false,
-    "blank": "游离多聚核糖体"
+    "blank": "游离多聚核糖体",
+    "blank2": "胞质溶胶"
    },
    {
     "front": "什么是共翻译转移？",
@@ -1379,7 +1518,8 @@
     "mnemonic": "边合成边进门",
     "type": "流程",
     "useImg": true,
-    "blank": "信号肽"
+    "blank": "信号肽",
+    "blank2": "rER膜"
    }
   ],
   "26": [
@@ -1389,7 +1529,8 @@
     "mnemonic": "游离或贴膜",
     "type": "组成数字",
     "useImg": true,
-    "blank": "游离态"
+    "blank": "游离态",
+    "blank2": "粗面内质网"
    },
    {
     "front": "游离核糖体与膜结合核糖体结构是否相同？区别何在？",
@@ -1397,7 +1538,8 @@
     "mnemonic": "同机器，不同岗位",
     "type": "对比",
     "useImg": false,
-    "blank": "ER信号肽"
+    "blank": "ER信号肽",
+    "blank2": "ER膜"
    }
   ],
   "27": [
@@ -1407,7 +1549,8 @@
     "mnemonic": "信号序列=邮政编码",
     "type": "定义",
     "useImg": false,
-    "blank": "信号序列"
+    "blank": "信号序列",
+    "blank2": "蛋白质自身信号序列"
    }
   ],
   "28": [
@@ -1417,7 +1560,8 @@
     "mnemonic": "核孔、跨膜、膜泡三条路",
     "type": "流程",
     "useImg": true,
-    "blank": "膜泡运输"
+    "blank": "膜泡运输",
+    "blank2": "核孔运输"
    }
   ],
   "30": [
@@ -1427,7 +1571,8 @@
     "mnemonic": "先做完再走 vs 边走边做",
     "type": "对比",
     "useImg": false,
-    "blank": "共转移"
+    "blank": "共转移",
+    "blank2": "后转移"
    }
   ],
   "32": [
@@ -1437,7 +1582,8 @@
     "mnemonic": "一线一斑",
     "type": "对比",
     "useImg": true,
-    "blank": "信号肽"
+    "blank": "信号肽",
+    "blank2": "信号斑"
    }
   ],
   "33": [
@@ -1447,7 +1593,8 @@
     "mnemonic": "Blobel=信号序列之父",
     "type": "例证",
     "useImg": false,
-    "blank": "Blobel"
+    "blank": "Blobel",
+    "blank2": "内在信号序列"
    }
   ],
   "36": [
@@ -1457,7 +1604,8 @@
     "mnemonic": "N端多一截，带路进ER",
     "type": "定义",
     "useImg": false,
-    "blank": "信号肽"
+    "blank": "信号肽",
+    "blank2": "N端信号肽"
    }
   ],
   "37": [
@@ -1467,7 +1615,8 @@
     "mnemonic": "N端车票，到站即撕",
     "type": "功能",
     "useImg": false,
-    "blank": "N端"
+    "blank": "N端",
+    "blank2": "细胞器"
    }
   ],
   "38": [
@@ -1485,7 +1634,8 @@
     "mnemonic": "双结合，踩刹车",
     "type": "功能",
     "useImg": false,
-    "blank": "信号序列"
+    "blank": "信号序列",
+    "blank2": "核糖体大亚基"
    }
   ],
   "39": [
@@ -1495,7 +1645,8 @@
     "mnemonic": "ER膜上的码头，接SRP靠岸",
     "type": "定位",
     "useImg": true,
-    "blank": "停泊蛋白DP"
+    "blank": "停泊蛋白DP",
+    "blank2": "内质网膜"
    }
   ],
   "40": [
@@ -1505,7 +1656,8 @@
     "mnemonic": "伸—结—停—泊—复—入",
     "type": "流程",
     "useImg": true,
-    "blank": "信号肽"
+    "blank": "信号肽",
+    "blank2": "SRP受体"
    }
   ],
   "41": [
@@ -1515,7 +1667,8 @@
     "mnemonic": "游离起、SRP停、受体泊、切肽折",
     "type": "流程",
     "useImg": false,
-    "blank": "信号肽"
+    "blank": "信号肽",
+    "blank2": "信号肽酶"
    }
   ],
   "42": [
@@ -1525,7 +1678,8 @@
     "mnemonic": "边合成边进门",
     "type": "流程",
     "useImg": true,
-    "blank": "共翻译转移"
+    "blank": "共翻译转移",
+    "blank2": "游离核糖体"
    }
   ],
   "43": [
@@ -1535,7 +1689,8 @@
     "mnemonic": "信号+启动穿膜，二合一",
     "type": "定义",
     "useImg": false,
-    "blank": "信号序列"
+    "blank": "信号序列",
+    "blank2": "肽链穿膜转移"
    }
   ],
   "44": [
@@ -1555,7 +1710,8 @@
     "mnemonic": "有头无尾，全进腔",
     "type": "流程",
     "useImg": true,
-    "blank": "可溶性蛋白"
+    "blank": "可溶性蛋白",
+    "blank2": "停止序列"
    }
   ],
   "46": [
@@ -1565,7 +1721,8 @@
     "mnemonic": "头切尾锚，一次穿膜",
     "type": "流程",
     "useImg": true,
-    "blank": "终止转移序列"
+    "blank": "终止转移序列",
+    "blank2": "N端起信号序列"
    }
   ],
   "47": [
@@ -1575,7 +1732,8 @@
     "mnemonic": "内起不切，来回穿梭",
     "type": "流程",
     "useImg": true,
-    "blank": "多次跨膜蛋白"
+    "blank": "多次跨膜蛋白",
+    "blank2": "内部起始转移信号"
    }
   ],
   "48": [
@@ -1585,7 +1743,8 @@
     "mnemonic": "裸链无用，修饰成才",
     "type": "功能",
     "useImg": false,
-    "blank": "翻译后修饰"
+    "blank": "翻译后修饰",
+    "blank2": "折叠"
    }
   ],
   "49": [
@@ -1595,7 +1754,8 @@
     "mnemonic": "粗面内质网，N糖加工厂",
     "type": "功能",
     "useImg": false,
-    "blank": "糖基化修饰"
+    "blank": "糖基化修饰",
+    "blank2": "N-连接糖基化"
    }
   ],
   "50": [
@@ -1605,7 +1765,8 @@
     "mnemonic": "多萜醇载糖，酶转给Asn",
     "type": "流程",
     "useImg": true,
-    "blank": "磷酸多萜醇"
+    "blank": "磷酸多萜醇",
+    "blank2": "糖基转移酶"
    }
   ],
   "51": [
@@ -1615,7 +1776,8 @@
     "mnemonic": "天冬酰胺，X后带丝苏",
     "type": "定位",
     "useImg": false,
-    "blank": "Asn-X-Ser/Thr"
+    "blank": "Asn-X-Ser/Thr",
+    "blank2": "糖基转移酶"
    }
   ],
   "52": [
@@ -1625,7 +1787,8 @@
     "mnemonic": "N内O高，N整O零，N天O丝",
     "type": "对比",
     "useImg": false,
-    "blank": "寡糖前体"
+    "blank": "寡糖前体",
+    "blank2": "高尔基"
    }
   ],
   "53": [
@@ -1635,7 +1798,8 @@
     "mnemonic": "折、稳、识、分（分选）",
     "type": "功能",
     "useImg": false,
-    "blank": "M6P分选信号"
+    "blank": "M6P分选信号",
+    "blank2": "细胞识别与免疫"
    }
   ],
   "54": [
@@ -1645,7 +1809,8 @@
     "mnemonic": "ER=折叠车间+装配线",
     "type": "功能",
     "useImg": true,
-    "blank": "折叠与装配"
+    "blank": "折叠与装配",
+    "blank2": "二硫键"
    }
   ],
   "55": [
@@ -1655,7 +1820,8 @@
     "mnemonic": "二硫键只认ER腔",
     "type": "定位",
     "useImg": true,
-    "blank": "二硫键异构酶"
+    "blank": "二硫键异构酶",
+    "blank2": "ER腔内"
    }
   ],
   "56": [
@@ -1665,7 +1831,8 @@
     "mnemonic": "PDI=二硫键的裁缝",
     "type": "定义",
     "useImg": false,
-    "blank": "蛋白二硫键异构酶"
+    "blank": "蛋白二硫键异构酶",
+    "blank2": "ER驻留蛋白"
    }
   ],
   "57": [
@@ -1676,7 +1843,8 @@
     "mnemonic": "Bip=ER里的纠错员",
     "type": "功能",
     "useImg": false,
-    "blank": "分子伴侣"
+    "blank": "分子伴侣",
+    "blank2": "错误折叠或未组装蛋白"
    }
   ],
   "58": [
@@ -1686,7 +1854,8 @@
     "mnemonic": "帮忙不入职（不成为产物）",
     "type": "定义",
     "useImg": false,
-    "blank": "帮助其折叠、装配"
+    "blank": "帮助其折叠、装配",
+    "blank2": "正在合成或部分折叠的多肽"
    }
   ],
   "59": [
@@ -1696,7 +1865,8 @@
     "mnemonic": "Hsp70=进化保守的折叠助手",
     "type": "组成/例证",
     "useImg": false,
-    "blank": "Hsp70"
+    "blank": "Hsp70",
+    "blank2": "协助蛋白折叠"
    }
   ],
   "62": [
@@ -1706,7 +1876,8 @@
     "mnemonic": "折对才放行，折错就销毁",
     "type": "流程",
     "useImg": false,
-    "blank": "正确折叠和装配"
+    "blank": "正确折叠和装配",
+    "blank2": "错误折叠蛋白"
    }
   ],
   "63": [
@@ -1716,7 +1887,8 @@
     "mnemonic": "KDEL——Keep in ER",
     "type": "功能",
     "useImg": false,
-    "blank": "内质网驻留信号序列"
+    "blank": "内质网驻留信号序列",
+    "blank2": "KDEL"
    }
   ],
   "64": [
@@ -1726,7 +1898,8 @@
     "mnemonic": "折好才放行，ER是质检关卡",
     "type": "功能",
     "useImg": false,
-    "blank": "正确折叠和装配"
+    "blank": "正确折叠和装配",
+    "blank2": "蛋白质质量"
    }
   ],
   "65": [
@@ -1736,7 +1909,8 @@
     "mnemonic": "折错就退货：出ER→泛素化→蛋白酶体",
     "type": "流程",
     "useImg": false,
-    "blank": "ERAD途径"
+    "blank": "ERAD途径",
+    "blank2": "泛素-蛋白酶体系统"
    }
   ],
   "66": [
@@ -1746,7 +1920,8 @@
     "mnemonic": "",
     "type": "例证",
     "useImg": false,
-    "blank": "泛素介导的蛋白质降解"
+    "blank": "泛素介导的蛋白质降解",
+    "blank2": "Ciechanover、Hershko、Rose"
    }
   ],
   "67": [
@@ -1756,7 +1931,8 @@
     "mnemonic": "76个氨基酸，无处不在故称泛素",
     "type": "组成数字",
     "useImg": false,
-    "blank": "降解标签"
+    "blank": "降解标签",
+    "blank2": "76个氨基酸"
    }
   ],
   "68": [
@@ -1766,7 +1942,8 @@
     "mnemonic": "E1活化、E2结合、E3连接；挂链即判死刑",
     "type": "流程",
     "useImg": false,
-    "blank": "赖氨酸残基"
+    "blank": "赖氨酸残基",
+    "blank2": "多聚泛素链"
    }
   ],
   "69": [
@@ -1776,7 +1953,8 @@
     "mnemonic": "底物+泛素+2ATP，三酶催化",
     "type": "流程",
     "useImg": false,
-    "blank": "泛素化蛋白"
+    "blank": "泛素化蛋白",
+    "blank2": "三种酶催化"
    }
   ],
   "70": [
@@ -1786,7 +1964,8 @@
     "mnemonic": "1个20S芯+2个19S帽",
     "type": "组成数字",
     "useImg": true,
-    "blank": "20S催化核心"
+    "blank": "20S催化核心",
+    "blank2": "19S调节帽"
    }
   ],
   "72": [
@@ -1796,7 +1975,8 @@
     "mnemonic": "粗网出蛋白，滑网管脂毒钙",
     "type": "功能",
     "useImg": false,
-    "blank": "rER"
+    "blank": "rER",
+    "blank2": "sER"
    },
    {
     "front": "内质网在蛋白质合成后还承担哪些加工任务？",
@@ -1804,7 +1984,8 @@
     "mnemonic": "折叠修饰加质检，易位子来把门开",
     "type": "功能",
     "useImg": false,
-    "blank": "易位子"
+    "blank": "易位子",
+    "blank2": "蛋白折叠、修饰、质量监控"
    }
   ],
   "73": [
@@ -1814,7 +1995,8 @@
     "mnemonic": "高尔基，膜囊堆，囊泡围着转",
     "type": "组成数字",
     "useImg": true,
-    "blank": "高尔基复合体"
+    "blank": "高尔基复合体",
+    "blank2": "扁平膜囊和囊泡"
    }
   ],
   "74": [
@@ -1824,7 +2006,8 @@
     "mnemonic": "顺中反，一条龙",
     "type": "组成数字",
     "useImg": true,
-    "blank": "极性"
+    "blank": "极性",
+    "blank2": "顺面(cis)"
    },
    {
     "front": "动物细胞高尔基体通常位于何处？",
@@ -1842,7 +2025,8 @@
     "mnemonic": "顺面收货，反面发货",
     "type": "功能",
     "useImg": true,
-    "blank": "TGN"
+    "blank": "TGN",
+    "blank2": "CGN"
    }
   ],
   "77": [
@@ -1852,7 +2036,8 @@
     "mnemonic": "O连高尔基，丝苏挂糖衣",
     "type": "定位",
     "useImg": false,
-    "blank": "Ser/Thr"
+    "blank": "Ser/Thr",
+    "blank2": "Ser/Thr羟基"
    }
   ],
   "78": [
@@ -1862,7 +2047,8 @@
     "mnemonic": "N糖起于ER，成于高尔基",
     "type": "流程",
     "useImg": false,
-    "blank": "内质网"
+    "blank": "内质网",
+    "blank2": "高尔基体"
    }
   ],
   "80": [
@@ -1872,7 +2058,8 @@
     "mnemonic": "加工分类再装车，信号受体来配对",
     "type": "功能",
     "useImg": false,
-    "blank": "分类装载运输"
+    "blank": "分类装载运输",
+    "blank2": "溶酶体"
    }
   ],
   "81": [
@@ -1882,7 +2069,8 @@
     "mnemonic": "单膜酸酶pH五",
     "type": "组成数字",
     "useImg": false,
-    "blank": "酸性水解酶"
+    "blank": "酸性水解酶",
+    "blank2": "单层膜"
    },
    {
     "front": "溶酶体存在于哪些细胞？植物细胞对应什么结构？",
@@ -1890,7 +2078,8 @@
     "mnemonic": "动物溶酶体，植物用液泡",
     "type": "对比",
     "useImg": false,
-    "blank": "液泡"
+    "blank": "液泡",
+    "blank2": "动物细胞"
    }
   ],
   "82": [
@@ -1900,7 +2089,8 @@
     "mnemonic": "初生→消化→残渣",
     "type": "流程",
     "useImg": false,
-    "blank": "初级溶酶体"
+    "blank": "初级溶酶体",
+    "blank2": "次级溶酶体"
    },
    {
     "front": "为什么说溶酶体是异质性细胞器？",
@@ -1908,7 +2098,8 @@
     "mnemonic": "",
     "type": "定义",
     "useImg": false,
-    "blank": "水解酶类"
+    "blank": "水解酶类",
+    "blank2": "发育阶段"
    }
   ],
   "84": [
@@ -1918,7 +2109,8 @@
     "mnemonic": "外来叫吞噬，内耗叫自噬",
     "type": "对比",
     "useImg": false,
-    "blank": "自噬"
+    "blank": "自噬",
+    "blank2": "吞噬"
    }
   ],
   "85": [
@@ -1928,7 +2120,8 @@
     "mnemonic": "酸酶酸中才干活",
     "type": "功能",
     "useImg": false,
-    "blank": "酸性水解酶"
+    "blank": "酸性水解酶",
+    "blank2": "酸性环境"
    }
   ],
   "86": [
@@ -1938,7 +2131,8 @@
     "mnemonic": "泵酸护糖衣",
     "type": "组成数字",
     "useImg": true,
-    "blank": "H+泵"
+    "blank": "H+泵",
+    "blank2": "膜蛋白高度糖基化"
    }
   ],
   "87": [
@@ -1948,7 +2142,8 @@
     "mnemonic": "废料、旧件、死细胞、外来货",
     "type": "功能",
     "useImg": false,
-    "blank": "衰老细胞器"
+    "blank": "衰老细胞器",
+    "blank2": "凋亡细胞"
    }
   ],
   "89": [
@@ -1958,7 +2153,8 @@
     "mnemonic": "泛素+溶酶体，双保险",
     "type": "对比",
     "useImg": false,
-    "blank": "泛素降解途径"
+    "blank": "泛素降解途径",
+    "blank2": "溶酶体途径"
    }
   ],
   "90": [
@@ -1968,7 +2164,8 @@
     "mnemonic": "包起来→送溶酶体→回收",
     "type": "流程",
     "useImg": true,
-    "blank": "自噬体"
+    "blank": "自噬体",
+    "blank2": "溶酶体"
    }
   ],
   "91": [
@@ -1978,7 +2175,8 @@
     "mnemonic": "合成→糖基化→打M6P标签→受体签收",
     "type": "流程",
     "useImg": true,
-    "blank": "M6P受体"
+    "blank": "M6P受体",
+    "blank2": "高尔基体"
    }
   ],
   "92": [
@@ -1988,7 +2186,8 @@
     "mnemonic": "溶酶体酶贴M6P邮票，寄往溶酶体。",
     "type": "定义",
     "useImg": false,
-    "blank": "M6P标志"
+    "blank": "M6P标志",
+    "blank2": "甘露糖残基磷酸化"
    }
   ],
   "93": [
@@ -1998,7 +2197,8 @@
     "mnemonic": "合成→加签→识别→打包→送达。",
     "type": "流程",
     "useImg": true,
-    "blank": "N-乙酰葡萄糖胺磷酸转移酶"
+    "blank": "N-乙酰葡萄糖胺磷酸转移酶",
+    "blank2": "M6P受体"
    },
    {
     "front": "M6P标志在哪个细胞器、由什么酶催化形成？",
@@ -2006,7 +2206,8 @@
     "mnemonic": "高尔基贴签，磷酸转移酶执笔。",
     "type": "定位",
     "useImg": false,
-    "blank": "高尔基体"
+    "blank": "高尔基体",
+    "blank2": "N-乙酰葡萄糖胺磷酸转移酶"
    }
   ],
   "96": [
@@ -2016,7 +2217,8 @@
     "mnemonic": "植物液泡是植物版溶酶体。",
     "type": "对比",
     "useImg": false,
-    "blank": "酸性水解酶"
+    "blank": "酸性水解酶",
+    "blank2": "溶酶体"
    },
    {
     "front": "植物液泡除类似溶酶体功能外还参与哪些功能？",
@@ -2024,7 +2226,8 @@
     "mnemonic": "存、压、色三件事。",
     "type": "功能",
     "useImg": false,
-    "blank": "维持膨压"
+    "blank": "维持膨压",
+    "blank2": "色素积累"
    }
   ]
  },
@@ -2036,7 +2239,8 @@
     "mnemonic": "泡、跨、孔——三路进器",
     "type": "流程",
     "useImg": false,
-    "blank": "囊泡运输"
+    "blank": "囊泡运输",
+    "blank2": "跨膜运输"
    }
   ],
   "2": [
@@ -2046,7 +2250,8 @@
     "mnemonic": "核走孔，线叶过走跨，内膜走泡",
     "type": "对比",
     "useImg": false,
-    "blank": "核孔运输"
+    "blank": "核孔运输",
+    "blank2": "膜泡运输"
    }
   ],
   "3": [
@@ -2056,7 +2261,8 @@
     "mnemonic": "边合成边进ER，一路泡到膜外",
     "type": "定义",
     "useImg": false,
-    "blank": "共转移"
+    "blank": "共转移",
+    "blank2": "粗面内质网"
    }
   ],
   "4": [
@@ -2066,7 +2272,8 @@
     "mnemonic": "先译完，再搬家",
     "type": "定义",
     "useImg": false,
-    "blank": "游离核糖体"
+    "blank": "游离核糖体",
+    "blank2": "细胞质基质"
    }
   ],
   "5": [
@@ -2076,7 +2283,8 @@
     "mnemonic": "三巨头：R-S-S，囊泡运输",
     "type": "例证",
     "useImg": false,
-    "blank": "囊泡运输"
+    "blank": "囊泡运输",
+    "blank2": "调节机制"
    }
   ],
   "6": [
@@ -2087,7 +2295,8 @@
     "mnemonic": "货要对门——分子原理",
     "type": "功能",
     "useImg": false,
-    "blank": "分子原理"
+    "blank": "分子原理",
+    "blank2": "货物"
    }
   ],
   "7": [
@@ -2097,7 +2306,8 @@
     "mnemonic": "II出ER，I回ER，网格去膜/溶酶",
     "type": "组成数字",
     "useImg": true,
-    "blank": "转运小泡COPII"
+    "blank": "转运小泡COPII",
+    "blank2": "COPI小泡"
    }
   ],
   "8": [
@@ -2107,7 +2317,8 @@
     "mnemonic": "一出（分泌）一进（胞吞）",
     "type": "流程",
     "useImg": true,
-    "blank": "向外分泌途径"
+    "blank": "向外分泌途径",
+    "blank2": "胞吞途径"
    }
   ],
   "10": [
@@ -2117,7 +2328,8 @@
     "mnemonic": "TGN出货，两头到：膜与溶酶体",
     "type": "功能",
     "useImg": false,
-    "blank": "受体介导的胞吞"
+    "blank": "受体介导的胞吞",
+    "blank2": "质膜"
    }
   ],
   "11": [
@@ -2137,7 +2349,8 @@
     "mnemonic": "壳—接—货，三层包",
     "type": "组成数字",
     "useImg": true,
-    "blank": "网格蛋白外壳"
+    "blank": "网格蛋白外壳",
+    "blank2": "衔接蛋白AP"
    },
    {
     "front": "衔接蛋白(AP)在包被小泡中的作用是什么？",
@@ -2145,7 +2358,8 @@
     "mnemonic": "AP当红娘，牵壳与受体",
     "type": "功能",
     "useImg": true,
-    "blank": "中介接头作用"
+    "blank": "中介接头作用",
+    "blank2": "货物受体"
    }
   ],
   "13": [
@@ -2155,7 +2369,8 @@
     "mnemonic": "壳、接、断，三件套",
     "type": "组成数字",
     "useImg": false,
-    "blank": "发动蛋白Dynamin"
+    "blank": "发动蛋白Dynamin",
+    "blank2": "网格蛋白—外壳"
    }
   ],
   "14": [
@@ -2165,7 +2380,8 @@
     "mnemonic": "TGN浓缩打包，外送膜与溶酶体",
     "type": "功能",
     "useImg": false,
-    "blank": "蛋白分子"
+    "blank": "蛋白分子",
+    "blank2": "TGN腔内浓缩的蛋白分子"
    }
   ],
   "15": [
@@ -2175,7 +2391,8 @@
     "mnemonic": "配体敲门，网格蛋白包走",
     "type": "例证",
     "useImg": false,
-    "blank": "网格蛋白"
+    "blank": "网格蛋白",
+    "blank2": "质膜受体"
    }
   ],
   "16": [
@@ -2185,7 +2402,8 @@
     "mnemonic": "结合—凹陷—包被—入胞",
     "type": "流程",
     "useImg": true,
-    "blank": "网格蛋白"
+    "blank": "网格蛋白",
+    "blank2": "膜凹陷"
    }
   ],
   "17": [
@@ -2195,7 +2413,8 @@
     "mnemonic": "dynamin收绳，一掐了之",
     "type": "功能",
     "useImg": true,
-    "blank": "小GTP蛋白"
+    "blank": "小GTP蛋白",
+    "blank2": "环收缩"
    }
   ],
   "19": [
@@ -2205,7 +2424,8 @@
     "mnemonic": "膜上站岗，激素原料",
     "type": "功能",
     "useImg": false,
-    "blank": "类固醇激素前体分子"
+    "blank": "类固醇激素前体分子",
+    "blank2": "质膜重要组成成分"
    },
    {
     "front": "胆固醇在血液中主要以什么形式运输？为什么？",
@@ -2213,7 +2433,8 @@
     "mnemonic": "难溶靠LDL摆渡",
     "type": "定义",
     "useImg": false,
-    "blank": "LDL"
+    "blank": "LDL",
+    "blank2": "低密度脂蛋白"
    }
   ],
   "20": [
@@ -2223,7 +2444,8 @@
     "mnemonic": "核酯壳脂，B蛋白把门",
     "type": "组成数字",
     "useImg": true,
-    "blank": "载脂蛋白B"
+    "blank": "载脂蛋白B",
+    "blank2": "胆固醇酯"
    },
    {
     "front": "LDL通过什么方式进入细胞？",
@@ -2241,7 +2463,8 @@
     "mnemonic": "合成—结合—融合—释放",
     "type": "流程",
     "useImg": true,
-    "blank": "溶酶体"
+    "blank": "溶酶体",
+    "blank2": "网格蛋白包被小泡"
    }
   ],
   "23": [
@@ -2251,7 +2474,8 @@
     "mnemonic": "受体失灵，血脂飙升",
     "type": "例证",
     "useImg": false,
-    "blank": "LDL受体基因缺失"
+    "blank": "LDL受体基因缺失",
+    "blank2": "胆固醇摄入通路阻断"
    }
   ],
   "25": [
@@ -2261,7 +2485,8 @@
     "mnemonic": "COPII向前走：ER→Golgi",
     "type": "定位",
     "useImg": true,
-    "blank": "顺行运输"
+    "blank": "顺行运输",
+    "blank2": "内质网"
    }
   ],
   "26": [
@@ -2271,7 +2496,8 @@
     "mnemonic": "Sar变构，COPII集合",
     "type": "流程",
     "useImg": true,
-    "blank": "Sar-GTP"
+    "blank": "Sar-GTP",
+    "blank2": "COPII包被"
    }
   ],
   "27": [
@@ -2281,7 +2507,8 @@
     "mnemonic": "换GTP上岗，贴膜开工",
     "type": "定义",
     "useImg": false,
-    "blank": "GTP结合蛋白"
+    "blank": "GTP结合蛋白",
+    "blank2": "COPII小泡组装"
    }
   ],
   "28": [
@@ -2291,7 +2518,8 @@
     "mnemonic": "COPI向后撤：回ER、退高尔基",
     "type": "功能",
     "useImg": true,
-    "blank": "逆向运输"
+    "blank": "逆向运输",
+    "blank2": "ER逃逸蛋白"
    }
   ],
   "29": [
@@ -2301,7 +2529,8 @@
     "mnemonic": "留下+抓回，双保险",
     "type": "流程",
     "useImg": false,
-    "blank": "回收信号"
+    "blank": "回收信号",
+    "blank2": "驻留蛋白"
    }
   ],
   "30": [
@@ -2311,7 +2540,8 @@
     "mnemonic": "KDEL——Keep in ER",
     "type": "定义",
     "useImg": false,
-    "blank": "KDEL"
+    "blank": "KDEL",
+    "blank2": "驻留蛋白"
    },
    {
     "front": "ER驻留蛋白逃逸到高尔基体后如何被回收？",
@@ -2319,7 +2549,8 @@
     "mnemonic": "KDEL受体+COPI=遣返专车",
     "type": "流程",
     "useImg": false,
-    "blank": "KDEL受体"
+    "blank": "KDEL受体",
+    "blank2": "COPI小泡"
    }
   ],
   "31": [
@@ -2329,7 +2560,8 @@
     "mnemonic": "七亚基+ARF",
     "type": "组成数字",
     "useImg": false,
-    "blank": "ARF"
+    "blank": "ARF",
+    "blank2": "GTP结合蛋白"
    },
    {
     "front": "COPI包被复合物的装配与去装配依赖什么？",
@@ -2337,7 +2569,8 @@
     "mnemonic": "ARF开关，装拆自如",
     "type": "功能",
     "useImg": false,
-    "blank": "ARF"
+    "blank": "ARF",
+    "blank2": "GTP结合蛋白"
    }
   ],
   "32": [
@@ -2347,7 +2580,8 @@
     "mnemonic": "出站ARF，进站dynamin",
     "type": "对比",
     "useImg": false,
-    "blank": "dynamin"
+    "blank": "dynamin",
+    "blank2": "ARF"
    }
   ],
   "33": [
@@ -2357,7 +2591,8 @@
     "mnemonic": "近走扩散，远搭骨架",
     "type": "流程",
     "useImg": false,
-    "blank": "细胞骨架"
+    "blank": "细胞骨架",
+    "blank2": "马达蛋白"
    }
   ],
   "34": [
@@ -2377,7 +2612,8 @@
     "mnemonic": "信号配受体，定向不迷路",
     "type": "功能",
     "useImg": false,
-    "blank": "靶向信号序列"
+    "blank": "靶向信号序列",
+    "blank2": "受体"
    }
   ],
   "36": [
@@ -2387,7 +2623,8 @@
     "mnemonic": "Rab找门，SNARE开门",
     "type": "功能",
     "useImg": false,
-    "blank": "SNARE"
+    "blank": "SNARE",
+    "blank2": "Rab"
    }
   ],
   "37": [
@@ -2397,7 +2634,8 @@
     "mnemonic": "Rab是膜上的GPS开关",
     "type": "定义",
     "useImg": false,
-    "blank": "GTP酶超家族"
+    "blank": "GTP酶超家族",
+    "blank2": "开关蛋白"
    }
   ],
   "38": [
@@ -2407,7 +2645,8 @@
     "mnemonic": "一膜一Rab，如身份证",
     "type": "功能",
     "useImg": false,
-    "blank": "Rab"
+    "blank": "Rab",
+    "blank2": "膜系统"
    }
   ],
   "39": [
@@ -2417,7 +2656,8 @@
     "mnemonic": "Rab找路，SNARE开门",
     "type": "对比",
     "useImg": false,
-    "blank": "SNARE"
+    "blank": "SNARE",
+    "blank2": "Rab"
    }
   ],
   "40": [
@@ -2427,7 +2667,8 @@
     "mnemonic": "v=vesicle，t=target",
     "type": "定位",
     "useImg": true,
-    "blank": "t-SNARE"
+    "blank": "t-SNARE",
+    "blank2": "v-SNARE"
    },
    {
     "front": "每种小泡的v-SNARE有何特点？",
@@ -2435,7 +2676,8 @@
     "mnemonic": "专泡专SNARE",
     "type": "定义",
     "useImg": false,
-    "blank": "v-SNARE"
+    "blank": "v-SNARE",
+    "blank2": "小泡"
    }
   ],
   "41": [
@@ -2445,7 +2687,8 @@
     "mnemonic": "四螺旋束拉链，两膜贴紧",
     "type": "功能",
     "useImg": true,
-    "blank": "膜融合"
+    "blank": "膜融合",
+    "blank2": "v-SNARE与t-SNARE形成四螺旋束"
    }
   ],
   "42": [
@@ -2455,7 +2698,8 @@
     "mnemonic": "钥匙配锁，专膜专融",
     "type": "流程",
     "useImg": false,
-    "blank": "t-SNARE"
+    "blank": "t-SNARE",
+    "blank2": "高尔基体特异t-SNARE"
    }
   ],
   "43": [
@@ -2465,7 +2709,8 @@
     "mnemonic": "先脱衣，再进门",
     "type": "流程",
     "useImg": false,
-    "blank": "脱去包被"
+    "blank": "脱去包被",
+    "blank2": "脱包被"
    }
   ],
   "44": [
@@ -2475,7 +2720,8 @@
     "mnemonic": "NSF、SNAP助融合",
     "type": "组成",
     "useImg": false,
-    "blank": "NSF"
+    "blank": "NSF",
+    "blank2": "SNAP"
    }
   ],
   "45": [
@@ -2485,7 +2731,8 @@
     "mnemonic": "Rab=Rabbit，把泡\"停\"在靶膜上",
     "type": "功能",
     "useImg": true,
-    "blank": "Rab GTPases"
+    "blank": "Rab GTPases",
+    "blank2": "Rab蛋白"
    },
    {
     "front": "介导小泡与靶膜膜融合的核心蛋白是什么？",
@@ -2493,7 +2740,8 @@
     "mnemonic": "SNARE=绳结，把两膜\"绑\"在一起融合",
     "type": "功能",
     "useImg": true,
-    "blank": "SNARE蛋白"
+    "blank": "SNARE蛋白",
+    "blank2": "v-SNARE与t-SNARE配对"
    }
   ],
   "46": [
@@ -2503,7 +2751,8 @@
     "mnemonic": "先Rab停靠，后SNARE融合",
     "type": "流程",
     "useImg": true,
-    "blank": "Rab effector"
+    "blank": "Rab effector",
+    "blank2": "Rab-GTP"
    },
    {
     "front": "为什么小泡运输具有高度特异性？",
@@ -2511,7 +2760,8 @@
     "mnemonic": "双保险：Rab认门，SNARE开锁",
     "type": "流程",
     "useImg": false,
-    "blank": "v-SNARE/t-SNARE"
+    "blank": "v-SNARE/t-SNARE",
+    "blank2": "Rab-Rab effector配对"
    }
   ]
  },
@@ -2523,7 +2773,8 @@
     "mnemonic": "核编码、胞质造、译后送",
     "type": "流程",
     "useImg": false,
-    "blank": "翻译后定向运输"
+    "blank": "翻译后定向运输",
+    "blank2": "细胞质游离核糖体"
    }
   ],
   "2": [
@@ -2533,7 +2784,8 @@
     "mnemonic": "自有DNA，蛋白靠核供",
     "type": "定义",
     "useImg": false,
-    "blank": "后转运的跨膜运输"
+    "blank": "后转运的跨膜运输",
+    "blank2": "核基因编码"
    }
   ],
   "3": [
@@ -2543,7 +2795,8 @@
     "mnemonic": "导肽认受体，接触点进门",
     "type": "流程",
     "useImg": false,
-    "blank": "N端导肽"
+    "blank": "N端导肽",
+    "blank2": "线粒体膜受体"
    }
   ],
   "4": [
@@ -2553,7 +2806,8 @@
     "mnemonic": "两膜贴近处，就是转运门",
     "type": "定位",
     "useImg": true,
-    "blank": "内外膜接触点"
+    "blank": "内外膜接触点",
+    "blank2": "内外膜靠近的区域"
    }
   ],
   "5": [
@@ -2563,7 +2817,8 @@
     "mnemonic": "TOM在外，TIM在内，T-O-M进，T-I-M深",
     "type": "组成",
     "useImg": true,
-    "blank": "TOM复合体"
+    "blank": "TOM复合体",
+    "blank2": "TIM复合体"
    }
   ],
   "6": [
@@ -2573,7 +2828,8 @@
     "mnemonic": "通道太窄，折叠进不来",
     "type": "功能",
     "useImg": false,
-    "blank": "解折叠"
+    "blank": "解折叠",
+    "blank2": "狭窄的通道"
    }
   ],
   "7": [
@@ -2583,7 +2839,8 @@
     "mnemonic": "结合、过点、穿TIM、切肽、折叠",
     "type": "流程",
     "useImg": true,
-    "blank": "N端导肽"
+    "blank": "N端导肽",
+    "blank2": "TOM受体"
    }
   ],
   "8": [
@@ -2593,7 +2850,8 @@
     "mnemonic": "Hsp70松绑，ATP买单",
     "type": "流程",
     "useImg": false,
-    "blank": "Hsp70"
+    "blank": "Hsp70",
+    "blank2": "ATP→ADP供能"
    }
   ],
   "9": [
@@ -2603,7 +2861,8 @@
     "mnemonic": "转运肽=进叶绿体的'门票'，进门即撕",
     "type": "定义",
     "useImg": false,
-    "blank": "转运肽"
+    "blank": "转运肽",
+    "blank2": "叶绿体"
    }
   ],
   "10": [
@@ -2613,7 +2872,8 @@
     "mnemonic": "基质→腔→膜，三层递进",
     "type": "流程",
     "useImg": true,
-    "blank": "基质蛋白导入"
+    "blank": "基质蛋白导入",
+    "blank2": "类囊体腔蛋白导入"
    }
   ],
   "11": [
@@ -2623,7 +2883,8 @@
     "mnemonic": "两段票：先到基质，再转腔",
     "type": "组成",
     "useImg": true,
-    "blank": "导向叶绿体基质序列"
+    "blank": "导向叶绿体基质序列",
+    "blank2": "导向类囊体腔序列"
    }
   ],
   "12": [
@@ -2633,7 +2894,8 @@
     "mnemonic": "小亚基核编码，进基质再组装",
     "type": "例证",
     "useImg": false,
-    "blank": "核基因编码"
+    "blank": "核基因编码",
+    "blank2": "胞质核糖体"
    }
   ],
   "13": [
@@ -2643,7 +2905,8 @@
     "mnemonic": "核三件套：膜、质、仁",
     "type": "组成",
     "useImg": true,
-    "blank": "核孔复合体"
+    "blank": "核孔复合体",
+    "blank2": "核被膜"
    }
   ],
   "15": [
@@ -2652,7 +2915,8 @@
     "back": "通道直径9-10nm；外径约120nm",
     "type": "组成数字",
     "useImg": true,
-    "blank": "通道直径9-10nm"
+    "blank": "通道直径9-10nm",
+    "blank2": "外径约120nm"
    },
    {
     "front": "NPC的功能是什么？存在于哪些细胞？",
@@ -2660,7 +2924,8 @@
     "mnemonic": "NPC=核质双向大门",
     "type": "功能",
     "useImg": false,
-    "blank": "核质物质交换的双向通道"
+    "blank": "核质物质交换的双向通道",
+    "blank2": "真核细胞间期核"
    }
   ],
   "19": [
@@ -2670,7 +2935,8 @@
     "mnemonic": "胞质环8纤毛，朝外伸",
     "type": "定位",
     "useImg": true,
-    "blank": "短纤毛"
+    "blank": "短纤毛",
+    "blank2": "核孔边缘胞质面一侧"
    }
   ],
   "20": [
@@ -2680,7 +2946,8 @@
     "mnemonic": "核篮在核内，8丝汇成环",
     "type": "定位",
     "useImg": true,
-    "blank": "纤丝"
+    "blank": "纤丝",
+    "blank2": "核质面一侧"
    }
   ],
   "21": [
@@ -2690,7 +2957,8 @@
     "mnemonic": "有进有出，双向通行",
     "type": "功能",
     "useImg": true,
-    "blank": "双方向转运"
+    "blank": "双方向转运",
+    "blank2": "入核转运"
    }
   ],
   "22": [
@@ -2700,7 +2968,8 @@
     "mnemonic": "小的自由过，大的要信号",
     "type": "对比",
     "useImg": true,
-    "blank": "自由扩散"
+    "blank": "自由扩散",
+    "blank2": "主动"
    }
   ],
   "23": [
@@ -2710,7 +2979,8 @@
     "mnemonic": "核质往来，核孔为门",
     "type": "定位",
     "useImg": true,
-    "blank": "核孔复合体"
+    "blank": "核孔复合体",
+    "blank2": "核质物质交换"
    }
   ],
   "24": [
@@ -2720,7 +2990,8 @@
     "mnemonic": "蛋白、进信号、出信号",
     "type": "定义",
     "useImg": false,
-    "blank": "核定位信号"
+    "blank": "核定位信号",
+    "blank2": "核输出信号"
    }
   ],
   "25": [
@@ -2730,7 +3001,8 @@
     "mnemonic": "胞质造，核内用",
     "type": "定义",
     "useImg": false,
-    "blank": "细胞质"
+    "blank": "细胞质",
+    "blank2": "细胞核"
    }
   ],
   "26": [
@@ -2740,7 +3012,8 @@
     "mnemonic": "碱性序列，入核通行证",
     "type": "定义",
     "useImg": false,
-    "blank": "亲核蛋白"
+    "blank": "亲核蛋白",
+    "blank2": "碱性氨基酸"
    }
   ],
   "28": [
@@ -2750,7 +3023,8 @@
     "mnemonic": "NLS指路，蛋白入核",
     "type": "功能",
     "useImg": true,
-    "blank": "核定位信号"
+    "blank": "核定位信号",
+    "blank2": "细胞核"
    }
   ],
   "29": [
@@ -2760,7 +3034,8 @@
     "mnemonic": "大蛋白入核，信号加耗能",
     "type": "流程",
     "useImg": false,
-    "blank": "核定位信号"
+    "blank": "核定位信号",
+    "blank2": "核孔复合体"
    }
   ],
   "30": [
@@ -2770,7 +3045,8 @@
     "mnemonic": "出核靠亮氨酸",
     "type": "功能",
     "useImg": false,
-    "blank": "核内物质"
+    "blank": "核内物质",
+    "blank2": "亮氨酸"
    }
   ],
   "31": [
@@ -2780,7 +3056,8 @@
     "mnemonic": "输入蛋白在胞质，认NLS带进门",
     "type": "定义",
     "useImg": false,
-    "blank": "NLS受体"
+    "blank": "NLS受体",
+    "blank2": "胞质溶胶"
    }
   ],
   "32": [
@@ -2790,7 +3067,8 @@
     "mnemonic": "核内Ran-GTP一到，货物就下车",
     "type": "功能",
     "useImg": false,
-    "blank": "输入蛋白"
+    "blank": "输入蛋白",
+    "blank2": "GTP酶"
    }
   ],
   "34": [
@@ -2800,7 +3078,8 @@
     "mnemonic": "结合→入核→Ran释放→回收",
     "type": "流程",
     "useImg": true,
-    "blank": "importin"
+    "blank": "importin",
+    "blank2": "Ran-GTP"
    }
   ],
   "35": [
@@ -2810,7 +3089,8 @@
     "mnemonic": "单层膜微体，氧化酶+过氧化氢酶",
     "type": "组成",
     "useImg": true,
-    "blank": "过氧化氢酶"
+    "blank": "过氧化氢酶",
+    "blank2": "氧化酶"
    }
   ],
   "37": [
@@ -2820,7 +3100,8 @@
     "mnemonic": "游离核糖体造蛋白，ER供膜",
     "type": "流程",
     "useImg": false,
-    "blank": "细胞质基质游离核糖体"
+    "blank": "细胞质基质游离核糖体",
+    "blank2": "内质网"
    }
   ],
   "38": [
@@ -2830,7 +3111,8 @@
     "mnemonic": "从头出芽或分裂，PTS指路",
     "type": "流程",
     "useImg": false,
-    "blank": "PTS1/PTS2信号"
+    "blank": "PTS1/PTS2信号",
+    "blank2": "过氧化物酶体分裂"
    }
   ]
  }
