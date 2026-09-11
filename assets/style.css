@@ -1,4 +1,4 @@
-:root{--ink:#22303f;--sub:#5b6b7b;--acc:#c0392b;--blue:#1f5c8b;--line:#dde6ee;--bg:#f6f9fc;--ok:#2e7d32;--warn:#c07f00}
+:root{--ink:#22303f;--sub:#5b6b7b;--acc:#c0392b;--blue:#1f5c8b;--line:#dde6ee;--bg:#f6f9fc;--ok:#2e7d32;--warn:#c07f00;color-scheme:light}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Roboto,Arial,sans-serif;color:var(--ink);background:#fff;line-height:1.65}
@@ -156,7 +156,7 @@ html[data-theme="dark"] #themebar{background:rgba(31,38,46,.92)}
 html[data-theme="sepia"] #themebar{background:rgba(250,243,224,.94)}
 
 /* ================= 护眼（米黄） ================= */
-html[data-theme="sepia"]{--ink:#3b3226;--sub:#6f6047;--acc:#a2482a;--blue:#8a6431;--line:#e2d6bb;--bg:#efe6cf;--ok:#4a7a3a;--warn:#9a6b00}
+html[data-theme="sepia"]{--ink:#3b3226;--sub:#6f6047;--acc:#a2482a;--blue:#8a6431;--line:#e2d6bb;--bg:#efe6cf;--ok:#4a7a3a;--warn:#9a6b00;color-scheme:light}
 html[data-theme="sepia"] body{background:#f4ecd6;color:#3b3226}
 html[data-theme="sepia"] .card,html[data-theme="sepia"] .slide,html[data-theme="sepia"] .q,html[data-theme="sepia"] .statsbox,html[data-theme="sepia"] .wb-entry,html[data-theme="sepia"] .gitem,html[data-theme="sepia"] details.sol,html[data-theme="sepia"] .navbtn,html[data-theme="sepia"] .self button,html[data-theme="sepia"] .causes button,html[data-theme="sepia"] .hwbar button,html[data-theme="sepia"] input.ans,html[data-theme="sepia"] textarea.ta,html[data-theme="sepia"] .slide .donebtn,html[data-theme="sepia"] .mopt{background:#faf3e0;color:#3b3226}
 html[data-theme="sepia"] .slide .body img{background:#faf3e0;border-color:#e2d6bb}
@@ -182,7 +182,7 @@ html[data-theme="sepia"] .mopt.sel{background:#6b4f24;color:#fff;border-color:#6
 html[data-theme="sepia"] h3{color:#8a3a20}
 
 /* ================= 深色 ================= */
-html[data-theme="dark"]{--ink:#d7dee8;--sub:#93a1b3;--acc:#e0715c;--blue:#6fb3e0;--line:#333d49;--bg:#181d24;--ok:#5cc07a;--warn:#e0b050}
+html[data-theme="dark"]{--ink:#d7dee8;--sub:#93a1b3;--acc:#e0715c;--blue:#6fb3e0;--line:#333d49;--bg:#181d24;--ok:#5cc07a;--warn:#e0b050;color-scheme:dark}
 html[data-theme="dark"] body{background:#12161b;color:#d7dee8}
 html[data-theme="dark"] .card,html[data-theme="dark"] .slide,html[data-theme="dark"] .q,html[data-theme="dark"] .statsbox,html[data-theme="dark"] .wb-entry,html[data-theme="dark"] .gitem,html[data-theme="dark"] details.sol,html[data-theme="dark"] .navbtn,html[data-theme="dark"] .self button,html[data-theme="dark"] .causes button,html[data-theme="dark"] .hwbar button,html[data-theme="dark"] input.ans,html[data-theme="dark"] textarea.ta,html[data-theme="dark"] .slide .donebtn,html[data-theme="dark"] .mopt{background:#1f262e;color:#d7dee8}
 html[data-theme="dark"] .animframe{background:#1f262e}
