@@ -203,6 +203,14 @@ html[data-theme="sepia"] .checkpoint .cp-opt.wrong{background:#f3ddd6;border-col
 .hm-grid{display:flex;flex-wrap:wrap;gap:3px}
 .hm-cell{width:16px;height:16px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.06)}
 .hm-0{background:#e6ecf2}.hm-c{background:#f6d9a8}.hm-b{background:#9ad3a8}.hm-a{background:#2e9e5b}
+.hm-conf{outline:2px solid var(--acc);outline-offset:1px}
+.confbtn{font-size:12px;border:1px solid #e0b4a8;background:#fff;color:var(--acc);border-radius:16px;padding:2px 10px;cursor:pointer;margin-left:6px}
+.confbtn.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.confnote{display:block;width:100%;margin-top:6px;padding:5px 9px;border:1px solid var(--line);border-radius:8px;font-size:12.5px;background:#fff}
+html[data-theme="dark"] .confbtn{background:#1f262e;color:#e0715c;border-color:#8a3a30}
+html[data-theme="dark"] .confnote{background:#1f262e;color:#d7dee8}
+html[data-theme="sepia"] .confbtn{background:#faf3e0}
+html[data-theme="sepia"] .confnote{background:#faf3e0}
 
 /* ================= 今日学习 / 复习 ================= */
 .dash{display:flex;gap:10px;flex-wrap:wrap}

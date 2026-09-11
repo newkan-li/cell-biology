@@ -40,6 +40,27 @@
     setWrong(cid, wrongList(cid).filter(function (e) { return e.id !== id; }));
   }
 
+  /* ---------- 不懂 / 待问 ---------- */
+  function confusedStore(cid) { return jget(skey(cid, "confused"), {}); }
+  function setConfusedStore(cid, o) { jset(skey(cid, "confused"), o); }
+  function isConfused(cid, kp) { return !!confusedStore(cid)[kp]; }
+  function toggleConfused(cid, kp, note) {
+    var o = confusedStore(cid);
+    if (o[kp]) { delete o[kp]; }
+    else { o[kp] = { note: note || "", ts: Date.now() }; }
+    setConfusedStore(cid, o);
+    return !!o[kp];
+  }
+  function confusedCount(cid) { return Object.keys(confusedStore(cid)).length; }
+  function confusedAll() {
+    var out = {};
+    (window.MANIFEST || []).forEach(function (m) {
+      var cs = confusedStore(m.id);
+      Object.keys(cs).forEach(function (kp) { out[kp] = cs[kp]; });
+    });
+    return out;
+  }
+
   /* ---------- 间隔复习 / 掌握度 / 打卡 状态层 ---------- */
   var SRS_KEY = PREFIX + "srs", KPS_KEY = PREFIX + "kpStats",
     STREAK_KEY = PREFIX + "streak", TASK_KEY = PREFIX + "tasks";
@@ -713,7 +734,8 @@
           var kp = cid + "_s" + m.i + "_" + s.i, v = kpMastery(kp);
           total++; if (v >= 0.6) mastered++;
           var cls = v >= 0.8 ? "hm-a" : v >= 0.6 ? "hm-b" : v > 0 ? "hm-c" : "hm-0";
-          html += '<a class="hm-cell ' + cls + '" href="#s_' + kp + '" title="' + esc(s.title) + '（掌握度 ' + Math.round(v * 100) + '%）"></a>';
+          if (isConfused(cid, kp)) cls += " hm-conf";
+          html += '<a class="hm-cell ' + cls + '" href="#s_' + kp + '" title="' + esc(s.title) + '（掌握度 ' + Math.round(v * 100) + '%）' + (isConfused(cid, kp) ? " · 待问" : "") + '"></a>';
         });
         html += "</div></div>";
       });
@@ -758,7 +780,7 @@
     aside.appendChild(el("div", "grp", "进度"));
     var pbar = el("div", "prog"); pbar.innerHTML = "<i></i>"; aside.appendChild(pbar);
     var ptxt = el("div", "hint"); aside.appendChild(ptxt);
-    function refreshProgress() { var s = chapterStats(cid, ch); pbar.firstChild.style.width = (s.slides ? Math.round(s.seen * 100 / s.slides) : 0) + "%"; ptxt.textContent = "概念页 " + s.seen + "/" + s.slides + " ｜ 错题 " + s.wrong; }
+    function refreshProgress() { var s = chapterStats(cid, ch); pbar.firstChild.style.width = (s.slides ? Math.round(s.seen * 100 / s.slides) : 0) + "%"; ptxt.textContent = "概念页 " + s.seen + "/" + s.slides + " ｜ 错题 " + s.wrong + " ｜ 待问 " + confusedCount(cid); }
 
     // hero
     var hero = el("div", "hero");
@@ -827,6 +849,21 @@
           db.textContent = seen[key] ? "✓ 已读" : "标记已读"; refreshProgress();
         };
         card.appendChild(db);
+        var cfd = confusedStore(cid)[key] || {};
+        var cf = el("button", "confbtn" + (isConfused(cid, key) ? " on" : ""), isConfused(cid, key) ? "❓ 待问" : "❓ 没听懂");
+        var cnote = el("input", "confnote");
+        cnote.placeholder = "哪里不懂？（选填，方便问老师）";
+        cnote.value = cfd.note || "";
+        cnote.style.display = isConfused(cid, key) ? "block" : "none";
+        cnote.oninput = function () { var o = confusedStore(cid); if (o[key]) { o[key].note = cnote.value; setConfusedStore(cid, o); } };
+        cf.onclick = function () {
+          var on = toggleConfused(cid, key, cnote.value);
+          cf.classList.toggle("on", on);
+          cf.textContent = on ? "❓ 待问" : "❓ 没听懂";
+          cnote.style.display = on ? "block" : "none";
+          refreshProgress();
+        };
+        card.appendChild(cf); card.appendChild(cnote);
         sec.appendChild(card);
       });
       // 本模块考题：概念页后紧跟该模块的全部考题（选择/填空/简答/论述/名词）
@@ -1164,6 +1201,9 @@
     }
     function render() {
       var due = srsDue().filter(function (id) { return idx.kp[id] || idx.q[id] || cmap[id]; });
+      var conf = Object.keys(confusedAll()).filter(function (kp) { return idx.kp[kp]; });
+      var confSet = {}; conf.forEach(function (k) { confSet[k] = 1; });
+      due = conf.concat(due.filter(function (id) { return !confSet[id]; }));
       if (dueEl) dueEl.textContent = due.length;
       host.innerHTML = "";
       if (!due.length) {
@@ -1180,6 +1220,7 @@
   function renderDashboard() {
     var host = document.getElementById("dashbody"); if (!host) return;
     var due = srsDue().length, task = taskState(), streak = streakCount();
+    var confN = Object.keys(confusedAll()).length;
     var total = 0, mastered = 0;
     (window.MANIFEST || []).forEach(function (m) {
       var ch = window.CHAPTERS[m.id]; if (!ch) return;
@@ -1195,6 +1236,7 @@
       '<div class="dcell"><b>' + streak + '</b><span>连续打卡（天）</span></div>' +
       '<div class="dcell"><b>' + (task.read || 0) + '</b><span>今日已读</span></div>' +
       '<div class="dcell"><b>' + (task.practice || 0) + '</b><span>今日练习</span></div>' +
+      '<div class="dcell"><b>' + confN + '</b><span>待问/不懂</span></div>' +
       '<div class="dcell"><b>' + mastered + "/" + total + '</b><span>已掌握知识点</span></div>' +
       '</div>';
   }
