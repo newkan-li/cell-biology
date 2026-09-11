@@ -1,0 +1,42 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>细胞核的结构</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'细胞核的结构',
+    sub:'核被膜、核孔复合体、染色质/染色体、核仁、核基质。',
+    legend:[{c:'#5a7fa8',t:'核被膜'},{c:'#e8703a',t:'核孔复合体'},{c:'#8e44ad',t:'染色质'},{c:'#2e9e5b',t:'核仁'}],
+    init:function(S){},
+    phases:[
+      {name:'① 核被膜（双层膜）',dur:1300,note:'核被膜由内外两层核膜组成，把细胞核与胞质分开。',ap:function(){}},
+      {name:'② 核孔复合体',dur:1300,note:'内外核膜局部融合形成核孔，核孔复合体镶嵌其中，是物质交换通道。',ap:function(){}},
+      {name:'③ 染色质与核仁',dur:1300,note:'染色质是 DNA 与蛋白的复合物；核仁是 rRNA 合成和核糖体组装的场所。',ap:function(){}},
+      {name:'④ 核基质',dur:1300,note:'核基质是核内的液体/纤维网络环境，参与 DNA 复制、转录等。',ap:function(){}},
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,W,H);
+      var cx=W/2,cy=H*0.54,R=Math.min(W,H)*0.36;
+      // envelope
+      ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.fillStyle='#fbfefc';ctx.fill();
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=6;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.stroke();
+      ctx.strokeStyle='#9bb6cc';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,R-7,0,7);ctx.stroke();
+      AnimKit.label(ctx,'核被膜',cx-R-4,cy-R+20,'#33465c','12px "Microsoft YaHei"','left');
+      // pores
+      ctx.globalAlpha=(phaseI===1||phaseI===3)?1:0.4;
+      for(var a=0;a<8;a++){var ang=a/8*6.283;var px=cx+Math.cos(ang)*R,py=cy+Math.sin(ang)*R;
+        ctx.fillStyle='#e8703a';ctx.beginPath();ctx.arc(px,py,6,0,7);ctx.fill();}
+      ctx.globalAlpha=1;
+      if(phaseI===1)AnimKit.label(ctx,'核孔复合体',cx+R-40,cy-R+20,'#a3401a','12px "Microsoft YaHei"','left');
+      // chromatin
+      ctx.globalAlpha=(phaseI===2||phaseI===3)?1:0.35;
+      ctx.strokeStyle='#8e44ad';ctx.lineWidth=4;
+      for(var k=0;k<4;k++){ctx.beginPath();for(var j=0;j<=20;j++){var t=j/20,xx=cx-R*0.6+t*R*1.2,yy=cy-R*0.35+k*R*0.22+Math.sin(t*10+k)*7;if(j===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}ctx.stroke();}
+      AnimKit.circle(ctx,cx-R*0.3,cy+R*0.42,24,'#2e9e5b',null);AnimKit.label(ctx,'核仁',cx-R*0.3,cy+R*0.42+2,'#fff','12px "Microsoft YaHei"');
+      ctx.globalAlpha=1;
+      if(phaseI===2)AnimKit.label(ctx,'染色质 / 核仁',cx+R*0.2,cy-R*0.5,'#5b2c6f','12px "Microsoft YaHei"','left');
+      if(phaseI===3)AnimKit.label(ctx,'核基质',cx+R*0.1,cy-R*0.6,'#33465c','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'细胞核的结构',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

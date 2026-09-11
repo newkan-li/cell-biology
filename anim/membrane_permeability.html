@@ -1,0 +1,37 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>人工膜通透性</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'人工膜对物质的通透性',
+    sub:'疏水小分子最易透过，水、尿素次之，葡萄糖、离子难以透过——越小越疏水越易过。',
+    legend:[{c:'#2e9e5b',t:'易透过'},{c:'#e8a13a',t:'中等'},{c:'#c0392b',t:'难透过'}],
+    init:function(S){},
+    phases:[
+      {name:'① 疏水小分子：易透过',dur:1300,note:'O₂、CO₂、苯等疏水小分子可自由穿过脂双层。',ap:function(){}},
+      {name:'② 水、尿素：较易透过',dur:1300,note:'水、甘油、尿素可缓慢透过(水也可经水通道)。',ap:function(){}},
+      {name:'③ 葡萄糖：难透过',dur:1300,note:'葡萄糖等较大极性分子难直接透过，需载体蛋白。',ap:function(){}},
+      {name:'④ 离子：几乎不能透过',dur:1300,note:'Na⁺、K⁺ 等带电离子几乎不能透过脂双层，需通道或泵。',ap:function(){}},
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var y0=H*0.40,y1=H*0.60;
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,W,y0);ctx.fillStyle='#fff7ef';ctx.fillRect(0,y1,W,H-y1);
+      ctx.fillStyle='#ffe9c9';ctx.fillRect(0,y0,W,y1-y0);
+      AnimKit.label(ctx,'膜外',14,20,'#7a8aa0','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'膜内',14,H-12,'#7a8aa0','12px "Microsoft YaHei"','left');
+      var items=[{t:'O₂ / CO₂',c:'#2e9e5b',x:W*0.16,through:true},{t:'水 / 尿素',c:'#e8a13a',x:W*0.38,through:true},{t:'葡萄糖',c:'#c0392b',x:W*0.62,through:false},{t:'Na⁺ / K⁺',c:'#c0392b',x:W*0.84,through:false}];
+      items.forEach(function(o,i){
+        var on=(phaseI===i)||phaseI===3;
+        ctx.globalAlpha=on?1:0.35;
+        AnimKit.circle(ctx,o.x,y0-26,11,o.c,null);
+        if(o.through){AnimKit.arrow(ctx,o.x,y0-14,o.x,y1+20,o.c,2.5);}
+        else{AnimKit.arrow(ctx,o.x,y0-14,o.x,y0-2,o.c,2);ctx.strokeStyle=o.c;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(o.x-10,y0+4);ctx.lineTo(o.x+10,y0+4);ctx.stroke();}
+        AnimKit.label(ctx,o.t,o.x,y1+36,o.c,'11.5px "Microsoft YaHei"');
+        ctx.globalAlpha=1;
+      });
+      AnimKit.label(ctx,'通透性：疏水小分子 > 水/尿素 > 葡萄糖 > 离子',W/2,22,'#1f5c8b','bold 13.5px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

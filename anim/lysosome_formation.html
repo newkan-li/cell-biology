@@ -1,0 +1,42 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>溶酶体的形成途径</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'溶酶体的形成途径',
+    sub:'①内体途径：胞吞物经早期/晚期内体与溶酶体融合；②自噬途径：自噬体与溶酶体融合。',
+    legend:[{c:'#3b6fd6',t:'内体途径'},{c:'#e8703a',t:'自噬途径'},{c:'#8e44ad',t:'溶酶体'}],
+    init:function(S){},
+    phases:[
+      {name:'① 内体途径',dur:1400,note:'胞吞物经早期内体→晚期内体，成熟后与溶酶体融合。',ap:function(){}},
+      {name:'② 自噬途径',dur:1400,note:'细胞内受损细胞器/大分子被包裹成自噬体。',ap:function(){}},
+      {name:'③ 与溶酶体融合',dur:1400,note:'晚期内体、自噬体都与溶酶体融合，形成次级溶酶体。',ap:function(){}},
+      {name:'④ 溶酶体是降解终点',dur:1400,note:'两条途径最终都把底物送入溶酶体，由酸性水解酶降解。',ap:function(){}},
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var lx=W*0.5,ly=H*0.80;
+      // lysosome
+      AnimKit.circle(ctx,lx,ly,34,'#8e44ad',null);AnimKit.label(ctx,'溶酶体',lx,ly+2,'#fff','12px "Microsoft YaHei"');
+      // endosome pathway (left)
+      var ex=W*0.20,ey=H*0.24;
+      ctx.globalAlpha=(phaseI===0||phaseI===2||phaseI===3)?1:0.3;
+      AnimKit.circle(ctx,ex,ey,26,'#3b6fd6',null);AnimKit.label(ctx,'早期内体',ex,ey+2,'#fff','10.5px "Microsoft YaHei"');
+      AnimKit.circle(ctx,ex,ey+70,28,'#5a7fa8',null);AnimKit.label(ctx,'晚期内体',ex,ey+72,'#fff','10.5px "Microsoft YaHei"');
+      AnimKit.circle(ctx,ex-46,ey-46,12,'#9bb6cc',null);AnimKit.label(ctx,'胞吞物',ex-46,ey-64,'#33465c','10.5px "Microsoft YaHei"');
+      AnimKit.arrow(ctx,ex-34,ey-36,ex-20,ey-18,'#33465c',2);AnimKit.arrow(ctx,ex,ey+28,ex,ey+42,'#3b6fd6',2);
+      if(phaseI>=2)AnimKit.arrow(ctx,ex+18,ey+92,lx-28,ly-18,'#3b6fd6',2.5);
+      ctx.globalAlpha=1;
+      // autophagy pathway (right)
+      var ax=W*0.80,ay=H*0.24;
+      ctx.globalAlpha=(phaseI===1||phaseI===2||phaseI===3)?1:0.3;
+      AnimKit.circle(ctx,ax,ay,28,'#e8703a',null);AnimKit.label(ctx,'自噬体',ax,ay+2,'#fff','11px "Microsoft YaHei"');
+      for(var c=0;c<3;c++)AnimKit.circle(ctx,ax-8+c*8,ay-30,5,'#c0392b',null);
+      if(phaseI>=2)AnimKit.arrow(ctx,ax-20,ay+22,lx+28,ly-18,'#e8703a',2.5);
+      ctx.globalAlpha=1;
+      if(phaseI===3)AnimKit.label(ctx,'两条途径都汇入溶酶体降解',lx,ly+52,'#2e7d32','bold 12.5px "Microsoft YaHei"');
+      AnimKit.label(ctx,'溶酶体的形成：内体途径 + 自噬途径',W/2,22,'#1f5c8b','bold 13.5px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

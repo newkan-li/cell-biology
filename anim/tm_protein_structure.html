@@ -1,0 +1,39 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>跨膜蛋白结构</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'跨膜蛋白的两种结构：α 螺旋与 β 桶',
+    sub:'α 螺旋是最常见的跨膜方式（疏水侧链朝外）；β 桶由 β 折叠卷成，见于孔道蛋白。',
+    legend:[{c:'#3b6fd6',t:'α 螺旋'},{c:'#2e9e5b',t:'β 桶'}],
+    init:function(S){},
+    phases:[
+      {name:'① α 螺旋跨膜',dur:1400,note:'α 螺旋是最常见的跨膜结构，疏水氨基酸侧链朝外与脂尾作用，亲水残基朝内。',ap:function(){}},
+      {name:'② β 桶跨膜',dur:1400,note:'β 折叠卷成桶状(β 桶)，中央形成孔道，见于孔蛋白等。',ap:function(){}},
+      {name:'③ 两者对比',dur:1400,note:'α 螺旋靠单段疏水序列跨膜；β 桶由多条 β 链围成，形成通道。',ap:function(){}},
+      {name:'④ 实例',dur:1400,note:'α 螺旋：受体、转运蛋白；β 桶：线粒体外膜孔蛋白、细菌外膜蛋白。',ap:function(){}},
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var y0=H*0.42,y1=H*0.62;
+      ctx.fillStyle='#ffe9c9';ctx.fillRect(0,y0,W,y1-y0);
+      var lx=W*0.28,rx=W*0.72;
+      ctx.globalAlpha=(phaseI===0||phaseI===2||phaseI===3)?1:0.35;
+      // alpha helix
+      ctx.strokeStyle='#3b6fd6';ctx.lineWidth=6;ctx.beginPath();
+      for(var i=0;i<=40;i++){var t=i/40,xx=lx-10+Math.sin(t*12)*10,yy=y0-16+t*(y1-y0+32);if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}ctx.stroke();
+      AnimKit.label(ctx,'α 螺旋',lx,y0-30,'#1f5c8b','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,'疏水侧链朝外',lx,y1+26,'#33465c','11.5px "Microsoft YaHei"');
+      ctx.globalAlpha=1;
+      ctx.globalAlpha=(phaseI===1||phaseI===2||phaseI===3)?1:0.35;
+      // beta barrel
+      ctx.strokeStyle='#2e9e5b';ctx.lineWidth=4;
+      for(var b=0;b<6;b++){var bx=rx-24+b*9.6;ctx.beginPath();ctx.moveTo(bx,y0-16);ctx.lineTo(bx+(b<3?-4:4),y1+16);ctx.stroke();}
+      AnimKit.label(ctx,'β 桶',rx,y0-30,'#3d7a5a','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,'中央形成孔道',rx,y1+26,'#33465c','11.5px "Microsoft YaHei"');
+      ctx.globalAlpha=1;
+      AnimKit.label(ctx,'跨膜蛋白的两种跨膜结构',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

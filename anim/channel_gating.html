@@ -1,0 +1,41 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>通道蛋白门控</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  function channel(ctx,x,ym,col,open){
+    ctx.fillStyle=col;ctx.fillRect(x-16,ym-22,8,44);ctx.fillRect(x+8,ym-22,8,44);
+    if(open){ctx.strokeStyle='#2e9e5b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,ym-34);ctx.lineTo(x,ym+34);ctx.stroke();}
+    else{ctx.strokeStyle='#c0392b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x-8,ym);ctx.lineTo(x+8,ym);ctx.stroke();}
+  }
+  AnimKit.mount({
+    title:'通道蛋白的门控机制',
+    sub:'通道的开放受电压、配体或机械力调控；通道开放时物质快速通过，且不与底物结合。',
+    legend:[{c:'#3b6fd6',t:'通道蛋白'},{c:'#2e9e5b',t:'开放'}],
+    init:function(S){},
+    phases:[
+      {name:'① 电压门控',dur:1300,note:'膜电位变化使通道开放，如神经轴突上的 Na⁺、K⁺ 电压门控通道。',ap:function(){}},
+      {name:'② 配体门控',dur:1300,note:'配体(如神经递质)结合后通道开放，如乙酰胆碱受体通道。',ap:function(){}},
+      {name:'③ 机械门控',dur:1300,note:'机械力(如牵张、压力)使通道开放，如内耳毛细胞的机械敏感通道。',ap:function(){}},
+      {name:'④ 通道的特点',dur:1300,note:'通道形成亲水孔道、不与被转运物结合、转运速度快、可被门控。',ap:function(){}},
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var ym=H*0.48,cols=[{x:W*0.2,t:'电压门控',s:'膜电位'},{x:W*0.5,t:'配体门控',s:'配体结合'},{x:W*0.8,t:'机械门控',s:'机械力'}];
+      cols.forEach(function(o,i){
+        var on=(phaseI===i)||phaseI===3;
+        ctx.globalAlpha=on?1:0.35;
+        ctx.fillStyle='#ffe9c9';ctx.fillRect(o.x-60,ym-10,120,20);
+        channel(ctx,o.x,ym,'#3b6fd6',on);
+        AnimKit.label(ctx,o.t,o.x,ym-44,'#1f5c8b','bold 12.5px "Microsoft YaHei"');
+        AnimKit.label(ctx,o.s,o.x,ym+40,'#33465c','11.5px "Microsoft YaHei"');
+        if(i===0)AnimKit.label(ctx,'+ + +',o.x,ym-26,'#c0392b','11px "Microsoft YaHei"');
+        if(i===1)AnimKit.circle(ctx,o.x,ym-30,7,'#e8a13a','L');
+        if(i===2)AnimKit.arrow(ctx,o.x-40,ym-20,o.x-16,ym-20,'#8d6e63',2);
+        ctx.globalAlpha=1;
+      });
+      if(phaseI===3)AnimKit.label(ctx,'通道：不结合底物、速度快、可门控',W/2,H-14,'#2e7d32','bold 12.5px "Microsoft YaHei"');
+      AnimKit.label(ctx,'通道蛋白的三种门控方式',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

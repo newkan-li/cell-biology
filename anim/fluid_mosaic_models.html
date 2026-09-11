@@ -1,0 +1,41 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>膜结构模型</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  function bilayer(ctx,x0,x1,ym){
+    ctx.fillStyle='#ffe9c9';ctx.fillRect(x0,ym-14,x1-x0,28);
+    for(var x=x0;x<x1;x+=16){ctx.fillStyle='#f2b950';ctx.beginPath();ctx.arc(x,ym-10,3,0,7);ctx.fill();ctx.beginPath();ctx.arc(x,ym+10,3,0,7);ctx.fill();}
+  }
+  AnimKit.mount({
+    title:'膜结构模型：三明治 vs 流动镶嵌',
+    sub:'1935 年“三明治”模型（蛋白铺在脂双层两侧）→ 1972 年流动镶嵌模型（蛋白镶嵌在流动脂双层中）。',
+    legend:[{c:'#3b6fd6',t:'膜蛋白'},{c:'#f2b950',t:'磷脂'}],
+    init:function(S){},
+    phases:[
+      {name:'① 1935 三明治模型',dur:1400,note:'Davson-Danielli 模型：脂双层两侧各铺一层蛋白，像“三明治”。',ap:function(){}},
+      {name:'② 1972 流动镶嵌模型',dur:1400,note:'Singer-Nicolson 模型：脂双层是流动的，蛋白镶嵌在其中(整合/外周蛋白)。',ap:function(){}},
+      {name:'③ 关键区别：蛋白的位置',dur:1400,note:'三明治模型认为蛋白连续铺在两侧；流动镶嵌模型认为蛋白镶嵌在脂双层内或表面。',ap:function(){}},
+      {name:'④ 流动镶嵌被广泛接受',dur:1400,note:'流动镶嵌模型能解释膜的流动性、不对称性和膜蛋白功能，被广泛接受。',ap:function(){}},
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f7fbff';ctx.fillRect(0,0,W,H);
+      var lx=W*0.26,rx=W*0.74,ym=H*0.5;
+      ctx.globalAlpha=(phaseI===0||phaseI===2||phaseI===3)?1:0.35;
+      bilayer(ctx,lx-110,lx+110,ym);
+      ctx.fillStyle='#3b6fd6';ctx.fillRect(lx-110,ym-28,220,12);ctx.fillRect(lx-110,ym+16,220,12);
+      AnimKit.label(ctx,'三明治模型',lx,ym+60,'#1f2a37','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,'蛋白铺在两侧',lx,ym-44,'#33465c','11.5px "Microsoft YaHei"');
+      ctx.globalAlpha=1;
+      ctx.globalAlpha=(phaseI===1||phaseI===2||phaseI===3)?1:0.35;
+      bilayer(ctx,rx-110,rx+110,ym);
+      AnimKit.roundRect(ctx,rx-70,ym-14,26,28,6);ctx.fillStyle='#3b6fd6';ctx.fill();
+      AnimKit.roundRect(ctx,rx-6,ym-20,26,40,6);ctx.fillStyle='#3b6fd6';ctx.fill();
+      AnimKit.roundRect(ctx,rx+48,ym-14,26,28,6);ctx.fillStyle='#3b6fd6';ctx.fill();
+      AnimKit.label(ctx,'流动镶嵌模型',rx,ym+60,'#1f2a37','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,'蛋白镶嵌在脂双层中',rx,ym-44,'#33465c','11.5px "Microsoft YaHei"');
+      ctx.globalAlpha=1;
+      AnimKit.label(ctx,'膜结构模型：从三明治到流动镶嵌',W/2,24,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>
