@@ -147,6 +147,33 @@ canvas.hw.tall{height:230px}
 
 @media print{aside,.navbtns,.hwbar,.self,.causes,.no-print{display:none!important}.layout{display:block}main{max-width:none;padding:0}details.sol{display:block!important;border:none;padding:2px 0}details.sol summary{list-style:none}}
 
+/* ================= 模拟测验 ================= */
+.ex-row{margin:6px 0;font-size:13.5px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.ex-lb{font-weight:400}
+.ex-item{border-top:1px dashed var(--line);padding-top:6px;margin-top:10px}
+.ex-num{font-size:12px;color:var(--sub)}
+.ex-bar{margin:14px 0}
+.ex-result{margin-top:16px}
+
+/* ================= 闪卡 ================= */
+.fc-chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.fc-chip{border:1px solid var(--line);background:#fff;color:var(--blue);border-radius:14px;padding:2px 10px;font-size:12.5px;cursor:pointer}
+.fc-chip.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.fc-progress{font-size:12.5px;color:var(--sub);margin:10px 0 6px}
+.fc-card{border:1px solid var(--line);border-radius:14px;background:#fff;padding:26px 22px;min-height:180px;cursor:pointer;box-shadow:0 1px 4px rgba(20,30,60,.06)}
+.fc-front{font-size:20px;font-weight:700;color:var(--blue);text-align:center}
+.fc-back{font-size:14px;line-height:1.7}
+.fc-back ul{margin:0;padding-left:18px}
+.fc-kps{color:#7a5d00;margin-top:6px}
+.fc-fig{margin-top:8px;color:#254a36;font-size:13px}
+.fc-hint{font-size:12px;color:var(--sub);text-align:center;margin:6px 0}
+.fc-rate{display:flex;gap:8px;justify-content:center;margin-top:6px}
+.fc-rate button{border:1px solid var(--line);background:#fff;border-radius:18px;padding:6px 20px;font-size:13px;cursor:pointer}
+.fc-rate button.ok{border-color:var(--ok);color:var(--ok)}
+.fc-rate button.mid{border-color:var(--warn);color:var(--warn)}
+.fc-rate button.no{border-color:var(--acc);color:var(--acc)}
+.fc-done{text-align:center;font-size:16px;color:var(--blue);padding:30px 0}
+
 /* ================= 本页自测 / 掌握度热力图 ================= */
 .checkpoint{margin-top:10px;border:1px dashed #b9d2e6;border-radius:10px;padding:8px 12px;background:#f7fbff}
 .checkpoint .cp-h{font-weight:700;color:var(--blue);font-size:13px;margin-bottom:4px}
@@ -226,6 +253,7 @@ html[data-theme="sepia"] .rev-ans{background:#efe4c9;border-color:#ddcda6}
 html[data-theme="sepia"] .checkpoint{background:#f3e8cf;border-color:#ddcda6}
 html[data-theme="sepia"] .checkpoint .cp-opt{background:#faf3e0}
 html[data-theme="sepia"] .hm-0{background:#e6dcc2}
+html[data-theme="sepia"] .fc-card,html[data-theme="sepia"] .fc-chip,html[data-theme="sepia"] .fc-rate button{background:#faf3e0}
 
 /* ================= 深色 ================= */
 html[data-theme="dark"]{--ink:#d7dee8;--sub:#93a1b3;--acc:#e0715c;--blue:#6fb3e0;--line:#333d49;--bg:#181d24;--ok:#5cc07a;--warn:#e0b050;color-scheme:dark}
@@ -275,3 +303,4 @@ html[data-theme="dark"] .rev-opt.wrong{background:#3a201d;border-color:#8a3a30}
 html[data-theme="dark"] .checkpoint{background:#1c2630;border-color:#33404d}
 html[data-theme="dark"] .checkpoint .cp-opt{background:#1f262e;color:#d7dee8}
 html[data-theme="dark"] .hm-0{background:#2a333d}
+html[data-theme="dark"] .fc-card,html[data-theme="dark"] .fc-chip,html[data-theme="dark"] .fc-rate button{background:#1f262e;color:#d7dee8}

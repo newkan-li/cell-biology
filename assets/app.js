@@ -711,7 +711,7 @@
     HW.init(cid);
     document.title = ch.title + " · 细胞生物学";
     var aside = document.getElementById("sidebar"), main = document.getElementById("main");
-    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="glossary.html">📖 术语表</a>';
+    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
     aside.appendChild(el("div", "grp", "各模块（概念 + 考题）"));
     ch.modules.forEach(function (m) {
       var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a);
@@ -853,6 +853,171 @@
     alert("已判分：本次检查 " + n + " 道填空题。选择题为点选即时判分。可在左侧查看『学习统计』或『错题本』。");
   }
 
+  /* ================= flashcards (auto-derived) ================= */
+  function buildCards() {
+    var cards = [];
+    (window.MANIFEST || []).forEach(function (m) {
+      var ch = window.CHAPTERS[m.id]; if (!ch) return;
+      (ch.term || []).forEach(function (q) {
+        cards.push({
+          id: "fc_term_" + q.id, ch: m.id, tag: "名词解释", front: q.term,
+          back: "<b>定义</b><br>" + esc(q.def).replace(/\n/g, "<br>") + (q.kps ? '<div class="fc-kps">踩分点：' + esc(q.kps) + "</div>" : "")
+        });
+      });
+      ch.modules.forEach(function (mod) {
+        mod.slides.forEach(function (s) {
+          if (!s.points && !s.fig) return;
+          var kp = m.id + "_s" + mod.i + "_" + s.i, back = "";
+          if (s.points && s.points.length) back += "<ul>" + s.points.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>";
+          if (s.fig) back += '<div class="fc-fig">' + esc(s.fig).replace(/\n/g, "<br>") + "</div>";
+          cards.push({ id: "fc_kp_" + kp, ch: m.id, tag: "本页要点", front: s.title, back: back });
+        });
+      });
+    });
+    (window.GLOSSARY || []).forEach(function (g, i) {
+      cards.push({
+        id: "fc_gloss_" + i, ch: g.ch, tag: "术语", front: g.t,
+        back: (g.en ? "<b>" + esc(g.en) + "</b><br>" : "") + esc(g.d)
+      });
+    });
+    return cards;
+  }
+  function cardMap() { var m = {}; buildCards().forEach(function (c) { m[c.id] = c; }); return m; }
+
+  function renderFlashcards() {
+    var ctl = document.getElementById("fcctl"), host = document.getElementById("fchost");
+    if (!host) return;
+    var cards = buildCards();
+    var names = { ch01: "绪论", ch02: "质膜", ch03: "内膜系统", ch04: "蛋白质运输", ch05: "后翻译转运" };
+    var chs = {}, tags = {};
+    cards.forEach(function (c) { if (c.ch) chs[c.ch] = 1; tags[c.tag] = 1; });
+    var curCh = "all", curTag = "all", deck = [], pos = 0;
+    try { var qp = new URLSearchParams(location.search).get("ch"); if (qp && chs[qp]) curCh = qp; } catch (e) { }
+    ctl.innerHTML = "";
+    var row1 = el("div", "fc-chips"), row2 = el("div", "fc-chips");
+    function mk(label, val, group) {
+      var b = el("button", "fc-chip", label); b.dataset.v = val;
+      b.onclick = function () { if (group === "ch") curCh = val; else curTag = val; sync(); build(); };
+      return b;
+    }
+    row1.appendChild(mk("全部章节", "all", "ch"));
+    Object.keys(chs).sort().forEach(function (c) { row1.appendChild(mk(names[c] || c, c, "ch")); });
+    row2.appendChild(mk("全部类型", "all", "tag"));
+    Object.keys(tags).forEach(function (t) { row2.appendChild(mk(t, t, "tag")); });
+    ctl.appendChild(row1); ctl.appendChild(row2);
+    function sync() {
+      Array.prototype.forEach.call(row1.children, function (b) { b.classList.toggle("on", b.dataset.v === curCh); });
+      Array.prototype.forEach.call(row2.children, function (b) { b.classList.toggle("on", b.dataset.v === curTag); });
+    }
+    function build() {
+      deck = cards.filter(function (c) { return (curCh === "all" || c.ch === curCh) && (curTag === "all" || c.tag === curTag); });
+      for (var i = deck.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = deck[i]; deck[i] = deck[j]; deck[j] = t; }
+      pos = 0; show();
+    }
+    function show() {
+      if (!deck.length) { host.innerHTML = '<p class="empty">没有符合条件的卡片。</p>'; return; }
+      if (pos >= deck.length) {
+        host.innerHTML = '<div class="fc-done">🎉 本组完成（共 ' + deck.length + ' 张）<div style="margin-top:10px"><button class="navbtn" style="width:auto" id="fcAgain">再来一组</button></div></div>';
+        var b = document.getElementById("fcAgain"); if (b) b.onclick = build; return;
+      }
+      var c = deck[pos];
+      host.innerHTML = '<div class="fc-progress">第 ' + (pos + 1) + " / " + deck.length + " 张 · " + esc(c.tag) + "</div>" +
+        '<div class="fc-card" id="fcCard"><div class="fc-front">' + esc(c.front) + "</div>" +
+        '<div class="fc-back" style="display:none">' + c.back + "</div></div>" +
+        '<div class="fc-hint">点击卡片翻面</div>' +
+        '<div class="fc-rate" style="display:none"><button class="no">不会</button><button class="mid">模糊</button><button class="ok">会</button></div>';
+      var card = document.getElementById("fcCard");
+      card.onclick = function () {
+        card.querySelector(".fc-back").style.display = "block";
+        card.querySelector(".fc-front").style.display = "none";
+        host.querySelector(".fc-rate").style.display = "flex";
+      };
+      var rate = host.querySelector(".fc-rate");
+      [["不会", 0], ["模糊", 1], ["会", 2]].forEach(function (o, i) {
+        rate.children[i].onclick = function () { srsRate(c.id, o[1]); pos++; show(); };
+      });
+    }
+    sync(); build();
+  }
+
+  /* ================= mock exam ================= */
+  function renderExam() {
+    var ctl = document.getElementById("examctl"), host = document.getElementById("examhost");
+    var timerEl = document.getElementById("examtimer");
+    if (!ctl || !host) return;
+    var names = { ch01: "绪论", ch02: "质膜", ch03: "内膜系统", ch04: "蛋白质运输", ch05: "后翻译转运" };
+    var types = [["mcq", "选择题"], ["judge", "判断题"], ["fill", "填空题"], ["short", "简答题"], ["calc", "论述/推导"], ["term", "名词解释"]];
+    var pool = [];
+    (window.MANIFEST || []).forEach(function (m) {
+      var ch = window.CHAPTERS[m.id]; if (!ch) return;
+      types.forEach(function (t) { (ch[t[0]] || []).forEach(function (q) { pool.push({ cid: m.id, kind: t[0], q: q }); }); });
+    });
+    ctl.innerHTML =
+      '<div class="ex-row"><b>章节：</b>' + (window.MANIFEST || []).map(function (m) {
+        return '<label class="ex-lb"><input type="checkbox" class="ex-ch" value="' + m.id + '" checked> ' + esc(names[m.id] || m.id) + "</label>";
+      }).join("") + "</div>" +
+      '<div class="ex-row"><b>题型：</b>' + types.map(function (t) {
+        return '<label class="ex-lb"><input type="checkbox" class="ex-ty" value="' + t[0] + '" checked> ' + t[1] + "</label>";
+      }).join("") + "</div>" +
+      '<div class="ex-row"><b>题量：</b><select id="exCount"><option>10</option><option selected>20</option><option>30</option><option>50</option></select>' +
+      '<b>时间：</b><select id="exMin"><option value="15">15 分钟</option><option value="30" selected>30 分钟</option><option value="60">60 分钟</option><option value="120">120 分钟</option></select>' +
+      '<button id="exStart" class="navbtn" style="width:auto;margin:0">开始测验</button></div>';
+    var timer = null, remain = 0, current = [];
+    function stopTimer() { if (timer) { clearInterval(timer); timer = null; } }
+    function fmt(s) { var m = Math.floor(s / 60), x = s % 60; return (m < 10 ? "0" : "") + m + ":" + (x < 10 ? "0" : "") + x; }
+    function start() {
+      var chs = Array.prototype.map.call(ctl.querySelectorAll(".ex-ch:checked"), function (x) { return x.value; });
+      var tys = Array.prototype.map.call(ctl.querySelectorAll(".ex-ty:checked"), function (x) { return x.value; });
+      if (!chs.length || !tys.length) { alert("请至少选择一个章节和一个题型。"); return; }
+      var n = parseInt(document.getElementById("exCount").value, 10);
+      var mins = parseInt(document.getElementById("exMin").value, 10);
+      current = pool.filter(function (it) { return chs.indexOf(it.cid) >= 0 && tys.indexOf(it.kind) >= 0; });
+      for (var i = current.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = current[i]; current[i] = current[j]; current[j] = t; }
+      current = current.slice(0, n);
+      host.innerHTML = "";
+      current.forEach(function (it, i) {
+        var wrap = el("div", "ex-item");
+        wrap.appendChild(el("div", "ex-num", "第 " + (i + 1) + " 题 · " + esc(names[it.cid] || it.cid)));
+        var c;
+        if (it.kind === "mcq") c = renderMCQ(it.cid, it.q, i + 1);
+        else if (it.kind === "judge") c = renderJudge(it.cid, it.q, i + 1);
+        else if (it.kind === "fill") c = renderFill(it.cid, it.q, i + 1);
+        else c = renderSelf(it.cid, it.q, i + 1, it.kind);
+        wrap.appendChild(c); host.appendChild(wrap);
+      });
+      remain = mins * 60;
+      if (timerEl) { timerEl.style.display = "block"; timerEl.textContent = "⏱ 剩余 " + fmt(remain); }
+      stopTimer();
+      timer = setInterval(function () {
+        remain--; if (timerEl) timerEl.textContent = "⏱ 剩余 " + fmt(remain);
+        if (remain <= 0) { stopTimer(); submit(true); }
+      }, 1000);
+      var bar = el("div", "ex-bar"); var bs = el("button", "navbtn", "📋 交卷判分");
+      bs.onclick = function () { stopTimer(); submit(false); }; bar.appendChild(bs); host.appendChild(bar);
+    }
+    function isCorrect(it) {
+      var cid = it.cid, q = it.q, r;
+      if (it.kind === "mcq") { r = mcqStore(cid)[q.id]; return r && r.last === String(q.a); }
+      if (it.kind === "judge") { r = judgeStore(cid)[q.id]; return r && r.last === String(q.a); }
+      if (it.kind === "fill") { r = fillStore(cid)[q.id]; return r && fuzzyMatch(q.a, r.last); }
+      r = selfStore(cid)[q.id]; return r && r.state === "ok";
+    }
+    function submit(auto) {
+      stopTimer();
+      if (timerEl) timerEl.textContent = "⏱ 已交卷";
+      var ok = 0, weak = {};
+      current.forEach(function (it) { if (isCorrect(it)) ok++; else if (it.q.kp) weak[it.q.kp] = 1; });
+      var total = current.length || 1;
+      var h = '<div class="statsbox"><h3 style="margin:0">📊 成绩</h3>' +
+        "<p>得分（客观自动 + 主观自评）：<b>" + ok + " / " + current.length + "</b>（" + Math.round(ok * 100 / total) + "%）" + (auto ? " · 时间到自动交卷" : "") + "</p>" +
+        (Object.keys(weak).length ? "<p>待加强知识点 " + Object.keys(weak).length + " 个，去「今日复习」巩固。</p>" : "<p>全部正确，很好！</p>") +
+        '<p><a class="navbtn" style="display:inline-block;width:auto;text-decoration:none" href="review.html">🔁 去复习</a></p></div>';
+      var res = el("div", "ex-result", h); host.appendChild(res);
+      res.scrollIntoView({ behavior: "smooth" });
+    }
+    document.getElementById("exStart").onclick = start;
+  }
+
   /* ================= review page (spaced repetition) ================= */
   function kpIndex() {
     var kp = {}, q = {}, titles = {};
@@ -883,6 +1048,17 @@
     var host = document.getElementById("reviewhost"), dueEl = document.getElementById("duecount");
     if (!host) return;
     var idx = kpIndex();
+    var cmap = cardMap();
+    function cardCard(id, c) {
+      var box = el("div", "rev-card");
+      box.innerHTML = '<div class="rev-meta">' + esc(idx.titles[c.ch] || c.ch || "") + " · " + esc(c.tag) + "</div>" +
+        '<div class="rev-title">' + esc(c.front) + "</div>";
+      var body = el("div", "rev-ans"); body.style.display = "none"; body.innerHTML = c.back;
+      var rv = el("button", "rev-reveal", "显示答案"); rv.setAttribute("data-open", "显示答案");
+      rv.onclick = toggle(rv, body);
+      box.appendChild(rv); box.appendChild(body); box.appendChild(rateRow(id));
+      return box;
+    }
     function toggle(btn, box) {
       return function () {
         var open = box.style.display !== "none";
@@ -938,14 +1114,16 @@
       return c;
     }
     function render() {
-      var due = srsDue().filter(function (id) { return idx.kp[id] || idx.q[id]; });
+      var due = srsDue().filter(function (id) { return idx.kp[id] || idx.q[id] || cmap[id]; });
       if (dueEl) dueEl.textContent = due.length;
       host.innerHTML = "";
       if (!due.length) {
         host.innerHTML = '<p class="empty">今天没有待复习的内容。去各章学习，标记已读、做题或翻卡片后会自动安排复习。</p>';
         return;
       }
-      due.forEach(function (id) { host.appendChild(idx.kp[id] ? kpCard(id, idx.kp[id]) : qCard(id, idx.q[id])); });
+      due.forEach(function (id) {
+        host.appendChild(idx.kp[id] ? kpCard(id, idx.kp[id]) : idx.q[id] ? qCard(id, idx.q[id]) : cardCard(id, cmap[id]));
+      });
     }
     render();
   }
@@ -1121,6 +1299,8 @@
     else if (page === "wrong") renderWrongPage();
     else if (page === "glossary") renderGlossary();
     else if (page === "review") renderReview();
+    else if (page === "flashcards") renderFlashcards();
+    else if (page === "exam") renderExam();
   });
 
   window.CELL = {
