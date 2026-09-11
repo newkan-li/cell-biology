@@ -1,0 +1,48 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>三种载体蛋白</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function P(c,t,vis){return{nx:c,ny:.12,tnx:c,tny:.12,c:c,t:t,vis:vis};}
+  function set(o,x,y){o.tnx=x;o.tny=y;}
+  AnimKit.mount({
+    title:'三种载体蛋白：单运输 / 同向共运输 / 反向共运输',
+    sub:'按转运方向与分子数分为 uniport、symport、antiport。',
+    legend:[{c:'#e8703a',t:'Na⁺'},{c:'#2e9e5b',t:'葡萄糖'},{c:'#3b6fd6',t:'Ca²⁺'}],
+    init:function(S){
+      S.u=P(.20,'G',false);
+      S.sa=P(.47,'Na',false);S.sb=P(.53,'G',false);
+      S.aa=P(.77,'Na',false);S.ab=P(.83,'Ca',false);},
+    phases:[
+      {name:'① 单运输 uniport',dur:1300,note:'只转运一种分子，顺浓度梯度（如 GLUT 运葡萄糖）。',ap:function(S){
+        S.u.vis=true;set(S.u,.20,.88);S.sa.vis=false;S.sb.vis=false;S.aa.vis=false;S.ab.vis=false;}},
+      {name:'② 同向共运输 symport',dur:1500,note:'两种分子同方向一起转运（如 SGLT：Na⁺ 顺梯度带入葡萄糖）。',ap:function(S){
+        S.u.vis=false;S.sa.vis=true;S.sb.vis=true;set(S.sa,.47,.88);set(S.sb,.53,.88);S.aa.vis=false;S.ab.vis=false;}},
+      {name:'③ 反向共运输 antiport',dur:1500,note:'两种分子方向相反（如 Na⁺/Ca²⁺ 交换体：Na⁺ 进、Ca²⁺ 出）。',ap:function(S){
+        S.u.vis=false;S.sa.vis=false;S.sb.vis=false;S.aa.vis=true;S.ab.vis=true;set(S.aa,.77,.88);set(S.ab,.83,.12);}},
+      {name:'④ 三者对比',dur:1400,note:'uniport 一种、symport 同向两种、antiport 反向两种。',ap:function(S){
+        S.u.vis=true;set(S.u,.20,.60);S.sa.vis=true;S.sb.vis=true;set(S.sa,.47,.60);set(S.sb,.53,.60);S.aa.vis=true;S.ab.vis=true;set(S.aa,.77,.60);set(S.ab,.83,.40);}}
+    ],
+    update:function(S,e){[S.u,S.sa,S.sb,S.aa,S.ab].forEach(function(o){o.nx+=(o.tnx-o.nx)*e*.55;o.ny+=(o.tny-o.ny)*e*.55;});},
+    draw:function(ctx,W,H,S){
+      var m=AnimKit.membrane(ctx,W,H,{gap:0});var yT=m.yTop,yB=m.yBot;
+      var cs=[.20,.50,.80];
+      cs.forEach(function(c){var x=c*W;
+        AnimKit.roundRect(ctx,x-34,yT-24,68,(yB-yT)+48,14);ctx.fillStyle='#5a7fa8';ctx.fill();
+        ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(x-14,yT-18);ctx.lineTo(x,yT-2);ctx.lineTo(x+14,yT-18);ctx.closePath();ctx.fill();});
+      AnimKit.label(ctx,'uniport 单运输',cs[0]*W,yB+52,'#33465c','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'symport 同向',cs[1]*W,yB+52,'#33465c','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'antiport 反向',cs[2]*W,yB+52,'#33465c','12px "Microsoft YaHei"');
+      function col(t){return t==='Na'?'#e8703a':t==='G'?'#2e9e5b':'#3b6fd6';}
+      function lab(t){return t==='Na'?'Na⁺':t==='G'?'G':'Ca²⁺';}
+      [S.u,S.sa,S.sb,S.aa,S.ab].forEach(function(o){if(o.vis)AnimKit.circle(ctx,o.nx*W,o.ny*H,13,col(o.t),lab(o.t));});
+      AnimKit.arrow(ctx,cs[0]*W,yT-34,cs[0]*W,yB+34,'#c9d8e8',2);
+      AnimKit.arrow(ctx,cs[1]*W-10,yT-34,cs[1]*W-10,yB+34,'#c9d8e8',2);
+      AnimKit.arrow(ctx,cs[1]*W+10,yT-34,cs[1]*W+10,yB+34,'#c9d8e8',2);
+      AnimKit.arrow(ctx,cs[2]*W-10,yT-34,cs[2]*W-10,yB+34,'#c9d8e8',2);
+      AnimKit.arrow(ctx,cs[2]*W+10,yB+34,cs[2]*W+10,yT-34,'#c9d8e8',2);
+      AnimKit.label(ctx,'细胞外',14,22,'#7a8aa0','13px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'细胞内',14,H-14,'#7a8aa0','13px "Microsoft YaHei"','left');
+    }
+  });
+})();
+</script></body></html>

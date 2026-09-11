@@ -1,0 +1,44 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>小肠上皮吸收葡萄糖</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function P(t,nx,ny){return{t:t,nx:nx,ny:ny,tnx:nx,tny:ny};}
+  function set(o,x,y){o.tnx=x;o.tny=y;}
+  AnimKit.mount({
+    title:'小肠上皮细胞吸收葡萄糖',
+    sub:'肠腔侧 SGLT 用 Na⁺ 梯度驱动葡萄糖入胞；基底侧 GLUT2 顺梯度输出；Na⁺/K⁺ 泵维持 Na⁺ 梯度。',
+    legend:[{c:'#e8703a',t:'Na⁺'},{c:'#2e9e5b',t:'葡萄糖'},{c:'#5a7fa8',t:'转运蛋白'}],
+    init:function(S){S.n=[P('Na',.20,.12),P('Na',.28,.18)];S.g=[P('G',.24,.16)];},
+    phases:[
+      {name:'① 肠腔 Na⁺、葡萄糖浓度高',dur:1100,note:'肠腔中 Na⁺ 与葡萄糖浓度高；胞内 Na⁺ 低。',ap:function(S){set(S.n[0],.20,.12);set(S.n[1],.28,.18);set(S.g[0],.24,.16);}},
+      {name:'② SGLT 同向转运入胞',dur:1300,note:'顶面（肠腔侧）SGLT 把 Na⁺ 顺梯度内流与葡萄糖逆梯度入胞耦联。',ap:function(S){set(S.n[0],.35,.30);set(S.n[1],.35,.36);set(S.g[0],.37,.42);}},
+      {name:'③ 葡萄糖在胞内积累',dur:1100,note:'葡萄糖在细胞内积累，浓度升高。',ap:function(S){set(S.g[0],.50,.56);set(S.n[0],.45,.58);set(S.n[1],.55,.62);}},
+      {name:'④ 基底侧 GLUT2 顺梯度输出',dur:1300,note:'基底面 GLUT2 让葡萄糖顺浓度梯度进入血液。',ap:function(S){set(S.g[0],.60,.86);}},
+      {name:'⑤ Na⁺/K⁺ 泵维持 Na⁺ 梯度',dur:1400,note:'基底面 Na⁺/K⁺ 泵把 Na⁺ 泵出细胞，维持胞内低 Na⁺，使 SGLT 可持续工作。',ap:function(S){set(S.n[0],.85,.86);set(S.n[1],.88,.90);}}
+    ],
+    update:function(S,e){S.n.concat(S.g).forEach(function(o){o.nx+=(o.tnx-o.nx)*e*.5;o.ny+=(o.tny-o.ny)*e*.5;});},
+    draw:function(ctx,W,H,S){
+      var xL=W*.08,xR=W*.92,yT=H*.30,yB=H*.72;
+      ctx.fillStyle='#eaf3fb';ctx.fillRect(0,0,W,yT);            // 肠腔
+      ctx.fillStyle='#f3fbf5';ctx.fillRect(0,yB,W,H-yB);          // 血液
+      ctx.fillStyle='#fffdf5';ctx.fillRect(xL,yT,xR-xL,yB-yT);    // 上皮细胞
+      ctx.strokeStyle='#ffe0b0';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(xL,yT);ctx.lineTo(xR,yT);ctx.moveTo(xL,yB);ctx.lineTo(xR,yB);ctx.stroke();
+      AnimKit.label(ctx,'肠腔',14,22,'#7a8aa0','13px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'血液 / 组织液',14,H-12,'#7a8aa0','13px "Microsoft YaHei"','left');
+      // SGLT apical
+      AnimKit.roundRect(ctx,W*.35-26,yT-26,52,52,10);ctx.fillStyle='#5a7fa8';ctx.fill();
+      AnimKit.label(ctx,'SGLT',W*.35,yT-34,'#33465c','11.5px "Microsoft YaHei"');
+      // GLUT2 basolateral
+      AnimKit.roundRect(ctx,W*.60-24,yB-26,48,52,10);ctx.fillStyle='#5a7fa8';ctx.fill();
+      AnimKit.label(ctx,'GLUT2',W*.60,yB+40,'#33465c','11.5px "Microsoft YaHei"');
+      // Na/K pump basolateral
+      AnimKit.roundRect(ctx,W*.85-26,yB-26,52,52,12);ctx.fillStyle='#7a9bbd';ctx.fill();
+      AnimKit.label(ctx,'Na⁺/K⁺ 泵',W*.85,yB+40,'#33465c','11.5px "Microsoft YaHei"');
+      AnimKit.arrow(ctx,W*.85,yB+30,W*.85,yB+66,'#c0392b',2);AnimKit.label(ctx,'Na⁺ 出',W*.85+40,yB+52,'#c0392b','11px "Microsoft YaHei"');
+      AnimKit.label(ctx,'高 Na⁺ / 高葡萄糖',14,40,'#7a8aa0','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'低 Na⁺',14,H-30,'#7a8aa0','12px "Microsoft YaHei"','left');
+      S.n.concat(S.g).forEach(function(o){AnimKit.circle(ctx,o.nx*W,o.ny*H,13,o.t==='Na'?'#e8703a':'#2e9e5b',o.t==='Na'?'Na⁺':'G');});
+    }
+  });
+})();
+</script></body></html>

@@ -1,0 +1,50 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>水通道四聚体</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'水通道蛋白（Aquaporin）四聚体',
+    sub:'4 个单体组装成四聚体，每个单体各形成一个水孔；水以单列快速通过。',
+    legend:[{c:'#5a7fa8',t:'水通道单体'},{c:'#3b9ee5',t:'水分子'}],
+    init:function(S){S.assem=false;S.water=false;S.d=0;},
+    phases:[
+      {name:'① 单个水通道单体',dur:1200,note:'每个单体由 6 次跨膜的 α 螺旋组成，自身即可形成水孔。',ap:function(S){S.assem=false;S.water=false;}},
+      {name:'② 组装成四聚体',dur:1300,note:'4 个单体在膜上组装成四聚体。',ap:function(S){S.assem=true;}},
+      {name:'③ 每个单体各有一个水孔',dur:1300,note:'四聚体的每个单体各形成一个独立水孔（共 4 个孔）。',ap:function(S){S.assem=true;}},
+      {name:'④ 水分子单列快速通过',dur:1500,note:'水分子排成单列，经孔道快速跨膜（每秒约 30 亿个）。',ap:function(S){S.water=true;}}
+    ],
+    update:function(S,e){S.d+=0.012*e*3;if(S.d>1)S.d-=1;},
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,W,H);
+      var cx=W/2,cy=H*.5,dd=Math.min(W,H)*.14,r=dd*.72;
+      var subs=[[-dd,-dd],[dd,-dd],[-dd,dd],[dd,dd]];
+      subs.forEach(function(p,i){
+        var x=cx+p[0],y=cy+p[1];
+        var a=(i===0||S.assem)?1:0.18;
+        ctx.globalAlpha=a;
+        AnimKit.circle(ctx,x,y,r,'#5a7fa8','');
+        AnimKit.circle(ctx,x,y,r*.42,'#eaf3fb','');
+        // pore channel
+        ctx.fillStyle='#fff';ctx.fillRect(x-6,y-r*.42,12,r*.84);
+        ctx.globalAlpha=1;
+        if(S.assem&&i===1){AnimKit.label(ctx,'水孔',x,y-r-10,'#33465c','11px "Microsoft YaHei"');}
+      });
+      if(S.assem){
+        AnimKit.label(ctx,'水通道四聚体',cx,cy-dd-r-16,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      } else {
+        AnimKit.label(ctx,'单个单体即可形成水孔',cx,cy-dd-r-16,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      }
+      if(S.water){
+        subs.forEach(function(p,si){
+          for(var k=0;k<3;k++){
+            var t=(S.d+k/3)%1;
+            var y=cy+p[1]-r*.42+t*(r*.84);
+            AnimKit.circle(ctx,cx+p[0],y,5,'#3b9ee5','');
+          }
+        });
+        AnimKit.label(ctx,'水分子单列通过',cx,cy+dd+r+30,'#3b9ee5','bold 13px "Microsoft YaHei"');
+      }
+    }
+  });
+})();
+</script></body></html>

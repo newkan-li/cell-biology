@@ -1,0 +1,42 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>K⁺通道选择性滤器</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function P(nx,ny,vis){return{nx:nx,ny:ny,tnx:nx,tny:ny,vis:vis};}
+  function set(o,x,y){o.tnx=x;o.tny=y;}
+  AnimKit.mount({
+    title:'K⁺ 通道的选择性滤器',
+    sub:'滤器只允许脱水后的 K⁺ 通过：K⁺ 与滤器羰基氧精确配位，Na⁺ 太小不能配位而被拒绝。',
+    legend:[{c:'#e8703a',t:'K⁺'},{c:'#2e9e5b',t:'Na⁺'},{c:'#5a7fa8',t:'通道蛋白'}],
+    init:function(S){S.k=P(.5,.06,false);S.na=P(.32,.10,false);S.hyd=false;S.rej=false;},
+    phases:[
+      {name:'① 通道结构：四聚体围成中央孔',dur:1200,note:'4 个亚基围成中央孔道，孔道最窄处为选择性滤器。',ap:function(S){S.k.vis=false;S.na.vis=false;S.hyd=false;S.rej=false;}},
+      {name:'② K⁺ 进入通道口',dur:1100,note:'K⁺ 从膜一侧进入孔道口。',ap:function(S){S.k.vis=true;set(S.k,.5,.20);S.hyd=true;}},
+      {name:'③ 在滤器中脱水',dur:1200,note:'K⁺ 脱去水化层，进入狭窄的选择性滤器。',ap:function(S){set(S.k,.5,.50);S.hyd=false;}},
+      {name:'④ 与羰基氧配位后通过',dur:1300,note:'滤器上的羰基氧恰好与 K⁺ 配位（距离匹配），K⁺ 顺利通过。',ap:function(S){set(S.k,.5,.86);}},
+      {name:'⑤ Na⁺ 因太小不能配位，被拒绝',dur:1500,note:'Na⁺ 半径更小，无法与羰基氧形成合适配位，不能通过滤器。',ap:function(S){S.na.vis=true;set(S.na,.5,.42);S.rej=true;}}
+    ],
+    update:function(S,e){[S.k,S.na].forEach(function(o){o.nx+=(o.tnx-o.nx)*e*.5;o.ny+=(o.tny-o.ny)*e*.5;});},
+    draw:function(ctx,W,H,S){
+      var m=AnimKit.membrane(ctx,W,H,{gap:110,outLabel:'细胞外',inLabel:'细胞内'});
+      var cx=W/2,yT=m.yTop,yB=m.yBot,cy=(yT+yB)/2,hgt=(yB-yT);
+      // channel: two lobes + pore
+      AnimKit.roundRect(ctx,cx-78,yT-34,58,hgt+68,16);ctx.fillStyle='#5a7fa8';ctx.fill();
+      AnimKit.roundRect(ctx,cx+20,yT-34,58,hgt+68,16);ctx.fillStyle='#5a7fa8';ctx.fill();
+      AnimKit.roundRect(ctx,cx-20,yT-34,40,hgt+68,8);ctx.fillStyle='#eaf3fb';ctx.fill();
+      // selectivity filter carbonyl O
+      for(var s=-1;s<=1;s+=2){for(var k=-1;k<=1;k++){
+        AnimKit.circle(ctx,cx+s*13,cy+k*13,5,'#c0392b','O');}}
+      AnimKit.label(ctx,'选择性滤器',cx,yB+54,'#33465c','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'羰基氧',cx-64,cy-24,'#c0392b','11px "Microsoft YaHei"','right');
+      // particles
+      if(S.k.vis){var o=S.k,x=o.nx*W,y=o.ny*H;
+        if(S.hyd){for(var a=0;a<6;a++){var an=a/6*6.28;AnimKit.circle(ctx,x+Math.cos(an)*18,y+Math.sin(an)*18,4,'#3b9ee5','');}}
+        AnimKit.circle(ctx,x,y,12,'#e8703a','K⁺');}
+      if(S.na.vis){var n=S.na,nx=n.nx*W,ny=n.ny*H;AnimKit.circle(ctx,nx,ny,11,'#2e9e5b','Na⁺');
+        if(S.rej){AnimKit.label(ctx,'✗ 不能通过',nx,ny-22,'#2e9e5b','12px "Microsoft YaHei"');}}
+      AnimKit.label(ctx,'“尺寸匹配”是选择性的关键',W/2,26,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

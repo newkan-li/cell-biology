@@ -1,0 +1,44 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>膜脂的不对称性</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function head(ctx,x,y,c,txt){AnimKit.circle(ctx,x,y,11,c,txt);}
+  function tail(ctx,x,y,down){var d=down?1:-1;ctx.strokeStyle='#e6c98f';ctx.lineWidth=2;
+    for(var s=-1;s<=1;s+=2){ctx.beginPath();ctx.moveTo(x+s*3,y+d*6);ctx.lineTo(x+s*4,y+d*20);ctx.stroke();}}
+  var OUT=[{c:'#3b6fd6',t:'PC'},{c:'#8e44ad',t:'SM'},{c:'#b04a9a',t:'糖脂'}];
+  var IN=[{c:'#2e9e5b',t:'PS'},{c:'#e8703a',t:'PE'},{c:'#8d6e63',t:'PI'}];
+  AnimKit.mount({
+    title:'膜脂的不对称性',
+    sub:'脂双层内外两层脂质种类与数量不同；糖脂只分布在质膜外侧（非胞质面）。',
+    legend:[{c:'#3b6fd6',t:'外层脂质'},{c:'#2e9e5b',t:'内层脂质'},{c:'#b04a9a',t:'糖脂'}],
+    init:function(S){S.sugar=false;S.hl=0;},
+    phases:[
+      {name:'① 外层（面向细胞外）',dur:1300,note:'外层主要含磷脂酰胆碱(PC)、鞘磷脂(SM)与糖脂。',ap:function(S){S.hl=1;}},
+      {name:'② 内层（面向胞质）',dur:1300,note:'内层主要含磷脂酰丝氨酸(PS)、磷脂酰乙醇胺(PE)、磷脂酰肌醇(PI)。',ap:function(S){S.hl=2;}},
+      {name:'③ 内外不对称',dur:1300,note:'两层脂质的种类、数量与分布明显不同，构成膜的不对称性。',ap:function(S){S.hl=3;}},
+      {name:'④ 糖脂只在外侧',dur:1300,note:'糖脂/糖蛋白的糖基位于质膜外侧；翻转酶等可维持不对称分布。',ap:function(S){S.hl=4;S.sugar=true;}}
+    ],
+    draw:function(ctx,W,H,S){
+      var yT=H*.44,yB=H*.56;
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,W,yT);ctx.fillStyle='#fff7ef';ctx.fillRect(0,yB,W,H-yB);
+      ctx.fillStyle='#ffe9c9';ctx.fillRect(0,yT,W,yB-yT);
+      var n=6,pad=W/(n+1);
+      for(var i=1;i<=n;i++){
+        var x=pad*i;
+        var o=OUT[i%OUT.length],inn=IN[i%IN.length];
+        head(ctx,x,yT+3,o.c,o.t);tail(ctx,x,yT+3,true);
+        head(ctx,x,yB-3,inn.c,inn.t);tail(ctx,x,yB-3,false);
+      }
+      // asymmetry emphasis
+      if(S.hl===1){ctx.strokeStyle='#3b6fd6';ctx.lineWidth=3;ctx.strokeRect(20,yT-24,W-40,26);}
+      if(S.hl===2){ctx.strokeStyle='#2e9e5b';ctx.lineWidth=3;ctx.strokeRect(20,yB-2,W-40,26);}
+      if(S.hl>=3){AnimKit.label(ctx,'外 ≠ 内',W/2,yT+16,'#c0392b','bold 14px "Microsoft YaHei"');}
+      if(S.sugar){[pad*3,pad*5].forEach(function(x){ctx.strokeStyle='#b04a9a';ctx.lineWidth=2;
+        for(var k=-1;k<=1;k++){ctx.beginPath();ctx.arc(x+k*6,yT-14,4,0,7);ctx.stroke();}
+        AnimKit.label(ctx,'糖',x,yT-26,'#b04a9a','11px "Microsoft YaHei"');});}
+      AnimKit.label(ctx,'细胞外',14,22,'#7a8aa0','13px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'胞质侧',14,H-14,'#7a8aa0','13px "Microsoft YaHei"','left');
+    }
+  });
+})();
+</script></body></html>

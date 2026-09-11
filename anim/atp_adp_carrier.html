@@ -1,0 +1,36 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ADP/ATP 载体蛋白</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function P(nx,ny,vis){return{nx:nx,ny:ny,tnx:nx,tny:ny,vis:vis};}
+  function set(o,x,y){o.tnx=x;o.tny=y;}
+  AnimKit.mount({
+    title:'ADP/ATP 载体蛋白（线粒体膜腺苷酸转运体）',
+    sub:'载体构象变化，把线粒体基质中的 ATP 运出、同时把胞质中的 ADP 运入，完成 ADP/ATP 交换。',
+    legend:[{c:'#c0392b',t:'ATP'},{c:'#3b6fd6',t:'ADP'},{c:'#5a7fa8',t:'载体蛋白'}],
+    init:function(S){S.open='out';S.adp=P(.5,.14,false);S.atp=P(.5,.86,false);},
+    phases:[
+      {name:'① 载体开口朝向胞质侧',dur:1100,note:'载体蛋白的核苷酸结合位点朝向膜间隙（胞质侧）。',ap:function(S){S.open='out';S.adp.vis=false;S.atp.vis=false;}},
+      {name:'② 胞质 ADP 结合',dur:1100,note:'胞质中的 ADP 结合到载体的结合位点。',ap:function(S){S.adp.vis=true;set(S.adp,.5,.36);}},
+      {name:'③ 构象改变，开口转向基质',dur:900,note:'载体发生构象变化，开口转向线粒体基质侧。',ap:function(S){S.open='in';}},
+      {name:'④ ADP 释放进入基质',dur:1100,note:'ADP 释放到线粒体基质，供氧化磷酸化使用。',ap:function(S){set(S.adp,.5,.86);}},
+      {name:'⑤ 基质 ATP 结合',dur:1100,note:'基质中合成的 ATP 结合到载体位点。',ap:function(S){S.atp.vis=true;set(S.atp,.5,.64);}},
+      {name:'⑥ 构象改变，开口转向胞质',dur:900,note:'载体构象恢复，开口转向胞质侧。',ap:function(S){S.open='out';}},
+      {name:'⑦ ATP 释放到胞质（完成交换）',dur:1200,note:'ATP 释放到胞质供能；同时完成一次 ADP/ATP 反向交换。',ap:function(S){set(S.atp,.5,.14);}}
+    ],
+    update:function(S,e){[S.adp,S.atp].forEach(function(o){o.nx+=(o.tnx-o.nx)*e*.6;o.ny+=(o.tny-o.ny)*e*.6;});},
+    draw:function(ctx,W,H,S){
+      var m=AnimKit.membrane(ctx,W,H,{gap:150,outLabel:'胞质（膜间隙）',inLabel:'线粒体基质'});
+      var cx=W/2,yT=m.yTop,yB=m.yBot,cy=(yT+yB)/2,pw=130;
+      AnimKit.roundRect(ctx,cx-pw/2,yT-32,pw,(yB-yT)+64,24);ctx.fillStyle='#5a7fa8';ctx.fill();
+      ctx.fillStyle='#fff';ctx.beginPath();
+      if(S.open==='out'){ctx.moveTo(cx-pw*.32,yT-26);ctx.lineTo(cx,cy-4);ctx.lineTo(cx+pw*.32,yT-26);}
+      else{ctx.moveTo(cx-pw*.32,yB+26);ctx.lineTo(cx,cy+4);ctx.lineTo(cx+pw*.32,yB+26);}ctx.closePath();ctx.fill();
+      AnimKit.label(ctx,'ADP/ATP 载体',cx,yB+56,'#33465c','12px "Microsoft YaHei"');
+      if(S.adp.vis){var o=S.adp;AnimKit.circle(ctx,o.nx*W,o.ny*H,15,'#3b6fd6','ADP');}
+      if(S.atp.vis){var o2=S.atp;AnimKit.circle(ctx,o2.nx*W,o2.ny*H,15,'#c0392b','ATP');}
+      AnimKit.label(ctx,'ADP ⇌ ATP 反向交换，无 ATP 水解',W/2,26,'#1f5c8b','bold 14px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

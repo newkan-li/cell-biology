@@ -1,0 +1,47 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>膜蛋白的类型</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function lipid(ctx,x,y,down){var d=down?1:-1;ctx.fillStyle='#f2b950';ctx.beginPath();ctx.arc(x,y,4,0,7);ctx.fill();
+    ctx.strokeStyle='#e6c98f';ctx.lineWidth=2;for(var s=-1;s<=1;s+=2){ctx.beginPath();ctx.moveTo(x+s*2,y+d*4);ctx.lineTo(x+s*3,y+d*18);ctx.stroke();}}
+  AnimKit.mount({
+    title:'膜蛋白的三种类型',
+    sub:'整合蛋白（跨膜）、外周蛋白（附着表面）、脂锚定蛋白（经脂链锚定）。',
+    legend:[{c:'#3b6fd6',t:'整合蛋白'},{c:'#2e9e5b',t:'外周蛋白'},{c:'#b04a9a',t:'脂锚定蛋白'}],
+    init:function(S){S.hl=1;},
+    phases:[
+      {name:'① 整合蛋白（内在蛋白）',dur:1300,note:'贯穿脂双层，跨膜区多为疏水α螺旋，亲水端露在膜两侧。',ap:function(S){S.hl=1;}},
+      {name:'② 外周蛋白（边周蛋白）',dur:1300,note:'不插入脂双层，靠静电与氢键附着在膜表面，可被高盐/极端pH去除。',ap:function(S){S.hl=2;}},
+      {name:'③ 脂锚定蛋白',dur:1300,note:'通过共价连接的脂链（如GPI锚、脂肪酸链）锚定在膜上。',ap:function(S){S.hl=3;}},
+      {name:'④ 三类对比',dur:1400,note:'整合蛋白跨膜、外周蛋白附着表面、脂锚定蛋白靠脂链固定，去除方法不同。',ap:function(S){S.hl=4;}}
+    ],
+    draw:function(ctx,W,H,S){
+      var yT=H*.42,yB=H*.58,cy=(yT+yB)/2;
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,W,yT);ctx.fillStyle='#fff7ef';ctx.fillRect(0,yB,W,H-yB);
+      ctx.fillStyle='#ffe9c9';ctx.fillRect(0,yT,W,yB-yT);
+      for(var x=14;x<W-6;x+=22){lipid(ctx,x,yT+2,true);lipid(ctx,x,yB-2,false);}
+      function hlBox(x,y,w,h,on){if(on){ctx.strokeStyle='#c0392b';ctx.lineWidth=2.5;ctx.setLineDash([6,4]);AnimKit.roundRect(ctx,x,y,w,h,10);ctx.stroke();ctx.setLineDash([]);}}
+      // integral
+      var ax=.26*W;
+      hlBox(ax-44,yT-42,88,(yB-yT)+84,S.hl===1||S.hl===4);
+      AnimKit.roundRect(ctx,ax-30,yT-30,60,(yB-yT)+60,14);ctx.fillStyle='#3b6fd6';ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,.4)';ctx.fillRect(ax-20,cy-4,40,8);
+      AnimKit.label(ctx,'整合蛋白',ax,yT-50,'#33465c','11.5px "Microsoft YaHei"');
+      // peripheral
+      var bx=.55*W;
+      hlBox(bx-56,yT-60,112,60,S.hl===2||S.hl===4);
+      ctx.beginPath();ctx.ellipse(bx,yT-18,44,18,0,0,7);ctx.fillStyle='#2e9e5b';ctx.fill();
+      AnimKit.label(ctx,'外周蛋白',bx,yT-46,'#33465c','11.5px "Microsoft YaHei"');
+      // lipid anchored
+      var dx=.80*W;
+      hlBox(dx-44,yT-56,88,72,S.hl===3||S.hl===4);
+      ctx.beginPath();ctx.arc(dx,yT-22,22,0,7);ctx.fillStyle='#b04a9a';ctx.fill();
+      ctx.strokeStyle='#8e2f7a';ctx.lineWidth=3;
+      ctx.beginPath();ctx.moveTo(dx-8,yT-6);ctx.lineTo(dx-10,cy+4);ctx.moveTo(dx+8,yT-6);ctx.lineTo(dx+10,cy+4);ctx.stroke();
+      AnimKit.label(ctx,'脂锚定蛋白',dx,yT-50,'#33465c','11.5px "Microsoft YaHei"');
+      AnimKit.label(ctx,'细胞外',14,22,'#7a8aa0','13px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'细胞内',14,H-14,'#7a8aa0','13px "Microsoft YaHei"','left');
+    }
+  });
+})();
+</script></body></html>

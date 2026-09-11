@@ -1,0 +1,36 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>两性分子自装配</title><link rel="stylesheet" href="anim.css"></head><body>
+<script src="anim.js"></script>
+<script>
+(function(){
+  function mol(ctx,x,y,ang,c){
+    AnimKit.circle(ctx,x,y,6,c);
+    var bx=x-Math.cos(ang)*16,by=y-Math.sin(ang)*16;
+    ctx.strokeStyle='#e6c98f';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(bx,by);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(bx-3,by-3);ctx.moveTo(bx,by);ctx.lineTo(bx+3,by+3);ctx.stroke();
+  }
+  var N=16;
+  AnimKit.mount({
+    title:'两性分子自装配成脂双层 / 脂质体',
+    sub:'磷脂一端亲水、一端疏水；在水中自发聚集，疏水尾相向、亲水头朝水，形成脂双层与封闭小泡。',
+    legend:[{c:'#f2b950',t:'亲水头'},{c:'#e6c98f',t:'疏水尾'}],
+    init:function(S){S.m=[];for(var i=0;i<N;i++)S.m.push({x:.1+.8*Math.random(),y:.2+.6*Math.random(),ang:Math.random()*6.28,tx:0,ty:0,tang:0});
+      S.m.forEach(function(o){o.tx=o.x;o.ty=o.y;o.tang=o.ang;});},
+    phases:[
+      {name:'① 单个两性分子分散在水中',dur:1200,note:'磷脂是两性分子：亲水头、疏水尾，随机分散在水中。',ap:function(S){S.m.forEach(function(o){o.tx=.1+.8*Math.random();o.ty=.15+.7*Math.random();o.tang=Math.random()*6.28;});}},
+      {name:'② 疏水尾避水而聚集',dur:1400,note:'疏水尾部避开水，分子自发靠拢聚集（疏水作用驱动）。',ap:function(S){S.m.forEach(function(o){o.tx=.35+.3*Math.random();o.ty=.3+.4*Math.random();o.tang=Math.random()*6.28;});}},
+      {name:'③ 形成脂双层',dur:1600,note:'亲水头朝外、疏水尾相向，自发形成稳定的脂双层。',ap:function(S){var yT=.44,yB=.56;S.m.forEach(function(o,i){var k=Math.floor(i/2),x=(k+1)/(N/2+1);
+        if(i%2===0){o.tx=x;o.ty=yT;o.tang=-Math.PI/2;}else{o.tx=x;o.ty=yB;o.tang=Math.PI/2;}});}},
+      {name:'④ 形成封闭脂质体',dur:1600,note:'若边缘暴露于水，脂双层弯曲闭合，形成球形脂质体（亲水头朝外/内，尾部相向）。',ap:function(S){var cx=.5,cy=.5,R=Math.min(.5,.30);S.m.forEach(function(o,i){var a=i/N*6.28;
+        o.tx=cx+Math.cos(a)*R;o.ty=cy+Math.sin(a)*R;o.tang=a;});}}
+    ],
+    update:function(S,e){S.m.forEach(function(o){o.x+=(o.tx-o.x)*e*.7;o.y+=(o.ty-o.y)*e*.7;var da=o.tang-o.ang;while(da>Math.PI)da-=6.28;while(da<-Math.PI)da+=6.28;o.ang+=da*e*.7;});},
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,W,H);
+      S.m.forEach(function(o){mol(ctx,o.x*W,o.y*H,o.ang,'#f2b950');});
+      AnimKit.label(ctx,'水',14,22,'#7a8aa0','13px "Microsoft YaHei"','left');
+      var names=['分散的单个分子','自发聚集','脂双层','封闭脂质体（小泡）'];
+    }
+  });
+})();
+</script></body></html>
