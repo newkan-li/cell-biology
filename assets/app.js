@@ -885,6 +885,13 @@
       });
       ch.modules.forEach(function (mod) {
         mod.slides.forEach(function (s) {
+          var kp0 = m.id + "_s" + mod.i + "_" + s.i;
+          (s.cards || []).forEach(function (c, i) {
+            var back = esc(c.back).replace(/\n/g, "<br>");
+            if (c.mnemonic) back += '<div class="fc-mn">💡 ' + esc(c.mnemonic) + "</div>";
+            if (c.useImg && s.img) back += '<img class="fc-img" src="' + s.img + '" loading="lazy" alt="">';
+            cards.push({ id: "fc_s_" + kp0 + "_" + i, ch: m.id, tag: "掌握卡片", front: c.front, back: back });
+          });
           if (!s.points && !s.fig) return;
           var kp = m.id + "_s" + mod.i + "_" + s.i, back = "";
           if (s.points && s.points.length) back += "<ul>" + s.points.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>";
