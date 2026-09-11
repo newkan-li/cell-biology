@@ -659,22 +659,38 @@
     box.appendChild(el("div", "cp-h", "🎯 本页自测（选做，不计入已读）"));
     var done = false;
     var fb = el("div", "cp-fb");
-    function grade(correct) {
+    function optLetter(o) { return String(o).trim().charAt(0); }
+    function answerText() {
+      if (kind === "mcq") {
+        for (var i = 0; i < (q.o || []).length; i++) if (optLetter(q.o[i]) === String(q.a).trim()) return q.o[i];
+        return String(q.a);
+      }
+      return q.a != null ? String(q.a) : "";
+    }
+    function grade(correct, opts, chosenEl) {
       if (done) return; done = true;
       kpRecord(kp, correct);
       if (!correct) srsRate(q.id, 0); else if (srsGet(q.id)) srsRate(q.id, 2);
-      fb.innerHTML = (correct ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 再想想</span>') +
-        (q.e ? " " + esc(q.e) : "");
+      if (opts) {
+        Array.prototype.forEach.call(opts.children, function (b) {
+          var isRight = (kind === "judge") ? (b.textContent.trim() === String(q.a).trim()) : (optLetter(b.textContent) === String(q.a).trim());
+          if (isRight) b.classList.add("right");
+        });
+        if (chosenEl && !correct) chosenEl.classList.add("wrong");
+      }
+      fb.innerHTML = (correct ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 错误</span>') +
+        '　正确答案：<b>' + esc(answerText()) + "</b>" +
+        (q.e ? '<div style="margin-top:4px">解析：' + esc(q.e) + "</div>" : "");
     }
     if (kind === "mcq") {
       box.appendChild(el("div", "cp-q", esc(q.q)));
       var opts = el("div", "cp-opts");
-      q.o.forEach(function (o, i) { var b = el("button", "cp-opt", esc(o)); b.onclick = function () { grade(i === q.a); }; opts.appendChild(b); });
+      q.o.forEach(function (o, i) { var b = el("button", "cp-opt", esc(o)); b.onclick = function () { grade(optLetter(o) === String(q.a).trim(), opts, b); }; opts.appendChild(b); });
       box.appendChild(opts);
     } else if (kind === "judge") {
       box.appendChild(el("div", "cp-q", esc(q.q)));
       var o2 = el("div", "cp-opts");
-      ["对", "错"].forEach(function (v) { var b = el("button", "cp-opt", v); b.onclick = function () { grade(v === q.a); }; o2.appendChild(b); });
+      ["对", "错"].forEach(function (v) { var b = el("button", "cp-opt", v); b.onclick = function () { grade(v === q.a, o2, b); }; o2.appendChild(b); });
       box.appendChild(o2);
     } else {
       box.appendChild(el("div", "cp-q", esc(q.q)));
@@ -1036,8 +1052,10 @@
   function kindName(k) { return { mcq: "选择题", judge: "判断题", fill: "填空题", short: "简答题", calc: "论述/推导", term: "名词解释" }[k] || k; }
   function answerHtml(info) {
     var q = info.q, k = info.kind, a = "";
-    if (k === "mcq") a = (q.o && q.o[q.a] != null) ? q.o[q.a] : "";
-    else if (k === "term") a = q.def || "";
+    if (k === "mcq") {
+      a = String(q.a);
+      for (var i = 0; i < (q.o || []).length; i++) { if (String(q.o[i]).trim().charAt(0) === String(q.a).trim()) { a = q.o[i]; break; } }
+    } else if (k === "term") a = q.def || "";
     else a = q.a != null ? q.a : "";
     var h = "<div>答案：<b>" + esc(a) + "</b></div>";
     if (q.e) h += '<div class="rev-exp">' + esc(q.e) + "</div>";
@@ -1099,8 +1117,9 @@
         q.o.forEach(function (o, i) {
           var b = el("button", "rev-opt", esc(o));
           b.onclick = function () {
-            Array.prototype.forEach.call(opts.children, function (x, j) { if (j === q.a) x.classList.add("right"); });
-            if (i !== q.a) b.classList.add("wrong");
+            var cl = function (s) { return String(s).trim().charAt(0); };
+            Array.prototype.forEach.call(opts.children, function (x) { if (cl(x.textContent) === String(q.a).trim()) x.classList.add("right"); });
+            if (cl(o) !== String(q.a).trim()) b.classList.add("wrong");
             ans.style.display = "block";
           };
           opts.appendChild(b);

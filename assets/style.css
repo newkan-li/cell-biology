@@ -180,6 +180,12 @@ canvas.hw.tall{height:230px}
 .checkpoint .cp-q{font-size:13px;margin-bottom:6px}
 .checkpoint .cp-opts{display:flex;gap:6px;flex-wrap:wrap}
 .checkpoint .cp-opt{border:1px solid #c6d8ea;background:#fff;color:var(--ink);border-radius:8px;padding:4px 12px;font-size:12.5px;cursor:pointer;text-align:left}
+.checkpoint .cp-opt.right{background:#e7f5ea;border-color:var(--ok);font-weight:700}
+.checkpoint .cp-opt.wrong{background:#fdecea;border-color:var(--acc)}
+html[data-theme="dark"] .checkpoint .cp-opt.right{background:#1c3324;border-color:#2e7d4a}
+html[data-theme="dark"] .checkpoint .cp-opt.wrong{background:#3a201d;border-color:#8a3a30}
+html[data-theme="sepia"] .checkpoint .cp-opt.right{background:#e2ecd6;border-color:#4a7a3a}
+html[data-theme="sepia"] .checkpoint .cp-opt.wrong{background:#f3ddd6;border-color:#a2482a}
 .checkpoint .cp-in{width:100%;max-width:360px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;margin-bottom:6px}
 .checkpoint .cp-fb{margin-top:6px;font-size:12.5px}
 .checkpoint .cp-fb .ok{color:var(--ok);font-weight:700}
