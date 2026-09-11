@@ -917,7 +917,8 @@
       (ch.term || []).forEach(function (q) {
         cards.push({
           id: "fc_term_" + q.id, ch: m.id, tag: "名词解释", front: q.term,
-          back: "<b>定义</b><br>" + esc(q.def).replace(/\n/g, "<br>") + (q.kps ? '<div class="fc-kps">踩分点：' + esc(q.kps) + "</div>" : "")
+          back: "<b>定义</b><br>" + esc(q.def).replace(/\n/g, "<br>") + (q.kps ? '<div class="fc-kps">踩分点：' + esc(q.kps) + "</div>" : ""),
+          plain: q.def, blank: q.term
         });
       });
       ch.modules.forEach(function (mod) {
@@ -927,20 +928,22 @@
             var back = esc(c.back).replace(/\n/g, "<br>");
             if (c.mnemonic) back += '<div class="fc-mn">💡 ' + esc(c.mnemonic) + "</div>";
             if (c.useImg && s.img) back += '<img class="fc-img" src="' + s.img + '" loading="lazy" alt="">';
-            cards.push({ id: "fc_s_" + kp0 + "_" + i, ch: m.id, tag: "掌握卡片", front: c.front, back: back });
+            cards.push({ id: "fc_s_" + kp0 + "_" + i, ch: m.id, tag: "掌握卡片", front: c.front, back: back, plain: c.back, blank: c.blank || "" });
           });
           if (!s.points && !s.fig) return;
           var kp = m.id + "_s" + mod.i + "_" + s.i, back = "";
           if (s.points && s.points.length) back += "<ul>" + s.points.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>";
           if (s.fig) back += '<div class="fc-fig">' + esc(s.fig).replace(/\n/g, "<br>") + "</div>";
-          cards.push({ id: "fc_kp_" + kp, ch: m.id, tag: "本页要点", front: s.title, back: back });
+          cards.push({ id: "fc_kp_" + kp, ch: m.id, tag: "本页要点", front: s.title, back: back,
+            plain: (s.points ? s.points.join("；") : "") + (s.fig ? " " + s.fig : ""), blank: "" });
         });
       });
     });
     (window.GLOSSARY || []).forEach(function (g, i) {
       cards.push({
         id: "fc_gloss_" + i, ch: g.ch, tag: "术语", front: g.t,
-        back: (g.en ? "<b>" + esc(g.en) + "</b><br>" : "") + esc(g.d)
+        back: (g.en ? "<b>" + esc(g.en) + "</b><br>" : "") + esc(g.d),
+        plain: g.d, blank: g.t
       });
     });
     return cards;
@@ -974,28 +977,42 @@
     var names = { ch01: "绪论", ch02: "质膜", ch03: "内膜系统", ch04: "蛋白质运输", ch05: "后翻译转运" };
     var chs = {}, tags = {};
     cards.forEach(function (c) { if (c.ch) chs[c.ch] = 1; tags[c.tag] = 1; });
-    var curCh = "all", curTag = "all", deck = [], pos = 0;
+    var curCh = "all", curTag = "all", mode = "背", deck = [], pos = 0;
     try { var qp = new URLSearchParams(location.search).get("ch"); if (qp && chs[qp]) curCh = qp; } catch (e) { }
     ctl.innerHTML = "";
-    var row1 = el("div", "fc-chips"), row2 = el("div", "fc-chips");
+    var row1 = el("div", "fc-chips"), row2 = el("div", "fc-chips"), row3 = el("div", "fc-chips");
     function mk(label, val, group) {
       var b = el("button", "fc-chip", label); b.dataset.v = val;
-      b.onclick = function () { if (group === "ch") curCh = val; else curTag = val; sync(); build(); };
+      b.onclick = function () {
+        if (group === "ch") curCh = val; else if (group === "tag") curTag = val; else mode = val;
+        sync(); build();
+      };
       return b;
     }
     row1.appendChild(mk("全部章节", "all", "ch"));
     Object.keys(chs).sort().forEach(function (c) { row1.appendChild(mk(names[c] || c, c, "ch")); });
     row2.appendChild(mk("全部类型", "all", "tag"));
     Object.keys(tags).forEach(function (t) { row2.appendChild(mk(t, t, "tag")); });
-    ctl.appendChild(row1); ctl.appendChild(row2);
+    [["背", "背"], ["填空", "填空"], ["写", "写"]].forEach(function (o) { row3.appendChild(mk("模式：" + o[0], o[1], "mode")); });
+    ctl.appendChild(row1); ctl.appendChild(row2); ctl.appendChild(row3);
     function sync() {
       Array.prototype.forEach.call(row1.children, function (b) { b.classList.toggle("on", b.dataset.v === curCh); });
       Array.prototype.forEach.call(row2.children, function (b) { b.classList.toggle("on", b.dataset.v === curTag); });
+      Array.prototype.forEach.call(row3.children, function (b) { b.classList.toggle("on", b.dataset.v === mode); });
     }
     function build() {
       deck = cards.filter(function (c) { return (curCh === "all" || c.ch === curCh) && (curTag === "all" || c.tag === curTag); });
       for (var i = deck.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = deck[i]; deck[i] = deck[j]; deck[j] = t; }
       pos = 0; renderProgress(); show();
+    }
+    function rateRow(c) {
+      var r = el("div", "fc-rate"); r.style.display = "none";
+      [["不会", 0], ["模糊", 1], ["会", 2]].forEach(function (o, i) {
+        var b = el("button", o[2], o[0]);
+        b.onclick = function () { srsRate(c.id, o[1]); renderProgress(); pos++; show(); };
+        r.appendChild(b);
+      });
+      return r;
     }
     function show() {
       if (!deck.length) { host.innerHTML = '<p class="empty">没有符合条件的卡片。</p>'; return; }
@@ -1004,21 +1021,53 @@
         var b = document.getElementById("fcAgain"); if (b) b.onclick = build; return;
       }
       var c = deck[pos];
-      host.innerHTML = '<div class="fc-progress">第 ' + (pos + 1) + " / " + deck.length + " 张 · " + esc(c.tag) + "</div>" +
-        '<div class="fc-card" id="fcCard"><div class="fc-front">' + esc(c.front) + "</div>" +
-        '<div class="fc-back" style="display:none">' + c.back + "</div></div>" +
-        '<div class="fc-hint">点击卡片翻面</div>' +
-        '<div class="fc-rate" style="display:none"><button class="no">不会</button><button class="mid">模糊</button><button class="ok">会</button></div>';
-      var card = document.getElementById("fcCard");
-      card.onclick = function () {
-        card.querySelector(".fc-back").style.display = "block";
-        card.querySelector(".fc-front").style.display = "none";
-        host.querySelector(".fc-rate").style.display = "flex";
-      };
-      var rate = host.querySelector(".fc-rate");
-      [["不会", 0], ["模糊", 1], ["会", 2]].forEach(function (o, i) {
-        rate.children[i].onclick = function () { srsRate(c.id, o[1]); renderProgress(); pos++; show(); };
-      });
+      var head = '<div class="fc-progress">第 ' + (pos + 1) + " / " + deck.length + " 张 · " + esc(c.tag) + " · " + mode + "</div>";
+      if (mode === "背") {
+        host.innerHTML = head + '<div class="fc-card" id="fcCard"><div class="fc-front">' + esc(c.front) + '</div>' +
+          '<div class="fc-back" style="display:none">' + c.back + "</div></div>" +
+          '<div class="fc-hint">点击卡片翻面</div>';
+        var card = document.getElementById("fcCard");
+        var rr = rateRow(c); host.appendChild(rr);
+        card.onclick = function () {
+          card.querySelector(".fc-back").style.display = "block";
+          card.querySelector(".fc-front").style.display = "none";
+          rr.style.display = "flex";
+        };
+      } else if (mode === "写") {
+        host.innerHTML = head + '<div class="fc-card"><div class="fc-front">' + esc(c.front) + '</div></div>' +
+          '<div class="fc-input"><input class="fc-ans" placeholder="输入你的答案…"><button class="fc-check">检查</button></div>' +
+          '<div class="fc-back" style="display:none">' + c.back + "</div>";
+        var rr2 = rateRow(c); host.appendChild(rr2);
+        var inp = host.querySelector(".fc-ans"), bk = host.querySelector(".fc-back");
+        var doCheck = function () {
+          var ok = fuzzyMatch(c.plain || "", inp.value);
+          inp.classList.remove("right", "wrong"); inp.classList.add(ok ? "right" : "wrong");
+          bk.style.display = "block"; rr2.style.display = "flex";
+        };
+        host.querySelector(".fc-check").onclick = doCheck;
+        inp.addEventListener("keydown", function (e) { if (e.key === "Enter") doCheck(); });
+      } else {
+        var cloze = c.plain || "", blank = c.blank || "", answer, cardInner;
+        if (blank && cloze.indexOf(blank) >= 0) {
+          answer = blank;
+          cardInner = '<div class="fc-front">' + esc(c.front) + '</div><div class="fc-cloze">' + esc(cloze.replace(blank, "______")) + "</div>";
+        } else if ((c.tag === "名词解释" || c.tag === "术语") && c.front && c.plain) {
+          answer = c.front;
+          cardInner = '<div class="fc-front">' + esc(c.plain) + "</div>";
+        } else { mode = "写"; sync(); show(); return; }
+        host.innerHTML = head + '<div class="fc-card">' + cardInner + "</div>" +
+          '<div class="fc-input"><input class="fc-ans" placeholder="填出空缺（' + answer.length + ' 字）"><button class="fc-check">检查</button></div>' +
+          '<div class="fc-back" style="display:none">' + c.back + "</div>";
+        var rr3 = rateRow(c); host.appendChild(rr3);
+        var inp3 = host.querySelector(".fc-ans"), bk3 = host.querySelector(".fc-back");
+        var doCheck3 = function () {
+          var ok = fuzzyMatch(answer, inp3.value);
+          inp3.classList.remove("right", "wrong"); inp3.classList.add(ok ? "right" : "wrong");
+          bk3.style.display = "block"; rr3.style.display = "flex";
+        };
+        host.querySelector(".fc-check").onclick = doCheck3;
+        inp3.addEventListener("keydown", function (e) { if (e.key === "Enter") doCheck3(); });
+      }
     }
     sync(); build();
   }
