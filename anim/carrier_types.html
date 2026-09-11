@@ -32,6 +32,10 @@
       AnimKit.label(ctx,'uniport 单运输',cs[0]*W,yB+52,'#33465c','12px "Microsoft YaHei"');
       AnimKit.label(ctx,'symport 同向',cs[1]*W,yB+52,'#33465c','12px "Microsoft YaHei"');
       AnimKit.label(ctx,'antiport 反向',cs[2]*W,yB+52,'#33465c','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'A 被动运输',cs[0]*W,yB+70,'#2e9e5b','11.5px "Microsoft YaHei"');
+      AnimKit.label(ctx,'B 主动运输',cs[1]*W,yB+70,'#c0392b','11.5px "Microsoft YaHei"');
+      AnimKit.label(ctx,'C 主动运输',cs[2]*W,yB+70,'#c0392b','11.5px "Microsoft YaHei"');
+      AnimKit.label(ctx,'转运速率 10²–10⁴ 分子/秒',W/2,cy,'#5b6b7b','11.5px "Microsoft YaHei"');
       function col(t){return t==='Na'?'#e8703a':t==='G'?'#2e9e5b':'#3b6fd6';}
       function lab(t){return t==='Na'?'Na⁺':t==='G'?'G':'Ca²⁺';}
       [S.u,S.sa,S.sb,S.aa,S.ab].forEach(function(o){if(o.vis)AnimKit.circle(ctx,o.nx*W,o.ny*H,13,col(o.t),lab(o.t));});

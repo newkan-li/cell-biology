@@ -20,8 +20,14 @@
     ],
     update:function(S,e){[S.adp,S.atp].forEach(function(o){o.nx+=(o.tnx-o.nx)*e*.6;o.ny+=(o.tny-o.ny)*e*.6;});},
     draw:function(ctx,W,H,S){
-      var m=AnimKit.membrane(ctx,W,H,{gap:150,outLabel:'胞质（膜间隙）',inLabel:'线粒体基质'});
+      var m=AnimKit.membrane(ctx,W,H,{gap:150,outLabel:'膜间隙',inLabel:'线粒体基质'});
       var cx=W/2,yT=m.yTop,yB=m.yBot,cy=(yT+yB)/2,pw=130;
+      AnimKit.label(ctx,'胞质',W-14,22,'#7a8aa0','12px "Microsoft YaHei"','right');
+      // ATP synthase (matrix side)
+      AnimKit.roundRect(ctx,W*.18-26,yB+8,52,40,10);ctx.fillStyle='#f2b950';ctx.fill();
+      AnimKit.label(ctx,'ATP 合酶',W*.18,yB+70,'#7a5b00','11.5px "Microsoft YaHei"');
+      AnimKit.arrow(ctx,W*.18+40,yB+28,W*.30,yB+28,'#c0392b',2);
+      AnimKit.label(ctx,'ATP 在基质合成',W*.18,yB+88,'#7a5b00','11px "Microsoft YaHei"');
       AnimKit.roundRect(ctx,cx-pw/2,yT-32,pw,(yB-yT)+64,24);ctx.fillStyle='#5a7fa8';ctx.fill();
       ctx.fillStyle='#fff';ctx.beginPath();
       if(S.open==='out'){ctx.moveTo(cx-pw*.32,yT-26);ctx.lineTo(cx,cy-4);ctx.lineTo(cx+pw*.32,yT-26);}

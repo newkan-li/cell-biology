@@ -1,32 +1,41 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>协助扩散</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>被动运输</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
 <script src="anim.js?v=20260911d"></script>
 <script>
 (function(){
-  function P(nx,ny){return{nx:nx,ny:ny,tnx:nx,tny:ny};}
+  function P(t,nx,ny){return{t:t,nx:nx,ny:ny,tnx:nx,tny:ny};}
   function set(o,x,y){o.tnx=x;o.tny=y;}
   AnimKit.mount({
-    title:'协助扩散（GLUT 载体蛋白）',
-    sub:'葡萄糖顺浓度梯度、经载体蛋白构象变化跨膜，不消耗 ATP。',
-    legend:[{c:'#2e9e5b',t:'葡萄糖'},{c:'#5a7fa8',t:'载体蛋白 GLUT'}],
-    init:function(S){S.open='out';S.g=[P(.15,.14),P(.30,.08),P(.70,.10),P(.85,.16),P(.25,.84),P(.75,.86)];},
+    title:'被动运输：简单扩散与协助扩散',
+    sub:'顺浓度梯度、不消耗能量。①简单扩散不需膜蛋白；②协助扩散需载体蛋白(如葡萄糖)或离子通道蛋白(如K⁺/Na⁺/Ca²⁺)。',
+    legend:[{c:'#2e9e5b',t:'小分子/葡萄糖'},{c:'#e8703a',t:'离子'},{c:'#5a7fa8',t:'载体/通道蛋白'}],
+    init:function(S){S.mode=0;S.p=[P('G',.2,.12),P('G',.35,.10),P('Na',.6,.10),P('Na',.72,.12)];},
     phases:[
-      {name:'① 葡萄糖结合载体（外侧）',dur:1000,note:'细胞外葡萄糖浓度高，结合到载体蛋白。',ap:function(S){S.open='out';set(S.g[0],.46,.38);}},
-      {name:'② 载体构象改变',dur:800,note:'载体蛋白构象变化，把葡萄糖带向膜内侧。',ap:function(S){S.open='in';}},
-      {name:'③ 释放到细胞内',dur:1000,note:'葡萄糖释放到细胞内（顺浓度梯度）。',ap:function(S){set(S.g[0],.40,.86);}},
-      {name:'④ 载体恢复',dur:800,note:'载体恢复原构象，可再次转运。',ap:function(S){S.open='out';}}
+      {name:'① 被动运输（顺浓度梯度）',dur:1200,note:'被动运输顺浓度梯度进行，不需要能量。',ap:function(S){S.mode=0;set(S.p[0],.2,.12);set(S.p[1],.35,.10);set(S.p[2],.6,.10);set(S.p[3],.72,.12);}},
+      {name:'② 简单扩散（不需膜蛋白）',dur:1300,note:'简单扩散：不需能量、不需膜蛋白。脂溶性分子、气体分子、小的不带电极性分子可直接穿过脂双层。',ap:function(S){S.mode=1;set(S.p[0],.30,.40);set(S.p[1],.34,.70);}},
+      {name:'③ 协助扩散-载体蛋白',dur:1300,note:'协助扩散：不需能量，但需膜蛋白协助。大的不带电分子如葡萄糖经载体蛋白转运。',ap:function(S){S.mode=2;set(S.p[0],.34,.40);set(S.p[1],.34,.70);}},
+      {name:'④ 协助扩散-离子通道蛋白',dur:1400,note:'各种带电离子(K⁺、Na⁺、Ca²⁺等)经离子通道蛋白顺梯度通过。',ap:function(S){S.mode=3;set(S.p[2],.66,.40);set(S.p[3],.66,.70);}}
     ],
-    update:function(S,e){S.g.forEach(function(o){o.nx+=(o.tnx-o.nx)*e;o.ny+=(o.tny-o.ny)*e;});},
-    onLoop:function(S){S.g[0]=P(.15,.14);},
+    update:function(S,e){S.p.forEach(function(o){o.nx+=(o.tnx-o.nx)*e*.5;o.ny+=(o.tny-o.ny)*e*.5;});},
     draw:function(ctx,W,H,S){
-      var m=AnimKit.membrane(ctx,W,H,{gap:120});var cx=W/2,yT=m.yTop,yB=m.yBot,cy=(yT+yB)/2,pw=110;
-      AnimKit.roundRect(ctx,cx-pw/2,yT-30,pw,(yB-yT)+60,22);ctx.fillStyle='#5a7fa8';ctx.fill();
-      ctx.fillStyle='#fff';ctx.beginPath();
-      if(S.open==='out'){ctx.moveTo(cx-pw*.3,yT-24);ctx.lineTo(cx,cy-4);ctx.lineTo(cx+pw*.3,yT-24);}
-      else{ctx.moveTo(cx-pw*.3,yB+24);ctx.lineTo(cx,cy+4);ctx.lineTo(cx+pw*.3,yB+24);}ctx.closePath();ctx.fill();
-      AnimKit.label(ctx,'GLUT',cx,yB+52,'#33465c','12px "Microsoft YaHei"');
-      AnimKit.label(ctx,'高浓度',W-14,22,'#7a8aa0','12px "Microsoft YaHei"','right');
-      AnimKit.label(ctx,'低浓度',W-14,H-14,'#7a8aa0','12px "Microsoft YaHei"','right');
-      S.g.forEach(function(o,i){AnimKit.circle(ctx,o.nx*W,o.ny*H,i===0?13:11,'#2e9e5b',i===0?'G':'G');});
+      var m=AnimKit.membrane(ctx,W,H,{gap:0});
+      var yT=m.yTop,yB=m.yBot,cy=(yT+yB)/2;
+      // simple diffusion channel? none. carrier at .34, ion channel at .66
+      if(S.mode>=2){AnimKit.roundRect(ctx,W*.34-26,yT-26,52,(yB-yT)+52,12);ctx.fillStyle='#5a7fa8';ctx.fill();
+        AnimKit.label(ctx,'载体蛋白',W*.34,yB+52,'#33465c','12px "Microsoft YaHei"');}
+      if(S.mode>=3){AnimKit.roundRect(ctx,W*.66-24,yT-26,48,(yB-yT)+52,10);ctx.fillStyle='#7a9bbd';ctx.fill();
+        AnimKit.roundRect(ctx,W*.66-9,yT-26,18,(yB-yT)+52,6);ctx.fillStyle='#eaf3fb';ctx.fill();
+        AnimKit.label(ctx,'离子通道',W*.66,yB+52,'#33465c','12px "Microsoft YaHei"');}
+      S.p.forEach(function(o,i){
+        if(S.mode===0)return;
+        if(S.mode===1&&i>1)return;
+        if(S.mode===2&&i>1)return;
+        if(S.mode===3&&i<2)return;
+        AnimKit.circle(ctx,o.nx*W,o.ny*H,13,o.t==='G'?'#2e9e5b':'#e8703a',o.t==='G'?'G':(o.t==='Na'?'Na⁺':''));
+      });
+      AnimKit.label(ctx,'细胞外（高浓度）',14,22,'#7a8aa0','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'细胞内（低浓度）',14,H-14,'#7a8aa0','12px "Microsoft YaHei"','left');
+      var names=['被动运输（顺浓度梯度）','① 简单扩散：不需膜蛋白','② 协助扩散：载体蛋白（葡萄糖）','② 协助扩散：离子通道蛋白（K⁺/Na⁺/Ca²⁺）'];
+      AnimKit.label(ctx,names[S.mode],W/2,26,'#1f5c8b','bold 14px "Microsoft YaHei"');
     }
   });
 })();

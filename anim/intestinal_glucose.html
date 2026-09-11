@@ -11,10 +11,10 @@
     init:function(S){S.n=[P('Na',.20,.12),P('Na',.28,.18)];S.g=[P('G',.24,.16)];},
     phases:[
       {name:'① 肠腔 Na⁺、葡萄糖浓度高',dur:1100,note:'肠腔中 Na⁺ 与葡萄糖浓度高；胞内 Na⁺ 低。',ap:function(S){set(S.n[0],.20,.12);set(S.n[1],.28,.18);set(S.g[0],.24,.16);}},
-      {name:'② SGLT 同向转运入胞',dur:1300,note:'顶面（肠腔侧）SGLT 把 Na⁺ 顺梯度内流与葡萄糖逆梯度入胞耦联。',ap:function(S){set(S.n[0],.35,.30);set(S.n[1],.35,.36);set(S.g[0],.37,.42);}},
+      {name:'② 载体1：顶端 Na⁺ 驱动同向运输',dur:1300,note:'载体1位于面向肠腔的顶端表面，由 Na⁺ 驱动的葡萄糖同向主动运输（2Na⁺ + 葡萄糖），使细胞内有高浓度葡萄糖。',ap:function(S){set(S.n[0],.35,.30);set(S.n[1],.35,.36);set(S.g[0],.37,.42);}},
       {name:'③ 葡萄糖在胞内积累',dur:1100,note:'葡萄糖在细胞内积累，浓度升高。',ap:function(S){set(S.g[0],.50,.56);set(S.n[0],.45,.58);set(S.n[1],.55,.62);}},
-      {name:'④ 基底侧 GLUT2 顺梯度输出',dur:1300,note:'基底面 GLUT2 让葡萄糖顺浓度梯度进入血液。',ap:function(S){set(S.g[0],.60,.86);}},
-      {name:'⑤ Na⁺/K⁺ 泵维持 Na⁺ 梯度',dur:1400,note:'基底面 Na⁺/K⁺ 泵把 Na⁺ 泵出细胞，维持胞内低 Na⁺，使 SGLT 可持续工作。',ap:function(S){set(S.n[0],.85,.86);set(S.n[1],.88,.90);}}
+      {name:'④ 载体2(Glut2)：基底面被动协助扩散',dur:1300,note:'载体蛋白2(Glut2)位于基底面，被动的葡萄糖协助扩散，使葡萄糖顺浓度释放到其他组织→血液。',ap:function(S){set(S.g[0],.60,.86);}},
+      {name:'⑤ Na⁺/K⁺-ATPase 维持 Na⁺ 梯度',dur:1400,note:'基底面 Na⁺/K⁺-ATPase 把 Na⁺ 泵出细胞，维持胞内低 Na⁺，使顶端同向运输可持续。',ap:function(S){set(S.n[0],.85,.86);set(S.n[1],.88,.90);}}
     ],
     update:function(S,e){S.n.concat(S.g).forEach(function(o){o.nx+=(o.tnx-o.nx)*e*.5;o.ny+=(o.tny-o.ny)*e*.5;});},
     draw:function(ctx,W,H,S){

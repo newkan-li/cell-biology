@@ -1,0 +1,59 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>细胞融合实验</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
+<script src="anim.js?v=20260911d"></script>
+<script>
+(function(){
+  function dots(n){var a=[];for(var i=0;i<n;i++)a.push({x:Math.random(),y:Math.random()});return a;}
+  AnimKit.mount({
+    title:'细胞融合实验证明膜蛋白的流动性',
+    sub:'小鼠细胞(红色荧光)与人细胞(绿色荧光)融合后，杂种细胞膜蛋白在 37℃ 下由各自聚集变为均匀混合。',
+    legend:[{c:'#e0392b',t:'小鼠膜蛋白(罗丹明)'},{c:'#7ac943',t:'人膜蛋白(荧光素)'}],
+    init:function(S){
+      S.red=[];S.green=[];for(var i=0;i<45;i++){S.red.push({a:Math.random()*6.28,r:Math.sqrt(Math.random())});S.green.push({a:Math.random()*6.28,r:Math.sqrt(Math.random())});}
+      S.mix=[];for(var j=0;j<45;j++){S.mix.push({a:Math.random()*6.28,r:Math.sqrt(Math.random()),c:Math.random()<0.5?'r':'g'});}
+      S.hy=[];for(var k=0;k<45;k++){S.hy.push({a:Math.random()*6.28,r:Math.sqrt(Math.random()),top:Math.random()<0.5});}
+    },
+    phases:[
+      {name:'① 两种细胞，不同荧光标记',dur:1300,note:'小鼠细胞膜蛋白用罗丹明(红)标记，人细胞膜蛋白用荧光素(绿)标记。'},
+      {name:'② 细胞融合 → 杂种细胞（t=0）',dur:1400,note:'两种细胞融合成杂种细胞；t=0 时红色与绿色膜蛋白仍各自聚集在各自区域。',ap:function(S){S.fused=true;}},
+      {name:'③ 37℃ 温育',dur:1200,note:'杂种细胞在 37℃ 下温育，膜蛋白可侧向扩散。',ap:function(S){S.warm=true;}},
+      {name:'④ t=40 min，红绿蛋白均匀混合',dur:1500,note:'40 分钟后两种膜蛋白均匀混合 → 证明膜蛋白具有侧向流动性。',ap:function(S){S.mixed=true;}}
+    ],
+    update:function(S,e){},
+    draw:function(ctx,W,H,S){
+      ctx.fillStyle='#fbfdff';ctx.fillRect(0,0,W,H);
+      var R=Math.min(W,H)*0.16;
+      function cell(cx,cy,list,colorFn){
+        AnimKit.circle(ctx,cx,cy,R,'#e9eef4','');
+        ctx.strokeStyle='#c9d6e3';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.stroke();
+        list.forEach(function(p){var x=cx+Math.cos(p.a)*p.r*R*0.86,y=cy+Math.sin(p.a)*p.r*R*0.86;AnimKit.circle(ctx,x,y,4,colorFn(p),'');});
+      }
+      if(!S.fused){
+        cell(W*0.24,H*0.30,S.red,function(){return '#e0392b';});
+        cell(W*0.24,H*0.72,S.green,function(){return '#7ac943';});
+        AnimKit.label(ctx,'mouse cell 小鼠细胞',W*0.24,H*0.30-R-12,'#33465c','12px "Microsoft YaHei"');
+        AnimKit.label(ctx,'human cell 人细胞',W*0.24,H*0.72+R+18,'#33465c','12px "Microsoft YaHei"');
+        AnimKit.label(ctx,'rhodamine 红',W*0.24,H*0.30,'#fff','bold 11px "Microsoft YaHei"');
+        AnimKit.label(ctx,'fluorescein 绿',W*0.24,H*0.72,'#fff','bold 11px "Microsoft YaHei"');
+      } else {
+        // fusion arrow
+        AnimKit.arrow(ctx,W*0.36,H*0.30,W*0.46,H*0.46,'#8aa0b8',3);
+        AnimKit.arrow(ctx,W*0.36,H*0.72,W*0.46,H*0.54,'#8aa0b8',3);
+        AnimKit.label(ctx,'CELL FUSION',W*0.44,H*0.50,'#5b6b7b','12px Arial');
+        // hybrid
+        var hx=W*0.62,hy=H*0.50;
+        if(!S.mixed){
+          cell(hx,hy,S.hy,function(p){return p.top?'#e0392b':'#7ac943';});
+          AnimKit.label(ctx,'hybrid cell 杂种细胞',hx,hy-R-12,'#33465c','12px "Microsoft YaHei"');
+          var t=S.warm?'t = 40 min? 温育中':'time = 0 min';
+          AnimKit.label(ctx,S.warm?'37℃ 温育中…':'time = 0 minutes',hx,hy+R+18,S.warm?'#c0392b':'#5b6b7b','12px "Microsoft YaHei"');
+        } else {
+          cell(hx,hy,S.mix,function(p){return p.c==='r'?'#e0392b':'#7ac943';});
+          AnimKit.label(ctx,'均匀混合（t = 40 min）',hx,hy-R-12,'#1f5c8b','12px "Microsoft YaHei"');
+          AnimKit.label(ctx,'膜蛋白侧向扩散',hx,hy+R+18,'#1f5c8b','12px "Microsoft YaHei"');
+        }
+      }
+      AnimKit.label(ctx,'膜脂和膜蛋白的运动是细胞进行生命活动的必要条件',W/2,H-14,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

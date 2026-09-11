@@ -8,10 +8,10 @@
     legend:[{c:'#5a7fa8',t:'水通道单体'},{c:'#3b9ee5',t:'水分子'}],
     init:function(S){S.assem=false;S.water=false;S.d=0;},
     phases:[
-      {name:'① 单个水通道单体',dur:1200,note:'每个单体由 6 次跨膜的 α 螺旋组成，自身即可形成水孔。',ap:function(S){S.assem=false;S.water=false;}},
-      {name:'② 组装成四聚体',dur:1300,note:'4 个单体在膜上组装成四聚体。',ap:function(S){S.assem=true;}},
-      {name:'③ 每个单体各有一个水孔',dur:1300,note:'四聚体的每个单体各形成一个独立水孔（共 4 个孔）。',ap:function(S){S.assem=true;}},
-      {name:'④ 水分子单列快速通过',dur:1500,note:'水分子排成单列，经孔道快速跨膜（每秒约 30 亿个）。',ap:function(S){S.water=true;}}
+      {name:'① 单个水通道单体',dur:1200,note:'每个单体由 6 次跨膜的 α 螺旋组成，自身即可形成一个水孔。',ap:function(S){S.assem=false;S.water=false;}},
+      {name:'② 组装成四聚体',dur:1300,note:'4 个相同单体组装成四聚体蛋白。',ap:function(S){S.assem=true;}},
+      {name:'③ 每个单体各有一个水孔',dur:1300,note:'四聚体中每个单体各形成一个独立水孔（共 4 个孔），孔道两端有前庭(vestibule)。',ap:function(S){S.assem=true;}},
+      {name:'④ 水分子单列快速通过',dur:1500,note:'水分子在孔道中排成单列快速通过，加速水的渗透流动。',ap:function(S){S.water=true;}}
     ],
     update:function(S,e){S.d+=0.012*e*3;if(S.d>1)S.d-=1;},
     draw:function(ctx,W,H,S){

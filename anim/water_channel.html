@@ -1,45 +1,53 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>水通道蛋白</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>水通道的发现</title><link rel="stylesheet" href="anim.css?v=20260911d"></head><body>
 <script src="anim.js?v=20260911d"></script>
 <script>
 (function(){
+  function waterMol(ctx,x,y,s){
+    ctx.strokeStyle='#9bb6cc';ctx.lineWidth=3*s;
+    ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-20*s,y+16*s);ctx.moveTo(x,y);ctx.lineTo(x+20*s,y+16*s);ctx.stroke();
+    AnimKit.circle(ctx,x,y,14*s,'#e0392b','O','#fff');
+    AnimKit.circle(ctx,x-20*s,y+16*s,9*s,'#f2f2f2','H','#333');
+    AnimKit.circle(ctx,x+20*s,y+16*s,9*s,'#f2f2f2','H','#333');
+    AnimKit.label(ctx,'δ⁻',x+16*s,y-6*s,'#3a7ca5','11px Arial');
+    AnimKit.label(ctx,'δ⁺',x-30*s,y+26*s,'#c0392b','11px Arial');
+    AnimKit.label(ctx,'δ⁺',x+30*s,y+26*s,'#c0392b','11px Arial');
+  }
   AnimKit.mount({
-    title:'水通道蛋白（Aquaporin）',
-    sub:'水分子经通道快速跨膜；大分子溶质被阻挡在膜外。',
-    legend:[{c:'#3b9ee5',t:'H₂O'},{c:'#b04a9a',t:'溶质（大分子）'}],
-    init:function(S){
-      S.w=[];for(var i=0;i<10;i++)S.w.push({nx:0,ny:0,t:Math.random()});
-      S.sol={x:.18,y:.05,dir:1};
-      S.blocked=0;
-    },
+    title:'水通道蛋白的发现（2003 年诺贝尔化学奖）',
+    sub:'青蛙卵母细胞置于极低渗的水中不膨胀（不含水通道）；红细胞等细胞含大量水通道蛋白，加速水的渗透流动。',
+    legend:[{c:'#e0392b',t:'O'},{c:'#3a7ca5',t:'水通道'}],
+    init:function(S){S.t=0;},
     phases:[
-      {name:'① 水分子到达通道口',dur:1200,note:'水分子从细胞外到达通道口。'},
-      {name:'② 快速通过通道',dur:1500,note:'水分子经通道快速进入细胞内（顺渗透压）。'},
-      {name:'③ 大分子被阻挡',dur:1200,note:'比水分子大的溶质无法通过狭窄通道（直径仅 0.28 nm）。',ap:function(S){S.blocked++;}}
+      {name:'① 水是极性分子（偶极）',dur:1300,note:'水分子为偶极分子（O 带 δ⁻、H 带 δ⁺），可形成氢键。'},
+      {name:'② 青蛙卵母细胞不膨胀',dur:1400,note:'青蛙卵母细胞和卵置于极低渗的池水中不膨胀，尽管其内部 KCl 浓度与其他细胞相当(150 mM)。',ap:function(S){S.stage=1;}},
+      {name:'③ 红细胞含水通道，加速水流动',dur:1400,note:'红细胞等细胞质膜含水通道蛋白，可加速水的渗透流动（水涌入 → 细胞膨胀）。',ap:function(S){S.stage=2;}},
+      {name:'④ 2003 年诺贝尔化学奖',dur:1300,note:'2003 年诺贝尔化学奖授予“水通道的发现”（Peter Agre）与钾通道研究（Roderick MacKinnon）。',ap:function(S){S.stage=3;}}
     ],
-    update:function(S,e){
-      S.w.forEach(function(o){o.t+=0.010*e*3;if(o.t>1){o.t=0;o.nx=(Math.random()-.5)*0.10;} });
-      S.sol.y+=0.006*S.sol.dir*e*3; if(S.sol.y>.34)S.sol.dir=-1; if(S.sol.y<.04){S.sol.dir=1;S.sol.x=.12+Math.random()*.16;}
-    },
+    update:function(S,e){S.t=(S.t+0.02*e*3)%1;},
     draw:function(ctx,W,H,S){
-      var m=AnimKit.membrane(ctx,W,H,{gap:70,outLabel:'细胞外',inLabel:'细胞内'});
-      var cx=W/2;
-      // channel protein
-      AnimKit.roundRect(ctx,cx-34,m.yTop-24,68,(m.yBot-m.yTop)+48,12);ctx.fillStyle='#5a7fa8';ctx.fill();
-      AnimKit.roundRect(ctx,cx-14,m.yTop-30,28,(m.yBot-m.yTop)+60,8);ctx.fillStyle='#eaf3fb';ctx.fill();
-      AnimKit.label(ctx,'水通道',cx,m.yBot+40,'#33465c','12px "Microsoft YaHei"');
-      // water molecules: move top->bottom through channel
-      S.w.forEach(function(o){
-        var t=o.t, x=cx+o.nx*W;
-        var y=AnimKit.lerp(H*0.06,H*0.94,t);
-        // funnel x toward channel near membrane
-        var k=Math.exp(-Math.pow((t-0.5)/0.18,2));
-        x=AnimKit.lerp(x,cx,k);
-        AnimKit.circle(ctx,x,y,9,'#3b9ee5','H₂O');
-      });
-      // solute blocked
-      var sx=S.sol.x*W, sy=S.sol.y*H;
-      AnimKit.circle(ctx,sx,sy,14,'#b04a9a','X');
-      if(S.sol.dir===1&&sy>m.yTop-16&&Math.abs(sx-cx)>40){AnimKit.label(ctx,'✗ 太大，不能通过',sx,sy-22,'#b04a9a','12px "Microsoft YaHei"');}
+      ctx.fillStyle='#fbfdff';ctx.fillRect(0,0,W,H);
+      if((S.stage||0)===0){
+        waterMol(ctx,W*0.5,H*0.45,1.6);
+        AnimKit.label(ctx,'H₂O 偶极分子，104.5°',W*0.5,H*0.72,'#33465c','14px "Microsoft YaHei"');
+      } else if(S.stage===1){
+        var cx=W*0.30,cy=H*0.52,R=Math.min(W,H)*0.20;
+        AnimKit.circle(ctx,cx,cy,R,'#cfe8d6','');
+        AnimKit.circle(ctx,cx,cy,R*0.5,'#f2b950','核');
+        AnimKit.label(ctx,'青蛙卵母细胞',cx,cy-R-14,'#33465c','13px "Microsoft YaHei"');
+        AnimKit.label(ctx,'✗ 不膨胀（不含水通道）',cx,cy+R+22,'#c0392b','12.5px "Microsoft YaHei"');
+        AnimKit.label(ctx,'池水（极低渗）',cx,H-16,'#3a7ca5','12px "Microsoft YaHei"');
+      } else {
+        var cx=W*0.32,cy=H*0.52,R=Math.min(W,H)*0.17;
+        AnimKit.circle(ctx,cx,cy,R,'#f6c9c9','');
+        // aquaporins around
+        for(var a=0;a<10;a++){var an=a/10*6.28;AnimKit.circle(ctx,cx+Math.cos(an)*R,cy+Math.sin(an)*R,6,'#3a7ca5','');}
+        AnimKit.label(ctx,'红细胞',cx,cy-R-14,'#33465c','13px "Microsoft YaHei"');
+        AnimKit.label(ctx,'含水通道 → 水涌入',cx,cy+R+22,'#c0392b','12.5px "Microsoft YaHei"');
+        for(var k=0;k<4;k++){var ty=H*0.30+k*40;AnimKit.arrow(ctx,cx-R-70,ty,cx-R-10,ty,'#3a7ca5',2);}
+        AnimKit.label(ctx,'渗透性水流动',cx-R-70,H*0.30-14,'#3a7ca5','11.5px "Microsoft YaHei"','right');
+        if(S.stage===3){AnimKit.label(ctx,'2003 诺贝尔化学奖：水通道的发现',W*0.72,H*0.42,'#1f5c8b','bold 14px "Microsoft YaHei"');
+          waterMol(ctx,W*0.72,H*0.60,1.0);}
+      }
     }
   });
 })();

@@ -2,42 +2,54 @@
 <script src="anim.js?v=20260911d"></script>
 <script>
 (function(){
-  function head(ctx,x,y,c,txt){AnimKit.circle(ctx,x,y,11,c,txt);}
-  function tail(ctx,x,y,down){var d=down?1:-1;ctx.strokeStyle='#e6c98f';ctx.lineWidth=2;
-    for(var s=-1;s<=1;s+=2){ctx.beginPath();ctx.moveTo(x+s*3,y+d*6);ctx.lineTo(x+s*4,y+d*20);ctx.stroke();}}
-  var OUT=[{c:'#3b6fd6',t:'PC'},{c:'#8e44ad',t:'SM'},{c:'#b04a9a',t:'糖脂'}];
-  var IN=[{c:'#2e9e5b',t:'PS'},{c:'#e8703a',t:'PE'},{c:'#8d6e63',t:'PI'}];
+  // exo = 外层(Exoplasmic) %, cyto = 内层(Cytosolic) %  (依据教师 PPT p13 柱状图)
+  var DATA=[
+    {k:'SM',name:'鞘磷脂',exo:24,cyto:5},
+    {k:'PC',name:'磷脂酰胆碱',exo:22,cyto:5},
+    {k:'PS',name:'磷脂酰丝氨酸',exo:2,cyto:15},
+    {k:'PE',name:'磷脂酰乙醇胺',exo:8,cyto:18},
+    {k:'PI',name:'磷脂酰肌醇',exo:1,cyto:4},
+    {k:'CI',name:'胆固醇',exo:12,cyto:14}
+  ];
   AnimKit.mount({
-    title:'膜脂的不对称性',
-    sub:'脂双层内外两层脂质种类与数量不同；糖脂只分布在质膜外侧（非胞质面）。',
-    legend:[{c:'#3b6fd6',t:'外层脂质'},{c:'#2e9e5b',t:'内层脂质'},{c:'#b04a9a',t:'糖脂'}],
-    init:function(S){S.sugar=false;S.hl=0;},
+    title:'膜脂在细胞内外两侧分布的不对称性',
+    sub:'同一膜脂在内、外两层分布不同：外层富含 SM/PC，内层富含 PS/PE；胆固醇较均一。',
+    legend:[{c:'#e06a8a',t:'外层 Exoplasmic'},{c:'#4a6fb5',t:'内层 Cytosolic'}],
+    init:function(S){S.grow=0;S.hl=-1;},
     phases:[
-      {name:'① 外层（面向细胞外）',dur:1300,note:'外层主要含磷脂酰胆碱(PC)、鞘磷脂(SM)与糖脂。',ap:function(S){S.hl=1;}},
-      {name:'② 内层（面向胞质）',dur:1300,note:'内层主要含磷脂酰丝氨酸(PS)、磷脂酰乙醇胺(PE)、磷脂酰肌醇(PI)。',ap:function(S){S.hl=2;}},
-      {name:'③ 内外不对称',dur:1300,note:'两层脂质的种类、数量与分布明显不同，构成膜的不对称性。',ap:function(S){S.hl=3;}},
-      {name:'④ 糖脂只在外侧',dur:1300,note:'糖脂/糖蛋白的糖基位于质膜外侧；翻转酶等可维持不对称分布。',ap:function(S){S.hl=4;S.sugar=true;}}
+      {name:'① 内外两层分布不对称',dur:1300,note:'膜脂在质膜内、外两层分布明显不同，构成膜脂的不对称性。',ap:function(S){S.hl=-1;}},
+      {name:'② 外层富含 SM、PC',dur:1300,note:'外层(Exoplasmic)主要含鞘磷脂(SM)与磷脂酰胆碱(PC)。',ap:function(S){S.hl=0;}},
+      {name:'③ 内层富含 PS、PE',dur:1300,note:'内层(Cytosolic)主要含磷脂酰丝氨酸(PS)与磷脂酰乙醇胺(PE)。',ap:function(S){S.hl=1;}},
+      {name:'④ 胆固醇较均一；PS 外翻=凋亡信号',dur:1400,note:'胆固醇(CI)两层分布较接近；PS 正常位于内侧，外翻即为细胞凋亡信号。',ap:function(S){S.hl=2;}}
     ],
+    update:function(S,e){if(S.grow<1)S.grow=Math.min(1,S.grow+0.03*e*3);},
     draw:function(ctx,W,H,S){
-      var yT=H*.44,yB=H*.56;
-      ctx.fillStyle='#f2f8ff';ctx.fillRect(0,0,W,yT);ctx.fillStyle='#fff7ef';ctx.fillRect(0,yB,W,H-yB);
-      ctx.fillStyle='#ffe9c9';ctx.fillRect(0,yT,W,yB-yT);
-      var n=6,pad=W/(n+1);
-      for(var i=1;i<=n;i++){
-        var x=pad*i;
-        var o=OUT[i%OUT.length],inn=IN[i%IN.length];
-        head(ctx,x,yT+3,o.c,o.t);tail(ctx,x,yT+3,true);
-        head(ctx,x,yB-3,inn.c,inn.t);tail(ctx,x,yB-3,false);
-      }
-      // asymmetry emphasis
-      if(S.hl===1){ctx.strokeStyle='#3b6fd6';ctx.lineWidth=3;ctx.strokeRect(20,yT-24,W-40,26);}
-      if(S.hl===2){ctx.strokeStyle='#2e9e5b';ctx.lineWidth=3;ctx.strokeRect(20,yB-2,W-40,26);}
-      if(S.hl>=3){AnimKit.label(ctx,'外 ≠ 内',W/2,yT+16,'#c0392b','bold 14px "Microsoft YaHei"');}
-      if(S.sugar){[pad*3,pad*5].forEach(function(x){ctx.strokeStyle='#b04a9a';ctx.lineWidth=2;
-        for(var k=-1;k<=1;k++){ctx.beginPath();ctx.arc(x+k*6,yT-14,4,0,7);ctx.stroke();}
-        AnimKit.label(ctx,'糖',x,yT-26,'#b04a9a','11px "Microsoft YaHei"');});}
-      AnimKit.label(ctx,'细胞外',14,22,'#7a8aa0','13px "Microsoft YaHei"','left');
-      AnimKit.label(ctx,'胞质侧',14,H-14,'#7a8aa0','13px "Microsoft YaHei"','left');
+      ctx.fillStyle='#fbfdff';ctx.fillRect(0,0,W,H);
+      var x0=W*0.10,x1=W*0.97,y0=H*0.52,sc=H*0.36/25;
+      var n=DATA.length,step=(x1-x0)/n,bw=step*0.42;
+      // axis
+      ctx.strokeStyle='#b9c9d8';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x0-10,y0);ctx.lineTo(x1,y0);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(x0-10,y0-H*0.36);ctx.lineTo(x0-10,y0+H*0.36);ctx.stroke();
+      AnimKit.label(ctx,'% of total membrane lipid',x0-14,y0-H*0.36-6,'#7a8aa0','11.5px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'外层 Exoplasmic',W-16,y0-H*0.36+2,'#e06a8a','12px "Microsoft YaHei"','right');
+      AnimKit.label(ctx,'内层 Cytosolic',W-16,y0+H*0.36-2,'#4a6fb5','12px "Microsoft YaHei"','right');
+      DATA.forEach(function(d,i){
+        var cx=x0+step*(i+0.5);
+        var on=(S.hl<0)||(S.hl===0&&(d.k==='SM'||d.k==='PC'))||(S.hl===1&&(d.k==='PS'||d.k==='PE'))||(S.hl===2&&d.k==='CI');
+        ctx.globalAlpha=on?1:0.30;
+        // exo (up, pink)
+        var hUp=d.exo*sc*S.grow;
+        ctx.fillStyle='#e06a8a';ctx.fillRect(cx-bw/2,y0-hUp,bw,hUp);
+        ctx.strokeStyle='#c14a6b';ctx.lineWidth=1;ctx.strokeRect(cx-bw/2,y0-hUp,bw,hUp);
+        // cyto (down, blue)
+        var hDn=d.cyto*sc*S.grow;
+        ctx.fillStyle='#4a6fb5';ctx.fillRect(cx-bw/2,y0,bw,hDn);
+        ctx.strokeStyle='#2f4f8a';ctx.lineWidth=1;ctx.strokeRect(cx-bw/2,y0,bw,hDn);
+        ctx.globalAlpha=1;
+        AnimKit.label(ctx,d.k,cx,y0+ (S.hl===1? hDn+16: hDn+14),'#33465c','bold 12.5px Arial');
+        AnimKit.label(ctx,d.name,cx,y0+H*0.36-4,'#5b6b7b','10.5px "Microsoft YaHei"');
+      });
+      if(S.hl===2)AnimKit.label(ctx,'PS 外翻 → 凋亡信号',W/2,H-14,'#c0392b','bold 13px "Microsoft YaHei"');
     }
   });
 })();
