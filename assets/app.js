@@ -787,6 +787,15 @@
     hero.innerHTML = "<h1>" + esc(ch.title) + '</h1><div class="tag">' + esc(ch.sub2 || "") + " ｜ 概念逐页 + 全题型练习 + 错题本 + 手写</div>";
     main.appendChild(hero);
 
+    if (ch.preview) {
+      var pv = el("div", "statsbox previewbox");
+      pv.innerHTML = '<h3 style="margin:0 0 6px">📖 课前预习导览</h3>' +
+        '<p class="pv-main">' + esc(ch.preview.main) + "</p>" +
+        '<div class="pv-q">带着这些问题去听课：</div><ol>' +
+        (ch.preview.questions || []).map(function (q) { return "<li>" + esc(q) + "</li>"; }).join("") + "</ol>";
+      main.appendChild(pv);
+    }
+
     var statsbox = el("div", "statsbox"); statsbox.id = "statsbox"; renderStats(cid, ch, statsbox); main.appendChild(statsbox);
     var heat = el("div", "statsbox"); heat.id = "heatmap"; renderHeatmap(cid, ch, heat); main.appendChild(heat);
 
