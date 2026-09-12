@@ -1559,7 +1559,8 @@
     };
     var covered = { ch01: 1, ch02: 1, ch03: 1, ch04: 1, ch05: 1, ch07: 1, ch08: 1, ch11: 1 };
     var cur = "all", q = "";
-    ctl.innerHTML = '<div class="fc-chips" id="ztchips"></div><input id="ztsearch" class="ans" placeholder="搜索题干 / 答案…" style="margin-top:6px">';
+    ctl.innerHTML = '<div class="fc-chips" id="ztchips"></div><input id="ztsearch" class="ans" placeholder="搜索题干 / 答案…" style="margin-top:6px">' +
+      '<button class="navbtn" style="width:auto;margin-top:8px" id="ztQuiz">🎯 真题自测（随机 20 题）</button>';
     var chips = document.getElementById("ztchips");
     function chip(label, val) {
       var b = el("button", "fc-chip" + (val === cur ? " on" : ""), label); b.dataset.v = val;
@@ -1590,6 +1591,44 @@
       host.innerHTML = html || '<p class="empty">没有匹配的真题。</p>';
       if (cnt) cnt.textContent = total;
     }
+    function startQuiz() {
+      var pool = [];
+      Object.keys(Z).forEach(function (cid) {
+        if (cur === "covered" && !covered[cid]) return;
+        if (cur !== "all" && cur !== "covered" && cid !== cur) return;
+        Z[cid].forEach(function (x) { if (x.q) pool.push({ cid: cid, x: x }); });
+      });
+      for (var i = pool.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
+      pool = pool.slice(0, 20);
+      var pos = 0, okN = 0;
+      function draw() {
+        if (!pool.length) { host.innerHTML = '<p class="empty">该范围没有真题。</p>'; return; }
+        if (pos >= pool.length) {
+          host.innerHTML = '<div class="statsbox"><h3 style="margin:0">🎯 真题自测完成</h3><p>共 ' + pool.length + " 题，自评掌握 <b>" + okN + "</b> 题。</p>" +
+            '<button class="navbtn" style="width:auto" id="ztBack">返回真题列表</button></div>';
+          document.getElementById("ztBack").onclick = function () { render(); };
+          return;
+        }
+        var it = pool[pos];
+        host.innerHTML = '<div class="fc-progress">第 ' + (pos + 1) + " / " + pool.length + " 题 · " + esc(names[it.cid] || it.cid) + "</div>" +
+          '<div class="zt"><div class="zt-q">' + esc(it.x.q) + "</div>" +
+          (it.x.src ? '<div class="zt-src">📌 ' + esc(it.x.src) + "</div>" : "") +
+          '<div class="zt-a" style="display:none;margin-top:6px"><b>答案：</b>' + esc(it.x.a || "（原书未给出，见教材）") + "</div>" +
+          '<div style="margin-top:8px"><button class="fc-check" id="ztReveal">显示答案</button></div>' +
+          '<div class="fc-rate" style="display:none;margin-top:8px"><button class="no">不会</button><button class="mid">模糊</button><button class="ok">会</button></div></div>';
+        document.getElementById("ztReveal").onclick = function () {
+          host.querySelector(".zt-a").style.display = "block";
+          host.querySelector(".fc-rate").style.display = "flex";
+          this.style.display = "none";
+        };
+        var rate = host.querySelector(".fc-rate");
+        [["不会", 0], ["模糊", 1], ["会", 2]].forEach(function (o, i) {
+          rate.children[i].onclick = function () { if (o[1] >= 2) okN++; pos++; draw(); };
+        });
+      }
+      draw();
+    }
+    document.getElementById("ztQuiz").onclick = startQuiz;
     render();
   }
 
