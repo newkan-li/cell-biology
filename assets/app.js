@@ -805,7 +805,7 @@
     HW.init(cid);
     document.title = ch.title + " · 细胞生物学";
     var aside = document.getElementById("sidebar"), main = document.getElementById("main");
-    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="textbook.html">📚 教材对照表</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
+    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="textbook.html">📚 教材对照表</a><a href="zhenti.html">📋 历年真题</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
     aside.appendChild(el("div", "grp", "各模块（概念 + 考题）"));
     ch.modules.forEach(function (m) {
       var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a);
@@ -1545,6 +1545,54 @@
     }
   }
 
+  /* ================= 历年真题页 ================= */
+  function renderZhenti() {
+    var ctl = document.getElementById("ztctl"), host = document.getElementById("zthost"), cnt = document.getElementById("ztcount");
+    if (!host) return;
+    var Z = window.ZHENTI || {};
+    var names = {
+      ch01: "第一章 绪论", ch02: "第二章 细胞的统一性与多样性", ch03: "第三章 研究方法", ch04: "第四章 细胞质膜",
+      ch05: "第五章 跨膜运输", ch06: "第六章 线粒体和叶绿体", ch07: "第七章 细胞质基质与内膜系统", ch08: "第八章 蛋白质分选与膜泡运输",
+      ch09: "第九章 细胞信号转导", ch10: "第十章 细胞骨架", ch11: "第十一章 细胞核与染色质", ch12: "第十二章 核糖体",
+      ch13: "第十三章 细胞周期与细胞分裂", ch14: "第十四章 细胞增殖调控与癌细胞", ch15: "第十五章 细胞分化与胚胎发育",
+      ch16: "第十六章 细胞死亡与细胞衰老", ch17: "第十七章 细胞的社会联系"
+    };
+    var covered = { ch01: 1, ch02: 1, ch03: 1, ch04: 1, ch05: 1, ch07: 1, ch08: 1, ch11: 1 };
+    var cur = "all", q = "";
+    ctl.innerHTML = '<div class="fc-chips" id="ztchips"></div><input id="ztsearch" class="ans" placeholder="搜索题干 / 答案…" style="margin-top:6px">';
+    var chips = document.getElementById("ztchips");
+    function chip(label, val) {
+      var b = el("button", "fc-chip" + (val === cur ? " on" : ""), label); b.dataset.v = val;
+      b.onclick = function () { cur = val; syncChips(); render(); };
+      chips.appendChild(b);
+    }
+    chip("全部（17章）", "all"); chip("只看已讲章节", "covered");
+    Object.keys(Z).sort().forEach(function (cid) { chip(esc(names[cid] || cid), cid); });
+    function syncChips() { Array.prototype.forEach.call(chips.children, function (b) { b.classList.toggle("on", b.dataset.v === cur); }); }
+    var search = document.getElementById("ztsearch");
+    search.oninput = function () { q = (search.value || "").trim().toLowerCase(); render(); };
+    function render() {
+      var html = "", total = 0;
+      Object.keys(Z).sort().forEach(function (cid) {
+        if (cur === "covered") { if (!covered[cid]) return; }
+        else if (cur !== "all" && cid !== cur) return;
+        var arr = Z[cid].filter(function (x) { return !q || (x.q + " " + x.a).toLowerCase().indexOf(q) >= 0; });
+        if (!arr.length) return;
+        html += "<h2>" + esc(names[cid] || cid) + "（" + arr.length + "）</h2>";
+        arr.forEach(function (x, i) {
+          total++;
+          html += '<div class="zt"><div class="zt-q"><b>' + (i + 1) + ".</b> " + esc(x.q) + "</div>" +
+            (x.src ? '<div class="zt-src">📌 ' + esc(x.src) + "</div>" : "") +
+            (x.a ? '<details class="sol"><summary>答案</summary><div class="ansbox">' + esc(x.a) + "</div></details>" : "") +
+            "</div>";
+        });
+      });
+      host.innerHTML = html || '<p class="empty">没有匹配的真题。</p>';
+      if (cnt) cnt.textContent = total;
+    }
+    render();
+  }
+
   /* ================= textbook cross-reference page ================= */
   function renderTextbook() {
     var host = document.getElementById("tbhost"); if (!host) return;
@@ -1725,6 +1773,7 @@
     else if (page === "flashcards") renderFlashcards();
     else if (page === "exam") renderExam();
     else if (page === "textbook") renderTextbook();
+    else if (page === "zhenti") renderZhenti();
   });
 
   window.CELL = {
