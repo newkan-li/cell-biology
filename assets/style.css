@@ -217,6 +217,9 @@ html[data-theme="sepia"] .fc-go{background:#faf3e0}
 .fc-ans.wrong{border-color:var(--acc);background:#fdf3f2}
 .fc-check{border:1px solid var(--blue);background:var(--blue);color:#fff;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer}
 .fc-cloze{margin-top:8px;font-size:14px;line-height:1.7;color:var(--ink)}
+.fc-ta{width:100%;min-height:80px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;font-family:inherit;line-height:1.6;resize:vertical;background:#fff}
+html[data-theme="dark"] .fc-ta{background:#1f262e;color:#d7dee8}
+html[data-theme="sepia"] .fc-ta{background:#faf3e0}
 html[data-theme="dark"] .fc-ans{background:#1f262e;color:#d7dee8}
 html[data-theme="sepia"] .fc-ans{background:#faf3e0}
 html[data-theme="dark"] .fc-mn{background:#2a2618;border-color:#4a4326;color:#e0c060}

@@ -984,6 +984,14 @@
           plain: q.def, blank: q.term
         });
       });
+      (ch.appcards || []).forEach(function (c, i) {
+        cards.push({
+          id: "fc_app_" + m.id + "_" + i, ch: m.id, mod: c.mod, modName: c.modName || "应用综合",
+          tag: "应用卡片", subjective: true, front: c.front,
+          back: esc(c.back).replace(/\n/g, "<br>") + (c.points ? '<div class="fc-kps">踩分点：' + esc(c.points) + "</div>" : ""),
+          plain: c.back, blank: ""
+        });
+      });
       ch.modules.forEach(function (mod) {
         mod.slides.forEach(function (s) {
           var kp0 = m.id + "_s" + mod.i + "_" + s.i;
@@ -1128,7 +1136,11 @@
       var r = el("div", "fc-rate"); r.style.display = "none";
       [["不会", 0], ["模糊", 1], ["会", 2]].forEach(function (o, i) {
         var b = el("button", o[2], o[0]);
-        b.onclick = function () { srsRate(c.id, o[1]); renderProgress(); pos++; show(); };
+        b.onclick = function () {
+          srsRate(c.id, o[1]);
+          if (c.subjective) { var o2 = fcAnsAll(); if (o2[c.id]) { o2[c.id].lastOk = (o[1] >= 2); jset(PREFIX + "fcans", o2); } }
+          renderProgress(); renderRecords(); pos++; show();
+        };
         r.appendChild(b);
       });
       return r;
@@ -1156,20 +1168,35 @@
           rr.style.display = "flex";
         };
       } else if (mode === "写") {
-        host.innerHTML = head + '<div class="fc-card"><div class="fc-front">' + esc(c.front) + '</div></div>' +
-          '<div class="fc-input"><input class="fc-ans" placeholder="输入你的答案…"><button class="fc-check">检查</button></div>' +
-          '<div class="fc-back" style="display:none">' + c.back + "</div>";
-        var rr2 = rateRow(c); host.appendChild(rr2);
-        var inp = host.querySelector(".fc-ans"), bk = host.querySelector(".fc-back");
-        var doCheck = function () {
-          var ok = fuzzyMatch(c.plain || "", inp.value);
-          inp.classList.remove("right", "wrong"); inp.classList.add(ok ? "right" : "wrong");
-          fcAnsSave(c.id, "写", inp.value, ok); renderRecords();
-          bk.style.display = "block"; rr2.style.display = "flex";
-        };
-        host.querySelector(".fc-check").onclick = doCheck;
-        inp.addEventListener("keydown", function (e) { if (e.key === "Enter") doCheck(); });
+        if (c.subjective) {
+          host.innerHTML = head + '<div class="fc-card"><div class="fc-front">' + esc(c.front) + '</div></div>' +
+            '<div class="fc-input"><textarea class="fc-ta" placeholder="先自己写下答题要点（可选，自动保存）…"></textarea></div>' +
+            '<div class="fc-input"><button class="fc-check">显示参考答案</button></div>' +
+            '<div class="fc-back" style="display:none">' + c.back + "</div>";
+          var rrS = rateRow(c); host.appendChild(rrS);
+          var ta = host.querySelector(".fc-ta"), bkS = host.querySelector(".fc-back");
+          var rec0 = fcAnsGet(c.id); if (rec0 && rec0.last) ta.value = rec0.last;
+          host.querySelector(".fc-check").onclick = function () {
+            fcAnsSave(c.id, "写", ta.value, null); renderRecords();
+            bkS.style.display = "block"; rrS.style.display = "flex";
+          };
+        } else {
+          host.innerHTML = head + '<div class="fc-card"><div class="fc-front">' + esc(c.front) + '</div></div>' +
+            '<div class="fc-input"><input class="fc-ans" placeholder="输入你的答案…"><button class="fc-check">检查</button></div>' +
+            '<div class="fc-back" style="display:none">' + c.back + "</div>";
+          var rr2 = rateRow(c); host.appendChild(rr2);
+          var inp = host.querySelector(".fc-ans"), bk = host.querySelector(".fc-back");
+          var doCheck = function () {
+            var ok = fuzzyMatch(c.plain || "", inp.value);
+            inp.classList.remove("right", "wrong"); inp.classList.add(ok ? "right" : "wrong");
+            fcAnsSave(c.id, "写", inp.value, ok); renderRecords();
+            bk.style.display = "block"; rr2.style.display = "flex";
+          };
+          host.querySelector(".fc-check").onclick = doCheck;
+          inp.addEventListener("keydown", function (e) { if (e.key === "Enter") doCheck(); });
+        }
       } else {
+        if (c.subjective) { mode = "写"; sync(); show(); return; }
         var cloze = c.plain || "", blank = c.blank || "", blank2 = c.blank2 || "", cardInner, answers = [];
         if (blank && cloze.indexOf(blank) >= 0) {
           if (blank2 && blank2 !== blank && cloze.indexOf(blank2) >= 0) {
@@ -1217,8 +1244,8 @@
           '<div class="fc-recsum">还没有作答记录。做几道「填空 / 写」后，这里会显示正确率与错卡。</div></div>';
         return;
       }
-      var okN = answered.filter(function (c) { return ans[c.id].lastOk; }).length;
-      var wrongCards = answered.filter(function (c) { return !ans[c.id].lastOk; });
+      var okN = answered.filter(function (c) { return ans[c.id].lastOk === true; }).length;
+      var wrongCards = answered.filter(function (c) { return ans[c.id].lastOk === false; });
       var byCh = {};
       answered.forEach(function (c) { var a = ans[c.id]; var t = byCh[c.ch] = byCh[c.ch] || { n: 0, ok: 0 }; t.n++; if (a.lastOk) t.ok++; });
       var h = '<div class="fc-recb"><div class="fc-cathead">📊 作答记录</div>' +
