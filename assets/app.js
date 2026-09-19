@@ -1025,6 +1025,12 @@
             front: (s.title || "English page"), frontImg: s.img, back: esc(enExp).replace(/\n/g, "<br>"),
             plain: enExp, blank: ""
           });
+          var pgExp = noteSection(s.notes || "", "【本页讲解】");
+          if (pgExp && s.img) cards.push({
+            id: "fc_pg_" + noteKp, ch: m.id, mod: mod.i, modName: mod.name, tag: "本页讲解", subjective: true,
+            front: (s.title || ""), frontImg: s.img, back: esc(pgExp).replace(/\n/g, "<br>"),
+            plain: pgExp, blank: ""
+          });
           if (!s.points && !s.fig) return;
           var kp = m.id + "_s" + mod.i + "_" + s.i, back = "";
           if (s.points && s.points.length) back += "<ul>" + s.points.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>";
