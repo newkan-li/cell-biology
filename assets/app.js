@@ -1952,7 +1952,8 @@
           total++; var x = r.x, tn = { mcq: "选择", judge: "判断", fill: "填空" }[r.t];
           html += '<div class="zt"><div class="zt-q"><b>' + (i + 1) + ".</b> [" + tn + "] " + esc(x.q) + "</div>";
           if (r.t === "mcq") html += '<div style="margin:4px 0;color:var(--sub)">' + x.o.map(function (o) { return esc(o); }).join("<br>") + "</div>";
-          html += '<details class="sol"><summary>答案' + (x.src ? "（" + esc(x.src) + "）" : "") + '</summary><div class="ansbox"><b>答案：' + esc(x.a) + "</b>" + (x.e ? '<div style="margin-top:4px">解析：' + esc(x.e).replace(/\n/g, "<br>") + "</div>" : "") + "</div></details></div>";
+          var ex = r.t === "mcq" ? optsExplain(x) : (r.t === "judge" ? optsExplain({ o: ["对", "错"], a: x.a, oe: x.oe }) : fillExplain(x));
+          html += '<details class="sol"><summary>答案' + (x.src ? "（" + esc(x.src) + "）" : "") + '</summary><div class="ansbox"><b>答案：' + esc(x.a) + "</b>" + (x.e ? '<div style="margin-top:4px">解析：' + esc(x.e).replace(/\n/g, "<br>") + "</div>" : "") + ex + "</div></details></div>";
         });
       });
       host.innerHTML = html || '<p class="empty">没有匹配的客观题。</p>';
