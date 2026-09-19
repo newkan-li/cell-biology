@@ -972,6 +972,17 @@
   }
 
   /* ================= flashcards (auto-derived) ================= */
+  function noteSection(notes, head) {
+    var i = (notes || "").indexOf(head);
+    if (i < 0) return "";
+    var t = notes.slice(i + head.length);
+    var j = t.search(/\n\s*【/);
+    if (j >= 0) t = t.slice(0, j);
+    return t.replace(/^\s+|\s+$/g, "");
+  }
+  function frontHtml(c) {
+    return esc(c.front) + (c.frontImg ? '<img class="fc-img" src="' + c.frontImg + '" loading="lazy" alt="">' : "");
+  }
   function buildCards() {
     var cards = [];
     (window.MANIFEST || []).forEach(function (m) {
@@ -1000,6 +1011,19 @@
             if (c.mnemonic) back += '<div class="fc-mn">💡 ' + esc(c.mnemonic) + "</div>";
             if (c.useImg && s.img) back += '<img class="fc-img" src="' + s.img + '" loading="lazy" alt="">';
             cards.push({ id: "fc_s_" + kp0 + "_" + i, ch: m.id, mod: mod.i, modName: mod.name, tag: "掌握卡片", front: c.front, back: back, plain: c.back, blank: c.blank || "", blank2: c.blank2 || "" });
+          });
+          var noteKp = m.id + "_s" + mod.i + "_" + s.i;
+          var figExp = noteSection(s.notes || "", "【读图讲解】");
+          if (figExp && s.img) cards.push({
+            id: "fc_fig_" + noteKp, ch: m.id, mod: mod.i, modName: mod.name, tag: "读图卡片", subjective: true,
+            front: "看图讲解：" + (s.title || ""), frontImg: s.img, back: esc(figExp).replace(/\n/g, "<br>"),
+            plain: figExp, blank: ""
+          });
+          var enExp = noteSection(s.notes || "", "【本页英文讲解】");
+          if (enExp && s.img) cards.push({
+            id: "fc_en_" + noteKp, ch: m.id, mod: mod.i, modName: mod.name, tag: "英文页讲解", subjective: true,
+            front: (s.title || "English page"), frontImg: s.img, back: esc(enExp).replace(/\n/g, "<br>"),
+            plain: enExp, blank: ""
           });
           if (!s.points && !s.fig) return;
           var kp = m.id + "_s" + mod.i + "_" + s.i, back = "";
@@ -1173,7 +1197,7 @@
         (rec.last ? " ｜ 上次：" + esc(String(rec.last).slice(0, 24)) + (rec.lastOk ? " ✓" : " ✗") : "") + "</div>" : "";
       var head = '<div class="fc-progress">第 ' + (pos + 1) + " / " + deck.length + " 张 · " + esc(c.tag) + " · " + mode + "</div>" + recLine;
       if (mode === "背") {
-        host.innerHTML = head + '<div class="fc-card" id="fcCard"><div class="fc-front">' + esc(c.front) + '</div>' +
+        host.innerHTML = head + '<div class="fc-card" id="fcCard"><div class="fc-front">' + frontHtml(c) + '</div>' +
           '<div class="fc-back" style="display:none">' + c.back + "</div></div>" +
           '<div class="fc-hint">点击卡片翻面</div>';
         var card = document.getElementById("fcCard");
@@ -1185,7 +1209,7 @@
         };
       } else if (mode === "写") {
         if (c.subjective) {
-          host.innerHTML = head + '<div class="fc-card"><div class="fc-front">' + esc(c.front) + '</div></div>' +
+          host.innerHTML = head + '<div class="fc-card"><div class="fc-front">' + frontHtml(c) + '</div></div>' +
             '<div class="fc-input"><textarea class="fc-ta" placeholder="先自己写下答题要点（可选，自动保存）…"></textarea></div>' +
             '<div class="fc-input"><button class="fc-check">显示参考答案</button></div>' +
             '<div class="fc-back" style="display:none">' + c.back + "</div>";
@@ -1197,7 +1221,7 @@
             bkS.style.display = "block"; rrS.style.display = "flex";
           };
         } else {
-          host.innerHTML = head + '<div class="fc-card"><div class="fc-front">' + esc(c.front) + '</div></div>' +
+          host.innerHTML = head + '<div class="fc-card"><div class="fc-front">' + frontHtml(c) + '</div></div>' +
             '<div class="fc-input"><input class="fc-ans" placeholder="输入你的答案…"><button class="fc-check">检查</button></div>' +
             '<div class="fc-back" style="display:none">' + c.back + "</div>";
           var rr2 = rateRow(c); host.appendChild(rr2);
