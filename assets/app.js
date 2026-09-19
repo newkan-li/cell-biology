@@ -292,6 +292,18 @@
   }
 
   /* ================= MCQ ================= */
+  function optsExplain(q) {
+    if (!q || !q.oe || !q.oe.length) return "";
+    var correct = String(q.a).trim();
+    var h = '<div class="oe-list">';
+    (q.o || []).forEach(function (o, i) {
+      var L = String(o).trim().charAt(0);
+      var ok = (L === correct);
+      h += '<div class="oe ' + (ok ? "ok" : "no") + '"><b>' + (ok ? "✔" : "✘") + " " + esc(L) + "</b> " + esc(q.oe[i] || "") + "</div>";
+    });
+    h += "</div>";
+    return h;
+  }
   function renderMCQ(cid, q, idx) {
     var box = el("div", "q"); box.id = "q_" + q.id;
     box.appendChild(el("p", "qq", "第 " + idx + " 题 " + esc(q.q) + (q.mod ? '<span class="src">[' + esc(q.mod) + "]</span>" : "")));
@@ -327,7 +339,7 @@
     });
     var res = box._res; res.style.display = "block";
     res.innerHTML = (ok ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 错误</span>（正确答案：<b>' + esc(correct) + "</b>）") +
-      '<div style="margin-top:4px">解析：' + esc(q.e || "") + "</div>";
+      '<div style="margin-top:4px">解析：' + esc(q.e || "") + "</div>" + optsExplain(q);
     box._cause.style.display = ok ? "none" : "flex";
     if (!ok) {
       addWrong(cid, { id: q.id, type: "mcq", q: q.q, correct: correct, chosen: chosen, cause: "", ts: Date.now() });
@@ -757,7 +769,7 @@
       }
       fb.innerHTML = (correct ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 错误</span>') +
         '　正确答案：<b>' + esc(answerText()) + "</b>" +
-        (q.e ? '<div style="margin-top:4px">解析：' + esc(q.e) + "</div>" : "");
+        (q.e ? '<div style="margin-top:4px">解析：' + esc(q.e) + "</div>" : "") + optsExplain(q);
     }
     if (kind === "mcq") {
       box.appendChild(el("div", "cp-q", esc(q.q)));

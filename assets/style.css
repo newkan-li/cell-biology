@@ -387,3 +387,9 @@ html[data-theme="dark"] .checkpoint{background:#1c2630;border-color:#33404d}
 html[data-theme="dark"] .checkpoint .cp-opt{background:#1f262e;color:#d7dee8}
 html[data-theme="dark"] .hm-0{background:#2a333d}
 html[data-theme="dark"] .fc-card,html[data-theme="dark"] .fc-chip,html[data-theme="dark"] .fc-rate button{background:#1f262e;color:#d7dee8}
+.oe-list{margin-top:8px;border-top:1px dashed var(--line);padding-top:6px;font-size:13px}
+.oe{margin:3px 0;line-height:1.5}
+.oe.ok{color:#1a7f37}
+.oe.no{color:#b42318}
+html[data-theme="dark"] .oe.ok{color:#4ade80}
+html[data-theme="dark"] .oe.no{color:#f87171}
