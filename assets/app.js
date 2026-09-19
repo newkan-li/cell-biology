@@ -1638,6 +1638,12 @@
     var T = window.TEXTBOOK; if (!T) { host.innerHTML = '<p class="empty">数据未加载。</p>'; return; }
     var html = '<p class="hint">' + esc(T.source) + " ｜ " + esc(T.note) + "</p>" +
       '<p class="hint">📌 老师课件共 13 个：第一批 5 个覆盖教材第 <b>1、2、3、4、5、7、8、11</b> 章；第二批 8 个覆盖第 <b>9、10、13、14、16</b> 章（细胞骨架、信号转导、细胞周期、增殖与癌、衰老与死亡）。</p>';
+    if (T.notCovered) {
+      html += '<div class="tb-gaps" style="margin-bottom:16px">⚠️ <b>教材未讲</b>（老师课件未覆盖，需自己看书补）：<ul>';
+      (T.notCovered.whole || []).forEach(function (x) { html += "<li><b>" + esc(x.ch) + "</b>（" + esc(x.pages) + "）</li>"; });
+      (T.notCovered.sections || []).forEach(function (x) { html += "<li>" + esc(x.ch) + "（" + esc(x.pages) + "）</li>"; });
+      html += "</ul></div>";
+    }
     (T.chapters || []).forEach(function (ch) {
       html += '<div class="tb-chapter"><h3>' + esc(ch.title) + "</h3>" +
         '<table class="tbl"><thead><tr><th>教材章节（第4版）</th><th>本站模块</th><th>页号</th><th>覆盖</th><th></th></tr></thead><tbody>';
