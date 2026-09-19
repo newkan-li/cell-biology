@@ -1045,7 +1045,7 @@
         "<span>掌握 <b>" + mastered + "</b></span><span>待复习 <b>" + due + "</b></span>" +
         '<span class="fcp-tags">' + tags + "</span></div>";
     }
-    var names = { ch01: "绪论", ch02: "质膜", ch03: "内膜系统", ch04: "蛋白质运输", ch05: "后翻译转运" };
+    var names = { ch01: "绪论", ch02: "质膜", ch03: "内膜系统", ch04: "蛋白质运输", ch05: "后翻译转运", ch06: "微管", ch07: "微丝", ch08: "中间纤维", ch09: "细胞周期", ch10: "信号(一)", ch11: "信号(二)", ch12: "衰老凋亡", ch13: "癌细胞" };
     var chs = {}, tags = {};
     cards.forEach(function (c) { if (c.ch) chs[c.ch] = 1; tags[c.tag] = 1; });
     var curCh = "all", curTag = "all", curMod = "all", mode = "填空", dueOnly = false, wrongOnly = false, deck = [], pos = 0;
@@ -1269,7 +1269,7 @@
     var ctl = document.getElementById("examctl"), host = document.getElementById("examhost");
     var timerEl = document.getElementById("examtimer");
     if (!ctl || !host) return;
-    var names = { ch01: "绪论", ch02: "质膜", ch03: "内膜系统", ch04: "蛋白质运输", ch05: "后翻译转运" };
+    var names = { ch01: "绪论", ch02: "质膜", ch03: "内膜系统", ch04: "蛋白质运输", ch05: "后翻译转运", ch06: "微管", ch07: "微丝", ch08: "中间纤维", ch09: "细胞周期", ch10: "信号(一)", ch11: "信号(二)", ch12: "衰老凋亡", ch13: "癌细胞" };
     var types = [["mcq", "选择题"], ["judge", "判断题"], ["fill", "填空题"], ["short", "简答题"], ["calc", "论述/推导"], ["term", "名词解释"]];
     var pool = [];
     (window.MANIFEST || []).forEach(function (m) {
@@ -1672,7 +1672,7 @@
     var cnt = document.getElementById("gcount");
     if (!host) return;
     if (cnt) cnt.textContent = data.length;
-    var names = { ch01: "绪论", ch02: "质膜", ch03: "内膜系统", ch04: "蛋白质运输", ch05: "后翻译转运" };
+    var names = { ch01: "绪论", ch02: "质膜", ch03: "内膜系统", ch04: "蛋白质运输", ch05: "后翻译转运", ch06: "微管", ch07: "微丝", ch08: "中间纤维", ch09: "细胞周期", ch10: "信号(一)", ch11: "信号(二)", ch12: "衰老凋亡", ch13: "癌细胞" };
     var cur = "all";
     var chs = {}; data.forEach(function (g) { if (g.ch) chs[g.ch] = 1; });
     var bAll = el("button", "on", "全部"); bAll.dataset.ch = "all";
