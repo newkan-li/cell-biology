@@ -304,6 +304,15 @@
     h += "</div>";
     return h;
   }
+  function fillExplain(q) {
+    if (!q || !q.oe || !q.oe.length) return "";
+    var marks = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫";
+    var h = '<div class="oe-list">';
+    q.oe.forEach(function (r, i) {
+      h += '<div class="oe"><b>' + (q.oe.length > 1 ? (marks.charAt(i) || ((i + 1) + ".")) : "解析") + "</b> " + esc(r) + "</div>";
+    });
+    return h + "</div>";
+  }
   function renderMCQ(cid, q, idx) {
     var box = el("div", "q"); box.id = "q_" + q.id;
     box.appendChild(el("p", "qq", "第 " + idx + " 题 " + esc(q.q) + (q.mod ? '<span class="src">[' + esc(q.mod) + "]</span>" : "")));
@@ -382,7 +391,7 @@
     });
     var res = box._res; res.style.display = "block";
     res.innerHTML = (ok ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 错误</span>（正确答案：<b>' + esc(correct) + "</b>）") +
-      '<div style="margin-top:4px">解析：' + esc(q.e || "") + "</div>";
+      '<div style="margin-top:4px">解析：' + esc(q.e || "") + "</div>" + optsExplain({ o: ["对", "错"], a: q.a, oe: q.oe });
     box._cause.style.display = ok ? "none" : "flex";
     if (!ok) addWrong(cid, { id: q.id, type: "judge", q: q.q, correct: correct, chosen: chosen, cause: "", ts: Date.now() });
     else clearWrong(cid, q.id);
@@ -399,7 +408,7 @@
     var bChk = el("button", "ok", "检查"), bShow = el("button", "", "显示答案");
     bar.appendChild(bChk); bar.appendChild(bShow); box.appendChild(bar);
     var det = el("details", "sol");
-    det.innerHTML = '<summary>参考答案</summary><div class="ansbox"><b>' + esc(q.a) + "</b></div>";
+    det.innerHTML = '<summary>参考答案</summary><div class="ansbox"><b>' + esc(q.a) + "</b>" + fillExplain(q) + "</div>";
     box.appendChild(det);
     var res = el("div", "mres"); res.style.display = "none"; box.appendChild(res);
     var cb = causeBox(cid, q.id); box.appendChild(cb);
@@ -413,7 +422,7 @@
       store[q.id] = rec; jset(skey(cid, "fill"), store); touch(cid);
       inp.classList.remove("right", "wrong"); inp.classList.add(ok ? "right" : "wrong");
       res.style.display = "block";
-      res.innerHTML = ok ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 与参考答案不完全一致</span>，可点“显示答案”核对。';
+      res.innerHTML = (ok ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 与参考答案不完全一致</span>，可点“显示答案”核对。') + fillExplain(q);
       cb.style.display = ok ? "none" : "flex";
       if (ok) { clearWrong(cid, q.id); } else { addWrong(cid, { id: q.id, type: "fill", q: q.q, correct: q.a, chosen: inp.value, cause: "", ts: Date.now() }); }
       kpRecord(q.kp, ok);
