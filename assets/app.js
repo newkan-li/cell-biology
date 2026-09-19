@@ -1546,7 +1546,7 @@
   }
 
   /* ================= 历年真题页 ================= */
-  function renderZhenti() {
+  function renderZhentiSub() {
     var ctl = document.getElementById("ztctl"), host = document.getElementById("zthost"), cnt = document.getElementById("ztcount");
     if (!host) return;
     var Z = window.ZHENTI || {};
@@ -1804,6 +1804,83 @@
       }
     }
   });
+
+  /* ================= 客观真题（选择/判断/填空） ================= */
+  var ZT_NAMES = {
+    ch01: "第一章 绪论", ch02: "第二章 细胞的统一性与多样性", ch03: "第三章 研究方法", ch04: "第四章 细胞质膜",
+    ch05: "第五章 跨膜运输", ch06: "第六章 线粒体和叶绿体", ch07: "第七章 细胞质基质与内膜系统", ch08: "第八章 蛋白质分选与膜泡运输",
+    ch09: "第九章 细胞信号转导", ch10: "第十章 细胞骨架", ch11: "第十一章 细胞核与染色质", ch12: "第十二章 核糖体",
+    ch13: "第十三章 细胞周期与细胞分裂", ch14: "第十四章 细胞增殖调控与癌细胞", ch15: "第十五章 细胞分化与胚胎发育",
+    ch16: "第十六章 细胞死亡与细胞衰老", ch17: "第十七章 细胞的社会联系"
+  };
+  function renderZhenti() {
+    if (!window.__ztmode) window.__ztmode = "sub";
+    var sub = document.getElementById("ztModeSub"), obj = document.getElementById("ztModeObj");
+    function sync() { if (sub) sub.classList.toggle("on", window.__ztmode === "sub"); if (obj) obj.classList.toggle("on", window.__ztmode === "obj"); }
+    if (sub) sub.onclick = function () { window.__ztmode = "sub"; sync(); renderZhentiSub(); };
+    if (obj) obj.onclick = function () { window.__ztmode = "obj"; sync(); renderZtObj(); };
+    sync();
+    if (window.__ztmode === "obj") renderZtObj(); else renderZhentiSub();
+  }
+  function renderZtObj() {
+    var ctl = document.getElementById("ztctl"), host = document.getElementById("zthost"), cnt = document.getElementById("ztcount");
+    if (!host) return;
+    var O = window.ZTOBJ || {};
+    var names = ZT_NAMES;
+    var covered = { ch01: 1, ch02: 1, ch03: 1, ch04: 1, ch05: 1, ch07: 1, ch08: 1, ch11: 1 };
+    var TY = [["all", "全部题型"], ["mcq", "选择题"], ["judge", "判断题"], ["fill", "填空题"]];
+    var cur = "all", ty = "all", q = "";
+    ctl.innerHTML = '<div class="fc-chips" id="zty"></div><div class="fc-chips" id="ztc"></div>' +
+      '<input id="ztsearch" class="ans" placeholder="搜索题干 / 答案…" style="margin-top:6px">' +
+      '<button class="navbtn" style="width:auto;margin-top:8px" id="ztQuiz">🎯 客观题自测（随机 20 题，可判分）</button>';
+    var yc = document.getElementById("zty"), cc = document.getElementById("ztc");
+    TY.forEach(function (t) { var b = el("button", "fc-chip" + (t[0] === ty ? " on" : ""), t[1]); b.dataset.v = t[0]; b.onclick = function () { ty = t[0]; sync(); render(); }; yc.appendChild(b); });
+    function chapChip(label, val) { var b = el("button", "fc-chip" + (val === cur ? " on" : ""), label); b.dataset.v = val; b.onclick = function () { cur = val; sync(); render(); }; cc.appendChild(b); }
+    chapChip("全部（17章）", "all"); chapChip("只看已讲章节", "covered");
+    Object.keys(O).sort().forEach(function (cid) { chapChip(esc(names[cid] || cid), cid); });
+    function sync() {
+      Array.prototype.forEach.call(yc.children, function (b) { b.classList.toggle("on", b.dataset.v === ty); });
+      Array.prototype.forEach.call(cc.children, function (b) { b.classList.toggle("on", b.dataset.v === cur); });
+    }
+    var search = document.getElementById("ztsearch"); search.oninput = function () { q = (search.value || "").trim().toLowerCase(); render(); };
+    function inScope(cid) { if (cur === "covered") return !!covered[cid]; if (cur !== "all") return cid === cur; return true; }
+    function types() { return ty === "all" ? ["mcq", "judge", "fill"] : [ty]; }
+    function render() {
+      var html = "", total = 0;
+      Object.keys(O).sort().forEach(function (cid) {
+        if (!inScope(cid)) return;
+        var rows = [];
+        types().forEach(function (t) { (O[cid][t] || []).forEach(function (x) { if (!q || (x.q + " " + (x.o || []).join(" ") + " " + x.a).toLowerCase().indexOf(q) >= 0) rows.push({ t: t, x: x }); }); });
+        if (!rows.length) return;
+        html += "<h2>" + esc(names[cid] || cid) + "（" + rows.length + "）</h2>";
+        rows.forEach(function (r, i) {
+          total++; var x = r.x, tn = { mcq: "选择", judge: "判断", fill: "填空" }[r.t];
+          html += '<div class="zt"><div class="zt-q"><b>' + (i + 1) + ".</b> [" + tn + "] " + esc(x.q) + "</div>";
+          if (r.t === "mcq") html += '<div style="margin:4px 0;color:var(--sub)">' + x.o.map(function (o) { return esc(o); }).join("<br>") + "</div>";
+          html += '<details class="sol"><summary>答案' + (x.src ? "（" + esc(x.src) + "）" : "") + '</summary><div class="ansbox"><b>答案：' + esc(x.a) + "</b>" + (x.e ? '<div style="margin-top:4px">解析：' + esc(x.e).replace(/\n/g, "<br>") + "</div>" : "") + "</div></details></div>";
+        });
+      });
+      host.innerHTML = html || '<p class="empty">没有匹配的客观题。</p>';
+      if (cnt) cnt.textContent = total;
+    }
+    function startQuiz() {
+      var pool = [];
+      Object.keys(O).sort().forEach(function (cid) { if (!inScope(cid)) return; types().forEach(function (t) { (O[cid][t] || []).forEach(function (x) { if (x.q) pool.push({ cid: cid, t: t, x: x }); }); }); });
+      for (var i = pool.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tt = pool[i]; pool[i] = pool[j]; pool[j] = tt; }
+      pool = pool.slice(0, 20);
+      if (!pool.length) { host.innerHTML = '<p class="empty">该范围没有客观题。</p>'; return; }
+      host.innerHTML = '<div class="statsbox" style="margin-bottom:8px"><b>🎯 客观题自测：' + pool.length + ' 题</b>　选择题点选项、判断题点对/错即时判分；填空题输入后点「检查」</div>';
+      pool.forEach(function (it, i) {
+        var x = it.x;
+        var o = { q: x.q, o: x.o, a: x.a, e: x.e, id: "ztobj_" + it.cid + "_" + it.t + "_" + i, kp: null };
+        var box = it.t === "mcq" ? renderMCQ(it.cid, o, i + 1) : (it.t === "judge" ? renderJudge(it.cid, o, i + 1) : renderFill(it.cid, o, i + 1));
+        host.appendChild(box);
+      });
+      if (cnt) cnt.textContent = pool.length;
+    }
+    document.getElementById("ztQuiz").onclick = startQuiz;
+    render();
+  }
 
   /* ================= boot ================= */
   document.addEventListener("DOMContentLoaded", function () {
