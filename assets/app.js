@@ -1278,7 +1278,7 @@
     });
     ctl.innerHTML =
       '<div class="ex-row"><b>章节：</b>' + (window.MANIFEST || []).map(function (m) {
-        return '<label class="ex-lb"><input type="checkbox" class="ex-ch" value="' + m.id + '" checked> ' + esc(names[m.id] || m.id) + "</label>";
+        return '<label class="ex-lb"><input type="checkbox" class="ex-ch" value="' + m.id + '" checked> ' + esc(names[m.id] || m.title || m.id) + "</label>";
       }).join("") + "</div>" +
       '<div class="ex-row"><b>题型：</b>' + types.map(function (t) {
         return '<label class="ex-lb"><input type="checkbox" class="ex-ty" value="' + t[0] + '" checked> ' + t[1] + "</label>";
