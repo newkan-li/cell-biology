@@ -1055,7 +1055,7 @@
       if (usp.get("due") === "1") dueOnly = true;
     } catch (e) { }
     ctl.innerHTML = "";
-    var row1 = el("div", "fc-chips"), row2 = el("div", "fc-chips"), row3 = el("div", "fc-chips"), row0 = el("div", "fc-chips");
+    var row1 = el("div", "fc-chips"), rowMod = el("div", "fc-chips"), row2 = el("div", "fc-chips"), row3 = el("div", "fc-chips"), row0 = el("div", "fc-chips");
     var dueN = cards.filter(function (c) { var s = srsGet(c.id); return s && s.due <= Date.now(); }).length;
     var bDue = el("button", "fc-chip" + (dueOnly ? " on" : ""), "📅 今日卡片（" + dueN + " 张到期）");
     bDue.onclick = function () { dueOnly = !dueOnly; wrongOnly = false; curCh = "all"; curTag = "all"; curMod = "all"; sync(); build(); };
@@ -1068,17 +1068,32 @@
       var b = el("button", "fc-chip", label); b.dataset.v = val;
       b.onclick = function () {
         dueOnly = false;
-        if (group === "ch") curCh = val; else if (group === "tag") curTag = val; else mode = val;
+        if (group === "ch") { curCh = val; curMod = "all"; } else if (group === "tag") curTag = val; else mode = val;
         sync(); build();
       };
       return b;
     }
     row1.appendChild(mk("全部章节", "all", "ch"));
     Object.keys(chs).sort().forEach(function (c) { row1.appendChild(mk(names[c] || c, c, "ch")); });
+    function renderModChips() {
+      rowMod.innerHTML = "";
+      if (curCh === "all") { rowMod.style.display = "none"; return; }
+      rowMod.style.display = "";
+      rowMod.appendChild(el("span", "fc-chiplabel", "模块："));
+      var b0 = el("button", "fc-chip" + (curMod === "all" ? " on" : ""), "整章");
+      b0.onclick = function () { curMod = "all"; sync(); build(); }; rowMod.appendChild(b0);
+      var mods = {};
+      cards.forEach(function (c) { if (c.ch === curCh && c.mod != null) mods[c.mod] = c.modName || ("模块" + c.mod); });
+      Object.keys(mods).sort(function (a, b) { return a - b; }).forEach(function (mi) {
+        var nm = mods[mi], lab = nm.length > 18 ? nm.slice(0, 18) + "…" : nm;
+        var b = el("button", "fc-chip" + (String(curMod) === String(mi) ? " on" : ""), lab);
+        b.title = nm; b.onclick = function () { curMod = mi; sync(); build(); }; rowMod.appendChild(b);
+      });
+    }
     row2.appendChild(mk("全部类型", "all", "tag"));
     Object.keys(tags).forEach(function (t) { row2.appendChild(mk(t, t, "tag")); });
     [["背", "背"], ["填空", "填空"], ["写", "写"]].forEach(function (o) { row3.appendChild(mk("模式：" + o[0], o[1], "mode")); });
-    ctl.appendChild(row0); ctl.appendChild(row1); ctl.appendChild(row2); ctl.appendChild(row3);
+    ctl.appendChild(row0); ctl.appendChild(row1); ctl.appendChild(rowMod); ctl.appendChild(row2); ctl.appendChild(row3);
     // 分类学习：按章 / 主题（模块）
     var catsEl = document.getElementById("fccats");
     if (catsEl) {
@@ -1121,6 +1136,7 @@
       Array.prototype.forEach.call(row1.children, function (b) { b.classList.toggle("on", !dueOnly && !wrongOnly && b.dataset.v === curCh); });
       Array.prototype.forEach.call(row2.children, function (b) { b.classList.toggle("on", !dueOnly && !wrongOnly && b.dataset.v === curTag); });
       Array.prototype.forEach.call(row3.children, function (b) { b.classList.toggle("on", b.dataset.v === mode); });
+      renderModChips();
     }
     function build() {
       deck = cards.filter(function (c) {
@@ -1270,12 +1286,28 @@
     var timerEl = document.getElementById("examtimer");
     if (!ctl || !host) return;
     var names = { ch01: "绪论", ch02: "质膜", ch03: "内膜系统", ch04: "蛋白质运输", ch05: "后翻译转运", ch06: "微管", ch07: "微丝", ch08: "中间纤维", ch09: "细胞周期", ch10: "信号(一)", ch11: "信号(二)", ch12: "衰老凋亡", ch13: "癌细胞" };
+    var ztNames = ZT_NAMES;
     var types = [["mcq", "选择题"], ["judge", "判断题"], ["fill", "填空题"], ["short", "简答题"], ["calc", "论述/推导"], ["term", "名词解释"]];
     var pool = [];
     (window.MANIFEST || []).forEach(function (m) {
       var ch = window.CHAPTERS[m.id]; if (!ch) return;
       types.forEach(function (t) { (ch[t[0]] || []).forEach(function (q) { pool.push({ cid: m.id, kind: t[0], q: q }); }); });
     });
+    function ztItems() {
+      var tg = document.getElementById("exZt");
+      if (!tg || !tg.checked) return [];
+      var sel = Array.prototype.map.call(ctl.querySelectorAll(".ex-zch:checked"), function (x) { return x.value; });
+      var out = [], O = window.ZTOBJ || {};
+      Object.keys(O).forEach(function (c) {
+        if (sel.indexOf(c) < 0) return;
+        ["mcq", "judge", "fill"].forEach(function (k) {
+          (O[c][k] || []).forEach(function (x, i) {
+            out.push({ cid: "T" + c, kind: k, q: { id: "zt_" + c + "_" + k + "_" + i, q: x.q, o: x.o, a: x.a, e: x.e, kp: null } });
+          });
+        });
+      });
+      return out;
+    }
     ctl.innerHTML =
       '<div class="ex-row"><b>章节：</b>' + (window.MANIFEST || []).map(function (m) {
         return '<label class="ex-lb"><input type="checkbox" class="ex-ch" value="' + m.id + '" checked> ' + esc(names[m.id] || m.title || m.id) + "</label>";
@@ -1283,10 +1315,18 @@
       '<div class="ex-row"><b>题型：</b>' + types.map(function (t) {
         return '<label class="ex-lb"><input type="checkbox" class="ex-ty" value="' + t[0] + '" checked> ' + t[1] + "</label>";
       }).join("") + "</div>" +
+      '<div class="ex-row"><b>题库真题：</b><label class="ex-lb"><input type="checkbox" id="exZt"> 纳入客观真题（选择/判断/填空，配套题库）</label></div>' +
+      '<div class="ex-row" id="exZtRow" style="display:none"><b>真题章节：</b>' +
+      (window.ZTOBJ ? Object.keys(window.ZTOBJ).sort().map(function (c) {
+        return '<label class="ex-lb"><input type="checkbox" class="ex-zch" value="' + c + '" checked> ' + esc(ztNames[c] || c) + "</label>";
+      }).join("") : "<span>（未加载 data/ztobj.js）</span>") + "</div>" +
       '<div class="ex-row"><b>题量：</b><select id="exCount"><option>10</option><option selected>20</option><option>30</option><option>50</option></select>' +
       '<b>时间：</b><select id="exMin"><option value="15">15 分钟</option><option value="30" selected>30 分钟</option><option value="60">60 分钟</option><option value="120">120 分钟</option></select>' +
       '<button id="exFull" class="navbtn" style="width:auto;margin:0;background:#c0392b;border-color:#c0392b">📄 802 整套模拟</button>' +
       '<button id="exStart" class="navbtn" style="width:auto;margin:0">开始测验</button></div>';
+    var ztToggle = document.getElementById("exZt"), ztRow = document.getElementById("exZtRow");
+    if (ztToggle) ztToggle.onchange = function () { ztRow.style.display = ztToggle.checked ? "" : "none"; };
+    Object.keys(window.ZTOBJ || {}).forEach(function (c) { names["T" + c] = "真题·" + (ztNames[c] || c); });
     var timer = null, remain = 0, current = [];
     function stopTimer() { if (timer) { clearInterval(timer); timer = null; } }
     function fmt(s) { var m = Math.floor(s / 60), x = s % 60; return (m < 10 ? "0" : "") + m + ":" + (x < 10 ? "0" : "") + x; }
@@ -1300,6 +1340,9 @@
       var cand = pool.filter(function (it) {
         return (plan || chs.indexOf(it.cid) >= 0) && (plan || tys.indexOf(it.kind) >= 0);
       });
+      var zi = ztItems();
+      if (!plan) zi = zi.filter(function (it) { return tys.indexOf(it.kind) >= 0; });
+      cand = cand.concat(zi);
       if (plan) {
         mins = plan.minutes || mins; current = [];
         Object.keys(plan.counts).forEach(function (k) {
