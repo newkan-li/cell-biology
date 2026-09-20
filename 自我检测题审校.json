@@ -1,0 +1,1294 @@
+{
+ "total": 831,
+ "low": 36,
+ "weak": 107,
+ "report": [
+  {
+   "cid": "ch01",
+   "page": 1,
+   "q": "关于第一章绪论的内容框架，下列叙述正确的是（　）",
+   "a": "B",
+   "cov": 15,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch01",
+   "page": 3,
+   "q": "1665年Robert Hooke观察软木塞切片并命名“cell”，下列说法正确的是（　）",
+   "a": "A",
+   "cov": 48,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch01",
+   "page": 6,
+   "q": "细胞学说三大基本原则不包括下列哪一项（　）",
+   "a": "B",
+   "cov": 0,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch01",
+   "page": 8,
+   "q": "美国第一位细胞生物学家威尔逊1925年提出“一切生命的关键问题都要到细胞中去寻找答案”，该名言主要强调（　）",
+   "a": "A",
+   "cov": 7,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch01",
+   "page": 11,
+   "q": "实验细胞学时期(1900—1953)的三大分支不包括（　）",
+   "a": "D",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch01",
+   "page": 12,
+   "q": "关于细胞结构上的共性，下列叙述错误的是（　）",
+   "a": "D",
+   "cov": 18,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch01",
+   "page": 14,
+   "q": "关于细胞的基本性质(功能共性)，下列说法正确的是（　）",
+   "a": "A",
+   "cov": 7,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch01",
+   "page": 20,
+   "q": "生命树分为三个主要分支，下列不属于这三个分支的是（　）",
+   "a": "D",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch01",
+   "page": 25,
+   "q": "原核细胞与真核细胞的共同点不包括（　）",
+   "a": "C",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch01",
+   "page": 30,
+   "q": "关于原核与真核细胞在细胞质、繁殖与运动上的差异，下列说法正确的是（　）",
+   "a": "B",
+   "cov": 10,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch01",
+   "page": 37,
+   "q": "关于酵母与人类细胞周期相关蛋白，下列说法正确的是（　）",
+   "a": "B",
+   "cov": 68,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch01",
+   "page": 40,
+   "q": "线虫(C. elegans)相关研究获得诺贝尔奖的领域是（　）",
+   "a": "D",
+   "cov": 33,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch01",
+   "page": 49,
+   "q": "在果蝇腿的前体细胞中人为表达Ey基因，最可能的结果是（　）",
+   "a": "A",
+   "cov": 18,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch01",
+   "page": 51,
+   "q": "人类婴儿与小鼠额头出现相似白斑，是因为（　）",
+   "a": "D",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch01",
+   "page": 55,
+   "q": "关于斑马鱼与人类的相似性，下列说法正确的是（　）",
+   "a": "D",
+   "cov": 82,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch02",
+   "page": 2,
+   "q": "关于质膜的基本功能，下列说法不正确的是（　）",
+   "a": "B",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch02",
+   "page": 3,
+   "q": "关于流动镶嵌模型，下列说法正确的是（　）",
+   "a": "C",
+   "cov": 43,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch02",
+   "page": 7,
+   "q": "关于膜的组成组分，下列说法正确的是（　）",
+   "a": "C",
+   "cov": 25,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch02",
+   "page": 9,
+   "q": "关于甘油磷脂，下列说法正确的是（　）",
+   "a": "B",
+   "cov": 50,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch02",
+   "page": 19,
+   "q": "膜脂在水溶液中自发形成脂双层，其驱动力是（　）",
+   "a": "D",
+   "cov": 10,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch02",
+   "page": 22,
+   "q": "下列不属于脂质体应用的是（　）",
+   "a": "B",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch02",
+   "page": 34,
+   "q": "限制膜蛋白侧向运动的方式不包括（　）",
+   "a": "C",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch02",
+   "page": 38,
+   "q": "关于温度对膜流动性的影响，下列说法正确的是（　）",
+   "a": "C",
+   "cov": 13,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch02",
+   "page": 54,
+   "q": "2003年诺贝尔化学奖授予的跨膜运输研究对象是（　）",
+   "a": "B",
+   "cov": 50,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch02",
+   "page": 65,
+   "q": "下列不属于主动运输驱动力的是（　）",
+   "a": "B",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch02",
+   "page": 70,
+   "q": "下列哪项不是动物细胞Na+/K+泵的作用（　）",
+   "a": "A",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch02",
+   "page": 78,
+   "q": "K+通道能特异性地只让K+通过，其分子基础是（　）",
+   "a": "C",
+   "cov": 17,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch03",
+   "page": 1,
+   "q": "本章所述的蛋白质定向转运方式不包括（　）",
+   "a": "B",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch03",
+   "page": 3,
+   "q": "下列不属于内膜系统的是（　）",
+   "a": "D",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch03",
+   "page": 6,
+   "q": "研究细胞膜系统的方法不包括（　）",
+   "a": "A",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch03",
+   "page": 15,
+   "q": "下列不属于光面内质网(sER)功能的是？",
+   "a": "B",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch03",
+   "page": 19,
+   "q": "ER合成的膜脂运往线粒体、高尔基体和质膜的方式不包括（　）",
+   "a": "A",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch03",
+   "page": 21,
+   "q": "关于内质网易位子(translocon)，下列叙述正确的是？",
+   "a": "B",
+   "cov": 19,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch03",
+   "page": 28,
+   "q": "核编码蛋白从胞质运往各目的地的途径不包括（　）",
+   "a": "C",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch03",
+   "page": 33,
+   "q": "因发现蛋白质具有决定其运输和定位的内在信号而获诺贝尔奖的科学家是？",
+   "a": "D",
+   "cov": 100,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch03",
+   "page": 36,
+   "q": "关于信号肽假说，叙述正确的是（　）",
+   "a": "A",
+   "cov": 61,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch03",
+   "page": 53,
+   "q": "下列不属于蛋白质糖基化生物学功能的是？",
+   "a": "A",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch03",
+   "page": 66,
+   "q": "2004年诺贝尔化学奖表彰的重大发现是？",
+   "a": "B",
+   "cov": 100,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch03",
+   "page": 68,
+   "q": "靶蛋白泛素化过程中，泛素共价结合的位点及催化酶是？",
+   "a": "D",
+   "cov": 12,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch03",
+   "page": 72,
+   "q": "下列关于内质网功能的叙述，错误的是？",
+   "a": "C",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch03",
+   "page": 89,
+   "q": "真核细胞调节蛋白质存量的两条主要降解途径是？",
+   "a": "B",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch04",
+   "page": 3,
+   "q": "关于共翻译转移的叙述，正确的是？",
+   "a": "D",
+   "cov": 18,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch04",
+   "page": 5,
+   "q": "2013年诺贝尔生理学或医学奖表彰的科学成就是？",
+   "a": "C",
+   "cov": 100,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch04",
+   "page": 32,
+   "q": "网格蛋白介导由TGN向质膜、胞内体或溶酶体的运输时，参与的小G蛋白是？",
+   "a": "D",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch05",
+   "page": 11,
+   "q": "定位于叶绿体类囊体腔的蛋白，其转运肽的特点是？",
+   "a": "C",
+   "cov": 5,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch06",
+   "page": 6,
+   "q": "关于中间纤维（IF）的组装，正确的是？",
+   "a": "A",
+   "cov": 18,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch06",
+   "page": 22,
+   "q": "关于微管组织中心(MTOC)，下列叙述正确的是？",
+   "a": "B",
+   "cov": 14,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch06",
+   "page": 23,
+   "q": "下列均属常见动物细胞微管组织中心的一组是？",
+   "a": "C",
+   "cov": 17,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch06",
+   "page": 30,
+   "q": "植物细胞周期中出现四种主要微管阵列，下列不属于其中的是？",
+   "a": "C",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch06",
+   "page": 47,
+   "q": "GFP-驱动蛋白沿Cy5标记微管运动的单分子实验说明？",
+   "a": "C",
+   "cov": 8,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch06",
+   "page": 63,
+   "q": "关于鞭毛、纤毛中微管骨架及运动，下列叙述正确的是？",
+   "a": "D",
+   "cov": 18,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch06",
+   "page": 74,
+   "q": "前中期染色体向赤道板聚集，主要是由什么调控的？",
+   "a": "A",
+   "cov": 19,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch06",
+   "page": 80,
+   "q": "关于微管药物用于癌症化疗的原理，下列叙述正确的是？",
+   "a": "B",
+   "cov": 19,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch07",
+   "page": 3,
+   "q": "关于微丝在体内外的装配，下列叙述正确的是？",
+   "a": "D",
+   "cov": 8,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch07",
+   "page": 7,
+   "q": "微丝和微管体外装配的三个阶段依次是？",
+   "a": "D",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch07",
+   "page": 10,
+   "q": "关于Arp2/3复合体，下列叙述正确的是？",
+   "a": "A",
+   "cov": 40,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch07",
+   "page": 26,
+   "q": "心肌细胞中构成细肌丝和粗肌丝的蛋白分别是？",
+   "a": "C",
+   "cov": 17,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch07",
+   "page": 34,
+   "q": "肌质网（sarcoplasmic reticulum）在肌肉收缩中的主要作用是？",
+   "a": "C",
+   "cov": 10,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch07",
+   "page": 35,
+   "q": "肌肉收缩的滑动丝模型认为，肌肉收缩时？",
+   "a": "A",
+   "cov": 6,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch07",
+   "page": 37,
+   "q": "小肠吸收上皮细胞游离面微绒毛的主要功能是？",
+   "a": "D",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch07",
+   "page": 39,
+   "q": "关于微绒毛与静纤毛的比较，正确的是？",
+   "a": "A",
+   "cov": 8,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch07",
+   "page": 50,
+   "q": "片状伪足（lamellipodia）和丝状伪足快速形成的主要机制是？",
+   "a": "A",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch07",
+   "page": 54,
+   "q": "在迁移细胞前缘，肌动蛋白单体主要在微丝的哪一端组装？",
+   "a": "B",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch07",
+   "page": 55,
+   "q": "细胞变形运动（如阿米巴、白细胞、成纤维细胞）的正确步骤是？",
+   "a": "A",
+   "cov": 13,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch07",
+   "page": 58,
+   "q": "果蝇精母细胞胞质分裂时，F-actin浓集于何处？",
+   "a": "B",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch08",
+   "page": 6,
+   "q": "下列中间纤维与其富集部位的对应，错误的是？",
+   "a": "B",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch08",
+   "page": 18,
+   "q": "单根中间纤维被拉伸3倍以上且拉伸段变细，提示其变形机制是？",
+   "a": "C",
+   "cov": 17,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch08",
+   "page": 20,
+   "q": "关于核纤层的叙述，正确的是？",
+   "a": "A",
+   "cov": 18,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch09",
+   "page": 6,
+   "q": "关于各时相物质合成的叙述，正确的是？",
+   "a": "D",
+   "cov": 12,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch09",
+   "page": 24,
+   "q": "关于DNA损伤后检验点反应的叙述，正确的是？",
+   "a": "A",
+   "cov": 19,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch09",
+   "page": 25,
+   "q": "细胞周期检验点(checkpoint)概念是1988年由谁提出的？",
+   "a": "D",
+   "cov": 82,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch09",
+   "page": 33,
+   "q": "在纺锤体组装检验点中，Mad2蛋白的作用是？",
+   "a": "D",
+   "cov": 9,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch09",
+   "page": 34,
+   "q": "2001年诺贝尔生理学或医学奖授予的发现是？",
+   "a": "C",
+   "cov": 100,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch09",
+   "page": 38,
+   "q": "将各期人细胞与M期细胞融合诱导早熟染色体凝集，S期细胞的染色质表现为？",
+   "a": "A",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch09",
+   "page": 53,
+   "q": "驱动细胞周期的“引擎”CDK活性受多方面调控，不包括下列哪项？",
+   "a": "C",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch09",
+   "page": 55,
+   "q": "关于CDK1活性的调节，下列叙述正确的是？",
+   "a": "D",
+   "cov": 100,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch09",
+   "page": 60,
+   "q": "下列属于INK4家族CDK抑制蛋白(CKI)的是？",
+   "a": "C",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch09",
+   "page": 61,
+   "q": "关于CDK活性的综合调节，下列叙述正确的是？",
+   "a": "C",
+   "cov": 14,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch09",
+   "page": 63,
+   "q": "癌细胞中细胞周期调控失调的常见表现是？",
+   "a": "D",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch09",
+   "page": 69,
+   "q": "关于两类E3泛素连接酶SCF与APC的叙述，正确的是？",
+   "a": "A",
+   "cov": 15,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch10",
+   "page": 2,
+   "q": "下列哪项不属于细胞通讯的基本过程？",
+   "a": "C",
+   "cov": 6,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch10",
+   "page": 5,
+   "q": "同一信号分子乙酰胆碱作用于不同靶细胞产生不同反应，说明？",
+   "a": "C",
+   "cov": 6,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch10",
+   "page": 8,
+   "q": "下列哪项不属于细胞通讯的方式？",
+   "a": "D",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch10",
+   "page": 9,
+   "q": "关于气体信号分子（如NO、CO）进入细胞的方式，正确的是？",
+   "a": "D",
+   "cov": 18,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch10",
+   "page": 11,
+   "q": "关于受体的叙述，正确的是？",
+   "a": "B",
+   "cov": 17,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch10",
+   "page": 15,
+   "q": "1998年诺贝尔生理学或医学奖授予Furchgott、Ignarro和Murad，表彰他们发现？",
+   "a": "C",
+   "cov": 100,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch10",
+   "page": 17,
+   "q": "1980年Furchgott将内皮释放的舒血管物质命名为？",
+   "a": "D",
+   "cov": 56,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch10",
+   "page": 24,
+   "q": "关于G蛋白偶联受体的叙述，正确的是？",
+   "a": "A",
+   "cov": 18,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch10",
+   "page": 25,
+   "q": "2021年诺贝尔生理学或医学奖表彰的发现是？",
+   "a": "D",
+   "cov": 50,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch10",
+   "page": 31,
+   "q": "2012年诺贝尔化学奖授予Lefkowitz和Kobilka，表彰他们？",
+   "a": "D",
+   "cov": 100,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch10",
+   "page": 34,
+   "q": "异源三聚体G蛋白的三个亚基是？",
+   "a": "D",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch10",
+   "page": 45,
+   "q": "“关闭信号的机制与开启信号的机制同等重要”，下列不属于关闭信号机制的是？",
+   "a": "C",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch10",
+   "page": 46,
+   "q": "1994年诺贝尔生理学或医学奖表彰的成就是？",
+   "a": "A",
+   "cov": 100,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch10",
+   "page": 47,
+   "q": "关于G蛋白激活与失活循环，正确的是？",
+   "a": "D",
+   "cov": 13,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch10",
+   "page": 49,
+   "q": "人愤怒时肾上腺素到达肝脏后，通过G蛋白信号通路使血糖升高的原因是？",
+   "a": "B",
+   "cov": 19,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch11",
+   "page": 2,
+   "q": "肝脏、肌肉细胞应答肾上腺素、胰高血糖素时，cAMP-PKA通路的作用是？",
+   "a": "A",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch11",
+   "page": 3,
+   "q": "cAMP激活蛋白激酶A(PKA)的方式是？",
+   "a": "C",
+   "cov": 18,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch11",
+   "page": 6,
+   "q": "肾上腺素刺激骨骼肌细胞糖原分解的级联顺序是？",
+   "a": "A",
+   "cov": 19,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch11",
+   "page": 12,
+   "q": "肌醇磷脂信号通路又称PKC系统，其反应链是？",
+   "a": "A",
+   "cov": 18,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch11",
+   "page": 18,
+   "q": "关于酶联受体的描述，正确的是？",
+   "a": "D",
+   "cov": 8,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch11",
+   "page": 21,
+   "q": "受体酪氨酸激酶(RTK)被配体激活的关键步骤是？",
+   "a": "B",
+   "cov": 17,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch11",
+   "page": 22,
+   "q": "无信号分子结合时，RTK和Ras分别处于什么状态？",
+   "a": "A",
+   "cov": 10,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch11",
+   "page": 23,
+   "q": "在RTK激活Ras的过程中，接头蛋白Grb2的SH2和SH3结构域分别结合什么？",
+   "a": "C",
+   "cov": 10,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch11",
+   "page": 37,
+   "q": "关于细胞内Ca2+信号，叙述正确的是（　）",
+   "a": "B",
+   "cov": 17,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch11",
+   "page": 38,
+   "q": "关于细胞维持胞质低Ca2+浓度(约10-7M)的机制，正确的是？",
+   "a": "C",
+   "cov": 17,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch11",
+   "page": 42,
+   "q": "关于钙调素（CaM）的叙述，正确的是（　）",
+   "a": "D",
+   "cov": 13,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch12",
+   "page": 19,
+   "q": "下列现象最能说明细胞凋亡普遍存在及其生物学意义的是（　）",
+   "a": "B",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch12",
+   "page": 21,
+   "q": "脊椎动物神经发育中约50%原始神经元发生凋亡的原因是？",
+   "a": "B",
+   "cov": 25,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch12",
+   "page": 31,
+   "q": "2002年诺贝尔生理学或医学奖授予的三位科学家是？",
+   "a": "C",
+   "cov": 100,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch12",
+   "page": 37,
+   "q": "在秀丽线虫细胞分化谱系中，EMS主要产生哪些细胞系？",
+   "a": "A",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch12",
+   "page": 42,
+   "q": "下列关于caspase切割底物特点的描述，正确的是（　）",
+   "a": "A",
+   "cov": 16,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch12",
+   "page": 55,
+   "q": "Bcl-2是最早从人类滤泡性淋巴瘤中分离克隆的哺乳动物抗凋亡基因，其功能相当于线虫中的哪个基因？",
+   "a": "C",
+   "cov": 100,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch13",
+   "page": 6,
+   "q": "关于接触抑制的叙述，正确的是（　）",
+   "a": "C",
+   "cov": 19,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch13",
+   "page": 7,
+   "q": "恶性肿瘤扩散（转移）过程中，癌细胞突破后进入血液所穿过的结构是？",
+   "a": "D",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch13",
+   "page": 8,
+   "q": "关于癌细胞与生长因子的关系，叙述正确的是（　）",
+   "a": "C",
+   "cov": 19,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch13",
+   "page": 16,
+   "q": "下列均属致癌因素，其中属于物理致癌因子的是？",
+   "a": "C",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch13",
+   "page": 18,
+   "q": "癌症病人中p53基因发生突变或缺失的比例约为？",
+   "a": "D",
+   "cov": 0,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch13",
+   "page": 21,
+   "q": "与宫颈癌发生密切相关的致瘤病毒是？",
+   "a": "C",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch13",
+   "page": 23,
+   "q": "2008年诺贝尔生理学或医学奖授予Harald zur Hausen，表彰他发现？",
+   "a": "B",
+   "cov": 63,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch13",
+   "page": 26,
+   "q": "针对HPV的疫苗对由该病毒引起的癌症早期阶段可提供的保护率约为？",
+   "a": "A",
+   "cov": 100,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch13",
+   "page": 27,
+   "q": "关于逆转录病毒的致癌机制，叙述正确的是（　）",
+   "a": "D",
+   "cov": 19,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch13",
+   "page": 28,
+   "q": "逆转录病毒复制周期中，其RNA基因组首先被转化为？",
+   "a": "B",
+   "cov": 0,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch13",
+   "page": 29,
+   "q": "发现人类免疫缺陷病毒(HIV)而获2008年诺贝尔奖的科学家是？",
+   "a": "A",
+   "cov": 86,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "ch13",
+   "page": 34,
+   "q": "关于原癌基因与肿瘤抑制基因突变特点的比较，正确的是？",
+   "a": "B",
+   "cov": 15,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch13",
+   "page": 41,
+   "q": "原癌基因(proto-oncogene)的准确定义是？",
+   "a": "A",
+   "cov": 6,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch13",
+   "page": 44,
+   "q": "在常见的原癌基因产物对应关系中，ras原癌基因编码的蛋白属于？",
+   "a": "A",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch13",
+   "page": 46,
+   "q": "下列哪一项不属于原癌基因转变为癌基因的常见机制？",
+   "a": "A",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "ch13",
+   "page": 52,
+   "q": "与传统化学治疗相比，血管内皮抑制因子治疗肿瘤的优势是？",
+   "a": "B",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "tb06",
+   "page": 85,
+   "q": "最早在光学显微镜下观察到动物细胞内颗粒状“生命小体”并将其命名为线粒体的学者分别是",
+   "a": "A",
+   "cov": 50,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "tb06",
+   "page": 86,
+   "q": "最早发现于果蝇、编码介导线粒体融合的外膜大分子GTPase的基因是",
+   "a": "A",
+   "cov": 0,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "tb06",
+   "page": 98,
+   "q": "叶绿体分裂中最早出现于内膜下的FtsZ环（Z环），其功能最可能是",
+   "a": "B",
+   "cov": 89,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "tb06",
+   "page": 106,
+   "q": "世界上第一个被成功测序的线粒体基因组来自",
+   "a": "D",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "tb06",
+   "page": 110,
+   "q": "关于非内共生起源学说，下列说法正确的是",
+   "a": "B",
+   "cov": 68,
+   "low": true,
+   "weak": false
+  },
+  {
+   "cid": "tb12",
+   "page": 270,
+   "q": "关于RNA世界假说的叙述，错误的是",
+   "a": "D",
+   "cov": 9,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "tb15",
+   "page": 321,
+   "q": "植物体细胞在适宜条件下形成愈伤组织，这一过程属于？",
+   "a": "B",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "tb15",
+   "page": 325,
+   "q": "眼发生过程中，视泡诱导与其接触的外胚层上皮发育成？",
+   "a": "B",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "tb15",
+   "page": 328,
+   "q": "决定哺乳动物睾丸发育的关键基因是？",
+   "a": "B",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "tb15",
+   "page": 331,
+   "q": "关于PGC的分化方向，下列叙述正确的是？",
+   "a": "B",
+   "cov": 18,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "tb15",
+   "page": 335,
+   "q": "在神经管发育中，维持神经上皮干细胞特性最主要的信号是？",
+   "a": "A",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "tb15",
+   "page": 339,
+   "q": "下列属于镶嵌型发育(自主型发育)典型代表的是？",
+   "a": "C",
+   "cov": 0,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "tb17",
+   "page": 361,
+   "q": "根据功能，细胞连接可分为三大类，下列配对正确的是？",
+   "a": "D",
+   "cov": 14,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "tb17",
+   "page": 370,
+   "q": "关于选择素的叙述，正确的是？",
+   "a": "C",
+   "cov": 17,
+   "low": false,
+   "weak": true
+  },
+  {
+   "cid": "tb17",
+   "page": 376,
+   "q": "关于蛋白聚糖与纤连蛋白，正确的是？",
+   "a": "D",
+   "cov": 52,
+   "low": true,
+   "weak": false
+  }
+ ]
+}

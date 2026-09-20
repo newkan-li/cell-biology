@@ -869,7 +869,7 @@
     else if (slide && slide.check) { q = slide.check; kind = "mcq"; }
     else return null;
     var box = el("div", "checkpoint");
-    box.appendChild(el("div", "cp-h", "🎯 本页自测（选做，不计入已读）"));
+    box.appendChild(el("div", "cp-h", "🎯 本页自测（AI 生成 · 概念自检）" + (q && q.lv ? ' <span class="lvtag">了解即可</span>' : "")));
     var done = false;
     var fb = el("div", "cp-fb");
     function optLetter(o) { return String(o).trim().charAt(0); }
@@ -1091,27 +1091,27 @@
       var qWrap = el("div", "modquiz");
       function qh(id, text) { var h = el("h3", "", text); h.id = id; return h; }
       if (m.mcq && m.mcq.length) {
-        qWrap.appendChild(qh("m" + m.i + "-mcq", "📝 本模块考题 · 选择题（点选项即时判分）"));
+        qWrap.appendChild(qh("m" + m.i + "-mcq", "📝 本模块考题 · 选择题（配套题库 · 点选项即时判分）"));
         m.mcq.forEach(function (q, i) { qWrap.appendChild(renderMCQ(cid, q, i + 1)); });
       }
       if (m.judge && m.judge.length) {
-        qWrap.appendChild(qh("m" + m.i + "-judge", "📝 本模块考题 · 判断题（点“对/错”即时判分）"));
+        qWrap.appendChild(qh("m" + m.i + "-judge", "📝 本模块考题 · 判断题（配套题库 · 点“对/错”即时判分）"));
         m.judge.forEach(function (q, i) { qWrap.appendChild(renderJudge(cid, q, i + 1)); });
       }
       if (m.fill && m.fill.length) {
-        qWrap.appendChild(qh("m" + m.i + "-fill", "📝 本模块考题 · 填空题（输入答案，自动模糊判分）"));
+        qWrap.appendChild(qh("m" + m.i + "-fill", "📝 本模块考题 · 填空题（配套题库 · 输入答案自动判分）"));
         m.fill.forEach(function (q, i) { qWrap.appendChild(renderFill(cid, q, i + 1)); });
       }
       if (m.short && m.short.length) {
-        qWrap.appendChild(qh("m" + m.i + "-short", "📝 本模块考题 · 简答题"));
+        qWrap.appendChild(qh("m" + m.i + "-short", "📝 本模块考题 · 简答题（题库 / 真题）"));
         m.short.forEach(function (q, i) { qWrap.appendChild(renderSelf(cid, q, i + 1, "short")); });
       }
       if (m.calc && m.calc.length) {
-        qWrap.appendChild(qh("m" + m.i + "-calc", "📝 本模块考题 · 论述 / 推导题"));
+        qWrap.appendChild(qh("m" + m.i + "-calc", "📝 本模块考题 · 论述 / 推导题（题库 / 真题）"));
         m.calc.forEach(function (q, i) { qWrap.appendChild(renderSelf(cid, q, i + 1, "calc")); });
       }
       if (m.term && m.term.length) {
-        qWrap.appendChild(qh("m" + m.i + "-term", "📝 本模块考题 · 名词解释（含踩分点）"));
+        qWrap.appendChild(qh("m" + m.i + "-term", "📝 本模块考题 · 名词解释（题库 · 含踩分点）"));
         m.term.forEach(function (q, i) { qWrap.appendChild(renderSelf(cid, q, i + 1, "term")); });
       }
       if (qWrap.children.length) sec.appendChild(qWrap);
