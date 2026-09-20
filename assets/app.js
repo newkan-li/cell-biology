@@ -983,6 +983,11 @@
           fb.innerHTML = '<div class="fn-h">' + (s.explain ? "📖 关键术语（中英对照）" : "🔍 图注解读") + '</div><p>' + esc(s.fig).replace(/\n/g, "<br>") + "</p>";
           card.appendChild(fb);
         }
+        if (s.figure) {
+          var fgb = el("div", "fignote figurebox");
+          fgb.innerHTML = '<div class="fn-h">🖼 读图讲解</div><p>' + esc(s.figure).replace(/\n/g, "<br>") + "</p>";
+          card.appendChild(fgb);
+        }
         var cp = renderCheckpoint(cid, key, qByKp, s);
         if (cp) card.appendChild(cp);
         if (s.explain) {

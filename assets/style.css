@@ -398,3 +398,6 @@ html[data-theme="dark"] .oe.no{color:#f87171}
 .rawbox>summary{cursor:pointer;font-size:13px;color:var(--blue);font-weight:600;outline:none}
 .rawbox .notes{margin-top:8px}
 html[data-theme="dark"] .explain{background:#1c242c}
+.figurebox{background:#eef3fb;border-color:#c3d6f0}
+.figurebox .fn-h{color:#1f5c8b}
+html[data-theme="dark"] .figurebox{background:#1b2634;border-color:#2f4159}
