@@ -129,6 +129,10 @@
     if (acc == null) return strength;
     return 0.6 * acc + 0.4 * strength;
   }
+  /* ---------- 章末通关测记录 ---------- */
+  function passedAll() { return jget(PREFIX + "passed", {}); }
+  function passedGet(cid) { return passedAll()[cid] || null; }
+  function passedSet(cid, rec) { var o = passedAll(); o[cid] = rec; jset(PREFIX + "passed", o); }
 
   function todayStr(d) { d = d || new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
   function bumpTask(kind) {
@@ -510,6 +514,75 @@
       '<span class="pill">答错 ' + s.miss + '</span>' +
       '<span class="pill">正确率 ' + (s.rate == null ? "—" : s.rate + "%") + '</span>' +
       '<span class="pill">错题本 ' + s.wrong + " 题</span></p>";
+  }
+
+  /* ================= 章末通关测（随机客观题，≥80% 通过） ================= */
+  function renderChapterExam(cid, ch) {
+    var host = el("div", "statsbox"); host.id = "chexam";
+    function pool() {
+      var arr = [];
+      ch.modules.forEach(function (m) {
+        (m.mcq || []).forEach(function (q) { arr.push({ k: "mcq", q: q }); });
+        (m.judge || []).forEach(function (q) { arr.push({ k: "judge", q: q }); });
+        (m.fill || []).forEach(function (q) { arr.push({ k: "fill", q: q }); });
+      });
+      return arr;
+    }
+    function isCorrect(it) {
+      var q = it.q, r;
+      if (it.k === "mcq") { r = mcqStore(cid)[q.id]; return r && r.last === String(q.a); }
+      if (it.k === "judge") { r = judgeStore(cid)[q.id]; return r && r.last === String(q.a); }
+      r = fillStore(cid)[q.id]; return r && fuzzyMatch(q.a, r.last);
+    }
+    function draw() {
+      var p = passedGet(cid), n = pool().length;
+      host.innerHTML =
+        '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">' +
+        '<h3 style="margin:0">🏁 本章通关测 <span class="hint">随机 20 题 · 正确率 ≥80% 通过</span></h3>' +
+        '<span class="pill" id="chexamBadge"></span></div>' +
+        '<p class="hint" style="margin:6px 0">从本章选择题 / 判断题 / 填空题（共 ' + n + ' 题）中随机抽 20 题，交卷后自动统计。达标后本章标记「已通关」。</p>' +
+        '<button class="navbtn" style="width:auto;margin:0" id="chexamStart">开始通关测</button>' +
+        '<div id="chexamBody"></div>';
+      var badge = host.querySelector("#chexamBadge");
+      if (p && p.passed) badge.innerHTML = "✅ 已通关（最佳 " + (p.best != null ? p.best : p.pct) + "%）";
+      else if (p) badge.innerHTML = "未通关（上次 " + p.pct + "%）";
+      else badge.textContent = "未开始";
+      host.querySelector("#chexamStart").onclick = start;
+    }
+    function start() {
+      var all = pool();
+      if (all.length < 5) { alert("本章客观题不足，无法进行通关测。"); return; }
+      for (var i = all.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = all[i]; all[i] = all[j]; all[j] = t; }
+      var picks = all.slice(0, 20);
+      var body = host.querySelector("#chexamBody"); body.innerHTML = "";
+      host.querySelector("#chexamStart").disabled = true;
+      picks.forEach(function (it, i) {
+        var wrap = el("div", "ex-item");
+        wrap.appendChild(el("div", "ex-num", "第 " + (i + 1) + " 题 · " + ({ mcq: "选择", judge: "判断", fill: "填空" }[it.k])));
+        var c = it.k === "mcq" ? renderMCQ(cid, it.q, i + 1) : (it.k === "judge" ? renderJudge(cid, it.q, i + 1) : renderFill(cid, it.q, i + 1));
+        wrap.appendChild(c); body.appendChild(wrap);
+      });
+      var bar = el("div", "ex-bar"); var bs = el("button", "navbtn", "📋 交卷判分");
+      bs.onclick = function () { submit(picks); }; bar.appendChild(bs); body.appendChild(bar);
+    }
+    function submit(picks) {
+      var ok = 0; picks.forEach(function (it) { if (isCorrect(it)) ok++; });
+      var n = picks.length, pct = Math.round(ok * 100 / n);
+      var prev = passedGet(cid) || {};
+      var best = Math.max(pct, prev.best || 0);
+      var passed = pct >= 80 || !!prev.passed;
+      passedSet(cid, { score: ok, n: n, pct: pct, best: best, passed: passed, ts: Date.now() });
+      var badge = host.querySelector("#chexamBadge");
+      if (badge) badge.innerHTML = passed ? ("✅ 已通关（最佳 " + best + "%）") : ("未通关（上次 " + pct + "%）");
+      var box = el("div", "statsbox");
+      box.innerHTML = '<h3 style="margin:0">📊 成绩</h3><p>正确 <b>' + ok + " / " + n + "</b>（" + pct + "%）" +
+        (pct >= 80 ? '　<span style="color:#1a7f37;font-weight:700">✅ 通过（≥80%）</span>' : '　<span style="color:#b42318">未通过，建议复习后重测</span>') +
+        '</p><button class="navbtn" style="width:auto;margin:0" id="chexamAgain">🔁 重新测一次</button>';
+      host.querySelector("#chexamBody").appendChild(box);
+      host.querySelector("#chexamAgain").onclick = function () { draw(); start(); };
+    }
+    draw();
+    return host;
   }
 
   /* ================= wrong book (chapter drawer) ================= */
@@ -980,6 +1053,7 @@
       main.appendChild(sec);
     });
 
+    main.appendChild(renderChapterExam(cid, ch));
     main.appendChild(el("footer", "", "仅供个人学习使用 ｜ 数据保存在本机浏览器 localStorage"));
     refreshProgress();
   }
@@ -1801,11 +1875,12 @@
     M.forEach(function (m) {
       var c = el("div", "card");
       var s = chapterStats(m.id, window.CHAPTERS[m.id] || { modules: [] });
+      var ps = passedGet(m.id);
       c.innerHTML =
-        '<div class="row"><h2>' + esc(m.title) + '</h2><span class="badge">' + m.n_slides + " 页 · " + m.n_q + " 题</span></div>" +
+        '<div class="row"><h2>' + esc(m.title) + '</h2><span class="badge">' + (ps && ps.passed ? "🏁 已通关 · " : "") + m.n_slides + " 页 · " + m.n_q + " 题</span></div>" +
         '<p class="topics">' + esc(m.sub2) + "</p>" +
         '<div class="prog"><i style="width:' + (s.slides ? Math.round(s.seen * 100 / s.slides) : 0) + '%"></i></div>' +
-        '<p class="topics">概念已读 ' + s.seen + "/" + s.slides + " ｜ 正确率 " + (s.rate == null ? "—" : s.rate + "%") + " ｜ 错题 " + s.wrong + " 题</p>";
+        '<p class="topics">' + (ps ? (ps.passed ? '<b style="color:#1a7f37">🏁 通关 ' + ps.best + "%</b> ｜ " : "🏁 未通关（" + ps.pct + "%）｜ ") : "") + '概念已读 ' + s.seen + "/" + s.slides + " ｜ 正确率 " + (s.rate == null ? "—" : s.rate + "%") + " ｜ 错题 " + s.wrong + " 题</p>";
       var a = el("a", "go", "开始学习 →"); a.href = m.id + ".html"; c.appendChild(a);
       list.appendChild(c);
     });
@@ -1829,11 +1904,12 @@
       if (s.seen || s.ok || s.miss || s.wrong) any = true;
       tW += s.wrong; tOK += s.ok; tMiss += s.miss;
       rows += "<tr><td>" + esc(m.title) + "</td><td>" + s.seen + "/" + s.slides + "</td><td>" +
-        (s.rate == null ? "—" : s.rate + "%") + "</td><td>" + s.wrong + "</td></tr>";
+        (s.rate == null ? "—" : s.rate + "%") + "</td><td>" + s.wrong + "</td><td>" +
+        (function () { var p = passedGet(m.id); return p ? (p.passed ? '<b style="color:#1a7f37">✅ ' + p.best + "%</b>" : p.pct + "%") : "—"; })() + "</td></tr>";
     });
     if (!any) { host.innerHTML = '<p class="empty">本设备还没有学习记录。打开任意一章开始学习，记录只存在这台设备。</p>'; return; }
-    host.innerHTML = '<table class="tbl"><thead><tr><th>章节</th><th>概念已读</th><th>正确率</th><th>错题</th></tr></thead><tbody>' +
-      rows + '<tr style="font-weight:700"><td>合计</td><td>—</td><td>' + ((tOK + tMiss) ? Math.round(tOK * 100 / (tOK + tMiss)) + "%" : "—") + "</td><td>" + tW + "</td></tr></tbody></table>";
+    host.innerHTML = '<table class="tbl"><thead><tr><th>章节</th><th>概念已读</th><th>正确率</th><th>错题</th><th>通关测</th></tr></thead><tbody>' +
+      rows + '<tr style="font-weight:700"><td>合计</td><td>—</td><td>' + ((tOK + tMiss) ? Math.round(tOK * 100 / (tOK + tMiss)) + "%" : "—") + "</td><td>" + tW + "</td><td>—</td></tr></tbody></table>";
   }
 
   function backupAll() {
