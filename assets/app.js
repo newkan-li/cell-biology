@@ -958,13 +958,23 @@
     window.__refreshHeat = draw;
   }
 
+  /* ================= 本章逻辑主线 ================= */
+  function renderOutline(ch) {
+    if (!ch.outline || !ch.outline.length) return null;
+    var box = el("div", "statsbox outlinebox");
+    box.innerHTML = '<h3 style="margin:0 0 8px">🧭 本章逻辑主线</h3><div class="outlinechain">' +
+      ch.outline.map(function (s) { return '<span class="ostep">' + esc(s) + "</span>"; }).join('<span class="oarrow">→</span>') +
+      '</div><p class="hint" style="margin:8px 0 0">先记住这条主线，再看每节细节——细节挂到主线上就不容易忘。</p>';
+    return box;
+  }
+
   function renderChapter(cid) {
     var ch = window.CHAPTERS[cid];
     if (!ch) { document.getElementById("main").innerHTML = "<p>数据未加载。</p>"; return; }
     HW.init(cid);
     document.title = ch.title + " · 细胞生物学";
     var aside = document.getElementById("sidebar"), main = document.getElementById("main");
-    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="textbook.html">📚 教材对照表</a><a href="zhenti.html">📋 历年真题</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
+    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="textbook.html">📚 教材对照表</a><a href="compare.html">🔗 对比速记表</a><a href="zhenti.html">📋 历年真题</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
     aside.appendChild(el("div", "grp", "各模块（概念 + 考题）"));
     ch.modules.forEach(function (m) {
       var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a);
@@ -1022,6 +1032,7 @@
         (ch.preview.questions || []).map(function (q) { return "<li>" + esc(q) + "</li>"; }).join("") + "</ol>";
       main.appendChild(pv);
     }
+    var ob = renderOutline(ch); if (ob) main.appendChild(ob);
 
     var statsbox = el("div", "statsbox"); statsbox.id = "statsbox"; renderStats(cid, ch, statsbox); main.appendChild(statsbox);
     var heat = el("div", "statsbox"); heat.id = "heatmap"; renderHeatmap(cid, ch, heat); main.appendChild(heat);
@@ -1058,6 +1069,11 @@
           pb.innerHTML = '<div class="pt-h">📌 本页要点</div><ul>' +
             s.points.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>";
           card.appendChild(pb);
+        }
+        if (s.mem) {
+          var mb = el("div", "memnote");
+          mb.innerHTML = "<b>💡 记忆点：</b>" + esc(s.mem);
+          card.appendChild(mb);
         }
         if (s.fig) {
           var fb = el("div", "fignote");
@@ -1918,6 +1934,31 @@
     host.innerHTML = html;
   }
 
+  /* ================= compare page ================= */
+  function renderCompare() {
+    var host = document.getElementById("cmphost"); if (!host) return;
+    var C = window.COMPARE; if (!C) { host.innerHTML = '<p class="empty">数据未加载。</p>'; return; }
+    var cnt = document.getElementById("cmpcount"); if (cnt) cnt.textContent = (C.tables || []).length;
+    function table(t) {
+      return '<div class="cmpbox" id="cmp_' + esc(t.id) + '"><h2>' + esc(t.title) + "</h2>" +
+        (t.tip ? '<p class="hint" style="margin:2px 0 8px">💡 ' + esc(t.tip) + "</p>" : "") +
+        '<div class="cmpscroll"><table class="tbl cmptbl"><thead><tr>' +
+        t.cols.map(function (c) { return "<th>" + esc(c) + "</th>"; }).join("") + "</tr></thead><tbody>" +
+        t.rows.map(function (r) { return "<tr>" + r.map(function (c, i) { return '<td class="' + (i === 0 ? "cmprow" : "") + '">' + esc(c) + "</td>"; }).join("") + "</tr>"; }).join("") +
+        "</tbody></table></div></div>";
+    }
+    host.innerHTML = (C.intro ? '<p class="hint">' + esc(C.intro) + "</p>" : "") + (C.tables || []).map(table).join("");
+    var chips = document.getElementById("cmpChips");
+    if (chips) {
+      chips.innerHTML = "";
+      (C.tables || []).forEach(function (t) {
+        var b = el("button", "fc-chip", t.title.replace(/（.*/, "").replace(/\(.*/, ""));
+        b.onclick = function () { var e = document.getElementById("cmp_" + t.id); if (e) e.scrollIntoView({ behavior: "smooth" }); };
+        chips.appendChild(b);
+      });
+    }
+  }
+
   /* ================= glossary page ================= */
   function renderGlossary() {
     var data = window.GLOSSARY || [];
@@ -2151,6 +2192,7 @@
     else if (page === "index") renderIndex();
     else if (page === "wrong") renderWrongPage();
     else if (page === "glossary") renderGlossary();
+    else if (page === "compare") renderCompare();
     else if (page === "review") renderReview();
     else if (page === "flashcards") renderFlashcards();
     else if (page === "exam") renderExam();
