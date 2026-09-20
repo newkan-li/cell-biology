@@ -463,3 +463,6 @@ html[data-theme="dark"] .cmptbl.mask td:not(.cmprow){background:#22303f}
 html[data-theme="dark"] .mm-branch>details>summary{background:#22303f;border-color:#2f4159}
 html[data-theme="dark"] .mm-branch>details>summary:hover{background:#28384a}
 html[data-theme="dark"] .mm-leaf:hover{background:#28384a}
+.doubtwrap{border-left:3px solid #d9822b;padding-left:8px;margin:6px 0}
+.doubtbadge{font-size:12px;color:#9a5b00;background:#fff4e0;border:1px solid #f0d9a8;border-radius:8px;padding:3px 8px;margin:4px 0}
+html[data-theme="dark"] .doubtbadge{color:#e6b76b;background:#33291a;border-color:#4a3a24}

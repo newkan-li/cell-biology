@@ -587,7 +587,12 @@
             : kk[0] === "judge" ? renderJudge(cid, q, i + 1)
               : kk[0] === "fill" ? renderFill(cid, q, i + 1)
                 : renderSelf(cid, q, i + 1, "short");
-          sec.appendChild(node);
+          if (q.doubt) {
+            var w = el("div", "doubtwrap");
+            w.appendChild(el("div", "doubtbadge", "⚠ 原书答案存疑，以下解析按事实说明（请对照原书核对）"));
+            w.appendChild(node);
+            sec.appendChild(w);
+          } else sec.appendChild(node);
         });
       });
     }
