@@ -958,13 +958,34 @@
     window.__refreshHeat = draw;
   }
 
-  /* ================= 本章逻辑主线 ================= */
+  /* ================= 本章逻辑主线（可点击思维导图） ================= */
   function renderOutline(ch) {
     if (!ch.outline || !ch.outline.length) return null;
+    var map = ch.outlineMap || [];
+    var cid = ch.id;
     var box = el("div", "statsbox outlinebox");
-    box.innerHTML = '<h3 style="margin:0 0 8px">🧭 本章逻辑主线</h3><div class="outlinechain">' +
-      ch.outline.map(function (s) { return '<span class="ostep">' + esc(s) + "</span>"; }).join('<span class="oarrow">→</span>') +
-      '</div><p class="hint" style="margin:8px 0 0">先记住这条主线，再看每节细节——细节挂到主线上就不容易忘。</p>';
+    var h = '<h3 style="margin:0 0 8px">🧭 本章思维导图 <span class="hint">点节点展开 / 跳转</span></h3><div class="mmap">';
+    h += '<div class="mm-root">' + esc(ch.title) + "</div>";
+    h += '<ul class="mm-branches">';
+    ch.outline.forEach(function (step, i) {
+      var mi = map[i];
+      var m = (mi != null && ch.modules[mi]) ? ch.modules[mi] : null;
+      h += '<li class="mm-branch"><details' + (i === 0 ? " open" : "") + "><summary>" +
+        '<span class="mm-step">' + (i + 1) + ". " + esc(step) + "</span>" +
+        (m ? '<span class="mm-mod">→ ' + esc(m.name) + "</span>" : "") +
+        "</summary>";
+      if (m) {
+        h += '<div class="mm-kids">';
+        m.slides.forEach(function (s) {
+          h += '<a class="mm-leaf" href="#s_' + cid + "_s" + m.i + "_" + s.i + '">p' + s.page + " " + esc(String(s.title || "").slice(0, 26)) + "</a>";
+        });
+        h += '<a class="mm-goto" href="#m' + m.i + '">→ 去本节（含讲解与考题）</a>';
+        h += "</div>";
+      }
+      h += "</details></li>";
+    });
+    h += "</ul></div>";
+    box.innerHTML = h;
     return box;
   }
 
