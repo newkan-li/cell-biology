@@ -1869,7 +1869,8 @@
   function renderTextbook() {
     var host = document.getElementById("tbhost"); if (!host) return;
     var T = window.TEXTBOOK; if (!T) { host.innerHTML = '<p class="empty">数据未加载。</p>'; return; }
-    var html = '<p class="hint">' + esc(T.source) + " ｜ " + esc(T.note) + "</p>" +
+    var html = (T.target ? '<div class="notice" style="background:#eef3fb;border-color:#c3d6f0"><b>' + esc(T.target) + "</b></div>" : "") +
+      '<p class="hint">' + esc(T.source) + " ｜ " + esc(T.note) + "</p>" +
       '<p class="hint">📌 内容来源：老师课件 13 章（覆盖教材第 <b>1、2、3、4、5、7、8、9、10、11、13、14、16</b> 章）+ 本站按教材原文 OCR 新增第 <b>6、12、15、17</b> 章。下表把「教材章/节」与「本站模块」一一对应。</p>';
     var stars = function (n) { return "★★★★★".slice(0, n || 1); };
     if (T.notCovered && (T.notCovered.sections || []).length) {
