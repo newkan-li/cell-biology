@@ -116,6 +116,8 @@
   function kpRecord(kp, correct) {
     if (!kp) return;
     var o = kpAll(), c = o[kp] || { ok: 0, n: 0 };
+    if (c.first === undefined) c.first = !!correct;
+    c.lastOk = !!correct;
     c.n++; if (correct) c.ok++;
     o[kp] = c; jset(KPS_KEY, o);
     bumpTask("practice");
@@ -340,6 +342,8 @@
     var ok = chosen === correct;
     var store = mcqStore(cid);
     var rec = store[q.id] || { ok: 0, miss: 0 };
+    if (rec.first === undefined) rec.first = ok;
+    rec.n = (rec.n || 0) + 1;
     rec.last = chosen;
     if (ok) { rec.ok++; rec.miss = Math.max(0, rec.miss - 1); } else { rec.miss++; rec.ok = Math.max(0, rec.ok - 1); }
     store[q.id] = rec; jset(skey(cid, "mcq"), store); touch(cid);
@@ -384,6 +388,8 @@
     var ok = chosen === correct;
     var store = judgeStore(cid);
     var rec = store[q.id] || { ok: 0, miss: 0 };
+    if (rec.first === undefined) rec.first = ok;
+    rec.n = (rec.n || 0) + 1;
     rec.last = chosen;
     if (ok) { rec.ok++; rec.miss = Math.max(0, rec.miss - 1); } else { rec.miss++; rec.ok = Math.max(0, rec.ok - 1); }
     store[q.id] = rec; jset(skey(cid, "judge"), store); touch(cid);
@@ -421,6 +427,8 @@
     box._check = function () {
       var ok = fuzzyMatch(q.a, inp.value);
       var store = fillStore(cid); var rec = store[q.id] || { ok: 0, miss: 0 };
+      if (rec.first === undefined) rec.first = ok;
+      rec.n = (rec.n || 0) + 1;
       rec.last = inp.value;
       if (ok) { rec.ok++; rec.miss = Math.max(0, rec.miss - 1); } else { rec.miss++; rec.ok = Math.max(0, rec.ok - 1); }
       store[q.id] = rec; jset(skey(cid, "fill"), store); touch(cid);
@@ -497,12 +505,29 @@
     var seen = seenStore(cid);
     var totalSlides = 0; ch.modules.forEach(function (m) { totalSlides += m.slides.length; });
     var seenN = 0; ch.modules.forEach(function (m) { m.slides.forEach(function (s) { if (seen[cid + "_s" + m.i + "_" + s.i]) seenN++; }); });
-    var mc = mcqStore(cid), fi = fillStore(cid), se = selfStore(cid);
-    var ok = 0, miss = 0;
-    [mc, judgeStore(cid), fi, se].forEach(function (st) { Object.keys(st).forEach(function (k) { ok += st[k].ok || 0; miss += st[k].miss || 0; }); });
+    var mc = mcqStore(cid), jg = judgeStore(cid), fi = fillStore(cid), se = selfStore(cid);
+    var ok = 0, miss = 0;          /* 累计（净）：对-错 抵消 */
+    var firstN = 0, firstOK = 0;   /* 首次作答（客观题 + 本页自测） */
+    [mc, jg, fi].forEach(function (st) {
+      Object.keys(st).forEach(function (k) {
+        var r = st[k];
+        ok += r.ok || 0; miss += r.miss || 0;
+        if (r.first !== undefined) { firstN++; if (r.first) firstOK++; }
+      });
+    });
+    Object.keys(se).forEach(function (k) { ok += se[k].ok || 0; miss += se[k].miss || 0; });
+    var kps = kpAll();
+    Object.keys(kps).forEach(function (k) {
+      if (k.indexOf(cid + "_s") !== 0) return;
+      var c = kps[k];
+      if (c.first !== undefined) { firstN++; if (c.first) firstOK++; }
+    });
     var wb = wrongList(cid);
+    var rateFirst = firstN ? Math.round(firstOK * 100 / firstN) : null;
+    var rateCum = (ok + miss) ? Math.round(ok * 100 / (ok + miss)) : null;
     return { slides: totalSlides, seen: seenN, ok: ok, miss: miss, wrong: wb.length,
-             rate: (ok + miss) ? Math.round(ok * 100 / (ok + miss)) : null };
+             firstN: firstN, firstOK: firstOK, rateFirst: rateFirst, rateCum: rateCum,
+             rate: (rateFirst != null ? rateFirst : rateCum) };
   }
 
   function renderStats(cid, ch, host) {
@@ -510,10 +535,11 @@
     host.innerHTML =
       '<h3 style="margin-top:0">📊 本章学习统计</h3>' +
       '<p><span class="pill">概念页 ' + s.seen + "/" + s.slides + '</span>' +
-      '<span class="pill">答对 ' + s.ok + '</span>' +
-      '<span class="pill">答错 ' + s.miss + '</span>' +
-      '<span class="pill">正确率 ' + (s.rate == null ? "—" : s.rate + "%") + '</span>' +
-      '<span class="pill">错题本 ' + s.wrong + " 题</span></p>";
+      '<span class="pill">正确率(首次) ' + (s.rateFirst == null ? "—" : s.rateFirst + "%") + '</span>' +
+      '<span class="pill">累计正确率 ' + (s.rateCum == null ? "—" : s.rateCum + "%") + '</span>' +
+      '<span class="pill">首次记录 ' + s.firstN + ' 题</span>' +
+      '<span class="pill">错题本 ' + s.wrong + " 题</span></p>" +
+      '<p class="hint" style="margin:6px 0 0">正确率按<b>首次作答</b>计（章节题 + 本页自测），重复刷题不会把它刷高；「累计」含重做、对错相互抵消，仅供参考。</p>';
   }
 
   /* ================= 章末通关测（随机客观题，≥80% 通过） ================= */
@@ -1908,7 +1934,7 @@
         '<div class="row"><h2>' + esc(m.title) + '</h2><span class="badge">' + (ps && ps.passed ? "🏁 已通关 · " : "") + m.n_slides + " 页 · " + m.n_q + " 题</span></div>" +
         '<p class="topics">' + esc(m.sub2) + "</p>" +
         '<div class="prog"><i style="width:' + (s.slides ? Math.round(s.seen * 100 / s.slides) : 0) + '%"></i></div>' +
-        '<p class="topics">' + (ps ? (ps.passed ? '<b style="color:#1a7f37">🏁 通关 ' + ps.best + "%</b> ｜ " : "🏁 未通关（" + ps.pct + "%）｜ ") : "") + '概念已读 ' + s.seen + "/" + s.slides + " ｜ 正确率 " + (s.rate == null ? "—" : s.rate + "%") + " ｜ 错题 " + s.wrong + " 题</p>";
+        '<p class="topics">' + (ps ? (ps.passed ? '<b style="color:#1a7f37">🏁 通关 ' + ps.best + "%</b> ｜ " : "🏁 未通关（" + ps.pct + "%）｜ ") : "") + '概念已读 ' + s.seen + "/" + s.slides + " ｜ 正确率(首次) " + (s.rate == null ? "—" : s.rate + "%") + " ｜ 错题 " + s.wrong + " 题</p>";
       var a = el("a", "go", "开始学习 →"); a.href = m.id + ".html"; c.appendChild(a);
       list.appendChild(c);
     });
@@ -1936,7 +1962,7 @@
         (function () { var p = passedGet(m.id); return p ? (p.passed ? '<b style="color:#1a7f37">✅ ' + p.best + "%</b>" : p.pct + "%") : "—"; })() + "</td></tr>";
     });
     if (!any) { host.innerHTML = '<p class="empty">本设备还没有学习记录。打开任意一章开始学习，记录只存在这台设备。</p>'; return; }
-    host.innerHTML = '<table class="tbl"><thead><tr><th>章节</th><th>概念已读</th><th>正确率</th><th>错题</th><th>通关测</th></tr></thead><tbody>' +
+    host.innerHTML = '<table class="tbl"><thead><tr><th>章节</th><th>概念已读</th><th>正确率(首次)</th><th>错题</th><th>通关测</th></tr></thead><tbody>' +
       rows + '<tr style="font-weight:700"><td>合计</td><td>—</td><td>' + ((tOK + tMiss) ? Math.round(tOK * 100 / (tOK + tMiss)) + "%" : "—") + "</td><td>" + tW + "</td><td>—</td></tr></tbody></table>";
   }
 
