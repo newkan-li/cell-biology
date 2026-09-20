@@ -969,7 +969,8 @@
         var img = el("img"); img.src = s.img; img.loading = "lazy"; img.alt = s.title;
         img.onclick = function () { document.getElementById("lbimg").src = s.img; document.getElementById("lightbox").classList.add("on"); };
         body.appendChild(img);
-        body.appendChild(el("div", "notes", esc(s.notes)));
+        if (s.explain) body.appendChild(el("div", "explain", esc(s.explain).replace(/\n/g, "<br>")));
+        else body.appendChild(el("div", "notes", esc(s.notes)));
         card.appendChild(body);
         if (s.points && s.points.length) {
           var pb = el("div", "points");
@@ -979,11 +980,16 @@
         }
         if (s.fig) {
           var fb = el("div", "fignote");
-          fb.innerHTML = '<div class="fn-h">🔍 图注解读</div><p>' + esc(s.fig).replace(/\n/g, "<br>") + "</p>";
+          fb.innerHTML = '<div class="fn-h">' + (s.explain ? "📖 关键术语（中英对照）" : "🔍 图注解读") + '</div><p>' + esc(s.fig).replace(/\n/g, "<br>") + "</p>";
           card.appendChild(fb);
         }
         var cp = renderCheckpoint(cid, key, qByKp, s);
         if (cp) card.appendChild(cp);
+        if (s.explain) {
+          var rawbox = el("details", "rawbox");
+          rawbox.innerHTML = '<summary>📄 教材原文（OCR，可展开对照）</summary><div class="notes">' + esc(s.notes) + "</div>";
+          card.appendChild(rawbox);
+        }
         if (s.anim) {
           var aw = el("div", "animwrap");
           aw.appendChild(el("div", "animhead", "🎬 动画演示（在老师原图下方）"));

@@ -393,3 +393,8 @@ html[data-theme="dark"] .fc-card,html[data-theme="dark"] .fc-chip,html[data-them
 .oe.no{color:#b42318}
 html[data-theme="dark"] .oe.ok{color:#4ade80}
 html[data-theme="dark"] .oe.no{color:#f87171}
+.explain{font-size:13px;line-height:1.78;color:var(--ink);margin-top:8px;background:var(--bg);border-left:3px solid var(--blue);padding:8px 12px;border-radius:8px}
+.rawbox{margin-top:10px;border:1px dashed var(--line);border-radius:10px;padding:6px 12px}
+.rawbox>summary{cursor:pointer;font-size:13px;color:var(--blue);font-weight:600;outline:none}
+.rawbox .notes{margin-top:8px}
+html[data-theme="dark"] .explain{background:#1c242c}
