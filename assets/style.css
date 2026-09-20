@@ -410,3 +410,16 @@ html[data-theme="dark"] .figurebox{background:#1b2634;border-color:#2f4159}
 .slide.tbslide .body img{width:100%;max-width:none}
 .slide.tbslide .explain{width:100%}
 @media(max-width:900px){.layout{display:block}aside{position:static;width:auto;height:auto;overflow:visible;border-right:0;border-bottom:1px solid var(--line)}main{max-width:none;padding:16px 16px 70px}}
+.tb-notcov{margin:6px 0 0;padding-left:20px}
+.tb-notcov li{margin:6px 0;line-height:1.6}
+.tb-why{font-size:12.5px;color:var(--sub);margin-top:2px}
+.lvl{display:inline-block;font-size:12px;font-weight:700;border-radius:10px;padding:0 8px;margin-left:6px}
+.lvl3{color:#b42318;background:#fdecea}
+.lvl2{color:#9a6b00;background:#fff4d6}
+.lvl1{color:#6b7280;background:#eef1f5}
+tr.tb-nc{background:#fff8e8}
+html[data-theme="dark"] tr.tb-nc{background:#2a2416}
+html[data-theme="dark"] .tb-why{color:#9aa7b4}
+html[data-theme="dark"] .lvl3{background:#3a1f1c;color:#f2a49b}
+html[data-theme="dark"] .lvl2{background:#3a3320;color:#e6c778}
+html[data-theme="dark"] .lvl1{background:#2a333d;color:#9aa7b4}

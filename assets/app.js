@@ -1829,11 +1829,16 @@
     var T = window.TEXTBOOK; if (!T) { host.innerHTML = '<p class="empty">数据未加载。</p>'; return; }
     var html = '<p class="hint">' + esc(T.source) + " ｜ " + esc(T.note) + "</p>" +
       '<p class="hint">📌 内容来源：老师课件 13 章（覆盖教材第 <b>1、2、3、4、5、7、8、9、10、11、13、14、16</b> 章）+ 本站按教材原文 OCR 新增第 <b>6、12、15、17</b> 章。下表把「教材章/节」与「本站模块」一一对应。</p>';
-    if (T.notCovered) {
-      html += '<div class="tb-gaps" style="margin-bottom:16px">⚠️ <b>教材未讲</b>（老师课件未覆盖，需自己看书补）：<ul>';
+    var stars = function (n) { return "★★★★★".slice(0, n || 1); };
+    if (T.notCovered && (T.notCovered.sections || []).length) {
+      var secs = T.notCovered.sections.slice().sort(function (a, b) { return (a.priority || 99) - (b.priority || 99); });
+      html += '<div class="tb-gaps" style="margin-bottom:16px">⚠️ <b>教材未讲</b>（按建议补齐优先级排序）：<ol class="tb-notcov">';
       (T.notCovered.whole || []).forEach(function (x) { html += "<li><b>" + esc(x.ch) + "</b>（" + esc(x.pages) + "）</li>"; });
-      (T.notCovered.sections || []).forEach(function (x) { html += "<li>" + esc(x.ch) + "（" + esc(x.pages) + "）</li>"; });
-      html += "</ul></div>";
+      secs.forEach(function (x) {
+        html += "<li><b>" + esc(x.title) + "</b>（" + esc(x.pages) + '）<span class="lvl lvl' + (x.level || 1) + '">' + stars(x.level) + "</span>" +
+          '<div class="tb-why">' + esc(x.why || "") + (x.status ? '　<span class="hint">' + esc(x.status) + "</span>" : "") + "</div></li>";
+      });
+      html += "</ol></div>";
     }
     (T.chapters || []).forEach(function (ch) {
       html += '<div class="tb-chapter"><h3>' + esc(ch.title) + "</h3>" +
@@ -1844,12 +1849,12 @@
         html += "<tr><td>" + esc(m.tb) + "</td><td>" + esc(m.modName || ("模块" + m.mod)) + "</td><td>" + esc(m.pages) + "</td><td>" + esc(cov) + "</td>" +
           '<td><a href="' + ch.web + '.html#' + anchor + '">去学习 →</a></td></tr>';
       });
-      html += "</tbody></table>";
-      if (ch.gaps && ch.gaps.length) {
-        html += '<div class="tb-gaps">⚠️ 教材未讲（需自己看书补）：<ul>' +
-          ch.gaps.map(function (g) { return "<li>" + esc(g) + "</li>"; }).join("") + "</ul></div>";
-      }
-      html += "</div>";
+      (T.notCovered && T.notCovered.sections || []).filter(function (x) { return x.web === ch.web; })
+        .sort(function (a, b) { return (a.priority || 99) - (b.priority || 99); })
+        .forEach(function (x) {
+          html += '<tr class="tb-nc"><td>' + esc(x.title) + "（" + esc(x.pages) + '）</td><td>— 未讲 —</td><td>' + esc(x.pages) + '</td><td><span class="lvl lvl' + (x.level || 1) + '">未讲 ' + stars(x.level) + "</span></td><td></td></tr>";
+        });
+      html += "</tbody></table></div>";
     });
     host.innerHTML = html;
   }
