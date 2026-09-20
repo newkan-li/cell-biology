@@ -903,6 +903,14 @@
     aside.appendChild(el("div", "grp", "各模块（概念 + 考题）"));
     ch.modules.forEach(function (m) {
       var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a);
+      if (m.slides && m.slides.length && /^tb/.test(cid)) {
+        m.slides.forEach(function (s) {
+          var t = String(s.title || "").replace(/^[\d\.\s、（）()]+/, "").slice(0, 16);
+          var sa = el("a", "sub subpg", "p" + s.page + " " + esc(t));
+          sa.href = "#s_" + cid + "_s" + m.i + "_" + s.i;
+          aside.appendChild(sa);
+        });
+      }
       var subs = [];
       if (m.mcq && m.mcq.length) subs.push(["m" + m.i + "-mcq", "选择题"]);
       if (m.judge && m.judge.length) subs.push(["m" + m.i + "-judge", "判断题"]);
