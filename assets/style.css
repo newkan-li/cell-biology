@@ -81,9 +81,9 @@ html[data-theme="dark"] .previewbox{background:#182a20;border-color:#2c4a38}
 html[data-theme="dark"] .previewbox .pv-main,html[data-theme="dark"] .previewbox li{color:#a8d8bc}
 html[data-theme="dark"] .previewbox .pv-q{color:#6fd09a}
 html[data-theme="sepia"] .previewbox{background:#eaf0da;border-color:#cddcae}
-#lightbox{position:fixed;inset:0;background:rgba(15,20,30,.9);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px}
+#lightbox{position:fixed;inset:0;background:rgba(15,20,30,.9);display:none;align-items:flex-start;justify-content:center;z-index:2000;padding:20px;overflow:auto}
 #lightbox.on{display:flex}
-#lightbox img{max-width:96vw;max-height:94vh;border-radius:8px}
+#lightbox img{max-width:96vw;max-height:none;border-radius:8px}
 .animwrap{margin-top:12px;border-top:1px dashed #dbe4ee;padding-top:10px}
 .animhead{font-size:13px;color:var(--blue);font-weight:700;margin-bottom:6px}
 .animframe{width:100%;height:430px;border:1px solid var(--line);border-radius:10px;background:#fff;display:block}
