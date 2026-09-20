@@ -444,3 +444,6 @@ html[data-theme="dark"] .ostep{background:#22303f;border-color:#2f4159}
 .memnote b{color:#6b3fa0}
 html[data-theme="dark"] .memnote{background:#241f33;border-color:#3d3357;color:#c9b8e6}
 html[data-theme="dark"] .memnote b{color:#b69ce0}
+.cmptbl.mask td:not(.cmprow){color:transparent;background:#eef3fb;cursor:pointer;user-select:none}
+.cmptbl.mask td:not(.cmprow).reveal{color:inherit;background:transparent}
+html[data-theme="dark"] .cmptbl.mask td:not(.cmprow){background:#22303f}

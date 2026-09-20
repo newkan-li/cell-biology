@@ -1223,6 +1223,10 @@
             front: (s.title || ""), frontImg: s.img, back: esc(pgExp).replace(/\n/g, "<br>"),
             plain: pgExp, blank: ""
           });
+          if (s.mem) cards.push({
+            id: "fc_mem_" + noteKp, ch: m.id, mod: mod.i, modName: mod.name, tag: "记忆点",
+            front: (s.title || "") + "　💡记忆点？", back: esc(s.mem), plain: s.mem, blank: ""
+          });
           if (!s.points && !s.fig) return;
           var kp = m.id + "_s" + mod.i + "_" + s.i, back = "";
           if (s.points && s.points.length) back += "<ul>" + s.points.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>";
@@ -1957,6 +1961,22 @@
         chips.appendChild(b);
       });
     }
+    var mk = document.getElementById("cmpMask");
+    if (mk) mk.onclick = function () {
+      var on = !mk.classList.contains("on");
+      mk.classList.toggle("on", on);
+      mk.textContent = on ? "✅ 挖空中（点单元格看答案）" : "🎯 挖空自测（点单元格看答案）";
+      Array.prototype.forEach.call(host.querySelectorAll(".cmptbl"), function (t) {
+        t.classList.toggle("mask", on);
+        if (on && !t._bound) {
+          t._bound = 1;
+          Array.prototype.forEach.call(t.querySelectorAll("td"), function (td) {
+            if (td.classList.contains("cmprow")) return;
+            td.onclick = function () { td.classList.toggle("reveal"); };
+          });
+        }
+      });
+    };
   }
 
   /* ================= glossary page ================= */
