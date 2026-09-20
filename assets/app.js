@@ -575,8 +575,23 @@
     block("afterclass-term", "一、名词解释（含踩分点）", te, "term");
     block("afterclass-short", "二、简答题", sh, "short");
     block("afterclass-calc", "三、论述 / 推导题", ca, "calc");
-    block("afterclass-jyq", "四、姜益泉《辅导与习题集》（各校真题 / 课后题）", ch.jyq || [], "short");
-    if (!total && !(ch.jyq || []).length) sec.appendChild(el("p", "empty", "本章暂无课后习题。"));
+    var jyq = ch.jyq || [];
+    if (jyq.length) {
+      var hj = el("h3", "", "四、姜益泉《辅导与习题集》（各校真题 / 课后题）"); hj.id = "afterclass-jyq"; sec.appendChild(hj);
+      [["mcq", "选择题"], ["judge", "判断题"], ["fill", "填空题"], ["short", "简答 / 问答"]].forEach(function (kk) {
+        var arr = jyq.filter(function (x) { return (x.kind || "short") === kk[0]; });
+        if (!arr.length) return;
+        sec.appendChild(el("h4", "", kk[1] + "（" + arr.length + " 题）"));
+        arr.forEach(function (q, i) {
+          var node = kk[0] === "mcq" ? renderMCQ(cid, q, i + 1)
+            : kk[0] === "judge" ? renderJudge(cid, q, i + 1)
+              : kk[0] === "fill" ? renderFill(cid, q, i + 1)
+                : renderSelf(cid, q, i + 1, "short");
+          sec.appendChild(node);
+        });
+      });
+    }
+    if (!total && !jyq.length) sec.appendChild(el("p", "empty", "本章暂无课后习题。"));
     return sec;
   }
 
