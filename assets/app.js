@@ -454,7 +454,7 @@
       answerHTML = "<b>标准定义：</b><br>" + esc(q.def).replace(/\n/g, "<br>");
       kps = q.kps || "";
     } else {
-      title = (kind === "short" ? "简答题 " : "论述/推导 ") + idx + "：" + esc(q.q);
+      title = (kind === "short" ? "简答题 " : "论述/推导 ") + idx + "：" + esc(q.q) + (q.src ? ' <span class="src">[' + esc(q.src) + "]</span>" : "");
       answerHTML = "<b>参考答案：</b><br>" + esc(kind === "calc" ? (q.steps || q.a) : q.a).replace(/\n/g, "<br>");
     }
     box.appendChild(el("p", "qq", title));
@@ -563,7 +563,7 @@
     var sh = ch.short || [], ca = ch.calc || [], te = ch.term || [];
     var sec = el("section"); sec.id = "afterclass";
     sec.appendChild(el("h2", "", "📚 课后习题（简答 / 论述 / 名词解释）"));
-    var total = sh.length + ca.length + te.length;
+    var total = sh.length + ca.length + te.length + (ch.jyq || []).length;
     var box = el("div", "statsbox");
     box.innerHTML = '<p class="hint" style="margin:0">先自己<b>默写</b>答案，再展开「参考答案 / 踩分点」核对——<b>主观题必须自己输出才算真正消化</b>。本章共 ' + total + ' 题。</p>';
     sec.appendChild(box);
@@ -575,7 +575,8 @@
     block("afterclass-term", "一、名词解释（含踩分点）", te, "term");
     block("afterclass-short", "二、简答题", sh, "short");
     block("afterclass-calc", "三、论述 / 推导题", ca, "calc");
-    if (!total) sec.appendChild(el("p", "empty", "本章暂无课后习题。"));
+    block("afterclass-jyq", "四、姜益泉《辅导与习题集》（各校真题 / 课后题）", ch.jyq || [], "short");
+    if (!total && !(ch.jyq || []).length) sec.appendChild(el("p", "empty", "本章暂无课后习题。"));
     return sec;
   }
 
@@ -984,10 +985,10 @@
       if (m.fill && m.fill.length) subs.push(["m" + m.i + "-fill", "填空题"]);
       subs.forEach(function (x) { var sa = el("a", "sub", "· " + x[1]); sa.href = "#" + x[0]; aside.appendChild(sa); });
     });
-    if ((ch.short || []).length || (ch.calc || []).length || (ch.term || []).length) {
+    if ((ch.short || []).length || (ch.calc || []).length || (ch.term || []).length || (ch.jyq || []).length) {
       aside.appendChild(el("div", "grp", "课后习题（主观）"));
       var ac = el("a", "", "📚 本章课后习题"); ac.href = "#afterclass"; aside.appendChild(ac);
-      [["afterclass-term", "名词解释"], ["afterclass-short", "简答题"], ["afterclass-calc", "论述/推导"]].forEach(function (x) {
+      [["afterclass-term", "名词解释"], ["afterclass-short", "简答题"], ["afterclass-calc", "论述/推导"], ["afterclass-jyq", "姜益泉真题/课后题"]].forEach(function (x) {
         var sa = el("a", "sub", "· " + x[1]); sa.href = "#" + x[0]; aside.appendChild(sa);
       });
     }
