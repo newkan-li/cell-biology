@@ -969,6 +969,7 @@
       m.slides.forEach(function (s) {
         var key = cid + "_s" + m.i + "_" + s.i;
         var card = el("div", "slide"); card.id = "s_" + key;
+        if (s.explain) card.classList.add("tbslide");
         var lv = s.level || "掌握";
         var head = el("div", "sh");
         head.innerHTML = '<span class="t">' + esc(s.title) + '</span><span class="lv lv-' + esc(lv) + '">' + esc(lv) + "</span>";
