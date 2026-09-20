@@ -893,7 +893,8 @@
       }
       fb.innerHTML = (correct ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 错误</span>') +
         '　正确答案：<b>' + esc(answerText()) + "</b>" +
-        (q.e ? '<div style="margin-top:4px">解析：' + esc(q.e) + "</div>" : "") + optsExplain(q);
+        (q.e ? '<div style="margin-top:4px">解析：' + esc(q.e) + "</div>" : "") + optsExplain(q) +
+        (q.basis ? '<div class="basis">📌 依据本页：' + esc(q.basis) + "</div>" : "");
     }
     if (kind === "mcq") {
       box.appendChild(el("div", "cp-q", esc(q.q)));
