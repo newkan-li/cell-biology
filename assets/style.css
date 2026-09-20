@@ -23,13 +23,17 @@ footer{color:var(--sub);font-size:12.5px;text-align:center;margin-top:36px}
 
 /* chapter layout */
 .layout{display:flex;align-items:flex-start}
-aside{position:sticky;top:0;height:100vh;overflow:auto;width:236px;flex:0 0 236px;padding:16px 12px;background:var(--bg);border-right:1px solid var(--line)}
+aside{position:sticky;top:0;height:100vh;overflow:auto;width:300px;flex:0 0 300px;padding:16px 12px;background:var(--bg);border-right:1px solid var(--line)}
 aside .ttl{font-weight:700;color:var(--blue);padding:4px 10px 10px;font-size:14px}
-aside a{display:block;padding:6px 10px;border-radius:8px;color:var(--blue);text-decoration:none;font-size:13px;margin:2px 0}
+aside a{display:block;padding:6px 10px;border-radius:8px;color:var(--blue);text-decoration:none;font-size:13px;margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 aside a:hover{background:#e7eef6}
 aside a.act{background:#dbe8f6;font-weight:700}
 aside a.sub{padding:3px 10px 3px 26px;font-size:12px;color:var(--sub)}
 aside a.sub:hover{background:#eef4fa;color:var(--blue)}
+aside details.subpages{margin:2px 0}
+aside details.subpages>summary{cursor:pointer;font-size:12px;color:var(--sub);padding:3px 10px 3px 26px;border-radius:8px}
+aside details.subpages>summary:hover{background:#eef4fa;color:var(--blue)}
+@media(max-width:1100px){aside{width:250px;flex-basis:250px}}
 aside .grp{font-size:12px;color:var(--sub);margin:10px 10px 2px;font-weight:700}
 .navbtns{margin:14px 4px;border-top:1px solid var(--line);padding-top:12px}
 .navbtn{display:block;width:100%;margin:6px 0;text-align:left;border:1px solid var(--line);background:#fff;color:var(--blue);border-radius:10px;padding:8px 10px;font-size:13px;font-weight:600;cursor:pointer}

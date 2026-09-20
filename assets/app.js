@@ -904,12 +904,15 @@
     ch.modules.forEach(function (m) {
       var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a);
       if (m.slides && m.slides.length && /^tb/.test(cid)) {
+        var det = el("details", "subpages");
+        det.appendChild(el("summary", "", "本节目录（" + m.slides.length + " 页）"));
         m.slides.forEach(function (s) {
-          var t = String(s.title || "").replace(/^[\d\.\s、（）()]+/, "").slice(0, 16);
+          var t = String(s.title || "").replace(/^[\d\.\s、（）()]+/, "").slice(0, 20);
           var sa = el("a", "sub subpg", "p" + s.page + " " + esc(t));
           sa.href = "#s_" + cid + "_s" + m.i + "_" + s.i;
-          aside.appendChild(sa);
+          det.appendChild(sa);
         });
+        aside.appendChild(det);
       }
       var subs = [];
       if (m.mcq && m.mcq.length) subs.push(["m" + m.i + "-mcq", "选择题"]);
