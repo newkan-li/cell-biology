@@ -558,6 +558,27 @@
       '<p class="hint" style="margin:6px 0 0">正确率分母 = <b>本章全部客观题（选择/判断/填空）+ 本页自测</b>，<b>没做的按未得分计</b>；每题只算一次（优先首次作答，旧记录取最近一次）。主观题自评不计入。</p>';
   }
 
+  /* ================= 每章课后习题（主观题集中栏） ================= */
+  function renderAfterClass(cid, ch) {
+    var sh = ch.short || [], ca = ch.calc || [], te = ch.term || [];
+    var sec = el("section"); sec.id = "afterclass";
+    sec.appendChild(el("h2", "", "📚 课后习题（简答 / 论述 / 名词解释）"));
+    var total = sh.length + ca.length + te.length;
+    var box = el("div", "statsbox");
+    box.innerHTML = '<p class="hint" style="margin:0">先自己<b>默写</b>答案，再展开「参考答案 / 踩分点」核对——<b>主观题必须自己输出才算真正消化</b>。本章共 ' + total + ' 题。</p>';
+    sec.appendChild(box);
+    function block(id, title, arr, kind) {
+      if (!arr.length) return;
+      var h = el("h3", "", title); h.id = id; sec.appendChild(h);
+      arr.forEach(function (q, i) { sec.appendChild(renderSelf(cid, q, i + 1, kind)); });
+    }
+    block("afterclass-term", "一、名词解释（含踩分点）", te, "term");
+    block("afterclass-short", "二、简答题", sh, "short");
+    block("afterclass-calc", "三、论述 / 推导题", ca, "calc");
+    if (!total) sec.appendChild(el("p", "empty", "本章暂无课后习题。"));
+    return sec;
+  }
+
   /* ================= 章末通关测（随机客观题，≥80% 通过） ================= */
   function renderChapterExam(cid, ch) {
     var host = el("div", "statsbox"); host.id = "chexam";
@@ -961,11 +982,15 @@
       if (m.mcq && m.mcq.length) subs.push(["m" + m.i + "-mcq", "选择题"]);
       if (m.judge && m.judge.length) subs.push(["m" + m.i + "-judge", "判断题"]);
       if (m.fill && m.fill.length) subs.push(["m" + m.i + "-fill", "填空题"]);
-      if (m.short && m.short.length) subs.push(["m" + m.i + "-short", "简答题"]);
-      if (m.calc && m.calc.length) subs.push(["m" + m.i + "-calc", "论述/推导"]);
-      if (m.term && m.term.length) subs.push(["m" + m.i + "-term", "名词解释"]);
       subs.forEach(function (x) { var sa = el("a", "sub", "· " + x[1]); sa.href = "#" + x[0]; aside.appendChild(sa); });
     });
+    if ((ch.short || []).length || (ch.calc || []).length || (ch.term || []).length) {
+      aside.appendChild(el("div", "grp", "课后习题（主观）"));
+      var ac = el("a", "", "📚 本章课后习题"); ac.href = "#afterclass"; aside.appendChild(ac);
+      [["afterclass-term", "名词解释"], ["afterclass-short", "简答题"], ["afterclass-calc", "论述/推导"]].forEach(function (x) {
+        var sa = el("a", "sub", "· " + x[1]); sa.href = "#" + x[0]; aside.appendChild(sa);
+      });
+    }
     var tools = el("div", "navbtns");
     function tb(label, fn) { var b = el("button", "navbtn", label); b.onclick = fn; tools.appendChild(b); }
     tb("📕 错题本", function () { openWrongDrawer(cid, ch); });
@@ -1103,22 +1128,11 @@
         qWrap.appendChild(qh("m" + m.i + "-fill", "📝 本模块考题 · 填空题（配套题库 · 输入答案自动判分）"));
         m.fill.forEach(function (q, i) { qWrap.appendChild(renderFill(cid, q, i + 1)); });
       }
-      if (m.short && m.short.length) {
-        qWrap.appendChild(qh("m" + m.i + "-short", "📝 本模块考题 · 简答题（题库 / 真题）"));
-        m.short.forEach(function (q, i) { qWrap.appendChild(renderSelf(cid, q, i + 1, "short")); });
-      }
-      if (m.calc && m.calc.length) {
-        qWrap.appendChild(qh("m" + m.i + "-calc", "📝 本模块考题 · 论述 / 推导题（题库 / 真题）"));
-        m.calc.forEach(function (q, i) { qWrap.appendChild(renderSelf(cid, q, i + 1, "calc")); });
-      }
-      if (m.term && m.term.length) {
-        qWrap.appendChild(qh("m" + m.i + "-term", "📝 本模块考题 · 名词解释（题库 · 含踩分点）"));
-        m.term.forEach(function (q, i) { qWrap.appendChild(renderSelf(cid, q, i + 1, "term")); });
-      }
       if (qWrap.children.length) sec.appendChild(qWrap);
       main.appendChild(sec);
     });
 
+    main.appendChild(renderAfterClass(cid, ch));
     main.appendChild(renderChapterExam(cid, ch));
     main.appendChild(el("footer", "", "仅供个人学习使用 ｜ 数据保存在本机浏览器 localStorage"));
     refreshProgress();
