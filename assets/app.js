@@ -536,9 +536,13 @@
     var cumOk = 0, cumMiss = 0;
     [mc, jg, fi, selfStore(cid)].forEach(function (st) { Object.keys(st).forEach(function (k) { cumOk += st[k].ok || 0; cumMiss += st[k].miss || 0; }); });
     var wb = wrongList(cid);
-    var rate = n ? Math.round(ok * 100 / n) : null;
+    /* 分母 = 全部客观题（章节选择/判断/填空）+ 本页自测；未做的按未得分计 */
+    var checkTotal = 0;
+    ch.modules.forEach(function (m) { m.slides.forEach(function (s) { if (s.check) checkTotal++; }); });
+    var totalQ = (ch.mcq || []).length + (ch.judge || []).length + (ch.fill || []).length + checkTotal;
+    var rate = totalQ ? Math.round(ok * 100 / totalQ) : null;
     var rateCum = (cumOk + cumMiss) ? Math.round(cumOk * 100 / (cumOk + cumMiss)) : null;
-    return { slides: totalSlides, seen: seenN, wrong: wb.length, answered: n, ok: ok,
+    return { slides: totalSlides, seen: seenN, wrong: wb.length, answered: n, totalQ: totalQ, ok: ok,
              firstN: n, firstOK: ok, rate: rate, rateFirst: rate, rateCum: rateCum };
   }
 
@@ -548,10 +552,10 @@
       '<h3 style="margin-top:0">📊 本章学习统计</h3>' +
       '<p><span class="pill">概念页 ' + s.seen + "/" + s.slides + '</span>' +
       '<span class="pill">正确率 ' + (s.rate == null ? "—" : s.rate + "%") + '</span>' +
-      '<span class="pill">已作答 ' + (s.answered || 0) + ' 题</span>' +
+      '<span class="pill">已作答 ' + (s.answered || 0) + "/" + (s.totalQ || 0) + ' 题</span>' +
       '<span class="pill">累计正确率 ' + (s.rateCum == null ? "—" : s.rateCum + "%") + '</span>' +
       '<span class="pill">错题本 ' + s.wrong + " 题</span></p>" +
-      '<p class="hint" style="margin:6px 0 0">正确率<b>按题计</b>（章节选择/判断/填空 + 本页自测）：每道题只算一次，优先取<b>首次作答</b>，旧记录按最近一次。重复刷题不会把它刷高（主观题自评不计入；「累计」含重做，仅供参考）。</p>';
+      '<p class="hint" style="margin:6px 0 0">正确率分母 = <b>本章全部客观题（选择/判断/填空）+ 本页自测</b>，<b>没做的按未得分计</b>；每题只算一次（优先首次作答，旧记录取最近一次）。主观题自评不计入。</p>';
   }
 
   /* ================= 章末通关测（随机客观题，≥80% 通过） ================= */
@@ -1946,7 +1950,7 @@
         '<div class="row"><h2>' + esc(m.title) + '</h2><span class="badge">' + (ps && ps.passed ? "🏁 已通关 · " : "") + m.n_slides + " 页 · " + m.n_q + " 题</span></div>" +
         '<p class="topics">' + esc(m.sub2) + "</p>" +
         '<div class="prog"><i style="width:' + (s.slides ? Math.round(s.seen * 100 / s.slides) : 0) + '%"></i></div>' +
-        '<p class="topics">' + (ps ? (ps.passed ? '<b style="color:#1a7f37">🏁 通关 ' + ps.best + "%</b> ｜ " : "🏁 未通关（" + ps.pct + "%）｜ ") : "") + '概念已读 ' + s.seen + "/" + s.slides + " ｜ 正确率 " + (s.rate == null ? "—" : s.rate + "%") + " ｜ 错题 " + s.wrong + " 题</p>";
+        '<p class="topics">' + (ps ? (ps.passed ? '<b style="color:#1a7f37">🏁 通关 ' + ps.best + "%</b> ｜ " : "🏁 未通关（" + ps.pct + "%）｜ ") : "") + '概念已读 ' + s.seen + "/" + s.slides + " ｜ 正确率 " + (s.rate == null ? "—" : s.rate + "%") + "（已答 " + (s.answered || 0) + "/" + (s.totalQ || 0) + "）｜ 错题 " + s.wrong + " 题</p>";
       var a = el("a", "go", "开始学习 →"); a.href = m.id + ".html"; c.appendChild(a);
       list.appendChild(c);
     });
@@ -1963,20 +1967,20 @@
   function renderOverview() {
     var host = document.getElementById("overview"); if (!host) return;
     var M = window.MANIFEST || [];
-    var rows = "", tW = 0, tOK = 0, tN = 0, any = false;
+    var rows = "", tW = 0, tOK = 0, tN = 0, tD = 0, any = false;
     M.forEach(function (m) {
       var ch = window.CHAPTERS[m.id];
       var s = chapterStats(m.id, ch || { modules: [] });
       if (s.seen || s.answered || s.wrong) any = true;
-      tW += s.wrong; tN += (s.answered || 0); tOK += (s.ok || 0);
+      tW += s.wrong; tN += (s.answered || 0); tOK += (s.ok || 0); tD += (s.totalQ || 0);
       rows += "<tr><td>" + esc(m.title) + "</td><td>" + s.seen + "/" + s.slides + "</td><td>" +
-        (s.answered ? s.answered : "—") + "</td><td>" +
+        (s.answered || 0) + "/" + (s.totalQ || 0) + "</td><td>" +
         (s.rate == null ? "—" : s.rate + "%") + "</td><td>" + s.wrong + "</td><td>" +
         (function () { var p = passedGet(m.id); return p ? (p.passed ? '<b style="color:#1a7f37">✅ ' + p.best + "%</b>" : p.pct + "%") : "—"; })() + "</td></tr>";
     });
     if (!any) { host.innerHTML = '<p class="empty">本设备还没有学习记录。打开任意一章开始学习，记录只存在这台设备。</p>'; return; }
-    host.innerHTML = '<table class="tbl"><thead><tr><th>章节</th><th>概念已读</th><th>已答</th><th>正确率</th><th>错题</th><th>通关测</th></tr></thead><tbody>' +
-      rows + '<tr style="font-weight:700"><td>合计</td><td>—</td><td>' + tN + "</td><td>" + (tN ? Math.round(tOK * 100 / tN) + "%" : "—") + "</td><td>" + tW + "</td><td>—</td></tr></tbody></table>";
+    host.innerHTML = '<table class="tbl"><thead><tr><th>章节</th><th>概念已读</th><th>已答/题量</th><th>正确率</th><th>错题</th><th>通关测</th></tr></thead><tbody>' +
+      rows + '<tr style="font-weight:700"><td>合计</td><td>—</td><td>' + tN + "/" + tD + "</td><td>" + (tD ? Math.round(tOK * 100 / tD) + "%" : "—") + "</td><td>" + tW + "</td><td>—</td></tr></tbody></table>";
   }
 
   function backupAll() {
