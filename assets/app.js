@@ -1141,7 +1141,7 @@
     HW.init(cid);
     document.title = ch.title + " · 细胞生物学";
     var aside = document.getElementById("sidebar"), main = document.getElementById("main");
-    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="textbook.html">📚 教材对照表</a><a href="compare.html">🔗 对比速记表</a><a href="zhenti.html">📋 历年真题</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
+    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="mindmap.html">🕸 跨章总图</a><a href="textbook.html">📚 教材对照表</a><a href="compare.html">🔗 对比速记表</a><a href="zhenti.html">📋 历年真题</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
     aside.appendChild(el("div", "grp", "各模块（概念 + 考题）"));
     ch.modules.forEach(function (m) {
       var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a);
@@ -2397,6 +2397,71 @@
     render();
   }
 
+  /* ================= 跨章知识总图 ================= */
+  function renderMindmap() {
+    var host = document.getElementById("mhhost");
+    var listEl = document.getElementById("mhlist");
+    var legEl = document.getElementById("mhlegend");
+    if (!host) return;
+    var mm = window.MINDMAP || { domains: {}, edges: [] };
+    var M = window.MANIFEST || [];
+    var byId = {}; M.forEach(function (m) { byId[m.id] = m; });
+    function shortName(id) {
+      var m = byId[id]; if (!m) return id;
+      return String(m.title || id).replace(/^第[一二三四五六七八九十百]+章\s*/, "").replace(/[（(].*/, "").slice(0, 10);
+    }
+    var palette = ["#2b6ef2", "#1b7f3b", "#a3541e", "#7a2a24", "#6a3fb5", "#0e7490", "#b8860b", "#4b5563"];
+    var doms = [], colorOf = {}, colOf = {}, rowOf = {};
+    Object.keys(mm.domains || {}).forEach(function (d, di) {
+      var c = palette[di % palette.length]; doms.push(d);
+      (mm.domains[d] || []).forEach(function (id, ri) { if (byId[id]) { colorOf[id] = c; colOf[id] = di; rowOf[id] = ri; } });
+    });
+    var other = M.filter(function (m) { return colOf[m.id] == null; }).map(function (m) { return m.id; });
+    if (other.length) { doms.push("其他"); var oi = doms.length - 1; other.forEach(function (id, ri) { colorOf[id] = "#4b5563"; colOf[id] = oi; rowOf[id] = ri; }); }
+    if (legEl) {
+      legEl.innerHTML = doms.map(function (d, i) {
+        return '<span class="mm-leg"><i style="background:' + palette[i % palette.length] + '"></i>' + esc(d) + "</span>";
+      }).join("");
+    }
+    var colW = 172, rowH = 84, nodeW = 152, nodeH = 48, padL = 20, padT = 24;
+    var maxRow = 0; Object.keys(rowOf).forEach(function (id) { if (rowOf[id] + 1 > maxRow) maxRow = rowOf[id] + 1; });
+    var W = padL + doms.length * colW + 20, H = padT + maxRow * rowH + 30;
+    var NS = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    svg.setAttribute("class", "mindsvg");
+    function mk(tag, attrs) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
+    function center(id) { return { x: padL + colOf[id] * colW + nodeW / 2, y: padT + rowOf[id] * rowH + nodeH / 2 }; }
+    (mm.edges || []).forEach(function (e) {
+      if (colOf[e.a] == null || colOf[e.b] == null) return;
+      var A = center(e.a), B = center(e.b);
+      var p = mk("path", { d: "M " + A.x + " " + A.y + " Q " + ((A.x + B.x) / 2) + " " + ((A.y + B.y) / 2 - 26) + " " + B.x + " " + B.y, "class": "mh-edge" });
+      var ti = mk("title"); ti.textContent = shortName(e.a) + " —" + e.t + "→ " + shortName(e.b); p.appendChild(ti);
+      svg.appendChild(p);
+    });
+    doms.forEach(function (d, i) {
+      var tx = padL + i * colW + nodeW / 2;
+      var lt = mk("text", { x: tx, y: 14, "class": "mh-domlabel", "text-anchor": "middle" }); lt.textContent = d; svg.appendChild(lt);
+    });
+    M.forEach(function (m) {
+      var id = m.id; if (colOf[id] == null) return;
+      var x = padL + colOf[id] * colW, y = padT + rowOf[id] * rowH;
+      var g = mk("g", { "class": "mh-node" }); g.style.cursor = "pointer";
+      g.appendChild(mk("rect", { x: x, y: y, width: nodeW, height: nodeH, rx: 10, fill: colorOf[id] }));
+      var t = mk("text", { x: x + nodeW / 2, y: y + nodeH / 2 + 4, "class": "mh-node-t", "text-anchor": "middle" }); t.textContent = shortName(id);
+      g.appendChild(t);
+      var tt = mk("title"); tt.textContent = m.title; g.appendChild(tt);
+      g.onclick = function () { location.href = id + ".html"; };
+      svg.appendChild(g);
+    });
+    host.appendChild(svg);
+    if (listEl) {
+      listEl.innerHTML = (mm.edges || []).map(function (e) {
+        return '<li><a href="' + esc(e.a) + '.html">' + esc(shortName(e.a)) + "</a> —" + esc(e.t) + "→ <a href=\"" + esc(e.b) + '.html">' + esc(shortName(e.b)) + "</a></li>";
+      }).join("");
+    }
+  }
+
   /* ================= boot ================= */
   document.addEventListener("DOMContentLoaded", function () {
     if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () { }); } catch (e) { } }
@@ -2407,6 +2472,7 @@
     else if (page === "wrong") renderWrongPage();
     else if (page === "glossary") renderGlossary();
     else if (page === "compare") renderCompare();
+    else if (page === "mindmap") renderMindmap();
     else if (page === "review") renderReview();
     else if (page === "flashcards") renderFlashcards();
     else if (page === "exam") renderExam();
