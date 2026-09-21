@@ -981,28 +981,33 @@
 
   /* ================= 本章逻辑主线（可点击思维导图） ================= */
   function renderOutline(ch) {
-    if (!ch.outline || !ch.outline.length) return null;
-    var map = ch.outlineMap || [];
+    if (!(ch.outline || []).length && !(ch.modules || []).length) return null;
     var cid = ch.id;
     var box = el("div", "statsbox outlinebox");
-    var h = '<h3 style="margin:0 0 8px">🧭 本章思维导图 <span class="hint">点节点展开 / 跳转</span></h3><div class="mmap">';
+    var h = '<h3 style="margin:0 0 8px">🧠 本章思维导图 <span class="hint">点节点展开 / 跳转</span></h3><div class="mmap">';
     h += '<div class="mm-root">' + esc(ch.title) + "</div>";
-    h += '<ul class="mm-branches">';
-    ch.outline.forEach(function (step, i) {
-      var mi = map[i];
-      var m = (mi != null && ch.modules[mi]) ? ch.modules[mi] : null;
-      h += '<li class="mm-branch"><details' + (i === 0 ? " open" : "") + "><summary>" +
-        '<span class="mm-step">' + (i + 1) + ". " + esc(step) + "</span>" +
-        (m ? '<span class="mm-mod">→ ' + esc(m.name) + "</span>" : "") +
-        "</summary>";
-      if (m) {
-        h += '<div class="mm-kids">';
-        m.slides.forEach(function (s) {
-          h += '<a class="mm-leaf" href="#s_' + cid + "_s" + m.i + "_" + s.i + '">p' + s.page + " " + esc(String(s.title || "").slice(0, 26)) + "</a>";
+    if ((ch.outline || []).length) {
+      h += '<div class="mm-chain">' + ch.outline.map(function (s, i) { return '<span class="ostep">' + (i + 1) + ". " + esc(s) + "</span>"; }).join('<span class="oarrow">→</span>') + "</div>";
+    }
+    h += '<ul class="mm-tree">';
+    (ch.modules || []).forEach(function (m) {
+      var slides = m.slides || [];
+      if (!slides.length && !(m.mcq || []).length && !(m.judge || []).length && !(m.fill || []).length) return;
+      h += '<li class="mm-tmod"><details><summary>' + esc(m.name) + ' <span class="mm-cnt">' + (slides.length ? slides.length + " 页" : "") + "</span></summary>";
+      if (slides.length) {
+        h += '<ul class="mm-tpages">';
+        slides.forEach(function (s) {
+          h += '<li class="mm-tpage"><details><summary><a class="mm-plink" href="#s_' + cid + "_s" + m.i + "_" + s.i + '">p' + s.page + " " + esc(String(s.title || "").slice(0, 28)) + "</a></summary>";
+          var kids = "";
+          if (s.mem) kids += '<li class="mm-mem">💡 ' + esc(s.mem) + "</li>";
+          (s.points || []).forEach(function (p) { kids += "<li>" + esc(p) + "</li>"; });
+          if (s.fig) kids += '<li class="mm-fig">📖 ' + esc(String(s.fig).split("\n")[0]) + "</li>";
+          h += '<ul class="mm-tpoints">' + (kids || "<li>（本页要点见页面）</li>") + "</ul>";
+          h += "</details></li>";
         });
-        h += '<a class="mm-goto" href="#m' + m.i + '">→ 去本节（含讲解与考题）</a>';
-        h += "</div>";
+        h += "</ul>";
       }
+      h += '<a class="mm-goto" href="#m' + m.i + '">→ 去本节（讲解与考题）</a>';
       h += "</details></li>";
     });
     h += "</ul></div>";
