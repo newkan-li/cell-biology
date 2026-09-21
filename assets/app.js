@@ -1100,8 +1100,11 @@
         head.innerHTML = '<span class="t">' + esc(s.title) + '</span><span class="lv lv-' + esc(lv) + '">' + esc(lv) + "</span>";
         card.appendChild(head);
         var body = el("div", "body");
-        var img = el("img"); img.src = s.img; img.loading = "lazy"; img.alt = s.title;
+        var tbCh = /^tb/.test(cid);
+        var img = el("img"); img.alt = s.title;
         img.onclick = function () { document.getElementById("lbimg").src = s.img; document.getElementById("lightbox").classList.add("on"); };
+        if (tbCh) { img.loading = "eager"; img.src = s.img; }
+        else { img.setAttribute("data-src", s.img); img.loading = "lazy"; if (animIO) animIO.observe(img); else img.src = s.img; }
         body.appendChild(img);
         if (s.explain) body.appendChild(el("div", "explain", esc(s.explain).replace(/\n/g, "<br>")));
         else body.appendChild(el("div", "notes", esc(s.notes)));
