@@ -2406,6 +2406,8 @@
     var mm = window.MINDMAP || { domains: {}, edges: [] };
     var M = window.MANIFEST || [];
     var byId = {}; M.forEach(function (m) { byId[m.id] = m; });
+    var path = mm.path || [];
+    var pathSet = {}; path.forEach(function (id) { pathSet[id] = 1; });
     function shortName(id) {
       var m = byId[id]; if (!m) return id;
       return String(m.title || id).replace(/^第[一二三四五六七八九十百]+章\s*/, "").replace(/[（(].*/, "").slice(0, 10);
@@ -2435,7 +2437,7 @@
     (mm.edges || []).forEach(function (e) {
       if (colOf[e.a] == null || colOf[e.b] == null) return;
       var A = center(e.a), B = center(e.b);
-      var p = mk("path", { d: "M " + A.x + " " + A.y + " Q " + ((A.x + B.x) / 2) + " " + ((A.y + B.y) / 2 - 26) + " " + B.x + " " + B.y, "class": "mh-edge" });
+      var p = mk("path", { d: "M " + A.x + " " + A.y + " Q " + ((A.x + B.x) / 2) + " " + ((A.y + B.y) / 2 - 26) + " " + B.x + " " + B.y, "class": "mh-edge" + (pathSet[e.a] && pathSet[e.b] ? " mh-onpath" : "") });
       var ti = mk("title"); ti.textContent = shortName(e.a) + " —" + e.t + "→ " + shortName(e.b); p.appendChild(ti);
       svg.appendChild(p);
     });
@@ -2446,7 +2448,7 @@
     M.forEach(function (m) {
       var id = m.id; if (colOf[id] == null) return;
       var x = padL + colOf[id] * colW, y = padT + rowOf[id] * rowH;
-      var g = mk("g", { "class": "mh-node" }); g.style.cursor = "pointer";
+      var g = mk("g", { "class": "mh-node" + (pathSet[id] ? " mh-onpath" : "") }); g.style.cursor = "pointer";
       g.appendChild(mk("rect", { x: x, y: y, width: nodeW, height: nodeH, rx: 10, fill: colorOf[id] }));
       var t = mk("text", { x: x + nodeW / 2, y: y + nodeH / 2 + 4, "class": "mh-node-t", "text-anchor": "middle" }); t.textContent = shortName(id);
       g.appendChild(t);
@@ -2455,6 +2457,22 @@
       svg.appendChild(g);
     });
     host.appendChild(svg);
+    var pathEl = document.getElementById("mhpath");
+    if (pathEl && path.length) {
+      var steps = path.map(function (id, i) {
+        return '<a class="mh-step" href="' + id + '.html"><b>' + (i + 1) + "</b> " + esc(shortName(id)) + "</a>";
+      }).join('<span class="oarrow">→</span>');
+      var br = Object.keys(mm.branches || {}).map(function (k) {
+        return '<a class="mh-branch" href="' + k + '.html">' + esc(shortName(k)) + '</a>⟶<a href="' + esc(mm.branches[k]) + '.html">' + esc(shortName(mm.branches[k])) + "</a>";
+      }).join("　");
+      pathEl.innerHTML = '<div class="mm-chain">' + steps + "</div>" + (br ? '<div class="mh-branchrow">教材章挂靠：' + br + "</div>" : "");
+    }
+    var tgl = document.getElementById("mhpathtoggle");
+    if (tgl) tgl.onclick = function () {
+      var on = svg.classList.toggle("pathonly");
+      tgl.classList.toggle("on", on);
+      tgl.textContent = on ? "显示全部关系" : "只看学习路径";
+    };
     if (listEl) {
       listEl.innerHTML = (mm.edges || []).map(function (e) {
         return '<li><a href="' + esc(e.a) + '.html">' + esc(shortName(e.a)) + "</a> —" + esc(e.t) + "→ <a href=\"" + esc(e.b) + '.html">' + esc(shortName(e.b)) + "</a></li>";

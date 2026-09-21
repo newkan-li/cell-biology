@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>跨章知识总图 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260923f">
-<script src="assets/theme.js?v=20260923f"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260923g">
+<script src="assets/theme.js?v=20260923g"></script>
 </head>
 <body data-page="mindmap">
 <div class="wrap" style="max-width:1200px">
@@ -19,6 +19,13 @@
   </header>
   <p><a href="index.html">← 返回首页</a>　<a href="compare.html">🔗 对比速记表</a>　<a href="glossary.html">📖 术语表</a></p>
   <div id="mhlegend" class="mm-legend"></div>
+  <div class="statsbox">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+      <h3 style="margin:0">🧭 推荐学习路径</h3>
+      <button id="mhpathtoggle" class="navbtn" style="width:auto;margin:0">只看学习路径</button>
+    </div>
+    <div id="mhpath"></div>
+  </div>
   <div class="statsbox"><div id="mhhost" style="overflow:auto"></div></div>
   <div class="statsbox">
     <h3 style="margin:0 0 8px">🔗 章与章之间的关系</h3>
@@ -26,9 +33,9 @@
   </div>
   <footer>仅供个人学习使用</footer>
 </div>
-<script src="data/manifest.js?v=20260923f"></script>
-<script src="data/mindmap.js?v=20260923f"></script>
-<script src="assets/app.js?v=20260923f"></script>
+<script src="data/manifest.js?v=20260923g"></script>
+<script src="data/mindmap.js?v=20260923g"></script>
+<script src="assets/app.js?v=20260923g"></script>
 <script>window.addEventListener("DOMContentLoaded",function(){var e=document.getElementById("mhcount");if(e&&window.MINDMAP)e.textContent=window.MINDMAP.edges.length;});</script>
 </body>
 </html>
