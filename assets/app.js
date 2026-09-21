@@ -994,9 +994,9 @@
     });
     var rel = {};
     (mind.edges || []).forEach(function (e) {
-      if (e.k !== "term") return;
-      (rel[e.a] = rel[e.a] || []).push({ to: e.b, t: e.t });
-      (rel[e.b] = rel[e.b] || []).push({ to: e.a, t: e.t });
+      if (e.k === "seq" || e.k === "main") return;
+      (rel[e.a] = rel[e.a] || []).push({ to: e.b, t: e.t, k: e.k });
+      (rel[e.b] = rel[e.b] || []).push({ to: e.a, t: e.t, k: e.k });
     });
 
     var h = '<h3 style="margin:0 0 8px">🧠 本章知识串联图 <span class="hint">主线 · 结构 · 概念关联</span> <span class="mm-done" id="mmdone_' + cid + '"></span>'
@@ -1036,7 +1036,8 @@
           if (rs && rs.length) {
             h += '<div class="mm-rel">🔗 关联：' + rs.slice(0, 8).map(function (r) {
               var tp = pageByKp[r.to];
-              return '<a href="#s_' + r.to + '">' + esc(r.t) + " ↔ p" + (tp ? tp.page : "?") + "</a>";
+              var lab = (r.k === "cmp" ? "对比：" : "") + r.t;
+              return '<a class="rel-' + r.k + '" href="#s_' + r.to + '">' + esc(lab) + " ↔ p" + (tp ? tp.page : "?") + "</a>";
             }).join("") + "</div>";
           }
           h += "</details></li>";
@@ -1092,11 +1093,11 @@
       var idxOf = {}; mods.forEach(function (m, i) { idxOf[m.mi] = i; });
       var pair = {};
       (mind.edges || []).forEach(function (e) {
-        if (e.k !== "term") return;
+        if (e.k === "seq" || e.k === "main") return;
         var ma = modOf[e.a], mb = modOf[e.b];
         if (ma == null || mb == null || ma === mb || idxOf[ma] == null || idxOf[mb] == null) return;
         var key = Math.min(ma, mb) + "-" + Math.max(ma, mb);
-        (pair[key] = pair[key] || []).push(e.t);
+        (pair[key] = pair[key] || []).push((e.k === "cmp" ? "对比·" : "") + e.t);
       });
       var NS = "http://www.w3.org/2000/svg";
       var rowH = 76, W = 880, nodeW = 360, nodeH = 48, cx = W / 2;

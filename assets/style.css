@@ -522,6 +522,10 @@ html[data-theme="dark"] .mm-termlabel{fill:#e0c46a}
 html[data-theme="dark"] .mm-rel a{background:#22303f;border-color:#2f4159}
 html[data-theme="dark"] .mm-rel a:hover{background:#28384a}
 html[data-theme="dark"] .mm-cmp a{border-color:#2f4159}
+.mm-rel a.rel-cmp{border-color:#f0c9a8;background:#fff5e8;color:#a3541e}
+.mm-rel a.rel-mech{border-color:#bfe3cc;background:#eaf6ee;color:#1b7f3b}
+html[data-theme="dark"] .mm-rel a.rel-cmp{background:#33291a;border-color:#4a3a24;color:#e6b76b}
+html[data-theme="dark"] .mm-rel a.rel-mech{background:#182a20;border-color:#2c4a38;color:#8fd8a8}
 html[data-theme="sepia"] .mindsvg{background:#fffdf3}
 html[data-theme="sepia"] .mm-node-rect{fill:#eef3e2;stroke:#c3d0b0}
 html[data-theme="sepia"] .mm-node-text{fill:#3a3327}
