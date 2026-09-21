@@ -1000,7 +1000,6 @@
           var kp = cid + "_s" + m.i + "_" + s.i;
           h += '<li class="mm-tpage"><details><summary><span class="mm-check" data-k="' + kp + '"></span><a class="mm-plink" href="#s_' + kp + '">p' + s.page + " " + esc(String(s.title || "").slice(0, 28)) + "</a></summary>";
           var kids = "";
-          if (s.mem) kids += '<li class="mm-mem">💡 ' + esc(s.mem) + "</li>";
           (s.points || []).forEach(function (p) { kids += "<li>" + esc(p) + "</li>"; });
           if (s.fig) kids += '<li class="mm-fig">📖 ' + esc(String(s.fig).split("\n")[0]) + "</li>";
           h += '<ul class="mm-tpoints">' + (kids || "<li>（本页要点见页面）</li>") + "</ul>";
@@ -1185,11 +1184,6 @@
             s.points.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>";
           card.appendChild(pb);
         }
-        if (s.mem) {
-          var mb = el("div", "memnote");
-          mb.innerHTML = "<b>💡 记忆点：</b>" + esc(s.mem);
-          card.appendChild(mb);
-        }
         if (s.fig) {
           var fb = el("div", "fignote");
           fb.innerHTML = '<div class="fn-h">' + (s.explain ? "📖 关键术语（中英对照）" : "🔍 图注解读") + '</div><p>' + esc(s.fig).replace(/\n/g, "<br>") + "</p>";
@@ -1337,10 +1331,6 @@
             id: "fc_pg_" + noteKp, ch: m.id, mod: mod.i, modName: mod.name, tag: "本页讲解", subjective: true,
             front: (s.title || ""), frontImg: s.img, back: esc(pgExp).replace(/\n/g, "<br>"),
             plain: pgExp, blank: ""
-          });
-          if (s.mem) cards.push({
-            id: "fc_mem_" + noteKp, ch: m.id, mod: mod.i, modName: mod.name, tag: "记忆点",
-            front: (s.title || "") + "　💡记忆点？", back: esc(s.mem), plain: s.mem, blank: ""
           });
           if (!s.points && !s.fig) return;
           var kp = m.id + "_s" + mod.i + "_" + s.i, back = "";
