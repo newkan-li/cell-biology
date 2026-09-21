@@ -2476,6 +2476,18 @@
       tgl.classList.toggle("on", on);
       tgl.textContent = on ? "显示全部关系" : "只看学习路径";
     };
+    var detailEl = document.getElementById("mhdetail");
+    if (detailEl) {
+      detailEl.innerHTML = Object.keys(mm.details || {}).map(function (d) {
+        var dd = mm.details[d];
+        var steps = (dd.steps || []).map(function (s) {
+          var items = (s.items || []).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("");
+          var inner = '<div class="mh-flow-t">' + esc(s.t) + "</div><ul>" + items + "</ul>";
+          return s.link ? '<a class="mh-flow-step" href="' + esc(s.link) + '">' + inner + "</a>" : '<div class="mh-flow-step">' + inner + "</div>";
+        }).join('<span class="oarrow">→</span>');
+        return '<div class="mh-detail"><h4>' + esc(d) + "：" + esc(dd.q || "") + '</h4><div class="mh-flow">' + steps + "</div></div>";
+      }).join("");
+    }
     if (listEl) {
       listEl.innerHTML = (mm.edges || []).map(function (e) {
         return '<li><a href="' + esc(e.a) + '.html">' + esc(shortName(e.a)) + "</a> —" + esc(e.t) + "→ <a href=\"" + esc(e.b) + '.html">' + esc(shortName(e.b)) + "</a></li>";

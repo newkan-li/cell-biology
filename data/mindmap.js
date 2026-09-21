@@ -10,6 +10,30 @@ window.MINDMAP = {
     "衰老·凋亡·癌": ["ch12", "ch13"],
     "核·分化·社会": ["tb11", "tb15", "tb17"]
   },
+  details: {
+    "信号转导": {
+      q: "转导什么？——把胞外的化学信号（第一信使）经「受体 → 换能蛋白 → 第二信使 → 激酶级联」逐级转换并放大为胞内信号，最终改变代谢、基因表达与细胞行为。",
+      steps: [
+        { t: "① 第一信使（胞外信号）", items: ["激素、神经递质", "生长因子、细胞因子", "气体分子 NO / CO", "胞外基质 / 接触信号"], link: "ch10.html" },
+        { t: "② 受体（识别）", items: ["G 蛋白偶联受体 GPCR（7 次跨膜）", "酶联受体 RTK（酪氨酸激酶）", "离子通道型受体", "胞内受体（甾类激素）"], link: "ch10.html" },
+        { t: "③ 换能蛋白", items: ["异三聚体 G 蛋白（αβγ；GTP/GDP 开关）", "小 G 蛋白 Ras / Rho", "GEF / GAP 调节"], link: "ch10.html" },
+        { t: "④ 第二信使（放大）", items: ["cAMP", "IP3 / DAG", "Ca²⁺", "cGMP / NO"], link: "ch11.html" },
+        { t: "⑤ 激酶级联", items: ["PKA", "PKC", "CaM 激酶", "Ras→Raf→MAPK", "PI3K–Akt", "JAK–STAT"], link: "ch11.html" },
+        { t: "⑥ 效应与反应", items: ["代谢酶活性改变", "离子通道开闭", "转录因子 → 基因表达", "增殖 / 分化 / 凋亡 / 分泌"], link: "ch11.html" }
+      ]
+    },
+    "内膜系统与分选": {
+      q: "分选什么？——把在 rER 合成的蛋白经「加工 → 加签 → 分选 → 膜泡运输 → 停靠融合」精准送到 ER/高尔基/溶酶体/质膜/胞外。",
+      steps: [
+        { t: "① 合成（rER）", items: ["信号肽引导共翻译入 ER", "N-连接糖基化", "折叠与质控（Bip/PDI）"], link: "ch03.html" },
+        { t: "② 加工（高尔基体）", items: ["糖链修剪、O-糖基化", "M6P 加签（溶酶体酶）", "极性区室 CGN→TGN"], link: "ch03.html" },
+        { t: "③ 分选（TGN）", items: ["M6P 受体 → 溶酶体", "信号序列 → 目的地", "COPI 回收逃逸蛋白"], link: "ch03.html" },
+        { t: "④ 膜泡运输", items: ["COPII：ER→高尔基（顺行）", "COPI：高尔基→ER（逆行）", "网格蛋白：TGN→膜/溶酶体"], link: "ch04.html" },
+        { t: "⑤ 停靠与融合", items: ["Rab 定位", "v-/t-SNARE 配对", "NSF/SNAP 解离"], link: "ch04.html" },
+        { t: "⑥ 到达", items: ["组成型/调节型分泌", "膜蛋白插入质膜", "溶酶体降解"], link: "ch04.html" }
+      ]
+    }
+  },
   path: ["ch01", "ch02", "ch03", "ch04", "ch05", "ch06", "ch07", "ch08", "ch09", "ch10", "ch11", "ch12", "ch13"],
   branches: { tb03: "ch01", tb06: "ch02", tb12: "ch03", tb11: "ch09", tb13: "ch09", tb15: "ch12", tb17: "ch02" },
   edges: [
