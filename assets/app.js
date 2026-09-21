@@ -454,7 +454,7 @@
       answerHTML = "<b>标准定义：</b><br>" + esc(q.def).replace(/\n/g, "<br>");
       kps = q.kps || "";
     } else {
-      title = (kind === "short" ? "简答题 " : "论述/推导 ") + idx + "：" + esc(q.q) + (q.src ? ' <span class="src">[' + esc(q.src) + "]</span>" : "");
+      title = (kind === "short" ? "简答题 " : "论述/推导 ") + idx + "：" + esc(q.q) + (q.type ? ' <span class="src">[' + esc(q.type) + "]</span>" : "") + (q.src ? ' <span class="src">[' + esc(q.src) + "]</span>" : "");
       answerHTML = "<b>参考答案：</b><br>" + esc(kind === "calc" ? (q.steps || q.a) : q.a).replace(/\n/g, "<br>");
       kps = q.kps || "";
     }
