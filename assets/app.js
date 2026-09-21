@@ -1101,7 +1101,7 @@
         card.appendChild(head);
         var body = el("div", "body");
         var img = el("img"); img.alt = s.title;
-        img.onclick = function () { document.getElementById("lbimg").src = s.img; document.getElementById("lightbox").classList.add("on"); };
+        img.onclick = function () { document.getElementById("lbimg").src = (s.big || s.img); document.getElementById("lightbox").classList.add("on"); };
         img.loading = /^tb/.test(cid) ? "eager" : "lazy";
         img.src = s.img;
         body.appendChild(img);
