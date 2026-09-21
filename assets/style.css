@@ -500,3 +500,28 @@ html[data-theme="dark"] .mm-fig{color:#79c99a}
 .ocrctrl .navbtn{width:auto;margin:0;padding:4px 10px;font-size:12.5px}
 .ocrimg{width:100%;border:1px solid var(--line);border-radius:8px;cursor:zoom-in;background:#fff}
 html[data-theme="dark"] .ocrpage{background:#f4f4f4}
+/* 本章知识串联图 */
+.mindbox .mm-chain a.ostep{text-decoration:none}
+.mm-cmp{font-size:12.5px;color:var(--sub);margin:2px 0 8px}
+.mm-cmp a{color:var(--blue);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:1px 8px;margin-right:6px}
+.mm-rel{margin:4px 0 2px;font-size:12px;color:var(--sub)}
+.mm-rel a{display:inline-block;margin:2px 6px 2px 0;padding:1px 8px;border:1px solid #c9dcff;background:#f0f5ff;border-radius:12px;color:var(--blue);text-decoration:none}
+.mm-rel a:hover{background:#e2ecfa}
+.mm-tool.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.mindsvg{width:100%;height:auto;display:block;background:#fbfdff;border:1px solid var(--line);border-radius:10px}
+.mm-mainline{stroke:#9bb7d4;stroke-width:2}
+.mm-termline{fill:none;stroke:#d0a72a;stroke-width:1.4;opacity:.75}
+.mm-termlabel{font-size:11px;fill:#8a6d1a}
+.mm-node-rect{fill:#eef4ff;stroke:#9cc3e0;stroke-width:1.2}
+.mm-node-text{font-size:12px;fill:#23405c}
+html[data-theme="dark"] .mindsvg{background:#141c26;border-color:#2c3442}
+html[data-theme="dark"] .mm-node-rect{fill:#1b2634;stroke:#3a5570}
+html[data-theme="dark"] .mm-node-text{fill:#cfe0f0}
+html[data-theme="dark"] .mm-termline{stroke:#c9a227}
+html[data-theme="dark"] .mm-termlabel{fill:#e0c46a}
+html[data-theme="dark"] .mm-rel a{background:#22303f;border-color:#2f4159}
+html[data-theme="dark"] .mm-rel a:hover{background:#28384a}
+html[data-theme="dark"] .mm-cmp a{border-color:#2f4159}
+html[data-theme="sepia"] .mindsvg{background:#fffdf3}
+html[data-theme="sepia"] .mm-node-rect{fill:#eef3e2;stroke:#c3d0b0}
+html[data-theme="sepia"] .mm-node-text{fill:#3a3327}

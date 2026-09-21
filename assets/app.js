@@ -979,17 +979,46 @@
     window.__refreshHeat = draw;
   }
 
-  /* ================= 本章逻辑主线（可点击思维导图） ================= */
+  /* ================= 本章知识串联图（结构树 + 关系图 + 概念关联） ================= */
   function renderOutline(ch) {
     if (!(ch.outline || []).length && !(ch.modules || []).length) return null;
     var cid = ch.id;
-    var box = el("div", "statsbox outlinebox");
-    var h = '<h3 style="margin:0 0 8px">🧠 本章思维导图 <span class="hint">点节点展开 / 勾选掌握</span> <span class="mm-done" id="mmdone_' + cid + '"></span> <button class="mm-tool" id="mmExp_' + cid + '">全部展开</button><button class="mm-tool" id="mmCol_' + cid + '">全部折叠</button></h3><div class="mmap">';
-    h += '<div class="mm-root">' + esc(ch.title) + "</div>";
+    var mind = (window.MIND && window.MIND[cid]) || { edges: [], cmp: [] };
+    var box = el("div", "statsbox outlinebox mindbox");
+    var pages = [], pageByKp = {}, modOf = {};
+    (ch.modules || []).forEach(function (m, mi) {
+      (m.slides || []).forEach(function (s, si) {
+        var p = { kp: cid + "_s" + mi + "_" + si, mod: mi, si: si, page: s.page, title: String(s.title || "").replace(/\s+/g, " ").trim() };
+        pages.push(p); pageByKp[p.kp] = p; modOf[p.kp] = mi;
+      });
+    });
+    var rel = {};
+    (mind.edges || []).forEach(function (e) {
+      if (e.k !== "term") return;
+      (rel[e.a] = rel[e.a] || []).push({ to: e.b, t: e.t });
+      (rel[e.b] = rel[e.b] || []).push({ to: e.a, t: e.t });
+    });
+
+    var h = '<h3 style="margin:0 0 8px">🧠 本章知识串联图 <span class="hint">主线 · 结构 · 概念关联</span> <span class="mm-done" id="mmdone_' + cid + '"></span>'
+      + '<button class="mm-tool on" id="mmTabTree_' + cid + '">结构树</button>'
+      + '<button class="mm-tool" id="mmTabGraph_' + cid + '">关系图</button>'
+      + '<button class="mm-tool" id="mmExp_' + cid + '">全部展开</button>'
+      + '<button class="mm-tool" id="mmCol_' + cid + '">全部折叠</button></h3>';
+
     if ((ch.outline || []).length) {
-      h += '<div class="mm-chain">' + ch.outline.map(function (s, i) { return '<span class="ostep">' + (i + 1) + ". " + esc(s) + "</span>"; }).join('<span class="oarrow">→</span>') + "</div>";
+      h += '<div class="mm-chain">';
+      h += ch.outline.map(function (s, i) {
+        var mods = [];
+        (ch.outlineMap || []).forEach(function (v, mi) { if (v === i) mods.push(mi); });
+        return '<a class="ostep" href="' + (mods.length ? "#m" + mods[0] : "#m0") + '">' + (i + 1) + ". " + esc(s) + "</a>";
+      }).join('<span class="oarrow">→</span>');
+      h += "</div>";
     }
-    h += '<ul class="mm-tree">';
+    if ((mind.cmp || []).length) {
+      h += '<div class="mm-cmp">🔗 相关对比速记表：' + mind.cmp.map(function (id) { return '<a href="compare.html">' + esc(id) + "</a>"; }).join(" ") + "</div>";
+    }
+
+    h += '<div class="mind-view" id="mmTree_' + cid + '"><ul class="mm-tree">';
     (ch.modules || []).forEach(function (m) {
       var slides = m.slides || [];
       if (!slides.length && !(m.mcq || []).length && !(m.judge || []).length && !(m.fill || []).length) return;
@@ -998,20 +1027,29 @@
         h += '<ul class="mm-tpages">';
         slides.forEach(function (s) {
           var kp = cid + "_s" + m.i + "_" + s.i;
-          h += '<li class="mm-tpage"><details><summary><span class="mm-check" data-k="' + kp + '"></span><a class="mm-plink" href="#s_' + kp + '">p' + s.page + " " + esc(String(s.title || "").slice(0, 28)) + "</a></summary>";
+          h += '<li class="mm-tpage"><details><summary><span class="mm-check" data-k="' + kp + '"></span><a class="mm-plink" href="#s_' + kp + '">p' + s.page + " " + esc(String(s.title || "").slice(0, 30)) + "</a></summary>";
           var kids = "";
           (s.points || []).forEach(function (p) { kids += "<li>" + esc(p) + "</li>"; });
           if (s.fig) kids += '<li class="mm-fig">📖 ' + esc(String(s.fig).split("\n")[0]) + "</li>";
           h += '<ul class="mm-tpoints">' + (kids || "<li>（本页要点见页面）</li>") + "</ul>";
+          var rs = rel[kp];
+          if (rs && rs.length) {
+            h += '<div class="mm-rel">🔗 关联：' + rs.slice(0, 8).map(function (r) {
+              var tp = pageByKp[r.to];
+              return '<a href="#s_' + r.to + '">' + esc(r.t) + " ↔ p" + (tp ? tp.page : "?") + "</a>";
+            }).join("") + "</div>";
+          }
           h += "</details></li>";
         });
         h += "</ul>";
       }
-      h += '<a class="mm-goto" href="#m' + m.i + '">→ 去本节（讲解与考题）</a>';
-      h += "</details></li>";
+      h += '<a class="mm-goto" href="#m' + m.i + '">→ 去本节（讲解与考题）</a></details></li>';
     });
     h += "</ul></div>";
+
+    h += '<div class="mind-view" id="mmGraph_' + cid + '" style="display:none"></div>';
     box.innerHTML = h;
+
     var store = jget(PREFIX + "mm", {});
     function syncCount() {
       var all = box.querySelectorAll('.mm-check[data-k^="' + cid + '_s"]');
@@ -1034,8 +1072,64 @@
       };
     });
     var bE = box.querySelector("#mmExp_" + cid), bC = box.querySelector("#mmCol_" + cid);
-    if (bE) bE.onclick = function () { Array.prototype.forEach.call(box.querySelectorAll("details"), function (d) { d.open = true; }); };
-    if (bC) bC.onclick = function () { Array.prototype.forEach.call(box.querySelectorAll("details"), function (d) { d.open = false; }); };
+    if (bE) bE.onclick = function () { Array.prototype.forEach.call(box.querySelectorAll("#mmTree_" + cid + " details"), function (d) { d.open = true; }); };
+    if (bC) bC.onclick = function () { Array.prototype.forEach.call(box.querySelectorAll("#mmTree_" + cid + " details"), function (d) { d.open = false; }); };
+
+    var tabT = box.querySelector("#mmTabTree_" + cid), tabG = box.querySelector("#mmTabGraph_" + cid);
+    var viewT = box.querySelector("#mmTree_" + cid), viewG = box.querySelector("#mmGraph_" + cid);
+    if (tabT && tabG) {
+      tabT.onclick = function () { viewT.style.display = ""; viewG.style.display = "none"; tabT.classList.add("on"); tabG.classList.remove("on"); };
+      tabG.onclick = function () { viewT.style.display = "none"; viewG.style.display = ""; tabG.classList.add("on"); tabT.classList.remove("on"); buildGraph(); };
+    }
+
+    var graphBuilt = false;
+    function buildGraph() {
+      if (graphBuilt || !viewG) return;
+      graphBuilt = true;
+      var mods = [];
+      (ch.modules || []).forEach(function (m, mi) { if ((m.slides || []).length) mods.push({ mi: mi, name: m.name, n: (m.slides || []).length }); });
+      if (!mods.length) { viewG.innerHTML = '<p class="hint">本章无模块数据。</p>'; return; }
+      var idxOf = {}; mods.forEach(function (m, i) { idxOf[m.mi] = i; });
+      var pair = {};
+      (mind.edges || []).forEach(function (e) {
+        if (e.k !== "term") return;
+        var ma = modOf[e.a], mb = modOf[e.b];
+        if (ma == null || mb == null || ma === mb || idxOf[ma] == null || idxOf[mb] == null) return;
+        var key = Math.min(ma, mb) + "-" + Math.max(ma, mb);
+        (pair[key] = pair[key] || []).push(e.t);
+      });
+      var NS = "http://www.w3.org/2000/svg";
+      var rowH = 76, W = 880, nodeW = 360, nodeH = 48, cx = W / 2;
+      var H = mods.length * rowH + 30;
+      var svg = document.createElementNS(NS, "svg");
+      svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+      svg.setAttribute("class", "mindsvg");
+      svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+      function mk(tag, attrs) { var n = document.createElementNS(NS, tag); for (var k in attrs) n.setAttribute(k, attrs[k]); return n; }
+      function line(x1, y1, x2, y2, cls) { svg.appendChild(mk("line", { x1: x1, y1: y1, x2: x2, y2: y2, "class": cls })); }
+      function path(d, cls) { svg.appendChild(mk("path", { d: d, "class": cls })); }
+      function txt(x, y, s, cls) { var t = mk("text", { x: x, y: y, "class": cls, "text-anchor": "middle" }); t.textContent = s; svg.appendChild(t); }
+      for (var i = 0; i < mods.length - 1; i++) line(cx, i * rowH + nodeH, cx, (i + 1) * rowH, "mm-mainline");
+      Object.keys(pair).slice(0, 14).forEach(function (key, ki) {
+        var parts = key.split("-").map(Number);
+        var ia = idxOf[parts[0]], ib = idxOf[parts[1]];
+        var y1 = ia * rowH + nodeH / 2, y2 = ib * rowH + nodeH / 2;
+        var lx = cx + ((ki % 2 === 0) ? -1 : 1) * 260, ly = (y1 + y2) / 2;
+        path("M " + cx + " " + y1 + " C " + lx + " " + y1 + ", " + lx + " " + y2 + ", " + cx + " " + y2, "mm-termline");
+        txt(lx, ly, pair[key][0] + (pair[key].length > 1 ? " +" + (pair[key].length - 1) : ""), "mm-termlabel");
+      });
+      mods.forEach(function (m, i) {
+        var g = mk("g", { "class": "mm-node" });
+        g.appendChild(mk("rect", { x: cx - nodeW / 2, y: i * rowH, width: nodeW, height: nodeH, rx: 12, "class": "mm-node-rect" }));
+        var t = mk("text", { x: cx, y: i * rowH + 29, "class": "mm-node-text", "text-anchor": "middle" });
+        t.textContent = (m.name || "").slice(0, 30) + (m.n ? "（" + m.n + "页）" : "");
+        g.appendChild(t); g.style.cursor = "pointer";
+        g.onclick = function () { location.hash = "#m" + m.mi; };
+        svg.appendChild(g);
+      });
+      viewG.appendChild(svg);
+    }
+
     syncCount();
     return box;
   }
