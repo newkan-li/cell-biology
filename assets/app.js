@@ -1155,13 +1155,19 @@
           var img = el("img"); img.alt = s.title; img.className = "ocrimg"; img.loading = "lazy"; img.src = s.img;
           img.style.display = "none";
           img.onclick = function () { document.getElementById("lbimg").src = (s.big || s.img); document.getElementById("lightbox").classList.add("on"); };
+          img.onerror = function () { img.style.display = "none"; if (wrap._err) wrap._err.style.display = "block"; };
+          var errd = el("div", "hint", "⚠ 原图加载失败，可点「🔍 放大原图」查看。"); errd.style.display = "none"; wrap._err = errd;
           var ctr = el("div", "ocrctrl");
           var bTxt = el("button", "navbtn", "📄 文字版"), bImg = el("button", "navbtn", "🖼 原图"), bZoom = el("button", "navbtn", "🔍 放大原图");
-          bTxt.onclick = function () { page.style.display = "block"; img.style.display = "none"; };
-          bImg.onclick = function () { page.style.display = "none"; img.style.display = "block"; };
+          bTxt.onclick = function () { page.style.display = "block"; img.style.display = "none"; errd.style.display = "none"; };
+          bImg.onclick = function () {
+            page.style.display = "none"; errd.style.display = "none"; img.style.display = "block";
+            img.loading = "eager";
+            if (!img.complete || !img.naturalWidth) img.src = s.img;   /* 强制加载隐藏期间未加载的图 */
+          };
           bZoom.onclick = function () { document.getElementById("lbimg").src = (s.big || s.img); document.getElementById("lightbox").classList.add("on"); };
           ctr.appendChild(bTxt); ctr.appendChild(bImg); ctr.appendChild(bZoom);
-          wrap.appendChild(ctr); wrap.appendChild(page); wrap.appendChild(img);
+          wrap.appendChild(ctr); wrap.appendChild(errd); wrap.appendChild(page); wrap.appendChild(img);
           body.appendChild(wrap);
         } else {
           var img2 = el("img"); img2.alt = s.title;
