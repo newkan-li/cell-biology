@@ -2212,7 +2212,7 @@
       Object.keys(O).sort().forEach(function (cid) {
         if (!inScope(cid)) return;
         var rows = [];
-        types().forEach(function (t) { (O[cid][t] || []).forEach(function (x) { if (!q || (x.q + " " + (x.o || []).join(" ") + " " + x.a).toLowerCase().indexOf(q) >= 0) rows.push({ t: t, x: x }); }); });
+        types().forEach(function (t) { (O[cid][t] || []).forEach(function (x) { if (!x.q || x.q.trim().length < 4) return; if (!q || (x.q + " " + (x.o || []).join(" ") + " " + x.a).toLowerCase().indexOf(q) >= 0) rows.push({ t: t, x: x }); }); });
         if (!rows.length) return;
         html += "<h2>" + esc(names[cid] || cid) + "（" + rows.length + "）</h2>";
         rows.forEach(function (r, i) {
@@ -2228,7 +2228,7 @@
     }
     function startQuiz() {
       var pool = [];
-      Object.keys(O).sort().forEach(function (cid) { if (!inScope(cid)) return; types().forEach(function (t) { (O[cid][t] || []).forEach(function (x) { if (x.q) pool.push({ cid: cid, t: t, x: x }); }); }); });
+      Object.keys(O).sort().forEach(function (cid) { if (!inScope(cid)) return; types().forEach(function (t) { (O[cid][t] || []).forEach(function (x) { if (x.q && x.q.trim().length >= 4) pool.push({ cid: cid, t: t, x: x }); }); }); });
       for (var i = pool.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tt = pool[i]; pool[i] = pool[j]; pool[j] = tt; }
       pool = pool.slice(0, 20);
       if (!pool.length) { host.innerHTML = '<p class="empty">该范围没有客观题。</p>'; return; }
