@@ -2410,7 +2410,10 @@
     var pathSet = {}; path.forEach(function (id) { pathSet[id] = 1; });
     function shortName(id) {
       var m = byId[id]; if (!m) return id;
-      return String(m.title || id).replace(/^第[一二三四五六七八九十百]+章\s*/, "").replace(/[（(].*/, "").slice(0, 10);
+      var t = String(m.title || id).replace(/^第[一二三四五六七八九十百]+章\s*/, "").trim();
+      var par = t.match(/^[（(]([^）)]*)[）)]\s*(.+)$/);
+      if (par) t = par[2] + "·" + par[1];
+      return t.replace(/[（(].*$/, "").replace(/\s+/g, " ").trim().slice(0, 10);
     }
     var palette = ["#2b6ef2", "#1b7f3b", "#a3541e", "#7a2a24", "#6a3fb5", "#0e7490", "#b8860b", "#4b5563"];
     var doms = [], colorOf = {}, colOf = {}, rowOf = {};
