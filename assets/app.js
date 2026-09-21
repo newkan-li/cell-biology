@@ -1332,12 +1332,6 @@
             front: (s.title || ""), frontImg: s.img, back: esc(pgExp).replace(/\n/g, "<br>"),
             plain: pgExp, blank: ""
           });
-          if (!s.points && !s.fig) return;
-          var kp = m.id + "_s" + mod.i + "_" + s.i, back = "";
-          if (s.points && s.points.length) back += "<ul>" + s.points.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>";
-          if (s.fig) back += '<div class="fc-fig">' + esc(s.fig).replace(/\n/g, "<br>") + "</div>";
-          cards.push({ id: "fc_kp_" + kp, ch: m.id, mod: mod.i, modName: mod.name, tag: "本页要点", front: s.title, back: back,
-            plain: (s.points ? s.points.join("；") : "") + (s.fig ? " " + s.fig : ""), blank: "" });
         });
       });
     });
