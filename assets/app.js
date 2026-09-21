@@ -1131,11 +1131,45 @@
         head.innerHTML = '<span class="t">' + esc(s.title) + '</span><span class="lv lv-' + esc(lv) + '">' + esc(lv) + "</span>";
         card.appendChild(head);
         var body = el("div", "body");
-        var img = el("img"); img.alt = s.title;
-        img.onclick = function () { document.getElementById("lbimg").src = (s.big || s.img); document.getElementById("lightbox").classList.add("on"); };
-        img.loading = /^tb/.test(cid) ? "eager" : "lazy";
-        img.src = s.img;
-        body.appendChild(img);
+        if (s.ocr && s.ocr.lines && s.ocr.lines.length) {
+          var wrap = el("div", "ocrwrap");
+          var page = el("div", "ocrpage");
+          page.style.aspectRatio = s.ocr.w + " / " + s.ocr.h;
+          (s.ocr.figs || []).forEach(function (f) {
+            var im = document.createElement("img"); im.className = "ocrfig"; im.loading = "lazy"; im.alt = "";
+            im.src = f[4];
+            im.style.left = (f[0] / s.ocr.w * 100) + "%";
+            im.style.top = (f[1] / s.ocr.h * 100) + "%";
+            im.style.width = (f[2] / s.ocr.w * 100) + "%";
+            page.appendChild(im);
+          });
+          s.ocr.lines.forEach(function (l) {
+            var sp = el("span", "ocrline");
+            sp.style.left = (l[0] / s.ocr.w * 100) + "%";
+            sp.style.top = (l[1] / s.ocr.h * 100) + "%";
+            sp.style.width = (l[2] / s.ocr.w * 100) + "%";
+            sp.style.fontSize = (l[3] * 0.92 / s.ocr.w * 100) + "cqw";
+            sp.textContent = l[4];
+            page.appendChild(sp);
+          });
+          var img = el("img"); img.alt = s.title; img.className = "ocrimg"; img.loading = "lazy"; img.src = s.img;
+          img.style.display = "none";
+          img.onclick = function () { document.getElementById("lbimg").src = (s.big || s.img); document.getElementById("lightbox").classList.add("on"); };
+          var ctr = el("div", "ocrctrl");
+          var bTxt = el("button", "navbtn", "📄 文字版"), bImg = el("button", "navbtn", "🖼 原图"), bZoom = el("button", "navbtn", "🔍 放大原图");
+          bTxt.onclick = function () { page.style.display = "block"; img.style.display = "none"; };
+          bImg.onclick = function () { page.style.display = "none"; img.style.display = "block"; };
+          bZoom.onclick = function () { document.getElementById("lbimg").src = (s.big || s.img); document.getElementById("lightbox").classList.add("on"); };
+          ctr.appendChild(bTxt); ctr.appendChild(bImg); ctr.appendChild(bZoom);
+          wrap.appendChild(ctr); wrap.appendChild(page); wrap.appendChild(img);
+          body.appendChild(wrap);
+        } else {
+          var img2 = el("img"); img2.alt = s.title;
+          img2.onclick = function () { document.getElementById("lbimg").src = (s.big || s.img); document.getElementById("lightbox").classList.add("on"); };
+          img2.loading = /^tb/.test(cid) ? "eager" : "lazy";
+          img2.src = s.img;
+          body.appendChild(img2);
+        }
         if (s.explain) body.appendChild(el("div", "explain", esc(s.explain).replace(/\n/g, "<br>")));
         else body.appendChild(el("div", "notes", esc(s.notes)));
         card.appendChild(body);

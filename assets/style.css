@@ -492,3 +492,11 @@ html[data-theme="dark"] .mm-fig{color:#79c99a}
 .mm-tmod>details>summary .mm-check.on{color:#8ef0b0}
 .mm-tool{margin-left:8px;font-size:12px;border:1px solid var(--line);background:var(--bg);color:var(--blue);border-radius:8px;padding:2px 8px;cursor:pointer}
 .mm-done{font-size:12px;color:#1a7f37;font-weight:700;margin-left:6px}
+.ocrwrap{margin-top:4px}
+.ocrpage{position:relative;width:100%;container-type:inline-size;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.ocrline{position:absolute;white-space:nowrap;overflow:hidden;line-height:1.02;color:#111}
+.ocrfig{position:absolute;display:block;border-radius:4px;max-width:none}
+.ocrctrl{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.ocrctrl .navbtn{width:auto;margin:0;padding:4px 10px;font-size:12.5px}
+.ocrimg{width:100%;border:1px solid var(--line);border-radius:8px;cursor:zoom-in;background:#fff}
+html[data-theme="dark"] .ocrpage{background:#f4f4f4}
