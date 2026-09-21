@@ -984,7 +984,7 @@
     if (!(ch.outline || []).length && !(ch.modules || []).length) return null;
     var cid = ch.id;
     var box = el("div", "statsbox outlinebox");
-    var h = '<h3 style="margin:0 0 8px">🧠 本章思维导图 <span class="hint">点节点展开 / 跳转</span></h3><div class="mmap">';
+    var h = '<h3 style="margin:0 0 8px">🧠 本章思维导图 <span class="hint">点节点展开 / 勾选掌握</span> <span class="mm-done" id="mmdone_' + cid + '"></span> <button class="mm-tool" id="mmExp_' + cid + '">全部展开</button><button class="mm-tool" id="mmCol_' + cid + '">全部折叠</button></h3><div class="mmap">';
     h += '<div class="mm-root">' + esc(ch.title) + "</div>";
     if ((ch.outline || []).length) {
       h += '<div class="mm-chain">' + ch.outline.map(function (s, i) { return '<span class="ostep">' + (i + 1) + ". " + esc(s) + "</span>"; }).join('<span class="oarrow">→</span>') + "</div>";
@@ -993,11 +993,12 @@
     (ch.modules || []).forEach(function (m) {
       var slides = m.slides || [];
       if (!slides.length && !(m.mcq || []).length && !(m.judge || []).length && !(m.fill || []).length) return;
-      h += '<li class="mm-tmod"><details><summary>' + esc(m.name) + ' <span class="mm-cnt">' + (slides.length ? slides.length + " 页" : "") + "</span></summary>";
+      h += '<li class="mm-tmod"><details><summary><span class="mm-check" data-k="' + cid + "_m" + m.i + '"></span>' + esc(m.name) + ' <span class="mm-cnt">' + (slides.length ? slides.length + " 页" : "") + "</span></summary>";
       if (slides.length) {
         h += '<ul class="mm-tpages">';
         slides.forEach(function (s) {
-          h += '<li class="mm-tpage"><details><summary><a class="mm-plink" href="#s_' + cid + "_s" + m.i + "_" + s.i + '">p' + s.page + " " + esc(String(s.title || "").slice(0, 28)) + "</a></summary>";
+          var kp = cid + "_s" + m.i + "_" + s.i;
+          h += '<li class="mm-tpage"><details><summary><span class="mm-check" data-k="' + kp + '"></span><a class="mm-plink" href="#s_' + kp + '">p' + s.page + " " + esc(String(s.title || "").slice(0, 28)) + "</a></summary>";
           var kids = "";
           if (s.mem) kids += '<li class="mm-mem">💡 ' + esc(s.mem) + "</li>";
           (s.points || []).forEach(function (p) { kids += "<li>" + esc(p) + "</li>"; });
@@ -1012,6 +1013,31 @@
     });
     h += "</ul></div>";
     box.innerHTML = h;
+    var store = jget(PREFIX + "mm", {});
+    function syncCount() {
+      var all = box.querySelectorAll('.mm-check[data-k^="' + cid + '_s"]');
+      var done = 0;
+      Array.prototype.forEach.call(all, function (x) { if (store[x.dataset.k]) done++; });
+      var el0 = box.querySelector("#mmdone_" + cid);
+      if (el0) el0.textContent = "已掌握 " + done + "/" + all.length + " 页";
+    }
+    Array.prototype.forEach.call(box.querySelectorAll(".mm-check"), function (sp) {
+      var k = sp.dataset.k;
+      sp.textContent = store[k] ? "☑" : "☐";
+      sp.classList.toggle("on", !!store[k]);
+      sp.title = "标记/取消「已掌握」";
+      sp.onclick = function (e) {
+        e.preventDefault(); e.stopPropagation();
+        if (store[k]) delete store[k]; else store[k] = 1;
+        jset(PREFIX + "mm", store);
+        sp.textContent = store[k] ? "☑" : "☐"; sp.classList.toggle("on", !!store[k]);
+        syncCount();
+      };
+    });
+    var bE = box.querySelector("#mmExp_" + cid), bC = box.querySelector("#mmCol_" + cid);
+    if (bE) bE.onclick = function () { Array.prototype.forEach.call(box.querySelectorAll("details"), function (d) { d.open = true; }); };
+    if (bC) bC.onclick = function () { Array.prototype.forEach.call(box.querySelectorAll("details"), function (d) { d.open = false; }); };
+    syncCount();
     return box;
   }
 
