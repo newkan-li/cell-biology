@@ -1141,7 +1141,7 @@
     HW.init(cid);
     document.title = ch.title + " · 细胞生物学";
     var aside = document.getElementById("sidebar"), main = document.getElementById("main");
-    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="mindmap.html">🕸 跨章总图</a><a href="textbook.html">📚 教材对照表</a><a href="compare.html">🔗 对比速记表</a><a href="zhenti.html">📋 历年真题</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
+    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="mindmap.html">🕸 跨章总图</a><a href="textbook.html">📚 教材对照表</a><a href="compare.html">🔗 对比速记表</a><a href="zhenti.html">📋 历年真题</a><a href="802.html">📋 802 真题</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
     aside.appendChild(el("div", "grp", "各模块（概念 + 考题）"));
     ch.modules.forEach(function (m) {
       var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a);
@@ -2495,6 +2495,35 @@
     }
   }
 
+  /* ================= 802 真题（手写本整理） ================= */
+  function renderZT802() {
+    var host = document.getElementById("zt802host");
+    if (!host || !window.ZT802) return;
+    var d = window.ZT802;
+    var introEl = document.getElementById("zt802intro");
+    if (introEl) introEl.innerHTML = "<b>说明：</b>" + esc(d.intro);
+    var cnt = document.getElementById("zt802count");
+    if (cnt) cnt.textContent = d.items.length;
+    var filterYear = false;
+    function draw() {
+      host.innerHTML = d.items.filter(function (it) { return !filterYear || (it.year && it.year.length); }).map(function (it) {
+        var page = "";
+        if (/^(ch|tb)\d+_s/.test(it.kp)) {
+          var cid = it.kp.split("_s")[0];
+          page = '<a class="navbtn" style="width:auto;margin:0;display:inline-block;text-decoration:none" href="' + cid + ".html#s_" + it.kp + '">📄 对应讲义页</a>';
+        }
+        return '<div class="q"><p class="qq">' + it.n + ". " + esc(it.q) + (it.year ? ' <span class="src">[' + esc(it.year) + "]</span>" : "") + "</p>" +
+          '<details class="sol"><summary>查看答案</summary><div class="ansbox" style="white-space:pre-wrap">' + esc(it.ans) + "</div></details>" +
+          (page ? '<div style="margin-top:8px">' + page + "</div>" : "") + "</div>";
+      }).join("");
+    }
+    var bAll = document.getElementById("zt802all"), bY = document.getElementById("zt802year");
+    if (bAll) bAll.onclick = function () { filterYear = false; bAll.classList.add("on"); if (bY) bY.classList.remove("on"); draw(); };
+    if (bY) bY.onclick = function () { filterYear = true; bY.classList.add("on"); if (bAll) bAll.classList.remove("on"); draw(); };
+    if (bAll) bAll.classList.add("on");
+    draw();
+  }
+
   /* ================= boot ================= */
   document.addEventListener("DOMContentLoaded", function () {
     if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () { }); } catch (e) { } }
@@ -2511,6 +2540,7 @@
     else if (page === "exam") renderExam();
     else if (page === "textbook") renderTextbook();
     else if (page === "zhenti") renderZhenti();
+    else if (page === "zt802") renderZT802();
   });
 
   window.CELL = {
