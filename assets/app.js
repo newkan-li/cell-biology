@@ -2522,6 +2522,28 @@
     if (bY) bY.onclick = function () { filterYear = true; bY.classList.add("on"); if (bAll) bAll.classList.remove("on"); draw(); };
     if (bAll) bAll.classList.add("on");
     draw();
+    renderRecent();
+  }
+
+  /* ================= 近年考点（诺奖/新方法） ================= */
+  function renderRecent() {
+    var host = document.getElementById("recenthost");
+    if (!host || !window.RECENT) return;
+    var d = window.RECENT;
+    var introEl = document.getElementById("recentintro");
+    if (introEl) introEl.innerHTML = "<b>说明：</b>" + esc(d.intro);
+    host.innerHTML = d.items.map(function (it) {
+      var page = "";
+      if (/^(ch|tb)\d+_s/.test(it.kp)) {
+        var cid = it.kp.split("_s")[0];
+        page = '<a class="navbtn" style="width:auto;margin:0;display:inline-block;text-decoration:none" href="' + cid + ".html#s_" + it.kp + '">📄 相关页</a>';
+      }
+      return '<div class="q"><p class="qq">' +
+        (it.year && it.year !== "—" ? '<span class="src">[' + esc(it.year) + "]</span> " : "") +
+        '<b>' + esc(it.t) + "</b> <span class=\"hint\">" + esc(it.kind) + (it.who ? " · " + esc(it.who) : "") + "</span></p>" +
+        "<p style=\"margin:4px 0 6px;font-size:13.5px\">" + esc(it.point) + "</p>" +
+        (page ? '<div>' + page + "</div>" : "") + "</div>";
+    }).join("");
   }
 
   /* ================= boot ================= */
