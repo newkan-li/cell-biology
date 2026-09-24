@@ -2542,7 +2542,8 @@
         (it.year && it.year !== "—" ? '<span class="src">[' + esc(it.year) + "]</span> " : "") +
         '<b>' + esc(it.t) + "</b> <span class=\"hint\">" + esc(it.kind) + (it.who ? " · " + esc(it.who) : "") + "</span></p>" +
         "<p style=\"margin:4px 0 6px;font-size:13.5px\">" + esc(it.point) + "</p>" +
-        (page ? '<div>' + page + "</div>" : "") + "</div>";
+        (it.ans ? '<details class="sol"><summary>查看参考答案</summary><div class="ansbox" style="white-space:pre-wrap">' + esc(it.ans) + "</div></details>" : "") +
+        (page ? '<div style="margin-top:8px">' + page + "</div>" : "") + "</div>";
     }).join("");
   }
 
