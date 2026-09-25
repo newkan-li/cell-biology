@@ -1213,6 +1213,14 @@
     var animIO = window.IntersectionObserver ? new IntersectionObserver(function (ents) {
       ents.forEach(function (en) { if (en.isIntersecting) { var f = en.target; if (!f.src) f.src = f.getAttribute("data-src"); animIO.unobserve(f); } });
     }, { rootMargin: "500px" }) : null;
+    var pageMeta = {};
+    ch.modules.forEach(function (m) { (m.slides || []).forEach(function (s) { pageMeta[cid + "_s" + m.i + "_" + s.i] = { page: s.page, title: s.title }; }); });
+    var seqPrev = {}, relMap = {};
+    ((window.MIND && window.MIND[cid] && window.MIND[cid].edges) || []).forEach(function (e) {
+      if (e.k === "seq") { seqPrev[e.b] = e.a; return; }
+      (relMap[e.a] = relMap[e.a] || []).push(e.b);
+      (relMap[e.b] = relMap[e.b] || []).push(e.a);
+    });
     ch.modules.forEach(function (m) {
       var sec = el("section"); sec.id = "m" + m.i;
       sec.appendChild(el("h2", "", esc(m.name)));
@@ -1224,6 +1232,18 @@
         var head = el("div", "sh");
         head.innerHTML = '<span class="t">' + esc(s.title) + '</span><span class="lv lv-' + esc(lv) + '">' + esc(lv) + "</span>";
         card.appendChild(head);
+        if (s.summary || s.goal || seqPrev[key] || (relMap[key] && relMap[key].length)) {
+          var ob = el("div", "objbox");
+          var oh = '<div class="ob-h">🎯 本页主旨与目标</div>';
+          if (s.summary) oh += '<p class="ob-sum">' + esc(s.summary) + '</p>';
+          if (s.goal) oh += '<div class="ob-goal">' + esc(s.goal) + '</div>';
+          var links = [];
+          if (seqPrev[key] && pageMeta[seqPrev[key]]) links.push('<a class="ob-link" href="#s_' + seqPrev[key] + '">⬅ 承接上一页 p' + pageMeta[seqPrev[key]].page + ' ' + esc(String(pageMeta[seqPrev[key]].title).slice(0, 16)) + '</a>');
+          (relMap[key] || []).slice(0, 4).forEach(function (r) { if (pageMeta[r]) links.push('<a class="ob-link" href="#s_' + r + '">🔗 相关 p' + pageMeta[r].page + ' ' + esc(String(pageMeta[r].title).slice(0, 14)) + '</a>'); });
+          if (links.length) oh += '<div class="ob-links">' + links.join("") + '</div>';
+          ob.innerHTML = oh;
+          card.appendChild(ob);
+        }
         var body = el("div", "body");
         if (s.ocr && s.ocr.lines && s.ocr.lines.length) {
           var wrap = el("div", "ocrwrap");
