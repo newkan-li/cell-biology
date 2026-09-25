@@ -722,6 +722,35 @@
     r.readAsText(file);
   }
 
+  /* ================= 自动快照（防丢） ================= */
+  var AUTO_KEY = PREFIX + "autobak", AUTO2_KEY = PREFIX + "autobak2";
+  function cellbioKeys() {
+    var keys = [];
+    try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k && k.indexOf(PREFIX) === 0 && k !== AUTO_KEY && k !== AUTO2_KEY) keys.push(k); } } catch (e) { }
+    return keys;
+  }
+  function autoSnapshot(force) {
+    try {
+      var last = jget(AUTO_KEY, null), now = Date.now();
+      if (!force && last && last.ts && (now - last.ts) < 6 * 3600 * 1000) return false;
+      var data = {}; cellbioKeys().forEach(function (k) { var v = localStorage.getItem(k); if (v != null && v.length < 200000) data[k] = v; });
+      if (!Object.keys(data).length) return false;
+      if (last) { try { localStorage.setItem(AUTO2_KEY, JSON.stringify(last)); } catch (e) { } }
+      localStorage.setItem(AUTO_KEY, JSON.stringify({ ts: now, n: Object.keys(data).length, data: data }));
+      return true;
+    } catch (e) { return false; }
+  }
+  function autoInfo() {
+    var a = jget(AUTO_KEY, null), b = jget(AUTO2_KEY, null);
+    return { latest: a ? { ts: a.ts, n: a.n } : null, prev: b ? { ts: b.ts, n: b.n } : null };
+  }
+  function restoreAuto(which) {
+    var s = jget(which === "prev" ? AUTO2_KEY : AUTO_KEY, null);
+    if (!s || !s.data) { alert("暂无自动快照可恢复。"); return false; }
+    Object.keys(s.data).forEach(function (k) { try { localStorage.setItem(k, s.data[k]); } catch (e) { } });
+    return true;
+  }
+
   /* ================= export PDF (questions + student answers) ================= */
   var PRINT_CSS =
     "*{box-sizing:border-box}" +
@@ -2583,6 +2612,7 @@
   /* ================= boot ================= */
   document.addEventListener("DOMContentLoaded", function () {
     if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () { }); } catch (e) { } }
+    autoSnapshot();
     maybeRemind(); setInterval(maybeRemind, 60000);
     var page = document.body.dataset.page;
     if (page === "chapter") renderChapter(document.body.dataset.ch);
@@ -2603,6 +2633,8 @@
     backupAll: backupAll, restoreAll: restoreAll, exportChapterPDF: exportChapterPDF,
     exportAllPDF: exportAllPDF, buildChapterDoc: buildChapterDoc,
     srsRate: srsRate, srsDue: srsDue, srsCount: srsCount, srsGet: srsGet,
-    kpRecord: kpRecord, kpMastery: kpMastery, streakCount: streakCount, taskState: taskState
+    kpRecord: kpRecord, kpMastery: kpMastery, streakCount: streakCount, taskState: taskState,
+    autoSnapshot: autoSnapshot, autoInfo: autoInfo, restoreAuto: restoreAuto, cellbioKeys: cellbioKeys,
+    PREFIX: PREFIX
   };
 })();

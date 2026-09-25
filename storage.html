@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f5c8b">
+<title>学习记录 · 诊断与恢复 · 细胞生物学</title>
+<link rel="stylesheet" href="assets/style.css?v=20260925q">
+<script src="assets/theme.js?v=20260925q"></script>
+</head>
+<body data-page="storage">
+<div class="wrap">
+  <header class="top">
+    <h1>🛟 学习记录 · 诊断与恢复</h1>
+    <p>查看本机存储的答题/错题/已读记录；自动快照与手动备份 ｜ 数据只存本机浏览器</p>
+  </header>
+  <p><a href="index.html">← 返回首页</a></p>
+
+  <div class="statsbox" style="background:#fff8e8;border-color:#f0d9a8;color:#5a4a1a">
+    <b>为什么记录会“消失”？</b> 学习记录存在<b>浏览器的 localStorage</b>里，它与
+    “<b>网址来源(origin)</b>”绑定。<br>
+    ① 换了网址（如 <code>localhost:8000</code> ↔ <code>github.io</code> ↔ 双击 <code>file://</code>）；
+    ② 清了浏览器数据 / 用了无痕模式 / 换了浏览器或设备；
+    ③ 浏览器存储被系统自动回收——都会让记录“看不到”。<br>
+    本页可导出/导入备份，并新增了<b>自动快照</b>（每 6 小时一次，保留最近两份）以防丢。
+  </div>
+
+  <div class="statsbox">
+    <h3 style="margin:0 0 6px">📦 当前本机记录概览</h3>
+    <div id="overview" style="font-size:13px">读取中…</div>
+  </div>
+
+  <div class="statsbox">
+    <h3 style="margin:0 0 6px">🕒 自动快照</h3>
+    <div id="bak" style="font-size:13px">读取中…</div>
+  </div>
+
+  <div class="statsbox">
+    <h3 style="margin:0 0 6px">💾 备份与恢复</h3>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="navbtn" style="width:auto;margin:0" id="exp">⬇ 导出全部记录(JSON)</button>
+      <button class="navbtn" style="width:auto;margin:0" id="imp">⬆ 从文件导入恢复</button>
+      <button class="navbtn" style="width:auto;margin:0" id="copy">📋 生成“跨网址迁移码”</button>
+    </div>
+    <input id="file" type="file" accept=".json" style="display:none">
+    <p class="hint" style="margin-top:8px">跨网址迁移：在原网址点“生成迁移码”→复制；到新网址点“从文件导入”或把迁移码粘贴到下方框→导入。</p>
+    <textarea id="paste" class="ans" style="width:100%;height:90px;margin-top:6px" placeholder="把迁移码/备份 JSON 粘贴到这里，然后点导入"></textarea>
+    <button class="navbtn" style="width:auto;margin-top:6px" id="imp2">⬆ 从上方文本导入</button>
+  </div>
+</div>
+<script src="data/manifest.js?v=20260925q"></script>
+<script src="assets/app.js?v=20260925q"></script>
+<script>
+(function () {
+  var PREFIX = "cellbio_";
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function jget(k, d) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+  var MAN = (window.MANIFEST || []);
+  var KINDS = [["mcq", "选择题"], ["judge", "判断题"], ["fill", "填空题"], ["self", "主观自评"], ["seen", "已读"], ["text", "作答文本"], ["wrong", "错题"], ["hw", "手写"]];
+
+  function render() {
+    // overview
+    var rows = "", subtotal = 0;
+    MAN.forEach(function (m) {
+      var cells = "";
+      KINDS.forEach(function (k) {
+        var v = jget(PREFIX + k[0] + ":" + m.id, null);
+        var n = 0;
+        if (Array.isArray(v)) n = v.length; else if (v && typeof v === "object") n = Object.keys(v).length;
+        subtotal += n;
+        cells += '<td style="text-align:center;color:' + (n ? "#1e7a45" : "#bbb") + '">' + n + "</td>";
+      });
+      rows += "<tr><td>" + esc(m.title || m.id) + "</td>" + cells + "</tr>";
+    });
+    var globals = [["kpStats", "知识点掌握"], ["srs", "间隔复习"], ["passed", "章末通关"], ["fcans", "闪卡作答"], ["tasks", "每日任务"], ["streak", "连续打卡"]];
+    var gro = globals.map(function (g) {
+      var v = jget(PREFIX + g[0], null), n = 0;
+      if (Array.isArray(v)) n = v.length; else if (v && typeof v === "object") n = Object.keys(v).length;
+      return '<span style="display:inline-block;margin:2px 10px 2px 0">' + g[1] + "：<b>" + n + "</b></span>";
+    }).join("");
+    document.getElementById("overview").innerHTML =
+      '<div style="margin-bottom:6px">全局：' + gro + "</div>" +
+      '<table style="border-collapse:collapse;font-size:12px"><tr><th style="text-align:left;padding:2px 6px">章节</th>' +
+      KINDS.map(function (k) { return '<th style="padding:2px 6px">' + k[1] + "</th>"; }).join("") + "</tr>" + rows + "</table>" +
+      '<div class="hint" style="margin-top:6px">各章非零记录合计（含重复计）约 <b>' + subtotal + '</b> 项。若整列都是 0，说明该章记录不在当前网址下。</div>';
+
+    // backup info
+    var info = (window.CELL && window.CELL.autoInfo) ? window.CELL.autoInfo() : { latest: null, prev: null };
+    function fmt(x) { return x ? new Date(x.ts).toLocaleString() + "（" + x.n + " 个键）" : "无"; }
+    document.getElementById("bak").innerHTML =
+      "最新快照：" + fmt(info.latest) + "<br>上一份：" + fmt(info.prev) +
+      '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">' +
+      '<button class="navbtn" style="width:auto;margin:0" id="rsNew">♻ 恢复到最新快照</button>' +
+      '<button class="navbtn" style="width:auto;margin:0" id="rsPrev">♻ 恢复到上一份</button>' +
+      '<button class="navbtn" style="width:auto;margin:0" id="snapNow">📸 立即生成快照</button></div>';
+    function bind(id, fn) { var e = document.getElementById(id); if (e) e.onclick = fn; }
+    bind("rsNew", function () { if (window.CELL.restoreAuto && window.CELL.restoreAuto("latest")) { alert("已恢复，刷新后生效。"); location.reload(); } });
+    bind("rsPrev", function () { if (window.CELL.restoreAuto && window.CELL.restoreAuto("prev")) { alert("已恢复，刷新后生效。"); location.reload(); } });
+    bind("snapNow", function () { if (window.CELL.autoSnapshot(true)) { alert("已生成快照。"); render(); } else { alert("当前没有可保存的记录。"); } });
+  }
+
+  function collect() {
+    var out = {};
+    try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k && k.indexOf(PREFIX) === 0 && k.indexOf("autobak") < 0) out[k] = localStorage.getItem(k); } } catch (e) { }
+    return { v: 1, all: true, ts: Date.now(), data: out };
+  }
+  function download(obj, name) {
+    var blob = new Blob([JSON.stringify(obj)], { type: "application/json" });
+    var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  }
+  function apply(json) {
+    try {
+      var obj = JSON.parse(json), d = obj.data || obj, n = 0;
+      Object.keys(d).forEach(function (k) { if (k.indexOf(PREFIX) === 0) { try { localStorage.setItem(k, d[k]); n++; } catch (e) { } } });
+      alert("导入完成，共 " + n + " 个键，刷新后生效。"); location.reload();
+    } catch (e) { alert("解析失败：" + e.message); }
+  }
+
+  document.getElementById("exp").onclick = function () { download(collect(), "cellbio-records.json"); };
+  document.getElementById("copy").onclick = function () {
+    var s = JSON.stringify(collect());
+    navigator.clipboard && navigator.clipboard.writeText(s).then(function () { alert("迁移码已复制，可粘贴到新网址导入。"); }, function () { document.getElementById("paste").value = s; alert("已填入下方文本框，请手动复制。"); }) || (document.getElementById("paste").value = s);
+  };
+  document.getElementById("imp").onclick = function () { document.getElementById("file").click(); };
+  document.getElementById("file").onchange = function () { var f = this.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { apply(r.result); }; r.readAsText(f); };
+  document.getElementById("imp2").onclick = function () { var t = document.getElementById("paste").value.trim(); if (t) apply(t); };
+
+  render();
+  setTimeout(render, 300);
+})();
+</script>
+</body>
+</html>
