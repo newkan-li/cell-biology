@@ -1279,6 +1279,14 @@
             s.points.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>";
           card.appendChild(pb);
         }
+        if (s.terms && s.terms.length) {
+          var tmb = el("div", "termsbox");
+          tmb.innerHTML = '<div class="tm-h">📚 本页术语</div><ul>' +
+            s.terms.map(function (x) {
+              return "<li><b>" + esc(x.t) + "</b>" + (x.en ? " (" + esc(x.en) + ")" : "") + "：" + esc(x.d) + "</li>";
+            }).join("") + "</ul>";
+          card.appendChild(tmb);
+        }
         if (s.fig) {
           var fb = el("div", "fignote");
           fb.innerHTML = '<div class="fn-h">' + (s.explain ? "📖 关键术语（中英对照）" : "🔍 图注解读") + '</div><p>' + esc(s.fig).replace(/\n/g, "<br>") + "</p>";
