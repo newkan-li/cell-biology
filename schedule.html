@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f5c8b">
+<title>学习路线 · 细胞生物学</title>
+<link rel="stylesheet" href="assets/style.css?v=20260925o">
+<script src="assets/theme.js?v=20260925o"></script>
+</head>
+<body data-page="schedule">
+<div class="wrap">
+  <header class="top">
+    <h1>🧭 学习路线</h1>
+    <p>同步跟课 · 期末冲刺 · 考研 802 ｜ 数据存本机浏览器</p>
+  </header>
+  <p><a href="index.html">← 返回首页</a></p>
+
+  <div class="fc-chips" id="tabs">
+    <button class="fc-chip on" data-v="sync">📅 同步跟课</button>
+    <button class="fc-chip" data-v="final">🏁 期末冲刺</button>
+    <button class="fc-chip" data-v="802">🎯 考研 802</button>
+  </div>
+
+  <div id="host"></div>
+  <footer>仅供个人学习使用 ｜ 讲次划分按本站模块自动生成，可自行对照老师进度调整</footer>
+</div>
+<script src="data/schedule.js?v=20260925o"></script>
+<script src="data/recent.js?v=20260925o"></script>
+<script src="data/802.js?v=20260925o"></script>
+<script>
+(function () {
+  var S = window.SCHEDULE || { lessons: [] };
+  var L = S.lessons || [];
+  var K = "cb_sched";
+  var st = load();
+  function load() { try { return JSON.parse(localStorage.getItem(K)) || {}; } catch (e) { return {}; } }
+  function save() { try { localStorage.setItem(K, JSON.stringify(st)); } catch (e) { } }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function lesson(n) { return L[n - 1]; }
+  function kpLink(kp, txt) { var c = String(kp).split("_")[0]; return '<a class="navbtn" style="width:auto;margin:2px;text-decoration:none" href="' + c + '.html#s_' + esc(kp) + '">' + esc(txt) + '</a>'; }
+  function today() { var d = new Date(); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+
+  var tabs = document.getElementById("tabs"), host = document.getElementById("host");
+  function setMode(m) { st.mode = m; save(); render(); }
+  Array.prototype.forEach.call(tabs.children, function (b) { b.onclick = function () { setMode(b.dataset.v); }; });
+
+  function render() {
+    Array.prototype.forEach.call(tabs.children, function (b) { b.classList.toggle("on", b.dataset.v === st.mode); });
+    if (st.mode === "final") return renderFinal();
+    if (st.mode === "802") return render802();
+    renderSync();
+  }
+
+  /* ---------- 同步 ---------- */
+  function renderSync() {
+    var start = st.start || "2026-09-01";
+    var perWeek = +st.perWeek || 2;
+    var cur = st.current || 1;
+    var weeks = Math.max(0, Math.floor((new Date(today() + "T00:00:00") - new Date(start + "T00:00:00")) / (7 * 86400000)));
+    var suggest = Math.min(L.length, Math.max(1, weeks * perWeek + 1));
+    var l = lesson(cur);
+    var doneN = Object.keys(st.done || {}).length;
+    var pages = (l ? l.pages : []).map(function (p) {
+      return '<a class="sub" style="display:inline-block;margin:2px 4px" href="' + l.ch + '.html#s_' + esc(p.k) + '">p' + esc(p.page) + ' ' + esc(String(p.title).slice(0, 20)) + '</a>';
+    }).join("");
+    host.innerHTML =
+      '<div class="statsbox"><h3 style="margin:0 0 8px">📅 我的跟课设置</h3>' +
+      '<div class="planrow">开课日期 <input type="date" id="scStart" value="' + start + '"> ' +
+      '每周课次 <input type="number" id="scPer" min="1" max="10" value="' + perWeek + '" class="pnum"> ' +
+      '<span class="hint">今天按设定应学到 <b>第 ' + suggest + ' 讲</b></span></div>' +
+      '<div class="hint">已标记完成 ' + doneN + ' / ' + L.length + ' 讲</div></div>' +
+      '<div class="statsbox"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">' +
+      '<h3 style="margin:0">📖 第 ' + cur + ' 讲 · ' + esc(l ? l.name : "") + '</h3>' +
+      '<span><button class="navbtn" style="width:auto;margin:0" id="scPrev">上一讲</button> ' +
+      '<button class="navbtn" style="width:auto;margin:0" id="scNext">下一讲</button> ' +
+      '<button class="navbtn" style="width:auto;margin:0" id="scDone">' + ((st.done && st.done[cur]) ? "✅ 已完成" : "标记完成") + '</button></span></div>' +
+      '<p class="hint">' + esc(l ? l.chTitle : "") + ' ｜ 约 ' + (l ? l.est : 0) + ' 分钟 ｜ ' + (l ? l.pages.length : 0) + ' 页</p>' +
+      '<div style="margin-top:6px"><b>① 课前 10 分钟预习：</b>先看下面这些页的「🎯 主旨」「📌 要点」，带着问题听课。</div>' +
+      '<div>' + pages + '</div>' +
+      '<div style="margin-top:8px"><b>② 课后巩固：</b>回看本讲页面 → 读「🧠 通俗理解」→ 做「🎯 本页自测」→ ' +
+      '<a href="flashcards.html">🃏 闪卡</a> · <a href="review.html">🔁 今日复习</a></div></div>';
+    document.getElementById("scStart").onchange = function () { st.start = this.value; save(); render(); };
+    document.getElementById("scPer").onchange = function () { st.perWeek = +this.value || 1; save(); render(); };
+    document.getElementById("scPrev").onclick = function () { st.current = Math.max(1, cur - 1); save(); render(); };
+    document.getElementById("scNext").onclick = function () { st.current = Math.min(L.length, cur + 1); save(); render(); };
+    document.getElementById("scDone").onclick = function () { st.done = st.done || {}; st.done[cur] = !st.done[cur]; save(); render(); };
+  }
+
+  /* ---------- 期末 ---------- */
+  function renderFinal() {
+    var byCh = {};
+    L.forEach(function (l) { (byCh[l.ch] = byCh[l.ch] || { title: l.chTitle, items: [] }).items.push(l); });
+    var html = '<div class="statsbox"><h3 style="margin:0 0 6px">🏁 期末冲刺</h3>' +
+      '<p class="hint">按章过一遍：每讲点进去看「📌 本页要点 + 🧠 通俗理解」，再去做章末模拟。勾选表示已复习。</p>' +
+      '<div><a class="navbtn" style="width:auto;margin:2px;text-decoration:none" href="exam.html">📝 模拟测验</a>' +
+      '<a class="navbtn" style="width:auto;margin:2px;text-decoration:none" href="wrong.html">📕 全局错题本</a>' +
+      '<a class="navbtn" style="width:auto;margin:2px;text-decoration:none" href="mindmap.html">🕸 跨章总图</a></div></div>';
+    Object.keys(byCh).forEach(function (ch) {
+      var g = byCh[ch];
+      html += '<div class="statsbox"><h3 style="margin:0 0 6px"><a href="' + ch + '.html" style="text-decoration:none">' + esc(g.title) + '</a></h3>';
+      g.items.forEach(function (l) {
+        var ck = st.done && st.done["f" + l.n];
+        html += '<div class="planrow"><label style="cursor:pointer"><input type="checkbox" data-f="' + l.n + '" ' + (ck ? "checked" : "") + '> ' +
+          '<a href="' + l.ch + '.html#s_' + esc(l.pages[0].k) + '">第 ' + l.n + ' 讲 ' + esc(l.name) + '</a> ' +
+          '<span class="hint">(' + l.pages.length + '页)</span></label></div>';
+      });
+      html += '</div>';
+    });
+    host.innerHTML = html;
+    Array.prototype.forEach.call(host.querySelectorAll("input[data-f]"), function (b) {
+      b.onchange = function () { st.done = st.done || {}; st.done["f" + b.dataset.f] = b.checked; save(); };
+    });
+  }
+
+  /* ---------- 802 ---------- */
+  function render802() {
+    var R = (window.RECENT && window.RECENT.items) || [];
+    var z = (window.ZT802 && window.ZT802.items) || [];
+    var hot = R.map(function (x) {
+      return '<li style="margin:4px 0">' + (x.year ? "[" + esc(x.year) + "] " : "") + '<b>' + esc(x.t) + '</b> — ' + esc(String(x.point).slice(0, 60)) +
+        ' ' + kpLink(x.kp, "对应讲义 p" + (String(x.kp).split("_").pop())) + '</li>';
+    }).join("");
+    host.innerHTML =
+      '<div class="statsbox"><h3 style="margin:0 0 6px">🎯 考研 802（首师大 · 翟中和第4版）</h3>' +
+      '<p class="hint">长期路线：先跟课把概念吃透，再用真题与主观题体系化，最后背近年热点。</p>' +
+      '<div><a class="navbtn" style="width:auto;margin:2px;text-decoration:none" href="802.html">📋 802 真题（' + z.length + '题）</a>' +
+      '<a class="navbtn" style="width:auto;margin:2px;text-decoration:none" href="zhenti.html">📋 历年真题</a>' +
+      '<a class="navbtn" style="width:auto;margin:2px;text-decoration:none" href="jiangyiquan.html">🔎 姜益泉习题集</a>' +
+      '<a class="navbtn" style="width:auto;margin:2px;text-decoration:none" href="exam.html">📝 802 整套模拟</a>' +
+      '<a class="navbtn" style="width:auto;margin:2px;text-decoration:none" href="glossary.html">📖 术语表</a></div></div>' +
+      '<div class="statsbox"><h3 style="margin:0 0 6px">🔥 近年热点 / 新增考点（' + R.length + '）</h3>' +
+      '<p class="hint">诺奖与新进展是近年常考“新增考点”，建议单独记忆。</p><ul style="padding-left:18px;margin:0">' + hot + '</ul></div>' +
+      '<div class="statsbox"><h3 style="margin:0 0 6px">✍️ 主观题突破建议</h3>' +
+      '<ul style="padding-left:18px;margin:0"><li>名词解释：先给定义，再补“内容/特点/意义”。</li>' +
+      '<li>简答/论述：分点作答，按“结构→功能→意义/实例”组织。</li>' +
+      '<li>每章做一遍 <a href="exam.html">模拟测验</a> 的简答/论述，对照踩分点自评。</li></ul></div>';
+  }
+
+  if (!st.mode) st.mode = "sync";
+  render();
+})();
+</script>
+</body>
+</html>
