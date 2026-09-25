@@ -336,14 +336,13 @@
     box._cause = cb; box._res = res;
     var _rec = mcqStore(cid)[q.id];
     if (_rec && _rec.last != null) {
-      var _cor = String(q.a).trim(), _ch = String(_rec.last), _ok = _ch === _cor;
-      Array.prototype.forEach.call(opts.children, function (b) {
-        if (b.dataset.l === _cor) b.classList.add("right");
-        if (b.dataset.l === _ch) { b.classList.add("sel"); if (!_ok) b.classList.add("wrong"); }
+      var _ok = String(_rec.last) === String(q.a).trim();
+      var _bar = redoBar(_ok ? "上次作答：✅ 正确" : "上次作答：❌ 错误", function () {
+        clearQRec(cid, "mcq", q.id);
+        resetQuestionBox(box, opts, res, cb);
+        _bar.remove();
       });
-      res.style.display = "block";
-      res.innerHTML = (_ok ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 错误</span>（正确答案：<b>' + esc(_cor) + "</b>）") + '<div style="margin-top:4px">解析：' + esc(q.e || "") + "</div>" + optsExplain(q);
-      cb.style.display = _ok ? "none" : "flex";
+      box.appendChild(_bar);
     }
     return box;
   }
@@ -394,14 +393,13 @@
     box._cause = cb; box._res = res;
     var _jr = judgeStore(cid)[q.id];
     if (_jr && _jr.last != null) {
-      var _jcor = String(q.a).trim(), _jch = String(_jr.last), _jok = _jch === _jcor;
-      Array.prototype.forEach.call(opts.children, function (b) {
-        if (b.dataset.l === _jcor) b.classList.add("right");
-        if (b.dataset.l === _jch) { b.classList.add("sel"); if (!_jok) b.classList.add("wrong"); }
+      var _jok = String(_jr.last) === String(q.a).trim();
+      var _jbar = redoBar(_jok ? "上次作答：✅ 正确" : "上次作答：❌ 错误", function () {
+        clearQRec(cid, "judge", q.id);
+        resetQuestionBox(box, opts, res, cb);
+        _jbar.remove();
       });
-      res.style.display = "block";
-      res.innerHTML = (_jok ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 错误</span>（正确答案：<b>' + esc(_jcor) + "</b>）") + '<div style="margin-top:4px">解析：' + esc(q.e || "") + "</div>" + optsExplain({ o: ["对", "错"], a: q.a, oe: q.oe });
-      cb.style.display = _jok ? "none" : "flex";
+      box.appendChild(_jbar);
     }
     return box;
   }
@@ -466,12 +464,13 @@
     bShow.onclick = function () { det.open = true; };
     var _fr = fillStore(cid)[q.id];
     if (_fr && _fr.last != null) {
-      inp.value = _fr.last;
       var _fok = fuzzyMatch(q.a, _fr.last);
-      inp.classList.add(_fok ? "right" : "wrong");
-      res.style.display = "block";
-      res.innerHTML = (_fok ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 与参考答案不完全一致</span>，可点“显示答案”核对。') + fillExplain(q);
-      cb.style.display = _fok ? "none" : "flex";
+      var _fbar = redoBar(_fok ? "上次作答：✅ 正确" : "上次作答：❌ 错误", function () {
+        clearQRec(cid, "fill", q.id);
+        resetQuestionBox(box, null, res, cb, inp);
+        _fbar.remove();
+      });
+      box.appendChild(_fbar);
     }
     return box;
   }
@@ -975,6 +974,23 @@
     }
     return cpStore(cid)[kp] || null;
   }
+  function clearQRec(cid, kind, key) {
+    if (kind === "cp") { var o = cpStore(cid); delete o[key]; jset(skey(cid, "cp"), o); return; }
+    var st = jget(skey(cid, kind), {}) || {}; delete st[key]; jset(skey(cid, kind), st);
+  }
+  function resetQuestionBox(box, optsEl, resEl, cbEl, inpEl) {
+    if (optsEl) Array.prototype.forEach.call(optsEl.querySelectorAll("button"), function (x) { x.classList.remove("sel", "right", "wrong"); });
+    if (resEl) { resEl.style.display = "none"; resEl.innerHTML = ""; }
+    if (cbEl) cbEl.style.display = "none";
+    if (inpEl) { inpEl.value = ""; inpEl.classList.remove("right", "wrong"); }
+  }
+  function redoBar(text, onRedo) {
+    var bar = el("div", "redobar");
+    bar.innerHTML = '<span class="hint">' + esc(text) + "</span> ";
+    var b = el("button", "navbtn", "🔁 重做"); b.style.width = "auto"; b.style.margin = "0";
+    b.onclick = onRedo; bar.appendChild(b);
+    return bar;
+  }
   function cpWriteGrade(cid, q, kind, chosen, ok) {
     if (!q || !q.id) return;
     var store = jget(skey(cid, kind), {}) || {};
@@ -1012,6 +1028,7 @@
           if (isChosen) { b.classList.add("sel"); if (!correct) b.classList.add("wrong"); }
         });
       }
+      fb.style.display = "block";
       fb.innerHTML = (correct ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 错误</span>') +
         '　正确答案：<b>' + esc(answerText()) + "</b>" +
         (q.e ? '<div style="margin-top:4px">解析：' + esc(q.e) + "</div>" : "") +
@@ -1046,9 +1063,14 @@
     box.appendChild(fb);
     var prior = cpPrior(cid, kp, q, kind);
     if (prior) {
-      done = true;
-      if (kind === "fill" && box._cpInput) box._cpInput.value = prior.a != null ? prior.a : "";
-      paint(!!prior.ok, prior.a);
+      var _pbar = redoBar(prior.ok ? "上次作答：✅ 正确" : "上次作答：❌ 错误", function () {
+        clearQRec(cid, "cp", kp);
+        if (q && q.id) clearQRec(cid, kind, q.id);
+        done = false;
+        resetQuestionBox(box, optsBox, fb, null, box._cpInput);
+        _pbar.remove();
+      });
+      box.appendChild(_pbar);
     }
     return box;
   }
