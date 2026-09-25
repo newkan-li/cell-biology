@@ -716,7 +716,7 @@
       var item = el("div", "wb-entry");
       var q = qmap[e.id];
       var extra = q ? ("<div style='margin-top:4px'>选项：" + q.o.map(esc).join("　") + "</div>") : "";
-      item.innerHTML = '<div class="wq">' + esc(e.q) + '<span class="pill">' + esc(e.type) + "</span>" +
+      item.innerHTML = '<div class="wq">' + esc(e.q) + '<span class="pill">' + esc(kindName(e.type)) + "</span>" +
         (e.cause ? '<span class="cause-tag">' + esc((CAUSES.filter(function (c) { return c[0] === e.cause; })[0] || ["", "其他"])[1]) + "</span>" : "") + "</div>" +
         extra +
         '<div class="wa">正确答案：<b>' + esc(e.correct) + "</b></div>" +
@@ -991,15 +991,28 @@
     b.onclick = onRedo; bar.appendChild(b);
     return bar;
   }
-  function cpWriteGrade(cid, q, kind, chosen, ok) {
-    if (!q || !q.id) return;
-    var store = jget(skey(cid, kind), {}) || {};
-    var rec = store[q.id] || { ok: 0, miss: 0 };
-    if (rec.first === undefined) rec.first = ok;
-    rec.n = (rec.n || 0) + 1; rec.last = chosen;
-    if (ok) { rec.ok++; rec.miss = Math.max(0, rec.miss - 1); } else { rec.miss++; rec.ok = Math.max(0, rec.ok - 1); }
-    store[q.id] = rec; jset(skey(cid, kind), store); touch(cid);
-    if (kind !== "fill") { if (ok) clearWrong(cid, q.id); else addWrong(cid, { id: q.id, type: kind, q: q.q, correct: String(q.a).trim(), chosen: chosen, cause: "", ts: Date.now() }); }
+  function optFull(q, letter) {
+    if (!q || !q.o) return letter;
+    for (var i = 0; i < q.o.length; i++) if (String(q.o[i]).trim().charAt(0) === String(letter).trim()) return q.o[i];
+    return letter;
+  }
+  function cpWriteGrade(cid, kp, q, kind, chosen, ok) {
+    if (!q) return;
+    var id = q.id || (cid + "_cp_" + kp);
+    if (q.id) {
+      var store = jget(skey(cid, kind), {}) || {};
+      var rec = store[q.id] || { ok: 0, miss: 0 };
+      if (rec.first === undefined) rec.first = ok;
+      rec.n = (rec.n || 0) + 1; rec.last = chosen;
+      if (ok) { rec.ok++; rec.miss = Math.max(0, rec.miss - 1); } else { rec.miss++; rec.ok = Math.max(0, rec.ok - 1); }
+      store[q.id] = rec; jset(skey(cid, kind), store); touch(cid);
+    } else {
+      var o = cpStore(cid); o[kp] = { a: chosen, ok: !!ok, ts: Date.now() }; jset(skey(cid, "cp"), o);
+    }
+    var correctText = (kind === "fill") ? String(q.a) : (kind === "judge") ? String(q.a) : optFull(q, q.a);
+    var chosenText = (kind === "mcq") ? optFull(q, chosen) : chosen;
+    if (ok) { clearWrong(cid, id); }
+    else { addWrong(cid, { id: id, type: kind, q: q.q || "", correct: correctText, chosen: chosenText, cause: "", ts: Date.now() }); }
   }
   function renderCheckpoint(cid, kp, qByKp, slide) {
     var pick = pickCheckpoint(qByKp, kp);
@@ -1039,8 +1052,7 @@
       if (done) return; done = true;
       kpRecord(kp, correct);
       if (q.id) { if (!correct) srsRate(q.id, 0); else if (srsGet(q.id)) srsRate(q.id, 2); }
-      cpWriteGrade(cid, q, kind, chosen, correct);
-      var o = cpStore(cid); o[kp] = { a: chosen, ok: correct, ts: Date.now() }; jset(skey(cid, "cp"), o);
+      cpWriteGrade(cid, kp, q, kind, chosen, correct);
       paint(correct, chosen);
     }
     if (kind === "mcq") {
@@ -2441,7 +2453,7 @@
       list.slice().reverse().forEach(function (e) {
         var item = el("div", "wb-entry");
         var q = qmap[e.id];
-        item.innerHTML = '<div class="wq">' + esc(e.q) + '<span class="pill">' + esc(e.type) + "</span>" +
+        item.innerHTML = '<div class="wq">' + esc(e.q) + '<span class="pill">' + esc(kindName(e.type)) + "</span>" +
           (e.cause ? '<span class="cause-tag">' + esc((CAUSES.filter(function (c) { return c[0] === e.cause; })[0] || ["", "其他"])[1]) + "</span>" : "") + "</div>" +
           (q ? '<div style="margin-top:4px">选项：' + q.o.map(esc).join("　") + "</div>" : "") +
           '<div class="wa">正确答案：<b>' + esc(e.correct) + "</b></div>" +
