@@ -334,6 +334,17 @@
     var res = el("div", "mres"); res.style.display = "none"; box.appendChild(res);
     var cb = causeBox(cid, q.id); box.appendChild(cb);
     box._cause = cb; box._res = res;
+    var _rec = mcqStore(cid)[q.id];
+    if (_rec && _rec.last != null) {
+      var _cor = String(q.a).trim(), _ch = String(_rec.last), _ok = _ch === _cor;
+      Array.prototype.forEach.call(opts.children, function (b) {
+        if (b.dataset.l === _cor) b.classList.add("right");
+        if (b.dataset.l === _ch) { b.classList.add("sel"); if (!_ok) b.classList.add("wrong"); }
+      });
+      res.style.display = "block";
+      res.innerHTML = (_ok ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 错误</span>（正确答案：<b>' + esc(_cor) + "</b>）") + '<div style="margin-top:4px">解析：' + esc(q.e || "") + "</div>" + optsExplain(q);
+      cb.style.display = _ok ? "none" : "flex";
+    }
     return box;
   }
 
@@ -381,6 +392,17 @@
     var res = el("div", "mres"); res.style.display = "none"; box.appendChild(res);
     var cb = causeBox(cid, q.id); box.appendChild(cb);
     box._cause = cb; box._res = res;
+    var _jr = judgeStore(cid)[q.id];
+    if (_jr && _jr.last != null) {
+      var _jcor = String(q.a).trim(), _jch = String(_jr.last), _jok = _jch === _jcor;
+      Array.prototype.forEach.call(opts.children, function (b) {
+        if (b.dataset.l === _jcor) b.classList.add("right");
+        if (b.dataset.l === _jch) { b.classList.add("sel"); if (!_jok) b.classList.add("wrong"); }
+      });
+      res.style.display = "block";
+      res.innerHTML = (_jok ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 错误</span>（正确答案：<b>' + esc(_jcor) + "</b>）") + '<div style="margin-top:4px">解析：' + esc(q.e || "") + "</div>" + optsExplain({ o: ["对", "错"], a: q.a, oe: q.oe });
+      cb.style.display = _jok ? "none" : "flex";
+    }
     return box;
   }
   function gradeJudge(cid, q, box, chosen) {
@@ -442,6 +464,15 @@
     };
     bChk.onclick = box._check;
     bShow.onclick = function () { det.open = true; };
+    var _fr = fillStore(cid)[q.id];
+    if (_fr && _fr.last != null) {
+      inp.value = _fr.last;
+      var _fok = fuzzyMatch(q.a, _fr.last);
+      inp.classList.add(_fok ? "right" : "wrong");
+      res.style.display = "block";
+      res.innerHTML = (_fok ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 与参考答案不完全一致</span>，可点“显示答案”核对。') + fillExplain(q);
+      cb.style.display = _fok ? "none" : "flex";
+    }
     return box;
   }
 
@@ -934,6 +965,26 @@
     }
     return null;
   }
+  function cpStore(cid) { return jget(skey(cid, "cp"), {}); }
+  function cpPrior(cid, kp, q, kind) {
+    if (q && q.id) {
+      var r;
+      if (kind === "mcq") { r = mcqStore(cid)[q.id]; if (r) return { a: r.last, ok: String(r.last) === String(q.a).trim() }; }
+      else if (kind === "judge") { r = judgeStore(cid)[q.id]; if (r) return { a: r.last, ok: String(r.last) === String(q.a).trim() }; }
+      else { r = fillStore(cid)[q.id]; if (r) return { a: r.last, ok: fuzzyMatch(q.a, r.last) }; }
+    }
+    return cpStore(cid)[kp] || null;
+  }
+  function cpWriteGrade(cid, q, kind, chosen, ok) {
+    if (!q || !q.id) return;
+    var store = jget(skey(cid, kind), {}) || {};
+    var rec = store[q.id] || { ok: 0, miss: 0 };
+    if (rec.first === undefined) rec.first = ok;
+    rec.n = (rec.n || 0) + 1; rec.last = chosen;
+    if (ok) { rec.ok++; rec.miss = Math.max(0, rec.miss - 1); } else { rec.miss++; rec.ok = Math.max(0, rec.ok - 1); }
+    store[q.id] = rec; jset(skey(cid, kind), store); touch(cid);
+    if (kind !== "fill") { if (ok) clearWrong(cid, q.id); else addWrong(cid, { id: q.id, type: kind, q: q.q, correct: String(q.a).trim(), chosen: chosen, cause: "", ts: Date.now() }); }
+  }
   function renderCheckpoint(cid, kp, qByKp, slide) {
     var pick = pickCheckpoint(qByKp, kp);
     var q, kind;
@@ -942,7 +993,7 @@
     else return null;
     var box = el("div", "checkpoint");
     box.appendChild(el("div", "cp-h", "🎯 本页自测（AI 生成 · 概念自检）" + (q && q.lv ? ' <span class="lvtag">了解即可</span>' : "")));
-    var done = false;
+    var done = false, optsBox = null;
     var fb = el("div", "cp-fb");
     function optLetter(o) { return String(o).trim().charAt(0); }
     function answerText() {
@@ -952,39 +1003,53 @@
       }
       return q.a != null ? String(q.a) : "";
     }
-    function grade(correct, opts, chosenEl) {
-      if (done) return; done = true;
-      kpRecord(kp, correct);
-      if (!correct) srsRate(q.id, 0); else if (srsGet(q.id)) srsRate(q.id, 2);
-      if (opts) {
-        Array.prototype.forEach.call(opts.children, function (b) {
+    function paint(correct, chosen) {
+      if (optsBox) {
+        Array.prototype.forEach.call(optsBox.children, function (b) {
           var isRight = (kind === "judge") ? (b.textContent.trim() === String(q.a).trim()) : (optLetter(b.textContent) === String(q.a).trim());
           if (isRight) b.classList.add("right");
+          var isChosen = (kind === "judge") ? (b.textContent.trim() === String(chosen)) : (optLetter(b.textContent) === String(chosen));
+          if (isChosen) { b.classList.add("sel"); if (!correct) b.classList.add("wrong"); }
         });
-        if (chosenEl && !correct) chosenEl.classList.add("wrong");
       }
       fb.innerHTML = (correct ? '<span class="ok">✔ 正确</span>' : '<span class="no">✘ 错误</span>') +
         '　正确答案：<b>' + esc(answerText()) + "</b>" +
-        (q.e ? '<div style="margin-top:4px">解析：' + esc(q.e) + "</div>" : "") + optsExplain(q) +
+        (q.e ? '<div style="margin-top:4px">解析：' + esc(q.e) + "</div>" : "") +
+        optsExplain(kind === "judge" ? { o: ["对", "错"], a: q.a, oe: q.oe } : q) +
         (q.basis ? '<div class="basis">📌 依据本页：' + esc(q.basis) + "</div>" : "");
+    }
+    function grade(correct, chosen) {
+      if (done) return; done = true;
+      kpRecord(kp, correct);
+      if (q.id) { if (!correct) srsRate(q.id, 0); else if (srsGet(q.id)) srsRate(q.id, 2); }
+      cpWriteGrade(cid, q, kind, chosen, correct);
+      var o = cpStore(cid); o[kp] = { a: chosen, ok: correct, ts: Date.now() }; jset(skey(cid, "cp"), o);
+      paint(correct, chosen);
     }
     if (kind === "mcq") {
       box.appendChild(el("div", "cp-q", esc(q.q)));
-      var opts = el("div", "cp-opts");
-      q.o.forEach(function (o, i) { var b = el("button", "cp-opt", esc(o)); b.onclick = function () { grade(optLetter(o) === String(q.a).trim(), opts, b); }; opts.appendChild(b); });
-      box.appendChild(opts);
+      optsBox = el("div", "cp-opts");
+      q.o.forEach(function (o) { var b = el("button", "cp-opt", esc(o)); b.onclick = function () { grade(optLetter(o) === String(q.a).trim(), optLetter(o)); }; optsBox.appendChild(b); });
+      box.appendChild(optsBox);
     } else if (kind === "judge") {
       box.appendChild(el("div", "cp-q", esc(q.q)));
-      var o2 = el("div", "cp-opts");
-      ["对", "错"].forEach(function (v) { var b = el("button", "cp-opt", v); b.onclick = function () { grade(v === q.a, o2, b); }; o2.appendChild(b); });
-      box.appendChild(o2);
+      optsBox = el("div", "cp-opts");
+      ["对", "错"].forEach(function (v) { var b = el("button", "cp-opt", v); b.onclick = function () { grade(v === q.a, v); }; optsBox.appendChild(b); });
+      box.appendChild(optsBox);
     } else {
       box.appendChild(el("div", "cp-q", esc(q.q)));
       var inp = el("input", "cp-in"); inp.placeholder = "输入答案";
-      var bc = el("button", "cp-opt", "检查"); bc.onclick = function () { grade(fuzzyMatch(q.a, inp.value)); };
+      var bc = el("button", "cp-opt", "检查"); bc.onclick = function () { grade(fuzzyMatch(q.a, inp.value), inp.value); };
       box.appendChild(inp); box.appendChild(bc);
+      box._cpInput = inp;
     }
     box.appendChild(fb);
+    var prior = cpPrior(cid, kp, q, kind);
+    if (prior) {
+      done = true;
+      if (kind === "fill" && box._cpInput) box._cpInput.value = prior.a != null ? prior.a : "";
+      paint(!!prior.ok, prior.a);
+    }
     return box;
   }
   function renderHeatmap(cid, ch, host) {
