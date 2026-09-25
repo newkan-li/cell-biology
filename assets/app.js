@@ -1293,6 +1293,11 @@
         if (s.explain) body.appendChild(el("div", "explain", esc(s.explain).replace(/\n/g, "<br>")));
         else body.appendChild(el("div", "notes", esc(s.notes)));
         card.appendChild(body);
+        if (s.intuition) {
+          var ib = el("div", "intuition");
+          ib.innerHTML = '<div class="in-h">🧠 通俗理解（直觉 · 类比）</div><p>' + esc(s.intuition).replace(/\n/g, "<br>") + '</p>';
+          card.appendChild(ib);
+        }
         if (s.points && s.points.length) {
           var pb = el("div", "points");
           pb.innerHTML = '<div class="pt-h">📌 本页要点</div><ul>' +
