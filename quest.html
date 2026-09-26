@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>闯关模式 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926bo">
-<script src="assets/theme.js?v=20260926bo"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926bp">
+<script src="assets/theme.js?v=20260926bp"></script>
 <style>
 .qtop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
 .qbar{flex:1;min-width:180px;height:12px;background:#eef2f8;border-radius:8px;overflow:hidden}
@@ -49,6 +49,19 @@ html[data-theme="dark"] .qt a{background:#22303d;border-color:#33475a;color:#a8c
 .qgroup>b{display:block;font-size:12px;color:#5b6b7b;margin-bottom:3px}
 html[data-theme="dark"] .qextra{background:#1b2531;border-color:#2c3a4a}
 html[data-theme="dark"] .qextra>summary{color:#9fc3e6}
+.exq-list{margin-top:2px}
+.exq{border:1px solid var(--line);border-radius:8px;margin:4px 0;background:#fff}
+.exq>summary{cursor:pointer;padding:5px 9px;font-size:12.6px;color:#234f7a;font-weight:600}
+.exq-body{padding:4px 12px 8px;font-size:12.4px;color:#33465c;line-height:1.7}
+.exq-pts,.exq-qs{margin:3px 0 6px;padding-left:18px}
+.exq-qs li{margin-bottom:4px}
+.qk{display:inline-block;font-size:11px;background:#eef4fb;color:#234f7a;border:1px solid #ccd8ea;border-radius:10px;padding:0 6px;margin-right:4px;font-weight:500}
+.qa{color:#1e7a45}
+.exq-ex{color:#7a5d00;background:#fff8e8;border:1px solid #f0d9a8;border-radius:6px;padding:4px 8px;margin:4px 0}
+html[data-theme="dark"] .exq{background:#1b2531;border-color:#2c3a4a}
+html[data-theme="dark"] .exq>summary{color:#9fc3e6}
+html[data-theme="dark"] .exq-body{color:#c9d6e2}
+html[data-theme="dark"] .exq-ex{background:#2a2618;border-color:#4a4326;color:#e0c060}
 html[data-theme="dark"] .step{background:#22303d;color:#9fc3e6}
 .subs{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
 .sub{font-size:11.5px;color:#5b6b7b;background:#f4f7fb;border:1px solid #dde6f0;border-radius:16px;padding:1px 9px}
@@ -108,16 +121,17 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   <footer style="margin-top:20px">仅供个人学习使用</footer>
 </div>
 
-<script src="data/manifest.js?v=20260926bo"></script>
-<script src="data/outline.js?v=20260926bo"></script>
-<script src="data/schedule.js?v=20260926bo"></script>
-<script src="data/expmap.js?v=20260926bo"></script>
-<script src="data/chapmeta.js?v=20260926bo"></script>
-<script src="data/zhenti.js?v=20260926bo"></script>
-<script src="data/ztobj.js?v=20260926bo"></script>
-<script src="data/history.js?v=20260926bo"></script>
-<script src="data/methods.js?v=20260926bo"></script>
-<script src="data/hotexp.js?v=20260926bo"></script>
+<script src="data/manifest.js?v=20260926bp"></script>
+<script src="data/outline.js?v=20260926bp"></script>
+<script src="data/schedule.js?v=20260926bp"></script>
+<script src="data/expmap.js?v=20260926bp"></script>
+<script src="data/chapmeta.js?v=20260926bp"></script>
+<script src="data/zhenti.js?v=20260926bp"></script>
+<script src="data/ztobj.js?v=20260926bp"></script>
+<script src="data/history.js?v=20260926bp"></script>
+<script src="data/methods.js?v=20260926bp"></script>
+<script src="data/hotexp.js?v=20260926bp"></script>
+<script src="data/kpqa.js?v=20260926bp"></script>
 <script>
 (function () {
   var PREFIX = "cellbio_";
@@ -135,6 +149,8 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   var READMARKS = jget(PREFIX + "readMarks", {});
   var ZT = window.ZHENTI || {}, ZO = window.ZTOBJ || {};
   var HIST = window.HISTORY || [], METH = window.METHODS || [], HOTEXP = window.HOTEXP || [];
+  var KPQA = window.KPQA || {};
+  var KINDNAME = { mcq: "选择", judge: "判断", fill: "填空", short: "简答", calc: "论述", term: "名解" };
   function ztCount(cid) {
     var a = (ZT[cid] && (ZT[cid].length || (ZT[cid].items || []).length)) || 0;
     var b = (ZO[cid] && (ZO[cid].length || (ZO[cid].items || []).length)) || 0;
@@ -319,8 +335,19 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
         var ok = L.ratio >= 0.8; if (ok) lessonDone++;
         return '<a class="sub' + (ok ? " ok" : "") + '" href="schedule.html?l=' + L.n + '" title="打开学习路线·第' + L.n + '讲（含该讲页码与讲义链接）">' + (ok ? "✅" : "◯") + " 第" + L.n + "讲 " + esc(L.name || "") + " <b>" + L.done + "/" + L.total + "</b></a>";
       }).join("");
-      var expChips = (s.exp || []).map(function (e) {
-        return '<a class="sub' + (e.done ? " ok" : "") + '" href="' + s.cid + '.html#s_' + esc(e.k) + '" title="' + esc(e.title) + '">' + (e.done ? "✅" : "◯") + " " + esc(String(e.title).slice(0, 20)) + "</a>";
+      var expBox = (s.exp || []).map(function (e) {
+        var q = KPQA[e.k] || {};
+        var pts = (q.p || []).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("");
+        var qs = (q.q || []).map(function (x) {
+          return '<li><span class="qk">' + esc(KINDNAME[x[0]] || x[0]) + "</span>" + esc(x[1]) + ' <span class="qa">答：' + esc(x[2]) + "</span></li>";
+        }).join("");
+        var ex = q.ex ? '<div class="exq-ex">🧪 ' + esc(q.ex) + "</div>" : "";
+        return '<details class="exq"><summary>' + (e.done ? "✅" : "◯") + " " + esc(String(e.title).slice(0, 28)) + "</summary>" +
+          '<div class="exq-body">' +
+          (pts ? "<b>考点：</b><ul class=\"exq-pts\">" + pts + "</ul>" : "") + ex +
+          "<b>对应考题：</b>" + (qs ? '<ul class="exq-qs">' + qs + "</ul>" : '<span class="hint">暂无精确对应题，去 <a href="' + s.cid + '.html">本章练习</a> / <a href="recite.html?ch=' + s.cid + '">背诵</a> 巩固</span>') +
+          '<div style="margin-top:4px"><a class="sub" href="' + s.cid + '.html#s_' + esc(e.k) + '">📄 讲义页</a></div>' +
+          "</div></details>";
       }).join("");
       var hist = HIST.filter(function (h) { return h.ch === s.cid; }).map(function (h) { return { h: h, done: h.kp ? !!seenO[h.kp] : !!READMARKS[hKey(h)], key: hKey(h) }; });
       var meth = METH.filter(function (m) { return m.kp && m.kp.split("_s")[0] === s.cid; }).map(function (m) { return { m: m, done: m.kp ? !!seenO[m.kp] : false }; });
@@ -329,9 +356,10 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
         if (obj.kp) return '<a class="sub' + (obj.done ? " ok" : "") + '" href="' + obj.href + '" title="' + esc(title) + '（对应讲义页已读即掌握）">' + (obj.done ? "✅" : "◯") + " " + esc(label) + "</a>";
         return '<a class="sub' + (obj.done ? " ok" : "") + '" href="#" data-mk="' + esc(key) + '" title="点击标记已掌握：' + esc(title) + '">' + (obj.done ? "✅" : "◯") + " " + esc(label) + "</a>";
       }
-      var histChips = hist.map(function (x) { return chipKp({ kp: x.h.kp, done: x.done, href: x.h.kp ? x.h.ch + ".html#s_" + esc(x.h.kp) : "#" }, x.key, String(x.h.t).slice(0, 16), x.h.t); }).join("");
-      var methChips = meth.map(function (x) { return '<a class="sub' + (x.done ? " ok" : "") + '" href="methods.html#mth_' + METH.indexOf(x.m) + '" title="' + esc(x.m.t) + '（对应讲义页已读即掌握）">' + (x.done ? "✅" : "◯") + " " + esc(x.m.t) + "</a>"; }).join("");
-      var hotChips = hot.map(function (x) { return chipKp({ kp: x.h.kp, done: x.done, href: x.h.kp ? "experiments.html#hot_" + esc(x.h.kp) : "#" }, x.key, String(x.h.e).slice(0, 16), x.h.e); }).join("");
+      function kpTip(kp, base) { var p = kp && KPQA[kp] && KPQA[kp].p && KPQA[kp].p[0]; return base + (p ? " · 考点：" + p : ""); }
+      var histChips = hist.map(function (x) { return chipKp({ kp: x.h.kp, done: x.done, href: x.h.kp ? x.h.ch + ".html#s_" + esc(x.h.kp) : "#" }, x.key, String(x.h.t).slice(0, 16), kpTip(x.h.kp, x.h.t)); }).join("");
+      var methChips = meth.map(function (x) { return '<a class="sub' + (x.done ? " ok" : "") + '" href="methods.html#mth_' + METH.indexOf(x.m) + '" title="' + esc(kpTip(x.m.kp, x.m.t)) + '（对应讲义页已读即掌握）">' + (x.done ? "✅" : "◯") + " " + esc(x.m.t) + "</a>"; }).join("");
+      var hotChips = hot.map(function (x) { return chipKp({ kp: x.h.kp, done: x.done, href: x.h.kp ? "experiments.html#hot_" + esc(x.h.kp) : "#" }, x.key, String(x.h.e).slice(0, 16), kpTip(x.h.kp, x.h.e)); }).join("");
       var ex = s.extra || {}, exChips = [];
       if (ex.der) exChips.push('<span class="sub' + (ex.derDone >= ex.der ? " ok" : "") + '">🧮 推导 ' + ex.derDone + "/" + ex.der + "</span>");
       exChips.push('<span class="sub' + (ex.wrong ? "" : " ok") + '">❌ 错题 ' + (ex.wrong ? ex.wrong + " 条" : "已清零") + "</span>");
@@ -344,8 +372,8 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
       var masteryTot = lessonTot + (s.exp || []).length + hist.length + meth.length + hot.length;
       s.masteryDone = masteryDone; s.masteryTot = masteryTot;
       var groups = [];
-      if (lessonChips) groups.push(group("🧩 讲次小关卡（" + lessonDone + "/" + lessonTot + "）", lessonChips));
-      if (expChips) groups.push(group("🔬 本章实验（" + expDone + "/" + (s.exp || []).length + "）", expChips));
+      if (lessonChips) groups.push('<div class="qgroup"><b>🧩 讲次小关卡（' + lessonDone + "/" + lessonTot + '）</b><div class="hint" style="font-size:11.5px;margin:-2px 0 4px">按「学习路线」把本章拆成若干“讲”；每讲页面已读 ≥80% 记为通过。点讲次可看该讲的全部页码与讲义链接。</div><div class="subs">' + lessonChips + "</div></div>");
+      if (expBox) groups.push('<div class="qgroup"><b>🔬 本章实验（' + expDone + "/" + (s.exp || []).length + '，点开看考点/考题）</b><div class="exq-list">' + expBox + "</div></div>");
       if (histChips) groups.push(group("🕰 本章科学史（" + histDone + "/" + hist.length + "）", histChips));
       if (methChips) groups.push(group("🧪 本章方法（" + methDone + "/" + meth.length + "）", methChips));
       if (hotChips) groups.push(group("⭐ 高频实验（" + hotDone + "/" + hot.length + "）", hotChips));
