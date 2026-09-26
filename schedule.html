@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>学习路线 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926bn">
-<script src="assets/theme.js?v=20260926bn"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926bo">
+<script src="assets/theme.js?v=20260926bo"></script>
 </head>
 <body data-page="schedule">
 <div class="wrap">
@@ -28,9 +28,9 @@
   <div id="host"></div>
   <footer>仅供个人学习使用 ｜ 讲次划分按本站模块自动生成，可自行对照老师进度调整</footer>
 </div>
-<script src="data/schedule.js?v=20260926bn"></script>
-<script src="data/recent.js?v=20260926bn"></script>
-<script src="data/802.js?v=20260926bn"></script>
+<script src="data/schedule.js?v=20260926bo"></script>
+<script src="data/recent.js?v=20260926bo"></script>
+<script src="data/802.js?v=20260926bo"></script>
 <script>
 (function () {
   var S = window.SCHEDULE || { lessons: [] };
@@ -44,6 +44,7 @@
   function kpLink(kp, txt) { var c = String(kp).split("_")[0]; return '<a class="navbtn" style="width:auto;margin:2px;text-decoration:none" href="' + c + '.html#s_' + esc(kp) + '">' + esc(txt) + '</a>'; }
   function today() { var d = new Date(); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
 
+  try { var _l = parseInt(new URLSearchParams(location.search).get("l"), 10); if (_l >= 1 && _l <= L.length) { st.current = _l; save(); } } catch (e) { }
   var tabs = document.getElementById("tabs"), host = document.getElementById("host");
   function setMode(m) { st.mode = m; save(); render(); }
   Array.prototype.forEach.call(tabs.children, function (b) { b.onclick = function () { setMode(b.dataset.v); }; });
