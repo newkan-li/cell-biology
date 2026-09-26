@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>背诵 · 名词解释与简答 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926ax">
-<script src="assets/theme.js?v=20260926ax"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926ay">
+<script src="assets/theme.js?v=20260926ay"></script>
 <style>
 .rbar2{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
 .rbar2 select,.rbar2 input{padding:5px 8px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:#fff}
@@ -58,7 +58,7 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
     <h1>✍️ 背诵 · 名词解释与简答</h1>
     <p>提纲卡（先看题干想关键词） + 默写自测 + 🖨 打印默写纸（A4）</p>
   </header>
-  <p class="noprint"><a href="index.html">← 返回首页</a> ｜ <a href="recite.html">✍️ 背诵/默写</a> ｜ <a href="guide.html">🚀 上手指南</a> ｜ <a href="flashcards.html">🃏 闪卡</a> ｜ <a href="review.html">🔁 今日复习</a> ｜ <a href="report.html">📊 学习报告</a> ｜ <a href="802.html">📋 802 真题</a></p>
+  <p class="noprint"><a href="index.html">← 返回首页</a> ｜ <a href="quest.html">🚩 闯关模式</a> ｜ <a href="recite.html">✍️ 背诵/默写</a> ｜ <a href="guide.html">🚀 上手指南</a> ｜ <a href="flashcards.html">🃏 闪卡</a> ｜ <a href="review.html">🔁 今日复习</a> ｜ <a href="report.html">📊 学习报告</a> ｜ <a href="802.html">📋 802 真题</a></p>
 
   <div class="rbar2 noprint">
     <select id="flesson" title="按学习路线 30 讲分批"></select>
@@ -86,8 +86,8 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
 </div>
 <div id="printarea"></div>
 
-<script src="data/schedule.js?v=20260926ax"></script>
-<script src="data/outline.js?v=20260926ax"></script>
+<script src="data/schedule.js?v=20260926ay"></script>
+<script src="data/outline.js?v=20260926ay"></script>
 <script>
 (function () {
   var ALL = window.OUTLINE || [];
@@ -172,6 +172,12 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
     window.print();
   });
 
+  try {
+    var Q = new URLSearchParams(location.search);
+    if (Q.get("ch")) fch.value = Q.get("ch");
+    if (Q.get("tier")) ftier.value = Q.get("tier");
+    if (Q.get("lesson")) flesson.value = Q.get("lesson");
+  } catch (e) { }
   render(); prog();
 })();
 </script>

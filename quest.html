@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f5c8b">
+<title>闯关模式 · 细胞生物学</title>
+<link rel="stylesheet" href="assets/style.css?v=20260926ay">
+<script src="assets/theme.js?v=20260926ay"></script>
+<style>
+.qtop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.qbar{flex:1;min-width:180px;height:12px;background:#eef2f8;border-radius:8px;overflow:hidden}
+.qbar>i{display:block;height:100%;background:linear-gradient(90deg,#4a90d9,#1f5c8b);transition:width .3s}
+.qstat{font-size:13px;color:#5b6b7b}
+.qnext{background:#eaf4ff;border:1px solid #bcd8f2;color:#1c3f63;border-radius:10px;padding:8px 12px;font-size:13.5px;margin:8px 0}
+.qnext a{color:#1f5c8b;font-weight:600}
+.qlist{position:relative;margin:10px 0 0;padding-left:0;list-style:none}
+.qlevel{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}
+.qlevel.locked{opacity:.55}
+.qnode{flex:0 0 44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;background:#9bb0c4}
+.qlevel.done .qnode{background:#2f9e5b}
+.qlevel.cur .qnode{background:#1f5c8b;box-shadow:0 0 0 4px rgba(31,92,139,.15)}
+.qbody{flex:1;min-width:0}
+.qtitle{font-size:15px;font-weight:600;color:#1f5c8b;margin:0}
+.qsub{font-size:12px;color:#5b6b7b;margin:2px 0 6px}
+.qtasks{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px}
+.qt{font-size:12.6px;color:#33465c;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.qt .ic{width:16px}
+.qt.done{color:#1a7f37}
+.qt a{color:#234f7a;background:#eef4fb;border:1px solid #ccd8ea;border-radius:14px;padding:1px 8px;text-decoration:none;font-size:12px}
+.qprog{height:6px;background:#eef2f8;border-radius:6px;overflow:hidden;margin-top:4px}
+.qprog>i{display:block;height:100%;background:#4a90d9}
+html[data-theme="dark"] .qlevel{background:#1b2531;border-color:#2c3a4a}
+html[data-theme="dark"] .qtitle{color:#7fb3d8}
+html[data-theme="dark"] .qt{color:#c9d6e2}
+html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9d6e2}
+</style>
+</head>
+<body data-page="quest">
+<div class="wrap">
+  <header class="top"><h1>🚩 闯关模式</h1><p>把每一章「学习 → 练习 → 背诵 → 闪卡/复习 → 通关测」串成一条主线，逐关解锁</p></header>
+  <p><a href="index.html">← 返回首页</a> ｜ <a href="quest.html">🚩 闯关模式</a> ｜ <a href="guide.html">🚀 上手指南</a> ｜ <a href="schedule.html">🧭 学习路线</a> ｜ <a href="report.html">📊 学习报告</a> ｜ <a href="recite.html">✍️ 背诵/默写</a> ｜ <a href="flashcards.html">🃏 闪卡</a> ｜ <a href="exam.html">📝 模拟测验</a></p>
+
+  <div class="qtop">
+    <div class="qbar"><i id="qfill" style="width:0%"></i></div>
+    <div class="qstat" id="qstat">读取中…</div>
+    <label class="qstat"><input type="checkbox" id="qskip"> 允许跳关</label>
+  </div>
+  <div class="qnext" id="qnext"></div>
+
+  <div class="qlist" id="qhost"></div>
+  <footer style="margin-top:20px">仅供个人学习使用</footer>
+</div>
+
+<script src="data/manifest.js?v=20260926ay"></script>
+<script src="data/outline.js?v=20260926ay"></script>
+<script src="data/schedule.js?v=20260926ay"></script>
+<script>
+(function () {
+  var PREFIX = "cellbio_";
+  function jget(k, d) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+  function skey(cid, kind) { return PREFIX + kind + ":" + cid; }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  var MANIFEST = window.MANIFEST || [];
+  var OUTLINE = window.OUTLINE || [];
+  var LESSONS = (window.SCHEDULE && window.SCHEDULE.lessons) || [];
+  var KP = jget(PREFIX + "kpStats", {});
+  var SRS = jget(PREFIX + "srs", {});
+  var PASSED = jget(PREFIX + "passed", {});
+  var FC = jget(PREFIX + "fcans", {});
+  var RECITE = jget(PREFIX + "recite", {});
+  var KP_KEY = PREFIX + "kpStats";
+
+  // 每章 必背 条目
+  var bibeiByCh = {};
+  OUTLINE.forEach(function (x) { if (x.tier === "必背" && x.cid) { (bibeiByCh[x.cid] = bibeiByCh[x.cid] || []).push(x); } });
+  // 每章 讲次
+  var lessonByCh = {};
+  LESSONS.forEach(function (L) { if (!lessonByCh[L.ch]) lessonByCh[L.ch] = []; lessonByCh[L.ch].push(L.n); });
+
+  function chapterStat(m) {
+    var cid = m.id;
+    var seen = Object.keys(jget(skey(cid, "seen"), {})).length;
+    var kpN = 0; Object.keys(KP).forEach(function (k) { if (k.indexOf(cid + "_s") === 0) kpN++; });
+    var mcq = jget(skey(cid, "mcq"), {}), judge = jget(skey(cid, "judge"), {}), fill = jget(skey(cid, "fill"), {}), self = jget(skey(cid, "self"), {});
+    function firstOk(r) { if (r.first !== undefined) return !!r.first; return (r.ok || 0) > 0 && !(r.miss > 0); }
+    var att = 0, ok = 0, pract = Object.keys(mcq).length + Object.keys(judge).length + Object.keys(fill).length + Object.keys(self).length;
+    [mcq, judge, fill].forEach(function (o) { Object.keys(o).forEach(function (k) { var r = o[k]; if ((r.n || 0) === 0 && r.last == null && r.first === undefined) return; att++; if (firstOk(r)) ok++; }); });
+    Object.keys(self).forEach(function (k) { var r = self[k]; if (r.state === undefined && (r.ok || 0) === 0 && (r.miss || 0) === 0) return; att++; if (r.state ? r.state === "ok" : firstOk(r)) ok++; });
+    var bib = bibeiByCh[cid] || [], bibDone = 0;
+    bib.forEach(function (x) { if (RECITE[x.id] === "ok") bibDone++; });
+    var srsN = 0; Object.keys(SRS).forEach(function (k) { if (k.indexOf(cid) === 0) srsN++; });
+    var fcN = 0; Object.keys(FC).forEach(function (k) { if (k.indexOf(cid) >= 0) fcN++; });
+    var pass = PASSED[cid] || null;
+
+    var n_slides = m.n_slides || 1, n_q = m.n_q || 1;
+    var t1 = { done: seen >= Math.ceil(n_slides * 0.5) || kpN >= Math.ceil(n_slides * 0.3), txt: "已读 " + seen + "/" + n_slides + " 页" };
+    var acc = att ? ok / att : 0;
+    var t2 = { done: att >= Math.ceil(n_q * 0.6) && acc >= 0.6, txt: "做题 " + pract + "/" + n_q + " · 首次正确率 " + (att ? Math.round(acc * 100) + "%" : "—") };
+    var t3 = { done: bib.length ? (bibDone / bib.length >= 0.6) : true, txt: bib.length ? ("必背掌握 " + bibDone + "/" + bib.length) : "无必背条目" };
+    var t4 = { done: (srsN >= 5 || fcN >= 5), txt: "复习 " + srsN + " · 闪卡 " + fcN };
+    var t5 = { done: !!(pass && pass.passed), txt: pass ? ("通关测 最好 " + (pass.best != null ? pass.best + "%" : (pass.pct != null ? pass.pct + "%" : "—"))) : "未测" };
+    var tasks = [t1, t2, t3, t4, t5];
+    var doneN = tasks.filter(function (t) { return t.done; }).length;
+    return { cid: cid, title: m.title, tasks: tasks, done: doneN === tasks.length, doneN: doneN, n: tasks.length };
+  }
+
+  var stats = MANIFEST.map(chapterStat);
+  var skipEl = document.getElementById("qskip");
+  try { skipEl.checked = localStorage.getItem("cellbio_questSkip") === "1"; } catch (e) { }
+  skipEl.addEventListener("change", function () { try { localStorage.setItem("cellbio_questSkip", skipEl.checked ? "1" : "0"); } catch (e) { } render(); });
+
+  function render() {
+    var allow = skipEl.checked;
+    var doneCount = 0, prevDone = true, host = "", nextRec = null;
+    var icon = ["📖 学习", "✍️ 练习", "🧠 背诵", "🃏 闪卡/复习", "🏁 通关测"];
+    stats.forEach(function (s, i) {
+      var unlocked = allow || i === 0 || prevDone;
+      var cur = unlocked && !s.done && (!nextRec);
+      if (cur) nextRec = s;
+      if (s.done) doneCount++;
+      var lt = (lessonByCh[s.cid] || []);
+      var sub = "第 " + s.cid.replace(/^(ch|tb)/, "") + (lt.length ? " 章 · 涉及第 " + lt[0] + (lt.length > 1 ? "–" + lt[lt.length - 1] : "") + " 讲" : " 章 · tb 教材章");
+      var rows = s.tasks.map(function (t, k) {
+        var link = "";
+        if (k === 0) link = '<a href="' + s.cid + '.html">去学习</a>';
+        else if (k === 1) link = '<a href="' + s.cid + '.html">去练习</a>';
+        else if (k === 2) link = '<a href="recite.html?ch=' + s.cid + '&tier=' + encodeURIComponent("必背") + '">去背诵</a>';
+        else if (k === 3) link = '<a href="flashcards.html?ch=' + s.cid + '">闪卡</a> <a href="review.html">复习</a>';
+        else link = '<a href="' + s.cid + '.html#chexam">去通关测</a>';
+        return '<div class="qt ' + (t.done ? "done" : "") + '"><span class="ic">' + (t.done ? "✅" : "⬜") + '</span><span>' + icon[k] + '：' + esc(t.txt) + '</span>' + link + '</div>';
+      }).join("");
+      var cls = s.done ? "done" : (unlocked ? "cur" : "locked");
+      host += '<div class="qlevel ' + cls + '"><div class="qnode">' + (s.done ? "✓" : (unlocked ? (i + 1) : "🔒")) + '</div>' +
+        '<div class="qbody"><div class="qtitle">第 ' + (i + 1) + ' 关 · ' + esc(String(s.title).slice(0, 22)) + (s.done ? ' <span style="color:#2f9e5b">已通关</span>' : "") + '</div>' +
+        '<div class="qsub">' + esc(sub) + ' · 任务 ' + s.doneN + "/" + s.n + '</div>' +
+        '<div class="qprog"><i style="width:' + Math.round(s.doneN / s.n * 100) + '%"></i></div>' +
+        '<div class="qtasks" style="margin-top:6px">' + rows + '</div></div></div>';
+      prevDone = s.done;
+    });
+    document.getElementById("qhost").innerHTML = host;
+    var pct = Math.round(doneCount / stats.length * 100);
+    document.getElementById("qfill").style.width = pct + "%";
+    document.getElementById("qstat").textContent = "已通关 " + doneCount + "/" + stats.length + "（" + pct + "%）";
+    if (nextRec) {
+      var t = nextRec.tasks.filter(function (x) { return !x.done; });
+      document.getElementById("qnext").innerHTML = "👉 <b>下一步</b>：第 " + (stats.indexOf(nextRec) + 1) + " 关「" + esc(String(nextRec.title).slice(0, 16)) + "」—— 建议先完成 <b>" + (t.length ? t[0].txt : "") + "</b>。" +
+        ' 进入：<a href="' + nextRec.cid + '.html">' + esc(nextRec.cid) + '</a> ｜ <a href="recite.html?ch=' + nextRec.cid + '">背诵</a>';
+    } else {
+      document.getElementById("qnext").innerHTML = "🎉 全部通关！可去 <a href='exam.html'>📝 模拟测验</a> / <a href='802.html'>📋 802 真题</a> 冲刺。";
+    }
+  }
+  render();
+})();
+</script>
+</body>
+</html>
