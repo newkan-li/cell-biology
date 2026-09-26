@@ -1331,8 +1331,12 @@
       var pv = el("div", "statsbox previewbox");
       pv.innerHTML = '<h3 style="margin:0 0 6px">📖 课前预习导览</h3>' +
         '<p class="pv-main">' + esc(ch.preview.main) + "</p>" +
-        '<div class="pv-q">带着这些问题去听课：</div><ol>' +
-        (ch.preview.questions || []).map(function (q) { return "<li>" + esc(q) + "</li>"; }).join("") + "</ol>";
+        '<div class="pv-q">带着这些问题去听课（点问题可看参考答案）：</div><ol>' +
+        (ch.preview.questions || []).map(function (q, i) {
+          var a = (ch.preview.answers || [])[i];
+          if (a) return '<li><details class="pv-qa"><summary>' + esc(q) + '</summary><div class="pv-a">' + esc(a).replace(/\n/g, "<br>") + "</div></details></li>";
+          return "<li>" + esc(q) + "</li>";
+        }).join("") + "</ol>";
       main.appendChild(pv);
     }
     if (ch.narrative) {
