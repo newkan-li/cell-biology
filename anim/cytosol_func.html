@@ -1,0 +1,34 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>细胞质基质</title><link rel="stylesheet" href="anim.css?v=20260926c"></head><body>
+<script src="anim.js?v=20260926c"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'细胞质基质及其功能',
+    sub:'细胞质基质(cytosol)=细胞质中除去细胞器后的胶状物质：糖酵解等代谢场所、游离核糖体蛋白合成场所、后翻译转运的起点，并为骨架与信号提供环境。',
+    legend:[{c:'#2e9e5b',t:'细胞质基质'},{c:'#5a7fa8',t:'细胞器'}],
+    phases:[
+      {name:'① 细胞质基质',dur:1400,note:'细胞质中除去各种细胞器后的胶状物质。'},
+      {name:'② 代谢场所',dur:1500,note:'糖酵解等多种代谢反应在此进行。'},
+      {name:'③ 蛋白合成场所',dur:1500,note:'游离核糖体在此合成蛋白，也是后翻译转运起点。'},
+      {name:'④ 骨架与信号环境',dur:1500,note:'为细胞骨架与信号转导提供组织环境。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'细胞质基质及其功能',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.52;
+      // 细胞
+      ctx.fillStyle= phaseI>=0?'#e8f7ee':'#f6f9fc'; ctx.strokeStyle='#5a7fa8'; ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(W/2,cy,Math.min(W,H)*0.40,0,7);ctx.fill();ctx.stroke();
+      // 细胞器
+      AnimKit.circle(ctx,W*0.40,cy-30,16,'#e0a95a',null); AnimKit.label(ctx,'细胞器',W*0.40,cy-56,'#b0791f','11px "Microsoft YaHei"');
+      // 核
+      AnimKit.circle(ctx,W*0.60,cy-30,22,'#eef4fa',null); AnimKit.label(ctx,'核',W*0.60,cy-30,'#234f7a','12px "Microsoft YaHei"');
+      if(phaseI>=1){ for(var i=0;i<5;i++) AnimKit.circle(ctx,W*0.40+i*40,cy+40,7,'#2e9e5b',null); AnimKit.label(ctx,'糖酵解等代谢',W/2,cy+70,'#1e7a45','11px "Microsoft YaHei"'); }
+      if(phaseI>=2){ AnimKit.circle(ctx,W*0.40,cy-4,10,'#5a7fa8','R'); AnimKit.label(ctx,'游离核糖体合成蛋白/后翻译转运起点',W/2,cy+96,'#45687f','11px "Microsoft YaHei"'); }
+      if(phaseI>=3){ ctx.strokeStyle='#8e5bb5';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(W*0.34,cy-60);ctx.lineTo(W*0.66,cy-60);ctx.stroke(); AnimKit.label(ctx,'细胞骨架与信号环境',W/2,cy-84,'#6a4a8a','11px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①胶状基质','②代谢场所','③蛋白合成/转运起点','④骨架与信号环境'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

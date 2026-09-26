@@ -1,0 +1,37 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自噬性细胞死亡</title><link rel="stylesheet" href="anim.css?v=20260926c"></head><body>
+<script src="anim.js?v=20260926c"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'自噬与自噬性细胞死亡',
+    sub:'双层膜包裹受损细胞器/大分子形成自噬体 → 与溶酶体融合降解；营养缺乏时供能，过度自噬可致自噬性细胞死亡。',
+    legend:[{c:'#2e9e5b',t:'自噬体(双层膜)'},{c:'#5a7fa8',t:'溶酶体'},{c:'#c0392b',t:'过度→死亡'}],
+    phases:[
+      {name:'① 双层膜包裹待降解物',dur:1500,note:'来自内质网/胞质的双层膜包裹受损细胞器、大分子。'},
+      {name:'② 闭合形成自噬体',dur:1600,note:'闭合形成双层膜的自噬体。'},
+      {name:'③ 与溶酶体融合降解',dur:1600,note:'自噬体与溶酶体融合，水解酶降解内容物。'},
+      {name:'④ 供能或过度→细胞死亡',dur:1600,note:'营养缺乏时提供能量；过度/持续自噬可致自噬性细胞死亡。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'自噬与自噬性细胞死亡',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.50;
+      // 细胞轮廓
+      ctx.strokeStyle='#bcd0e2';ctx.lineWidth=2;ctx.beginPath();ctx.arc(W*0.32,cy,110,0,7);ctx.stroke();
+      // 细胞器
+      for(var i=0;i<3;i++) AnimKit.circle(ctx,W*0.32-60+i*50,cy+20,12,'#e0a95a',null);
+      // 自噬体（双层膜）
+      if(phaseI>=0){ var opened=phaseI<2;
+        ctx.strokeStyle='#2e9e5b';ctx.lineWidth=3;ctx.beginPath();
+        if(opened){ ctx.arc(W*0.32,cy-10,46,0.4,5.9); } else { ctx.arc(W*0.32,cy-10,46,0,7); } ctx.stroke();
+        if(!opened){ ctx.beginPath();ctx.arc(W*0.32,cy-10,40,0,7);ctx.stroke(); AnimKit.circle(ctx,W*0.32,cy-10,12,'#e0a95a',null); AnimKit.label(ctx,'自噬体',W*0.32,cy-64,'#1e7a45','11px "Microsoft YaHei"'); } }
+      // 溶酶体
+      AnimKit.pill(ctx,W*0.62,cy-24,150,48,'#5a7fa8','溶酶体','#fff');
+      if(phaseI>=2){ AnimKit.arrow(ctx,W*0.32+50,cy-10,W*0.62-2,cy-4,'#2e9e5b',2.5); AnimKit.label(ctx,'融合→水解酶降解',W*0.5,cy+40,'#45687f','11px "Microsoft YaHei"'); }
+      if(phaseI>=3){ AnimKit.label(ctx,'营养缺乏→供能 ； 过度/持续→自噬性细胞死亡',W/2,cy+110,'#c0392b','bold 12px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①双层膜包裹','②形成自噬体','③与溶酶体融合降解','④供能 / 过度→死亡'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

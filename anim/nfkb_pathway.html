@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NF-κB通路</title><link rel="stylesheet" href="anim.css?v=20260926c"></head><body>
+<script src="anim.js?v=20260926c"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'NF-κB 通路：IκB 降解释放 NF-κB 入核',
+    sub:'静息时 NF-κB 被 IκB 结合滞留胞质；TNF/IL-1 激活 IKK → 磷酸化 IκB 使其泛素化降解 → NF-κB 入核激活免疫、炎症与抗凋亡基因。',
+    legend:[{c:'#c0392b',t:'NF-κB'},{c:'#5a7fa8',t:'IκB'},{c:'#8e5bb5',t:'IKK'}],
+    phases:[
+      {name:'① 静息：IκB 扣住 NF-κB',dur:1500,note:'NF-κB 与 IκB 结合，被滞留胞质。'},
+      {name:'② 刺激激活 IKK',dur:1500,note:'TNF/IL-1 等刺激激活 IKK。'},
+      {name:'③ IKK 磷酸化 IκB→降解',dur:1600,note:'IκB 被磷酸化并泛素化降解。'},
+      {name:'④ NF-κB 入核激活基因',dur:1600,note:'NF-κB 释放入核，激活免疫/炎症/抗凋亡基因。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'NF-κB 信号通路',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.46;
+      var bound=phaseI<2;
+      // NF-κB + IκB
+      AnimKit.circle(ctx,W*0.30,cy,20,'#c0392b','NF');
+      if(bound){ AnimKit.circle(ctx,W*0.30+26,cy,16,'#5a7fa8','IκB'); AnimKit.label(ctx,'NF-κB 被滞留胞质',W*0.30,cy+50,'#45687f','12px "Microsoft YaHei"'); }
+      else { AnimKit.label(ctx,'IκB 已降解',W*0.30,cy+50,'#7a8aa0','12px "Microsoft YaHei"'); }
+      // IKK
+      AnimKit.pill(ctx,W*0.30-70,cy-90,140,32, phaseI>=1?'#8e5bb5':'#e6ecf2','IKK', phaseI>=1?'#fff':'#7a8aa0');
+      AnimKit.arrow(ctx,W*0.30,cy-56,W*0.30,cy-22, phaseI>=1?'#8e5bb5':'#c6d8ea',2.2);
+      // 核
+      AnimKit.circle(ctx,W*0.72,cy,56,'#eef4fa',null); AnimKit.label(ctx,'细胞核',W*0.72,cy,'#234f7a','12px "Microsoft YaHei"');
+      if(phaseI>=3){ AnimKit.arrow(ctx,W*0.30+30,cy,W*0.72-24,cy,'#c0392b',2.5); AnimKit.label(ctx,'NF-κB 入核 → 免疫/炎症/抗凋亡基因',W/2,cy+96,'#c0392b','bold 12px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①静息：IκB扣住NF-κB','②刺激激活IKK','③IκB磷酸化降解','④NF-κB入核激活基因'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

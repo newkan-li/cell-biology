@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>病毒</title><link rel="stylesheet" href="anim.css?v=20260926c"></head><body>
+<script src="anim.js?v=20260926c"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'病毒：核酸 + 蛋白质衣壳，专性胞内寄生',
+    sub:'病毒由核酸(DNA 或 RNA)和蛋白质衣壳组成，无细胞结构、无独立代谢，必须寄生在活细胞内借宿主复制。类病毒仅 RNA；朊病毒仅蛋白质。',
+    legend:[{c:'#8e5bb5',t:'核酸'},{c:'#5a7fa8',t:'衣壳/宿主'}],
+    phases:[
+      {name:'① 病毒=核酸+衣壳',dur:1500,note:'病毒由核酸和蛋白质衣壳组成，无细胞结构。'},
+      {name:'② 吸附并进入宿主',dur:1500,note:'病毒吸附并进入宿主细胞。'},
+      {name:'③ 借宿主复制',dur:1600,note:'借宿主的核糖体与酶复制核酸、合成衣壳蛋白。'},
+      {name:'④ 组装释放',dur:1500,note:'装配成新病毒并释放；类病毒/朊病毒各不相同。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'病毒的结构与复制',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.5;
+      // 病毒
+      AnimKit.circle(ctx,W*0.25,cy,40,'#efe8fb',null);
+      for(var i=0;i<10;i++){ var a=i/10*Math.PI*2; AnimKit.circle(ctx,W*0.25+30*Math.cos(a),cy+30*Math.sin(a),5,'#8e5bb5',null); }
+      AnimKit.circle(ctx,W*0.25,cy,12,'#c0392b','N');
+      AnimKit.label(ctx,'病毒(核酸+衣壳)',W*0.25,cy+66,'#6a4a8a','12px "Microsoft YaHei"');
+      // 宿主
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=2;ctx.beginPath();ctx.arc(W*0.68,cy,70,0,7);ctx.stroke();
+      AnimKit.label(ctx,'宿主细胞',W*0.68,cy+92,'#45687f','12px "Microsoft YaHei"');
+      if(phaseI>=1){ AnimKit.arrow(ctx,W*0.25+44,cy,W*0.68-72,cy,'#8e5bb5',2.5); AnimKit.label(ctx,'吸附/进入',W*0.46,cy-16,'#6a4a8a','11px "Microsoft YaHei"'); }
+      if(phaseI>=2){ for(var j=0;j<3;j++) AnimKit.circle(ctx,W*0.60+j*22,cy-16+j*18,9,'#8e5bb5',null); AnimKit.label(ctx,'借宿主复制',W*0.68,cy+18,'#c0392b','11px "Microsoft YaHei"'); }
+      if(phaseI>=3){ for(var k=0;k<4;k++) AnimKit.circle(ctx,W*0.78+k*14,cy-40,7,'#8e5bb5',null); AnimKit.label(ctx,'组装并释放新病毒',W/2,cy+128,'#1f5c8b','bold 12px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①核酸+衣壳','②吸附进入宿主','③借宿主复制','④组装释放'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

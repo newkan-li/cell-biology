@@ -1,0 +1,37 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Wnt通路</title><link rel="stylesheet" href="anim.css?v=20260926c"></head><body>
+<script src="anim.js?v=20260926c"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'Wnt 信号通路：稳定 β-catenin 使其入核',
+    sub:'Wnt 结合 Frizzled 受体 → 抑制 GSK-3β 对 β-catenin 的降解 → β-catenin 在胞质积累并入核 → 与 TCF/LEF 结合激活靶基因转录。',
+    legend:[{c:'#8e5bb5',t:'Wnt/Frizzled'},{c:'#2e9e5b',t:'β-catenin'},{c:'#5a7fa8',t:'核'}],
+    phases:[
+      {name:'① 无 Wnt：β-catenin 被降解',dur:1600,note:'无 Wnt 时，GSK-3β 磷酸化 β-catenin 使其被降解。'},
+      {name:'② Wnt 结合 Frizzled',dur:1500,note:'Wnt 蛋白结合受体 Frizzled。'},
+      {name:'③ 抑制 GSK-3β→β-catenin 积累',dur:1600,note:'降解被抑制，β-catenin 在胞质积累。'},
+      {name:'④ β-catenin 入核激活转录',dur:1600,note:'β-catenin 入核与 TCF/LEF 结合，激活靶基因。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'Wnt 信号通路',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var m=AnimKit.membrane(ctx,W,H,{yTop:H*0.30,yBot:H*0.44,cx:W*0.28,gap:70});
+      var cx=W*0.28;
+      ctx.strokeStyle='#8e5bb5';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(cx,m.yTop-20);ctx.lineTo(cx,m.yBot+20);ctx.stroke();
+      AnimKit.label(ctx,'Frizzled',cx,m.yBot+38,'#6a4a8a','11px "Microsoft YaHei"');
+      if(phaseI>=1) AnimKit.circle(ctx,cx,m.yTop-38,9,'#8e5bb5','W');
+      var y=m.yBot+70;
+      var gsk=phaseI<2;
+      AnimKit.pill(ctx,cx-80,y-24,160,40, gsk?'#5a7fa8':'#e6ecf2','GSK-3β', gsk?'#fff':'#7a8aa0');
+      var bc=phaseI>=2?3:1;
+      for(var i=0;i<bc;i++) AnimKit.circle(ctx,cx-20+i*22,y+40,10,'#2e9e5b','β');
+      AnimKit.label(ctx, phaseI<2?'β-catenin 被降解':'β-catenin 积累', cx, y+66, phaseI<2?'#c0392b':'#1e7a45','12px "Microsoft YaHei"');
+      // 核
+      AnimKit.circle(ctx,W*0.72,y+10,54,'#eef4fa',null); AnimKit.label(ctx,'细胞核',W*0.72,y+10,'#234f7a','12px "Microsoft YaHei"');
+      if(phaseI>=3){ AnimKit.arrow(ctx,cx+30,y+40,W*0.72-20,y+14,'#2e9e5b',2.5); AnimKit.label(ctx,'β-catenin 入核 + TCF/LEF → 靶基因',W/2,y+96,'#1e7a45','bold 12px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①无Wnt→β-catenin被降解','②Wnt结合Frizzled','③抑制GSK-3β→积累','④入核激活转录'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

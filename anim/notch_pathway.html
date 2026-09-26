@@ -1,0 +1,39 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Notch通路</title><link rel="stylesheet" href="anim.css?v=20260926c"></head><body>
+<script src="anim.js?v=20260926c"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'Notch 信号通路：切割释放 NICD 入核',
+    sub:'Notch 受体与相邻细胞的配体(Delta)结合 → 受体被蛋白酶切割、释放胞内段 NICD → NICD 入核与 CSL 结合激活靶基因，介导旁侧抑制与细胞命运决定。',
+    legend:[{c:'#8e5bb5',t:'Notch/Delta'},{c:'#2e9e5b',t:'NICD'},{c:'#5a7fa8',t:'核'}],
+    phases:[
+      {name:'① 相邻细胞配体结合',dur:1500,note:'邻近细胞的 Delta 配体结合 Notch 受体。'},
+      {name:'② 受体被切割',dur:1600,note:'Notch 被蛋白酶切割，释放胞内段 NICD。'},
+      {name:'③ NICD 入核',dur:1600,note:'NICD 进入细胞核。'},
+      {name:'④ 激活靶基因/旁侧抑制',dur:1600,note:'NICD 与 CSL 结合激活靶基因，介导旁侧抑制。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'Notch 信号通路',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.44;
+      // 两个相邻细胞
+      AnimKit.pill(ctx,80,cy-70,180,140,'#eef4fa','信号细胞','#45687f');
+      AnimKit.pill(ctx,W-260,cy-70,180,140,'#f7fafd','邻近细胞','#45687f');
+      // Delta 配体
+      AnimKit.circle(ctx,270,cy,11,'#8e5bb5','Δ'); AnimKit.label(ctx,'Delta',270,cy-24,'#6a4a8a','11px "Microsoft YaHei"');
+      // Notch 受体
+      ctx.strokeStyle='#8e5bb5';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(W-260,cy-20);ctx.lineTo(W-260,cy+20);ctx.stroke();
+      AnimKit.label(ctx,'Notch',W-260,cy+38,'#6a4a8a','11px "Microsoft YaHei"');
+      var nicd=phaseI>=1;
+      if(phaseI>=1){ AnimKit.arrow(ctx,282,cy,W-262,cy,'#c0392b',2.2); }
+      var nx=phaseI>=2? W*0.55 : W-260;
+      if(nicd) AnimKit.pill(ctx,nx-30,cy-16,60,32,'#2e9e5b','NICD','#fff');
+      // 核
+      AnimKit.circle(ctx,W*0.72,cy+70,50,'#eef4fa',null); AnimKit.label(ctx,'细胞核',W*0.72,cy+70,'#234f7a','12px "Microsoft YaHei"');
+      if(phaseI>=3){ AnimKit.arrow(ctx,W*0.55+20,cy+18,W*0.72-18,cy+36,'#2e9e5b',2.5); AnimKit.label(ctx,'NICD + CSL → 靶基因(旁侧抑制)',W/2,cy+132,'#1e7a45','bold 12px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①配体结合Notch','②切割释放NICD','③NICD入核','④激活靶基因/旁侧抑制'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>
