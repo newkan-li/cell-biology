@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f5c8b">
+<title>学习报告 · 细胞生物学</title>
+<link rel="stylesheet" href="assets/style.css?v=20260926x">
+<script src="assets/theme.js?v=20260926x"></script>
+<style>
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:10px 0}
+.rcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:center}
+.rcard .rn{font-size:26px;font-weight:700;color:#1f5c8b;line-height:1.2}
+.rcard .rl{font-size:12px;color:#5b6b7b;margin-top:3px}
+.rbar{height:8px;background:#eef2f8;border-radius:6px;overflow:hidden;margin-top:4px}
+.rbar>i{display:block;height:100%;background:linear-gradient(90deg,#4a90d9,#1f5c8b)}
+table.rtab{width:100%;border-collapse:collapse;font-size:12.6px}
+table.rtab th,table.rtab td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left;white-space:nowrap}
+table.rtab th{color:#1f5c8b;font-weight:600}
+table.rtab td.num{text-align:right;font-variant-numeric:tabular-nums}
+.rsec{margin-top:18px}
+.rsec h2{font-size:16px;margin:0 0 4px;border:0;padding:0}
+html[data-theme="dark"] .rcard{background:#1b2531;border-color:#2c3a4a}
+html[data-theme="dark"] .rcard .rn{color:#7fb3d8}
+html[data-theme="dark"] .rbar{background:#232c36}
+</style>
+</head>
+<body data-page="report">
+<div class="wrap">
+  <header class="top">
+    <h1>📊 学习报告</h1>
+    <p>基于本机浏览器记录，仅统计**这台设备**的学习/复习/练习情况；数据不联网上传。</p>
+  </header>
+  <p><a href="index.html">← 返回首页</a> ｜ <a href="report.html">📊 学习报告</a> ｜ <a href="schedule.html">🧭 学习路线</a> ｜ <a href="storage.html">💾 记录与备份</a> ｜ <a href="wrong.html">❌ 错题本</a> ｜ <a href="review.html">🔁 复习</a> ｜ <a href="exam.html">📝 模拟考</a></p>
+
+  <div class="rsec"><h2>① 学习（浏览 / 掌握）</h2><div class="rgrid" id="g-study"></div></div>
+  <div class="rsec"><h2>② 复习（间隔重复 / 打卡）</h2><div class="rgrid" id="g-review"></div></div>
+  <div class="rsec"><h2>③ 练习（做题 / 正确率 / 错题）</h2><div class="rgrid" id="g-practice"></div></div>
+
+  <div class="rsec">
+    <h2>分章进度</h2>
+    <div class="hint" style="margin-bottom:6px">掌握度 = 正确率×0.6 + 复习强度×0.4；“已学”按浏览过的页计。</div>
+    <div style="overflow:auto"><table class="rtab" id="tab"></table></div>
+  </div>
+
+  <div class="rsec">
+    <h2>近 14 天任务量</h2>
+    <div class="hint" style="margin-bottom:6px">读（read）/ 复习（review）/ 练习（practice）每日次数。</div>
+    <div id="spark" style="overflow:auto"></div>
+  </div>
+
+  <p class="hint" style="margin-top:20px">说明：本页只读本机数据；换设备/清缓存会丢失。可在 <a href="storage.html">💾 记录与备份</a> 导出或恢复。</p>
+  <footer>仅供个人学习使用</footer>
+</div>
+
+<script src="data/manifest.js?v=20260926x"></script>
+<script>
+(function () {
+  var PREFIX = "cellbio_";
+  function jget(k, def) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
+  function skey(cid, kind) { return PREFIX + kind + ":" + cid; }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function todayStr(d) { d = d || new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+
+  var KP = jget(PREFIX + "kpStats", {});
+  var SRS = jget(PREFIX + "srs", {});
+  var STK = jget(PREFIX + "streak", { days: {} });
+  var TASKS = jget(PREFIX + "tasks", {});
+  var PASSED = jget(PREFIX + "passed", {});
+  var FC = jget(PREFIX + "fcans", {});
+  var MANIFEST = window.MANIFEST || [];
+  var now = Date.now();
+
+  function mastery(kp) {
+    var c = KP[kp], s = SRS[kp];
+    var acc = (c && c.n) ? c.ok / c.n : null;
+    var strength = s ? Math.min(1, (s.reps || 0) / 4) : 0;
+    return acc == null ? strength : (0.6 * acc + 0.4 * strength);
+  }
+  function streakCount() { var n = 0, d = new Date(); for (var i = 0; i < 3650; i++) { if (STK.days && STK.days[todayStr(d)]) { n++; d.setDate(d.getDate() - 1); } else break; } return n; }
+  function sum(o) { var t = 0; Object.keys(o || {}).forEach(function (k) { t += o[k].length || Object.keys(o[k]).length; }); return t; }
+
+  var row = [];
+  var totalSeen = 0, totalSlides = 0, totalMastered = 0, totalQ = 0, totalPract = 0, totalOk = 0, totalAtt = 0, totalWrong = 0, lastMax = 0;
+  MANIFEST.forEach(function (m) {
+    var cid = m.id;
+    var seen = Object.keys(jget(skey(cid, "seen"), {})).length;
+    var mcq = jget(skey(cid, "mcq"), {}), judge = jget(skey(cid, "judge"), {}), fill = jget(skey(cid, "fill"), {}), self = jget(skey(cid, "self"), {});
+    var pract = Object.keys(mcq).length + Object.keys(judge).length + Object.keys(fill).length + Object.keys(self).length;
+    var ok = 0, att = 0;
+    [mcq, judge, fill].forEach(function (o) { Object.keys(o).forEach(function (k) { var r = o[k]; ok += (r.ok || 0); att += (r.n || 0); }); });
+    Object.keys(self).forEach(function (k) { var r = self[k]; ok += (r.ok || 0); att += ((r.ok || 0) + (r.miss || 0)); });
+    var wrong = (jget(skey(cid, "wrong"), []) || []).length;
+    var kps = {}, mastered = 0;
+    Object.keys(KP).forEach(function (kp) { if (kp.indexOf(cid + "_s") === 0) { kps[kp] = 1; if (mastery(kp) >= 0.6) mastered++; } });
+    var last = jget(skey(cid, "last"), 0) || 0;
+    var pass = PASSED[cid];
+    totalSeen += seen; totalSlides += (m.n_slides || 0); totalMastered += mastered;
+    totalQ += (m.n_q || 0); totalPract += pract; totalOk += ok; totalAtt += att; totalWrong += wrong;
+    if (last > lastMax) lastMax = last;
+    row.push({ cid: cid, title: m.title, n_slides: m.n_slides || 0, n_q: m.n_q || 0, seen: seen, mastered: mastered, pract: pract, ok: ok, att: att, wrong: wrong, last: last, pass: pass });
+  });
+
+  var srsN = Object.keys(SRS).length;
+  var dueN = 0; Object.keys(SRS).forEach(function (k) { if (SRS[k] && SRS[k].due <= now) dueN++; });
+  var reviewsDone = 0; Object.keys(SRS).forEach(function (k) { if (SRS[k] && (SRS[k].reps || 0) > 0) reviewsDone++; });
+  var t = todayStr();
+  var td = TASKS[t] || { read: 0, review: 0, practice: 0 };
+  var accAll = totalAtt ? Math.round(totalOk / totalAtt * 100) : 0;
+  var studyRate = totalSlides ? Math.round(totalSeen / totalSlides * 100) : 0;
+
+  function card(n, l) { return '<div class="rcard"><div class="rn">' + n + '</div><div class="rl">' + l + '</div></div>'; }
+  function fmtLast(ts) { if (!ts) return "—"; var d = new Date(ts); return (d.getMonth() + 1) + "/" + d.getDate() + " " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
+
+  document.getElementById("g-study").innerHTML =
+    card(totalSeen + " <small>/ " + totalSlides + "</small>", "已浏览讲义页（" + studyRate + "%）") +
+    card(totalMastered, "已掌握页（掌握度≥0.6）") +
+    card(Object.keys(KP).length, "有作答记录的考点") +
+    card(srsN, "纳入复习的条目");
+  document.getElementById("g-review").innerHTML =
+    card(streakCount(), "连续打卡（天）") +
+    card(reviewsDone, "已复习条目") +
+    card(dueN, "今日待复习") +
+    card((td.read || 0) + "/" + (td.review || 0) + "/" + (td.practice || 0), "今日 读/复习/练");
+  document.getElementById("g-practice").innerHTML =
+    card(totalPract, "已做题目（含自测）") +
+    card(accAll + "%", "总正确率") +
+    card(totalWrong, "错题本条目") +
+    card(Object.keys(PASSED).length, "通关章节数") +
+    card(Object.keys(FC).length, "闪卡作答数");
+
+  var h = "<tr><th>章</th><th>页</th><th>已学</th><th>掌握页</th><th>掌握度</th><th>做题</th><th>正确率</th><th>错题</th><th>通关</th><th>最近</th></tr>";
+  row.forEach(function (r) {
+    var done = r.pract, qrate = r.n_q ? Math.round(done / r.n_q * 100) : 0;
+    var acc = r.att ? Math.round(r.ok / r.att * 100) : 0;
+    var mrate = r.n_slides ? Math.round(r.mastered / r.n_slides * 100) : 0;
+    h += "<tr><td><a href='" + r.cid + ".html' style='color:#234f7a;text-decoration:none'>" + esc(String(r.title).slice(0, 14)) + "</a></td>" +
+      "<td class='num'>" + r.n_slides + "</td>" +
+      "<td class='num'>" + r.seen + "</td>" +
+      "<td class='num'>" + r.mastered + "</td>" +
+      "<td class='num' style='min-width:90px'>" + mrate + "%<div class='rbar'><i style='width:" + Math.min(100, mrate) + "%'></i></div></td>" +
+      "<td class='num'>" + done + "</td>" +
+      "<td class='num'>" + (r.att ? acc + "%" : "—") + "</td>" +
+      "<td class='num'>" + (r.wrong || "") + "</td>" +
+      "<td class='num'>" + (r.pass ? "✅" : "") + "</td>" +
+      "<td class='num'>" + fmtLast(r.last) + "</td></tr>";
+  });
+  document.getElementById("tab").innerHTML = h;
+
+  var days = [], maxv = 1;
+  for (var i = 13; i >= 0; i--) { var d = new Date(); d.setDate(d.getDate() - i); var k = todayStr(d); var v = TASKS[k] || { read: 0, review: 0, practice: 0 }; days.push({ k: k, v: v }); maxv = Math.max(maxv, v.read, v.review, v.practice); }
+  var sp = "<table class='rtab'><tr><th>日期</th><th>读</th><th>复习</th><th>练习</th></tr>";
+  days.forEach(function (d) {
+    function bar(n) { return "<div class='rbar' style='min-width:60px'><i style='width:" + Math.round(n / maxv * 100) + "%'></i></div>"; }
+    sp += "<tr><td>" + d.k + "</td><td style='min-width:70px'>" + d.v.read + bar(d.v.read) + "</td><td style='min-width:70px'>" + d.v.review + bar(d.v.review) + "</td><td style='min-width:70px'>" + d.v.practice + bar(d.v.practice) + "</td></tr>";
+  });
+  sp += "</table>";
+  document.getElementById("spark").innerHTML = sp;
+})();
+</script>
+</body>
+</html>
