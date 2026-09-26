@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>核孔运输</title><link rel="stylesheet" href="anim.css?v=20260926d"></head><body>
+<script src="anim.js?v=20260926d"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'核孔运输：小分子自由扩散，大分子主动运输',
+    sub:'核孔复合体(NPC)是核质物质交换的通道：离子、代谢物及 <40kDa 小分子可扩散通过；大分子(蛋白、RNA)凭 NLS/NES 主动、耗能地进出。',
+    legend:[{c:'#2e9e5b',t:'自由扩散'},{c:'#8e5bb5',t:'主动运输'}],
+    phases:[
+      {name:'① 核孔复合体',dur:1400,note:'核膜上的核孔复合体是双向通道。'},
+      {name:'② 小分子自由扩散',dur:1500,note:'离子、代谢物、<40kDa 小分子可自由扩散通过。'},
+      {name:'③ 大分子主动运输',dur:1600,note:'大分子凭 NLS/NES，耗能主动进出。'},
+      {name:'④ 双向交换',dur:1500,note:'进核的蛋白与出核的 RNA 等都经此通道。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'核孔运输',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var m=AnimKit.membrane(ctx,W,H,{yTop:H*0.36,yBot:H*0.50,cx:W/2,gap:70});
+      // 核孔环
+      AnimKit.circle(ctx,W/2,m.yTop-6,10,'#5a7fa8',null); AnimKit.circle(ctx,W/2,m.yBot+6,10,'#5a7fa8',null);
+      AnimKit.label(ctx,'核孔复合体(NPC)',W/2,m.yTop-34,'#45687f','12px "Microsoft YaHei"');
+      if(phaseI>=1){ for(var i=0;i<4;i++) AnimKit.circle(ctx,W/2-20+i*14,m.yBot+26,9,'#2e9e5b','s'); AnimKit.arrow(ctx,W/2,m.yBot+16,W/2,m.yTop-16,'#2e9e5b',2); }
+      if(phaseI>=2){ AnimKit.pill(ctx,W*0.32,m.yBot+40,120,30,'#8e5bb5','大分子+NLS','#fff'); AnimKit.arrow(ctx,W*0.32+120,m.yBot+55,W/2-10,m.yTop-4,'#8e5bb5',2.2);
+        AnimKit.pill(ctx,W*0.6,m.yTop-36,120,30,'#8e5bb5','RNA/出核','#fff'); AnimKit.arrow(ctx,W*0.6+60,m.yTop-40,W/2+8,m.yBot+8,'#8e5bb5',2.2); }
+      AnimKit.label(ctx,['①核孔复合体','②小分子自由扩散','③大分子主动运输','④双向交换'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

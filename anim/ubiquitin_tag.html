@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>泛素</title><link rel="stylesheet" href="anim.css?v=20260926d"></head><body>
+<script src="anim.js?v=20260926d"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'泛素：给靶蛋白挂上“待销毁”标签',
+    sub:'泛素是 76 氨基酸的小蛋白，经 E1 激活、E2 传递、E3 连接，一串串挂到靶蛋白上，形成待降解信号。',
+    legend:[{c:'#8e5bb5',t:'泛素(Ub)'},{c:'#c0392b',t:'靶蛋白'}],
+    phases:[
+      {name:'① E1 激活泛素',dur:1400,note:'E1 在 ATP 下激活泛素。'},
+      {name:'② E2 传递',dur:1400,note:'泛素转移到 E2。'},
+      {name:'③ E3 挂到靶蛋白',dur:1600,note:'E3 把泛素一串串挂到靶蛋白(决定特异性)。'},
+      {name:'④ 形成泛素链→待降解',dur:1500,note:'多泛素链是送往蛋白酶体的信号。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'泛素化',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.5, x=W*0.62;
+      AnimKit.circle(ctx,x,cy,28,'#c0392b','P'); AnimKit.label(ctx,'靶蛋白',x,cy+50,'#c0392b','12px "Microsoft YaHei"');
+      var n=phaseI>=3?4:(phaseI>=2?2:0);
+      for(var i=0;i<n;i++) AnimKit.circle(ctx,x-6+i*10,cy-40-i*12,7,'#8e5bb5','U');
+      if(n) AnimKit.label(ctx,'泛素链',x+80,cy-60,'#6a4a8a','12px "Microsoft YaHei"','left');
+      // E1/E2/E3
+      var ea=[[W*0.2,'E1'],[W*0.38,'E2'],[W*0.56,'E3']];
+      ea.forEach(function(e,i){ var on=phaseI>=i; AnimKit.pill(ctx,e[0],cy-18,70,36, on?'#5a7fa8':'#e6ecf2', e[1], on?'#fff':'#7a8aa0'); });
+      AnimKit.arrow(ctx,W*0.2+70,cy,W*0.38,cy,'#8aa0b8',2); AnimKit.arrow(ctx,W*0.38+70,cy,W*0.56,cy,'#8aa0b8',2);
+      AnimKit.label(ctx,['①E1激活','②E2传递','③E3挂泛素','④多泛素链→待降解'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>内吞途径</title><link rel="stylesheet" href="anim.css?v=20260926d"></head><body>
+<script src="anim.js?v=20260926d"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'内吞途径：质膜→早期内体→晚期内体→溶酶体',
+    sub:'质膜内陷形成内吞小泡，把胞外物质经早期内体、晚期内体逐步酸化，最终送溶酶体降解。',
+    legend:[{c:'#c0392b',t:'内吞物'},{c:'#5a7fa8',t:'内体'},{c:'#2e9e5b',t:'溶酶体'}],
+    phases:[
+      {name:'① 质膜内陷形成小泡',dur:1500,note:'质膜内陷、包被形成内吞小泡，把胞外物质带入细胞。'},
+      {name:'② 早期内体',dur:1500,note:'小泡脱包被后融合成早期内体(偏酸)，是分选与回收枢纽。'},
+      {name:'③ 晚期内体',dur:1600,note:'早期内体成熟为晚期内体，进一步酸化。'},
+      {name:'④ 与溶酶体融合降解',dur:1600,note:'晚期内体与溶酶体融合，货物被水解酶降解。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'内吞途径',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.5;
+      AnimKit.pill(ctx,40,cy-14,150,28,'#eef4fa','质膜','#45687f');
+      var xs=[W*0.34,W*0.55,W*0.76];
+      var cols=['#5a7fa8','#5a7fa8','#2e9e5b'], names=['早期内体','晚期内体','溶酶体'], rad=[24,26,30];
+      xs.forEach(function(x,i){ if(phaseI>=i+1){ AnimKit.circle(ctx,x,cy,rad[i],cols[i],null); AnimKit.label(ctx,names[i],x,cy+rad[i]+16,cols[i],'11px "Microsoft YaHei"'); } });
+      if(phaseI>=0) AnimKit.circle(ctx,xs[0]-60,cy-50,9,'#c0392b','C');
+      if(phaseI>=0) AnimKit.arrow(ctx,190,cy,xs[0]-rad[0]-6,cy,'#8aa0b8',2);
+      if(phaseI>=1) AnimKit.arrow(ctx,xs[0]+rad[0]+6,cy,xs[1]-rad[1]-6,cy,'#8aa0b8',2);
+      if(phaseI>=2) AnimKit.arrow(ctx,xs[1]+rad[1]+6,cy,xs[2]-rad[2]-6,cy,'#8aa0b8',2);
+      AnimKit.label(ctx,['①质膜内陷','②早期内体','③晚期内体','④溶酶体降解'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

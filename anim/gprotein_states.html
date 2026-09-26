@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>G蛋白状态</title><link rel="stylesheet" href="anim.css?v=20260926d"></head><body>
+<script src="anim.js?v=20260926d"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'G 蛋白的无活性态与激活态',
+    sub:'无活性(静止)态：α、β、γ 结合，α 上为 GDP；激活态：α 结合 GTP 并与 βγ 分离，去结合/激活靶蛋白。',
+    legend:[{c:'#5a7fa8',t:'α-GDP(无活性)'},{c:'#2e9e5b',t:'α-GTP(激活)'},{c:'#8e5bb5',t:'βγ'}],
+    phases:[
+      {name:'① 无活性(静止)态',dur:1400,note:'α、β、γ 结合成三聚体，α 上是 GDP。'},
+      {name:'② GDP→GTP',dur:1400,note:'受体催化 GDP 换成 GTP。'},
+      {name:'③ 激活态：α 与 βγ 分离',dur:1500,note:'α-GTP 与 βγ 分开，成为激活态。'},
+      {name:'④ 结合并激活靶蛋白',dur:1500,note:'α-GTP 结合靶蛋白(酶/通道)并激活它。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'G 蛋白的两种状态',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.5, on=phaseI>=2;
+      var ax=on? W*0.35 : W*0.5;
+      AnimKit.circle(ctx,ax,cy,26, on?'#2e9e5b':'#5a7fa8','α');
+      AnimKit.label(ctx, on?'GTP':'GDP', ax,cy,'#fff','bold 11px Arial');
+      AnimKit.circle(ctx,on?W*0.62:W*0.5,cy-16,16,'#8e5bb5','β'); AnimKit.circle(ctx,on?W*0.68:W*0.56,cy+16,16,'#8e5bb5','γ');
+      if(on){ AnimKit.pill(ctx,W*0.72,cy-18,150,36,'#e6ecf2','靶蛋白激活','#45687f'); AnimKit.arrow(ctx,ax+28,cy,W*0.72-2,cy,'#2e9e5b',2.5); }
+      AnimKit.label(ctx, on?'激活态：α-GTP + βγ 分离':'无活性态：α-GDP + βγ 结合',W/2,cy+90, on?'#1e7a45':'#45687f','bold 12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①无活性(GDP)','②GDP→GTP','③激活/分离','④结合激活靶蛋白'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

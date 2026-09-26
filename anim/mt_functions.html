@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>微管功能</title><link rel="stylesheet" href="anim.css?v=20260926d"></head><body>
+<script src="anim.js?v=20260926d"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'微管的主要功能',
+    sub:'微管三大功能：维持细胞形态、作为胞内运输轨道、参与有丝分裂中染色体运动（纺锤体）。',
+    legend:[{c:'#2e9e5b',t:'微管'}],
+    phases:[
+      {name:'① 维持细胞形态',dur:1400,note:'微管支撑细胞形态与特化突起。'},
+      {name:'② 胞内运输轨道',dur:1500,note:'马达蛋白沿微管运输囊泡与细胞器。'},
+      {name:'③ 组织纺锤体',dur:1500,note:'分裂时微管组装成纺锤体。'},
+      {name:'④ 染色体运动',dur:1500,note:'纺锤体微管牵引染色体准确分配。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'微管的功能',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.5;
+      function icon(x,label,draw){ draw(x,cy); AnimKit.label(ctx,label,x,cy+78,'#45687f','12px "Microsoft YaHei"'); }
+      icon(W*0.2,'维持形态',function(x,y){ ctx.strokeStyle='#2e9e5b';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(x,y-40);ctx.lineTo(x,y+40);ctx.stroke(); AnimKit.circle(ctx,x,y-46,8,'#c0392b',null); });
+      icon(W*0.4,'运输轨道',function(x,y){ ctx.strokeStyle='#2e9e5b';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+80,y);ctx.stroke(); AnimKit.circle(ctx,x+20,y-16,9,'#5a7fa8','C'); });
+      icon(W*0.62,'纺锤体',function(x,y){ AnimKit.circle(ctx,x,y-40,7,'#1f5c8b',null); AnimKit.circle(ctx,x,y+40,7,'#1f5c8b',null); for(var i=0;i<4;i++){ctx.strokeStyle='#2e9e5b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,y-40);ctx.lineTo(x-30+i*20,y+30);ctx.moveTo(x,y+40);ctx.lineTo(x-30+i*20,y-30);ctx.stroke();} });
+      icon(W*0.84,'染色体运动',function(x,y){ AnimKit.circle(ctx,x,y,16,'#c0392b',null); AnimKit.arrow(ctx,x-44,y,x-20,y,'#2e9e5b',2.5); AnimKit.arrow(ctx,x+44,y,x+20,y,'#2e9e5b',2.5); });
+      AnimKit.label(ctx,['①维持形态','②运输轨道','③纺锤体','④染色体运动'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

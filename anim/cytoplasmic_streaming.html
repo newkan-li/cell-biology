@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>胞质环流</title><link rel="stylesheet" href="anim.css?v=20260926d"></head><body>
+<script src="anim.js?v=20260926d"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'胞质环流：肌动蛋白-肌球蛋白驱动的胞质定向流动',
+    sub:'在巨大藻细胞中，大囊泡与下方 F-actin 束相连，myosin 沿微丝滑动驱动胞质定向环流。',
+    legend:[{c:'#c98a3a',t:'F-actin 束'},{c:'#5a7fa8',t:'大囊泡'}],
+    phases:[
+      {name:'① 大囊泡沿 F-actin 束',dur:1500,note:'大囊泡与下方 F-actin 束相连。'},
+      {name:'② myosin 驱动滑动',dur:1500,note:'myosin 沿微丝滑动，带动囊泡运动。'},
+      {name:'③ 胞质定向流动',dur:1600,note:'胞质沿固定方向持续环流。'},
+      {name:'④ 加速物质混合',dur:1500,note:'环流加快胞内物质的运输与混合。'}
+    ],
+    init:function(S){S.t=0;},
+    step:function(S,dt){ S.t=(S.t+dt/1000*0.6)%1; },
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'胞质环流',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.52, cx=W/2, r=Math.min(W,H)*0.34;
+      ctx.strokeStyle='#bcd0e2';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.stroke();
+      ctx.strokeStyle='#c98a3a';ctx.lineWidth=6;ctx.beginPath();ctx.arc(cx,cy,r-24,0,7);ctx.stroke();
+      var a=S.t*Math.PI*2;
+      AnimKit.circle(ctx,cx+(r-24)*Math.cos(a),cy+(r-24)*Math.sin(a),16,'#5a7fa8','V');
+      AnimKit.arrow(ctx,cx+(r-30)*Math.cos(a+0.5),cy+(r-30)*Math.sin(a+0.5),cx+(r-30)*Math.cos(a+0.9),cy+(r-30)*Math.sin(a+0.9),'#2e9e5b',2.5);
+      AnimKit.label(ctx,'myosin 沿 F-actin 滑动 → 环流',W/2,cy+r+26,'#1f5c8b','bold 12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①囊泡连F-actin束','②myosin驱动滑动','③胞质定向流动','④加速物质混合'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

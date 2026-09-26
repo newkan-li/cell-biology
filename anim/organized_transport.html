@@ -1,0 +1,28 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>有组织运输</title><link rel="stylesheet" href="anim.css?v=20260926d"></head><body>
+<script src="anim.js?v=20260926d"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'内膜系统的有组织运输：分泌途径 vs 胞吞途径',
+    sub:'向外：ER 合成→高尔基体→细胞表面/溶酶体（分泌途径/顺行）；向内：质膜→内体→溶酶体（胞吞途径）。',
+    legend:[{c:'#2e9e5b',t:'分泌途径(向外)'},{c:'#c0392b',t:'胞吞途径(向内)'}],
+    phases:[
+      {name:'① 分泌途径',dur:1500,note:'从 ER 蛋白质合成开始，经高尔基体到细胞表面或溶酶体。'},
+      {name:'② 顺行运输',dur:1500,note:'ER→高尔基体→质膜，由 COPII/网格蛋白小泡完成。'},
+      {name:'③ 胞吞途径',dur:1600,note:'质膜内陷→内体→溶酶体，把胞外物质运入。'},
+      {name:'④ 两途径的平衡',dur:1500,note:'分泌与胞吞共同维持膜与物质的动态平衡。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'内膜系统的有组织运输',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.5;
+      function box(x,t,c){ AnimKit.pill(ctx,x,cy-18,96,36,c,t,'#fff'); }
+      box(60,'ER','#5a7fa8'); box(W*0.36,'高尔基体','#5a7fa8'); box(W*0.62,'细胞表面','#45687f'); box(W*0.86,'溶酶体','#2e9e5b');
+      if(phaseI<=1){ AnimKit.arrow(ctx,158,cy,W*0.36-4,cy,'#2e9e5b',2.5); AnimKit.arrow(ctx,W*0.36+98,cy,W*0.62-4,cy,'#2e9e5b',2.5); AnimKit.label(ctx,'分泌途径(顺行)→',W*0.30,cy-40,'#1e7a45','12px "Microsoft YaHei"'); }
+      if(phaseI>=2){ AnimKit.arrow(ctx,W*0.62+98,cy+30,W*0.86-4,cy-18,'#c0392b',2.2); AnimKit.label(ctx,'胞吞→内体→溶酶体',W*0.72,cy+70,'#c0392b','12px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①分泌途径','②顺行运输','③胞吞途径','④动态平衡'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

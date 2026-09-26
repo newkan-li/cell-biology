@@ -1,0 +1,36 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>凋亡异常与疾病</title><link rel="stylesheet" href="anim.css?v=20260926d"></head><body>
+<script src="anim.js?v=20260926d"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'细胞凋亡异常与疾病：太多太少都致病',
+    sub:'凋亡减少：癌症、某些自身免疫病（本应凋亡的细胞存活）；凋亡过多：艾滋病、神经变性疾病、中风、心肌梗塞（细胞缺失）。',
+    legend:[{c:'#c0392b',t:'凋亡减少'},{c:'#5a7fa8',t:'凋亡过多'}],
+    phases:[
+      {name:'① 正常凋亡',dur:1400,note:'凋亡维持细胞数量与组织稳态。'},
+      {name:'② 凋亡减少→癌症/自身免疫病',dur:1600,note:'本应凋亡的细胞存活下来。'},
+      {name:'③ 凋亡过多→细胞缺失',dur:1600,note:'艾滋病、神经变性疾病等。'},
+      {name:'④ 干预思路',dur:1500,note:'抗癌策略常基于刺激细胞“自杀程序”。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'凋亡异常与疾病',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.52;
+      // 左：凋亡减少
+      var many=(phaseI===1||phaseI===3)?8:4;
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=2;ctx.beginPath();ctx.arc(W*0.27,cy,80,0,7);ctx.stroke();
+      for(var i=0;i<many;i++){ var a=i/many*Math.PI*2; AnimKit.circle(ctx,W*0.27+52*Math.cos(a),cy+52*Math.sin(a),9,'#f2c9c2',null); }
+      AnimKit.label(ctx,'凋亡减少',W*0.27,cy-96,'#c0392b','bold 12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'癌症 / 自身免疫病',W*0.27,cy+104,'#c0392b','11px "Microsoft YaHei"');
+      // 右：凋亡过多
+      var few=(phaseI>=2)?2:4;
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=2;ctx.beginPath();ctx.arc(W*0.73,cy,80,0,7);ctx.stroke();
+      for(var j=0;j<few;j++){ var b=j/few*Math.PI*2; AnimKit.circle(ctx,W*0.73+52*Math.cos(b),cy+52*Math.sin(b),9,'#9ec1e0',null); }
+      AnimKit.label(ctx,'凋亡过多',W*0.73,cy-96,'#45687f','bold 12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'艾滋病 / 神经变性 / 中风 / 心梗',W*0.73,cy+104,'#45687f','11px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①正常凋亡','②减少→癌症/自身免疫病','③过多→细胞缺失','④抗癌常刺激“自杀程序”'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

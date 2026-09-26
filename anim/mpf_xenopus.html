@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MPF爪蟾实验</title><link rel="stylesheet" href="anim.css?v=20260926d"></head><body>
+<script src="anim.js?v=20260926d"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'非洲爪蟾实验：M 期细胞质含 MPF',
+    sub:'把 M 期爪蟾卵细胞的细胞质注入卵母细胞，能促其进入 M 期(核破裂、形成纺锤体)；取自间期的细胞质则不能，说明 M 期存在“M 期促进因子(MPF)”。',
+    legend:[{c:'#c0392b',t:'M期细胞质'},{c:'#5a7fa8',t:'间期细胞质'}],
+    phases:[
+      {name:'① M 期细胞质',dur:1400,note:'取自 M 期卵细胞的细胞质。'},
+      {name:'② 注入卵母细胞',dur:1500,note:'注入卵母细胞后促其进入 M 期。'},
+      {name:'③ 核破裂、形成纺锤体',dur:1600,note:'出现核破裂并形成纺锤体，进入 M 期。'},
+      {name:'④ 间期细胞质无效',dur:1500,note:'取自间期的细胞质不引起进入 M 期→存在 MPF。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'爪蟾卵 MPF 实验',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.5;
+      function oocyte(x,label,active){
+        ctx.strokeStyle='#5a7fa8';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,cy,56,0,7);ctx.stroke();
+        AnimKit.circle(ctx,x,cy-8,16, active?'#f2c9c2':'#eef4fa',null);
+        if(active){ for(var i=0;i<4;i++){ctx.strokeStyle='#c0392b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,cy-30);ctx.lineTo(x-24+i*16,cy+30);ctx.moveTo(x,cy+30);ctx.lineTo(x-24+i*16,cy-30);ctx.stroke();} }
+        AnimKit.label(ctx,label,x,cy+76,'#45687f','12px "Microsoft YaHei"');
+      }
+      oocyte(W*0.3,'M期细胞质注入',phaseI>=1);
+      oocyte(W*0.72,'间期细胞质注入',false);
+      if(phaseI>=0){ AnimKit.pill(ctx,W*0.3-70,cy-96,140,32,'#c0392b','M期细胞质','#fff'); AnimKit.arrow(ctx,W*0.3,cy-62,W*0.3,cy-58,'#c0392b',2); }
+      if(phaseI>=3){ AnimKit.pill(ctx,W*0.72-70,cy-96,140,32,'#5a7fa8','间期细胞质','#fff'); AnimKit.label(ctx,'不进入 M 期',W*0.72,cy+96,'#c0392b','12px "Microsoft YaHei"'); }
+      if(phaseI>=2) AnimKit.label(ctx,'核破裂 + 形成纺锤体 → 进入 M 期',W/2,cy+118,'#1e7a45','bold 12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①M期细胞质','②注入卵母细胞','③核破裂/纺锤体','④间期细胞质无效'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

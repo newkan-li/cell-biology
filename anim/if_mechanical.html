@@ -1,0 +1,33 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IF机械强度</title><link rel="stylesheet" href="anim.css?v=20260926d"></head><body>
+<script src="anim.js?v=20260926d"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'中间纤维为细胞提供机械强度支持',
+    sub:'IF 网络像“钢筋”为细胞提供抗拉、抗剪切的机械支撑；角蛋白网络被破坏会导致皮肤起泡(blistering)。',
+    legend:[{c:'#2e9e5b',t:'IF 网络'},{c:'#c0392b',t:'破坏→起泡'}],
+    phases:[
+      {name:'① 完整的 IF 网络',dur:1400,note:'IF 网络撑住细胞、抵抗机械力。'},
+      {name:'② 受力时缓冲',dur:1500,note:'IF 可拉伸、提供机械强度。'},
+      {name:'③ 角蛋白网络被破坏',dur:1600,note:'网络破坏后细胞不能抵抗机械力。'},
+      {name:'④ 皮肤起泡',dur:1500,note:'表皮细胞受损→皮肤起泡(blistering)。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'IF 与机械强度',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.5;
+      var broken=phaseI>=2;
+      ctx.fillStyle= broken?'#f9e6e2':'#e8f7ee'; ctx.strokeStyle='#5a7fa8'; ctx.lineWidth=2;
+      ctx.beginPath();ctx.ellipse(W*0.4,cy,120,70,0,0,7);ctx.fill();ctx.stroke();
+      ctx.strokeStyle= broken?'#c0392b':'#2e9e5b'; ctx.lineWidth=3;
+      for(var i=0;i<6;i++){ var y=cy-50+i*20; if(broken&&i%2){ ctx.beginPath();ctx.moveTo(W*0.4-90,y);ctx.lineTo(W*0.4-30,y);ctx.moveTo(W*0.4-10,y);ctx.lineTo(W*0.4+90,y);ctx.stroke(); } else { ctx.beginPath();ctx.moveTo(W*0.4-90,y);ctx.lineTo(W*0.4+90,y);ctx.stroke(); } }
+      if(phaseI>=1) AnimKit.arrow(ctx,W*0.4-150,cy,W*0.4-124,cy,'#8aa0b8',3), AnimKit.arrow(ctx,W*0.4+150,cy,W*0.4+124,cy,'#8aa0b8',3);
+      AnimKit.label(ctx, broken?'角蛋白网络破坏→不能抗机械力':'完整网络→抗拉/抗剪切',W*0.4,cy+96, broken?'#c0392b':'#1e7a45','12px "Microsoft YaHei"');
+      // 皮肤/起泡
+      if(phaseI>=3){ ctx.fillStyle='#f2c9c2'; ctx.beginPath(); ctx.ellipse(W*0.8,cy,70,50,0,0,7); ctx.fill(); AnimKit.circle(ctx,W*0.8,cy,20,'#fff',null); AnimKit.label(ctx,'皮肤起泡',W*0.8,cy+70,'#c0392b','12px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①完整网络','②受力缓冲','③网络破坏','④皮肤起泡'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

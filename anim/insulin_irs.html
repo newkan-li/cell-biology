@@ -1,0 +1,33 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>胰岛素受体</title><link rel="stylesheet" href="anim.css?v=20260926d"></head><body>
+<script src="anim.js?v=20260926d"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'胰岛素受体(RTK)经 IRS 激活下游信号',
+    sub:'胰岛素受体是 RTK(2α2β 四聚体)，配体结合后自身磷酸化，并把胰岛素受体底物 IRS 磷酸化；磷酸化的 IRS 招募含 SH2 的蛋白(如 Grb2)，启动下游。',
+    legend:[{c:'#c0392b',t:'胰岛素受体'},{c:'#8e5bb5',t:'IRS'},{c:'#2e9e5b',t:'SH2 蛋白'}],
+    phases:[
+      {name:'① 胰岛素受体(RTK 四聚体)',dur:1400,note:'受体为 2α2β 四聚体，属 RTK。'},
+      {name:'② 配体结合→自身磷酸化',dur:1500,note:'胰岛素结合后受体自身磷酸化。'},
+      {name:'③ 磷酸化 IRS',dur:1500,note:'受体把底物 IRS 磷酸化。'},
+      {name:'④ IRS 招募含 SH2 蛋白',dur:1500,note:'磷酸化 IRS 招募含 SH2 的蛋白(如 Grb2)，启动下游。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'胰岛素受体 → IRS → 下游',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var m=AnimKit.membrane(ctx,W,H,{yTop:H*0.30,yBot:H*0.44,cx:W*0.35,gap:70});
+      var x=W*0.35;
+      ctx.strokeStyle='#c0392b';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(x-14,m.yTop-24);ctx.lineTo(x-14,m.yBot+24);ctx.moveTo(x+14,m.yTop-24);ctx.lineTo(x+14,m.yBot+24);ctx.stroke();
+      AnimKit.circle(ctx,x,m.yTop-40,8,'#c0392b','L');
+      if(phaseI>=1) AnimKit.circle(ctx,x-14,m.yBot+16,6,'#2e9e5b','P'), AnimKit.circle(ctx,x+14,m.yBot+16,6,'#2e9e5b','P');
+      AnimKit.label(ctx,'胰岛素受体(2α2β)',x,m.yBot+44,'#c0392b','11px "Microsoft YaHei"');
+      var y=m.yBot+80;
+      AnimKit.pill(ctx,x-70,y,140,32, phaseI>=2?'#8e5bb5':'#e6ecf2','IRS', phaseI>=2?'#fff':'#7a8aa0');
+      if(phaseI>=1) AnimKit.arrow(ctx,x,y-14,x,y-2,'#8aa0b8',2);
+      if(phaseI>=3){ AnimKit.circle(ctx,W*0.72,y+16,16,'#2e9e5b','S'); AnimKit.label(ctx,'含 SH2 蛋白(如 Grb2)',W*0.72,y+48,'#1e7a45','11px "Microsoft YaHei"'); AnimKit.arrow(ctx,x+70,y+16,W*0.72-18,y+16,'#2e9e5b',2.5); }
+      AnimKit.label(ctx,['①RTK四聚体','②结合→自身磷酸化','③磷酸化IRS','④招募含SH2蛋白'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>
