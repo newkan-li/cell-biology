@@ -1521,7 +1521,7 @@
           aw.appendChild(el("div", "animhead", "🎬 动画演示（在老师原图下方）"));
           var ifr = document.createElement("iframe");
           ifr.className = "animframe"; ifr.loading = "lazy"; ifr.setAttribute("title", s.title);
-          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926by");
+          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926bz");
           ifr.onload = function () { var o = jget(PREFIX + "animSeen", {}); if (!o[s.anim]) { o[s.anim] = 1; jset(PREFIX + "animSeen", o); } };
           aw.appendChild(ifr); card.appendChild(aw);
           if (animIO) animIO.observe(ifr); else ifr.src = ifr.getAttribute("data-src");
@@ -2277,6 +2277,9 @@
     };
     var covered = { ch01: 1, ch02: 1, ch03: 1, ch04: 1, ch05: 1, ch07: 1, ch08: 1, ch11: 1 };
     var cur = "all", q = "";
+    var urlSet = {};
+    try { var _q = new URLSearchParams(location.search).get("ch"); if (_q) _q.split(",").forEach(function (c) { if (Z[c]) urlSet[c] = 1; }); } catch (e) { }
+    if (Object.keys(urlSet).length) cur = "__ch";
     ctl.innerHTML = '<div class="fc-chips" id="ztchips"></div><input id="ztsearch" class="ans" placeholder="搜索题干 / 答案…" style="margin-top:6px">' +
       '<button class="navbtn" style="width:auto;margin-top:8px" id="ztQuiz">🎯 真题自测（随机 20 题）</button>';
     var chips = document.getElementById("ztchips");
@@ -2286,15 +2289,14 @@
       chips.appendChild(b);
     }
     chip("全部（17章）", "all"); chip("只看已讲章节", "covered");
-    Object.keys(Z).sort().forEach(function (cid) { chip(esc(names[cid] || cid), cid); });
+    Object.keys(Z).sort().forEach(function (cid) { chip((urlSet[cid] ? "★" : "") + esc(names[cid] || cid), cid); });
     function syncChips() { Array.prototype.forEach.call(chips.children, function (b) { b.classList.toggle("on", b.dataset.v === cur); }); }
-    var urlSet = {};
-    try { var _q = new URLSearchParams(location.search).get("ch"); if (_q) _q.split(",").forEach(function (c) { if (Z[c]) urlSet[c] = 1; }); } catch (e) { }
-    if (Object.keys(urlSet).length) { cur = "__ch"; chip("本章相关真题（" + Object.keys(urlSet).length + "）", "__ch"); syncChips(); }
+    if (Object.keys(urlSet).length) { chip("★ 本章相关真题（" + Object.keys(urlSet).length + "）", "__ch"); syncChips(); }
     var search = document.getElementById("ztsearch");
     search.oninput = function () { q = (search.value || "").trim().toLowerCase(); render(); };
     function render() {
       host.innerHTML = ""; var total = 0;
+      if (cur === "__ch") host.appendChild(el("div", "hint", "仅显示本章相关真题（共 " + Object.keys(urlSet).length + " 个教材章）；点上方章节可查看其他章。"));
       Object.keys(Z).sort().forEach(function (cid) {
         if (cur === "__ch") { if (!urlSet[cid]) return; }
         else if (cur === "covered") { if (!covered[cid]) return; }
@@ -2631,6 +2633,9 @@
     var covered = { ch01: 1, ch02: 1, ch03: 1, ch04: 1, ch05: 1, ch07: 1, ch08: 1, ch11: 1 };
     var TY = [["all", "全部题型"], ["mcq", "选择题"], ["judge", "判断题"], ["fill", "填空题"]];
     var cur = "all", ty = "all", q = "";
+    var urlSet = {};
+    try { var _q = new URLSearchParams(location.search).get("ch"); if (_q) _q.split(",").forEach(function (c) { if (O[c]) urlSet[c] = 1; }); } catch (e) { }
+    if (Object.keys(urlSet).length) cur = "__ch";
     ctl.innerHTML = '<div class="fc-chips" id="zty"></div><div class="fc-chips" id="ztc"></div>' +
       '<input id="ztsearch" class="ans" placeholder="搜索题干 / 答案…" style="margin-top:6px">' +
       '<button class="navbtn" style="width:auto;margin-top:8px" id="ztQuiz">🎯 客观题自测（随机 20 题，可判分）</button>';
@@ -2638,10 +2643,8 @@
     TY.forEach(function (t) { var b = el("button", "fc-chip" + (t[0] === ty ? " on" : ""), t[1]); b.dataset.v = t[0]; b.onclick = function () { ty = t[0]; sync(); render(); }; yc.appendChild(b); });
     function chapChip(label, val) { var b = el("button", "fc-chip" + (val === cur ? " on" : ""), label); b.dataset.v = val; b.onclick = function () { cur = val; sync(); render(); }; cc.appendChild(b); }
     chapChip("全部（17章）", "all"); chapChip("只看已讲章节", "covered");
-    Object.keys(O).sort().forEach(function (cid) { chapChip(esc(names[cid] || cid), cid); });
-    var urlSet = {};
-    try { var _q = new URLSearchParams(location.search).get("ch"); if (_q) _q.split(",").forEach(function (c) { if (O[c]) urlSet[c] = 1; }); } catch (e) { }
-    if (Object.keys(urlSet).length) { cur = "__ch"; chapChip("本章相关（" + Object.keys(urlSet).length + "）", "__ch"); sync(); }
+    Object.keys(O).sort().forEach(function (cid) { chapChip((urlSet[cid] ? "★" : "") + esc(names[cid] || cid), cid); });
+    if (Object.keys(urlSet).length) { chapChip("★ 本章相关（" + Object.keys(urlSet).length + "）", "__ch"); sync(); }
     function sync() {
       Array.prototype.forEach.call(yc.children, function (b) { b.classList.toggle("on", b.dataset.v === ty); });
       Array.prototype.forEach.call(cc.children, function (b) { b.classList.toggle("on", b.dataset.v === cur); });
@@ -2651,6 +2654,7 @@
     function types() { return ty === "all" ? ["mcq", "judge", "fill"] : [ty]; }
     function render() {
       host.innerHTML = ""; var total = 0;
+      if (cur === "__ch") host.appendChild(el("div", "hint", "仅显示本章相关客观真题（共 " + Object.keys(urlSet).length + " 个教材章）；点上方章节可查看其他章。"));
       Object.keys(O).sort().forEach(function (cid) {
         if (!inScope(cid)) return;
         var rows = [];
