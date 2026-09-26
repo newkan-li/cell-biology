@@ -69,6 +69,16 @@ try {
   });
 } catch (e) { }
 
+/* 映射到学习路线“第几讲” */
+let lessons = [];
+try { require(path.join(ROOT, "data", "schedule.js")); lessons = (window.SCHEDULE && window.SCHEDULE.lessons) || []; } catch (e) { }
+const kpLesson = {}, cidFirst = {};
+lessons.forEach(L => {
+  if (!cidFirst[L.ch] || L.n < cidFirst[L.ch]) cidFirst[L.ch] = L.n;
+  (L.pages || []).forEach(p => { if (p && p.k && kpLesson[p.k] == null) kpLesson[p.k] = L.n; });
+});
+items.forEach(x => { x.lesson = (x.kp && kpLesson[x.kp]) || cidFirst[x.cid] || null; });
+
 fs.writeFileSync(path.join(ROOT, "data", "outline.js"), "window.OUTLINE=" + JSON.stringify(items) + ";");
 const byKind = {}, byTier = {};
 items.forEach(x => { byKind[x.kind] = (byKind[x.kind] || 0) + 1; byTier[x.tier] = (byTier[x.tier] || 0) + 1; });

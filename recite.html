@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>背诵 · 名词解释与简答 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926aw">
-<script src="assets/theme.js?v=20260926aw"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926ax">
+<script src="assets/theme.js?v=20260926ax"></script>
 <style>
 .rbar2{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
 .rbar2 select,.rbar2 input{padding:5px 8px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:#fff}
@@ -61,6 +61,7 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
   <p class="noprint"><a href="index.html">← 返回首页</a> ｜ <a href="recite.html">✍️ 背诵/默写</a> ｜ <a href="guide.html">🚀 上手指南</a> ｜ <a href="flashcards.html">🃏 闪卡</a> ｜ <a href="review.html">🔁 今日复习</a> ｜ <a href="report.html">📊 学习报告</a> ｜ <a href="802.html">📋 802 真题</a></p>
 
   <div class="rbar2 noprint">
+    <select id="flesson" title="按学习路线 30 讲分批"></select>
     <select id="fch"></select>
     <select id="ftier" title="分层：必背优先，了解层可选">
       <option value="必背">分层：必背</option>
@@ -85,7 +86,8 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
 </div>
 <div id="printarea"></div>
 
-<script src="data/outline.js?v=20260926aw"></script>
+<script src="data/schedule.js?v=20260926ax"></script>
+<script src="data/outline.js?v=20260926ax"></script>
 <script>
 (function () {
   var ALL = window.OUTLINE || [];
@@ -94,15 +96,23 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
   function save() { try { localStorage.setItem(KEY, JSON.stringify(marks)); } catch (e) { } }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   var KIND = { term: "名解", short: "简答", calc: "论述" };
-  var host = document.getElementById("host"), fch = document.getElementById("fch"), ftier = document.getElementById("ftier"), fkind = document.getElementById("fkind"), fundo = document.getElementById("fundo"), fq = document.getElementById("fq"), rprog = document.getElementById("rprog");
+  var host = document.getElementById("host"), flesson = document.getElementById("flesson"), fch = document.getElementById("fch"), ftier = document.getElementById("ftier"), fkind = document.getElementById("fkind"), fundo = document.getElementById("fundo"), fq = document.getElementById("fq"), rprog = document.getElementById("rprog");
 
   var chs = []; ALL.forEach(function (x) { if (x.cid && chs.indexOf(x.cid) < 0) chs.push(x.cid); });
   fch.innerHTML = '<option value="">全部章节</option>' + chs.map(function (c) { var t = (ALL.find(function (x) { return x.cid === c; }) || {}).ctitle || c; return '<option value="' + c + '">' + esc(String(t).slice(0, 16)) + "</option>"; }).join("");
 
+  var LESSONS = (window.SCHEDULE && window.SCHEDULE.lessons) || [];
+  if (LESSONS.length) {
+    flesson.innerHTML = '<option value="">全部讲次</option>' + LESSONS.map(function (L) {
+      return '<option value="' + L.n + '">第 ' + L.n + ' 讲 · ' + esc(String(L.chTitle || "").replace(/^第[一二三四五六七八九十]+章\s*/, "").slice(0, 8)) + '</option>';
+    }).join("") + '<option value="none">未分批（tb 教材章/术语表）</option>';
+  } else { flesson.style.display = "none"; }
+
   function list() {
-    var c = fch.value, k = fkind.value, u = fundo.checked, q = fq.value.trim().toLowerCase(), t = ftier.value;
+    var c = fch.value, k = fkind.value, u = fundo.checked, q = fq.value.trim().toLowerCase(), t = ftier.value, L = flesson.value;
     return ALL.filter(function (x) {
       if (t && x.tier !== t) return false;
+      if (L === "none") { if (x.lesson) return false; } else if (L && x.lesson !== +L) return false;
       if (c && x.cid !== c) return false;
       if (k && x.kind !== k) return false;
       if (u && marks[x.id] === "ok") return false;
@@ -123,7 +133,7 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
       var kp = x.kp ? '<a href="' + x.cid + '.html#s_' + esc(x.kp) + '">📄 讲义页</a>' : "";
       return '<div class="ritem" data-id="' + esc(x.id) + '">' +
         '<div class="rq"><span class="rtier t-' + esc(x.tier || "了解") + '">' + esc(x.tier || "了解") + '</span><span class="rtag">' + (KIND[x.kind] || "题") + '</span>' + esc(x.q) + '</div>' +
-        (x.ctitle ? '<div class="rr">' + esc(x.ctitle) + '</div>' : "") +
+        (x.ctitle ? '<div class="rr">' + esc(x.ctitle) + (x.lesson ? ' · 第 ' + x.lesson + ' 讲' : ' · 未分批') + '</div>' : "") +
         '<div class="rbtns">' +
           '<button data-a="keys">💡 关键词提纲</button>' +
           '<button data-a="ans">📖 完整答案</button>' +
@@ -145,13 +155,14 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
     if (marks[id] === a) { delete marks[id]; item.querySelector('[data-a="' + a + '"]').classList.remove("on"); } else { marks[id] = a; }
     save(); prog();
   });
-  [fch, ftier, fkind, fundo].forEach(function (el) { el.addEventListener("change", render); });
+  [flesson, fch, ftier, fkind, fundo].forEach(function (el) { el.addEventListener("change", render); });
   fq.addEventListener("input", render);
 
   document.getElementById("prbtn").addEventListener("click", function () {
     var arr = list(), withAns = document.getElementById("prans").checked;
-    var tierSel = ftier.value || "全部";
-    var head = '<div class="phead">细胞生物学 · 名词解释/简答 默写纸　［' + esc(tierSel) + '］　共 ' + arr.length + ' 题　' + new Date().toLocaleDateString() + '</div>';
+    var tierSel = ftier.value || "全部", ls = flesson.value;
+    var lname = ls === "" ? "" : (ls === "none" ? " · 未分批" : " · 第 " + ls + " 讲");
+    var head = '<div class="phead">细胞生物学 · 名词解释/简答 默写纸　［' + esc(tierSel) + lname + '］　共 ' + arr.length + ' 题　' + new Date().toLocaleDateString() + '</div>';
     document.getElementById("printarea").innerHTML = head + (arr.map(function (x, i) {
       var lines = '<div class="plines"><div></div><div></div><div></div></div>';
       return '<div class="pitem"><div class="pq"><span class="pseq">' + (i + 1) + '.</span>[' + (KIND[x.kind] || "题") + '] ' + esc(x.q) +
