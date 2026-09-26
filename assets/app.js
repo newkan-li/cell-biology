@@ -137,6 +137,12 @@
   function passedSet(cid, rec) { var o = passedAll(); o[cid] = rec; jset(PREFIX + "passed", o); }
 
   function todayStr(d) { d = d || new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+  function isoWeek(d) {
+    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    var day = d.getUTCDay() || 7; d.setUTCDate(d.getUTCDate() + 4 - day);
+    var y = d.getUTCFullYear(), start = new Date(Date.UTC(y, 0, 1));
+    return y + "-W" + Math.ceil(((d - start) / 86400000 + 1) / 7);
+  }
   function bumpTask(kind) {
     var all = jget(TASK_KEY, {}), t = todayStr();
     if (!all[t]) all[t] = { read: 0, review: 0, practice: 0 };
@@ -1515,7 +1521,7 @@
           aw.appendChild(el("div", "animhead", "🎬 动画演示（在老师原图下方）"));
           var ifr = document.createElement("iframe");
           ifr.className = "animframe"; ifr.loading = "lazy"; ifr.setAttribute("title", s.title);
-          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926bm");
+          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926bn");
           ifr.onload = function () { var o = jget(PREFIX + "animSeen", {}); if (!o[s.anim]) { o[s.anim] = 1; jset(PREFIX + "animSeen", o); } };
           aw.appendChild(ifr); card.appendChild(aw);
           if (animIO) animIO.observe(ifr); else ifr.src = ifr.getAttribute("data-src");
@@ -2027,6 +2033,10 @@
         if (!o.best || pct > o.best) { o.best = pct; o.bestTs = Date.now(); }
         o.last = pct; o.lastTs = Date.now(); o.n = current.length; o.mode = examMode;
         jset(PREFIX + "examBest", o);
+        var wk = isoWeek(new Date()), wb = jget(PREFIX + "weekBoss", {}), cw = wb[wk] || { runs: 0 };
+        cw.runs++; cw.last = pct; if (!cw.best || pct > cw.best) cw.best = pct;
+        cw.n = current.length; cw.mode = examMode; cw.ts = Date.now();
+        wb[wk] = cw; jset(PREFIX + "weekBoss", wb);
       } catch (e) { }
       var h = '<div class="statsbox"><h3 style="margin:0">📊 成绩</h3>' +
         "<p>得分（客观自动 + 主观自评）：<b>" + ok + " / " + current.length + "</b>（" + Math.round(ok * 100 / total) + "%）" + (auto ? " · 时间到自动交卷" : "") + "</p>" +

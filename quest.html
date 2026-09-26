@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>闯关模式 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926bm">
-<script src="assets/theme.js?v=20260926bm"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926bn">
+<script src="assets/theme.js?v=20260926bn"></script>
 <style>
 .qtop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
 .qbar{flex:1;min-width:180px;height:12px;background:#eef2f8;border-radius:8px;overflow:hidden}
@@ -93,6 +93,13 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   </div>
 
   <div class="statsbox" style="margin-top:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+      <h3 style="margin:0">🗡️ 每周 Boss（限时模拟）</h3><span class="qstat" id="qwbstat"></span>
+    </div>
+    <div id="qweekly" style="margin-top:8px"></div>
+  </div>
+
+  <div class="statsbox" style="margin-top:14px">
     <h3 style="margin:0 0 6px">📅 节奏与时间预算</h3>
     <div id="qpace"></div>
   </div>
@@ -101,16 +108,16 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   <footer style="margin-top:20px">仅供个人学习使用</footer>
 </div>
 
-<script src="data/manifest.js?v=20260926bm"></script>
-<script src="data/outline.js?v=20260926bm"></script>
-<script src="data/schedule.js?v=20260926bm"></script>
-<script src="data/expmap.js?v=20260926bm"></script>
-<script src="data/chapmeta.js?v=20260926bm"></script>
-<script src="data/zhenti.js?v=20260926bm"></script>
-<script src="data/ztobj.js?v=20260926bm"></script>
-<script src="data/history.js?v=20260926bm"></script>
-<script src="data/methods.js?v=20260926bm"></script>
-<script src="data/hotexp.js?v=20260926bm"></script>
+<script src="data/manifest.js?v=20260926bn"></script>
+<script src="data/outline.js?v=20260926bn"></script>
+<script src="data/schedule.js?v=20260926bn"></script>
+<script src="data/expmap.js?v=20260926bn"></script>
+<script src="data/chapmeta.js?v=20260926bn"></script>
+<script src="data/zhenti.js?v=20260926bn"></script>
+<script src="data/ztobj.js?v=20260926bn"></script>
+<script src="data/history.js?v=20260926bn"></script>
+<script src="data/methods.js?v=20260926bn"></script>
+<script src="data/hotexp.js?v=20260926bn"></script>
 <script>
 (function () {
   var PREFIX = "cellbio_";
@@ -144,6 +151,14 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   var PLAN = jget(PREFIX + "plan", { exam: "2027-12-20" });
   var DAILY = jget(PREFIX + "daily", { read: 8, practice: 20, review: 5, cards: 10, recite: 5 });
   var PACE = jget(PREFIX + "pace", { perLevel: 5, rounds: 2 });
+  var WEEKBOSS = jget(PREFIX + "weekBoss", {});
+  var WB_TARGET = jget(PREFIX + "weekBossTarget", 70);
+  function isoWeek(d) {
+    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    var day = d.getUTCDay() || 7; d.setUTCDate(d.getUTCDate() + 4 - day);
+    var y = d.getUTCFullYear(), start = new Date(Date.UTC(y, 0, 1));
+    return y + "-W" + Math.ceil(((d - start) / 86400000 + 1) / 7);
+  }
   function todayStr(d) { d = d || new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
   function streakCount() { var n = 0, d = new Date(); for (var i = 0; i < 3650; i++) { if (STK.days && STK.days[todayStr(d)]) { n++; d.setDate(d.getDate() - 1); } else break; } return n; }
   function starStr(k, n) { return '<span class="stars">' + new Array(k + 1).join("★") + new Array(n - k + 1).join("☆") + "</span>"; }
@@ -268,6 +283,21 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   try { skipEl.checked = localStorage.getItem("cellbio_questSkip") === "1"; } catch (e) { }
   skipEl.addEventListener("change", function () { try { localStorage.setItem("cellbio_questSkip", skipEl.checked ? "1" : "0"); } catch (e) { } render(); });
 
+  function renderWeekly() {
+    var wk = isoWeek(new Date()), wb = WEEKBOSS[wk] || null;
+    var best = wb ? wb.best : null, runs = wb ? wb.runs : 0;
+    var done = best != null && best >= WB_TARGET;
+    var dow = new Date().getDay() || 7, leftDays = 7 - dow;
+    document.getElementById("qweekly").innerHTML =
+      '<div class="qtasks">' +
+      '<div class="qt ' + (done ? "done" : "") + '"><div class="qt-l"><span class="ic">' + (done ? "✅" : "⬜") + '</span><b>🗡️ 本周目标</b><span class="qd">限时模拟成绩 ≥ ' + WB_TARGET + '%</span></div><div class="qt-r"><a href="exam.html">去限时模拟</a><a href="802.html">802 整套</a></div></div>' +
+      '<div class="qt"><div class="qt-l"><span class="ic">📅</span><b>本周成绩</b><span class="qd">' + (best != null ? ("最好 " + best + "% · 完成 " + runs + " 次") : "本周还没测") + '</span></div><div class="qt-r">目标 <input type="number" min="10" max="100" id="qwt" value="' + WB_TARGET + '" style="width:56px">%</div></div>' +
+      '<div class="qt"><div class="qt-l"><span class="ic">⏳</span><b>本周剩余</b><span class="qd">' + leftDays + ' 天</span></div></div>' +
+      '</div>';
+    document.getElementById("qwbstat").textContent = done ? "本周已达标 🎉" : ("目标 ≥" + WB_TARGET + "%");
+    var inp = document.getElementById("qwt");
+    if (inp) inp.onchange = function () { WB_TARGET = Math.max(10, Math.min(100, parseInt(inp.value, 10) || 70)); jset(PREFIX + "weekBossTarget", WB_TARGET); renderWeekly(); };
+  }
   function render() {
     var allow = skipEl.checked;
     var doneCount = 0, prevDone = true, host = "", nextRec = null;
@@ -351,6 +381,7 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
     Object.keys(PASSED).forEach(function (cid) { var p = PASSED[cid]; if (p && p.passed) passedN++; if (p && (p.best || 0) > bestMax) bestMax = p.best || 0; });
     var masteredRecite = 0; OUTLINE.forEach(function (x) { if (RECITE[x.id] === "ok") masteredRecite++; });
     var fcN = Object.keys(FC).length, streak = streakCount();
+    var _wb = WEEKBOSS[isoWeek(new Date())], weeklyDone = !!(_wb && _wb.best >= WB_TARGET);
     var ACH = [
       { icon: "🚩", t: "出发", d: "通关第 1 关", ok: doneCount >= 1 },
       { icon: "📗", t: "学而时习", d: "通关 5 关", ok: doneCount >= 5 },
@@ -364,7 +395,8 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
       { icon: "⭐", t: "满星关", d: "任一章满任务（7/7）", ok: (function () { return stats.some(function (s) { return s.doneN === s.n; }); })() },
       { icon: "🎬", t: "动画达人", d: "观看动画 ≥50 个", ok: (function () { return Object.keys(ANIMSEEN).length >= 50; })() },
       { icon: "❌", t: "清道夫", d: "错题清零的章 ≥10", ok: (function () { return stats.filter(function (s) { return s.extra && !s.extra.wrong; }).length >= 10; })() },
-      { icon: "🎓", t: "全书通关", d: "20 章全通 + 模拟 ≥70%", ok: (doneCount >= stats.length && ((function () { return jget(PREFIX + "examBest", {}).best || 0; })()) >= 70) }
+      { icon: "🎓", t: "全书通关", d: "20 章全通 + 模拟 ≥70%", ok: (doneCount >= stats.length && ((function () { return jget(PREFIX + "examBest", {}).best || 0; })()) >= 70) },
+      { icon: "🗡️", t: "周 Boss", d: "本周限时模拟 ≥ 目标", ok: weeklyDone }
     ];
     var got = ACH.filter(function (a) { return a.ok; }).length;
     document.getElementById("qachv").innerHTML = ACH.map(function (a) {
@@ -388,6 +420,7 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
 
     renderDaily();
     renderPace(doneCount, lDone, lTot);
+    renderWeekly();
   }
   render();
 })();
