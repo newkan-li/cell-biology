@@ -495,6 +495,13 @@
       kps = q.kps || "";
     }
     box.appendChild(el("p", "qq", title));
+    var tmpl = el("details", "tmpl");
+    tmpl.innerHTML = "<summary>📝 答题模板（先看结构再作答）</summary><div class='tmpl-body'>" +
+      (kind === "term"
+        ? "【名词解释模板】定义（属 + 种差）＋ 1–2 条关键特征 ＋（可选）实例/意义。力求准确、简练，一般 3–5 分。"
+        : "【简答/论述答题模板】<br>① <b>点名概念</b>：先给核心名词下定义（是什么）。<br>② <b>分步机制/过程</b>：按顺序或分类，用“首先/其次/此外”写清环节（怎么发生）。<br>③ <b>举例或证据</b>：给出典型实验、实例或数据支持。<br>④ <b>结论/意义</b>：一句话总结作用、意义或应用。") +
+      "</div>";
+    box.appendChild(tmpl);
     var ta = el("textarea", "ta");
     ta.placeholder = (kind === "term")
       ? "在此用键盘输入你的定义（先自己写，再展开标准定义核对；内容会自动保存）"
@@ -513,27 +520,31 @@
       (kps ? '<div class="kps">' + esc(kps) + "</div>" : "");
     box.appendChild(det);
     var bar = el("div", "self");
-    var bOk = el("button", "ok", "✓ 我会（掌握）"), bNo = el("button", "no", "✗ 我不会");
-    bar.appendChild(bOk); bar.appendChild(bNo); box.appendChild(bar);
+    bar.appendChild(el("span", "rubric", "自评：对照“踩分点”，要点完整=掌握；漏 1–2 个要点=部分；写不出或方向错=不会。"));
+    var bOk = el("button", "ok", "✓ 掌握"), bPart = el("button", "part", "△ 部分"), bNo = el("button", "no", "✗ 不会");
+    bar.appendChild(bOk); bar.appendChild(bPart); bar.appendChild(bNo); box.appendChild(bar);
     var cb = causeBox(cid, q.id); box.appendChild(cb);
     box.appendChild(hwBox(cid, q.id, kind !== "term"));
 
     function mark(state) {
       var store = selfStore(cid); var rec = store[q.id] || { ok: 0, miss: 0 };
-      if (state === "ok") { rec.ok++; rec.miss = Math.max(0, rec.miss - 1); } else { rec.miss++; rec.ok = Math.max(0, rec.ok - 1); }
+      if (state === "ok") { rec.ok++; rec.miss = Math.max(0, rec.miss - 1); }
+      else if (state === "part") { rec.part = (rec.part || 0) + 1; }
+      else { rec.miss++; rec.ok = Math.max(0, rec.ok - 1); }
       rec.state = state; store[q.id] = rec; jset(skey(cid, "self"), store); touch(cid);
-      bOk.classList.toggle("on", state === "ok"); bNo.classList.toggle("on", state === "no");
+      bOk.classList.toggle("on", state === "ok"); bPart.classList.toggle("on", state === "part"); bNo.classList.toggle("on", state === "no");
       cb.style.display = state === "no" ? "flex" : "none";
       if (state === "no") {
         addWrong(cid, { id: q.id, type: kind, q: (kind === "term" ? q.term : q.q), correct: (kind === "term" ? q.def : (kind === "calc" ? (q.a || q.steps) : q.a)), chosen: "(自评不会)", cause: "", ts: Date.now() });
       } else { clearWrong(cid, q.id); }
       kpRecord(q.kp, state === "ok");
-      if (state === "no") srsRate(q.id, 0); else if (srsGet(q.id)) srsRate(q.id, 2);
+      if (state === "no") srsRate(q.id, 0); else if (state === "part") srsRate(q.id, 1); else if (srsGet(q.id)) srsRate(q.id, 2);
     }
     bOk.onclick = function () { mark("ok"); };
+    bPart.onclick = function () { mark("part"); };
     bNo.onclick = function () { mark("no"); };
     var st = selfStore(cid)[q.id];
-    if (st && st.state) { bOk.classList.toggle("on", st.state === "ok"); bNo.classList.toggle("on", st.state === "no"); if (st.state === "no") cb.style.display = "flex"; }
+    if (st && st.state) { bOk.classList.toggle("on", st.state === "ok"); bPart.classList.toggle("on", st.state === "part"); bNo.classList.toggle("on", st.state === "no"); if (st.state === "no") cb.style.display = "flex"; }
     return box;
   }
 
@@ -1283,7 +1294,7 @@
     HW.init(cid);
     document.title = ch.title + " · 细胞生物学";
     var aside = document.getElementById("sidebar"), main = document.getElementById("main");
-    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="guide.html">🚀 上手指南</a><a href="schedule.html">🧭 学习路线</a><a href="report.html">📊 学习报告</a><a href="animations.html">🎬 动画总目录</a><a href="history.html">🕰 科学史</a><a href="methods.html">🧪 实验方法</a><a href="experiments.html">🔬 实验一览</a><a href="mindmap.html">🕸 跨章总图</a><a href="textbook.html">📚 教材对照表</a><a href="compare.html">🔗 对比速记表</a><a href="zhenti.html">📋 历年真题</a><a href="802.html">📋 802 真题</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
+    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="guide.html">🚀 上手指南</a><a href="faq.html">❓ 常见问题</a><a href="schedule.html">🧭 学习路线</a><a href="report.html">📊 学习报告</a><a href="animations.html">🎬 动画总目录</a><a href="history.html">🕰 科学史</a><a href="methods.html">🧪 实验方法</a><a href="experiments.html">🔬 实验一览</a><a href="mindmap.html">🕸 跨章总图</a><a href="textbook.html">📚 教材对照表</a><a href="compare.html">🔗 对比速记表</a><a href="zhenti.html">📋 历年真题</a><a href="802.html">📋 802 真题</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
     aside.appendChild(el("div", "grp", "各模块（概念 + 考题）"));
     ch.modules.forEach(function (m) {
       var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a);
@@ -1504,7 +1515,7 @@
           aw.appendChild(el("div", "animhead", "🎬 动画演示（在老师原图下方）"));
           var ifr = document.createElement("iframe");
           ifr.className = "animframe"; ifr.loading = "lazy"; ifr.setAttribute("title", s.title);
-          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926ah");
+          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926ai");
           aw.appendChild(ifr); card.appendChild(aw);
           if (animIO) animIO.observe(ifr); else ifr.src = ifr.getAttribute("data-src");
         }
