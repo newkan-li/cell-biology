@@ -83,7 +83,8 @@ window.AnimKit = (function () {
       noteEl.innerHTML = '阶段：<b>' + cfg.phases[i].name + '</b>' + (cfg.phases[i].note ? ' —— ' + cfg.phases[i].note : '');
       reportH();
     }
-    function reset() { S = {}; if (cfg.init) cfg.init(S); phaseI = 0; applyPhase(0); }
+    function startPhase() { var m = /[?&]p=(\d+)/.exec(location.search); var n = m ? parseInt(m[1], 10) : 0; return Math.max(0, Math.min(cfg.phases.length - 1, n || 0)); }
+    function reset() { S = {}; if (cfg.init) cfg.init(S); phaseI = startPhase(); for (var i = 0; i < phaseI; i++) { if (cfg.phases[i].ap) cfg.phases[i].ap(S); } applyPhase(phaseI); }
     var last = performance.now();
     function tick() {
       var now = performance.now(), dt = now - last; last = now; if (dt > 200) dt = 33; fc++;
