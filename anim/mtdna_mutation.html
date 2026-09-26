@@ -1,0 +1,33 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>线粒体DNA突变</title><link rel="stylesheet" href="anim.css?v=20260926e"></head><body>
+<script src="anim.js?v=20260926e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'线粒体 DNA 突变与衰老',
+    sub:'线粒体 DNA 缺乏组蛋白保护、修复能力弱，突变随年龄积累，导致呼吸链/能量供应下降，与衰老及多种线粒体病相关。',
+    legend:[{c:'#2e9e5b',t:'正常 mtDNA'},{c:'#c0392b',t:'突变 mtDNA'}],
+    phases:[
+      {name:'① 线粒体与 mtDNA',dur:1400,note:'线粒体含自身 DNA(mtDNA)。'},
+      {name:'② 缺乏保护/修复弱',dur:1500,note:'mtDNA 缺乏组蛋白保护、修复能力弱。'},
+      {name:'③ 突变随年龄积累',dur:1600,note:'突变逐渐积累，呼吸链功能下降。'},
+      {name:'④ 能量下降→衰老',dur:1500,note:'能量供应下降，与衰老/线粒体病相关。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'线粒体 DNA 突变',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.5;
+      ctx.fillStyle='#e8f7ee';ctx.strokeStyle='#2e9e5b';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(W*0.38,cy,120,70,0,0,7);ctx.fill();ctx.stroke();
+      // mtDNA 环
+      var mut=phaseI>=2?(phaseI>=3?5:3):0;
+      ctx.strokeStyle='#2e9e5b';ctx.lineWidth=5;ctx.beginPath();ctx.arc(W*0.38,cy,40,0,7);ctx.stroke();
+      for(var i=0;i<mut;i++){ var a=i/mut*Math.PI*2; AnimKit.circle(ctx,W*0.38+40*Math.cos(a),cy+40*Math.sin(a),7,'#c0392b','X'); }
+      AnimKit.label(ctx,'mtDNA',W*0.38,cy-56,'#1e7a45','12px "Microsoft YaHei"');
+      AnimKit.label(ctx, phaseI>=1?'缺乏组蛋白保护、修复弱':'',W*0.38,cy+92,'#45687f','11px "Microsoft YaHei"');
+      if(phaseI>=3){ AnimKit.arrow(ctx,W*0.62,cy,W*0.8,cy,'#c0392b',3); AnimKit.label(ctx,'能量↓ → 衰老 / 线粒体病',W*0.72,cy-20,'#c0392b','bold 12px "Microsoft YaHei"'); }
+      else if(phaseI>=2) AnimKit.label(ctx,'突变随年龄积累 → 呼吸链↓',W*0.72,cy,'#c0392b','bold 12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①mtDNA','②保护弱/修复弱','③突变积累','④能量↓→衰老'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

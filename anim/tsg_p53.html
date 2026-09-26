@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>p53抑癌</title><link rel="stylesheet" href="anim.css?v=20260926e"></head><body>
+<script src="anim.js?v=20260926e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'p53：与人类肿瘤相关性最高的抑癌基因',
+    sub:'p53 被称为“基因组卫士”：DNA 受损时被激活，启动 p21 使周期阻滞以利修复；损伤严重或修复失败则诱导凋亡。约半数癌症中 p53 突变或缺失。',
+    legend:[{c:'#c0392b',t:'DNA损伤'},{c:'#8e5bb5',t:'p53'},{c:'#2e9e5b',t:'p21→阻滞'}],
+    phases:[
+      {name:'① DNA 损伤',dur:1400,note:'辐射/化学物造成 DNA 损伤。'},
+      {name:'② p53 被稳定/激活',dur:1500,note:'p53 被磷酸化稳定并激活。'},
+      {name:'③ p21→G1 阻滞',dur:1600,note:'p53 启动 p21，抑制 CDK，使周期停在 G1 以利修复。'},
+      {name:'④ 修复失败→凋亡',dur:1500,note:'损伤严重则诱导凋亡；p53 突变则失去此保护。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'p53：基因组卫士',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.5, x0=W*0.2, step=W*0.26;
+      AnimKit.pill(ctx,x0-60,cy-20,120,40, phaseI>=0?'#c0392b':'#e6ecf2','DNA 损伤', phaseI>=0?'#fff':'#7a8aa0');
+      AnimKit.pill(ctx,x0+step-60,cy-20,120,40, phaseI>=1?'#8e5bb5':'#e6ecf2','p53 激活', phaseI>=1?'#fff':'#7a8aa0');
+      AnimKit.pill(ctx,x0+step*2-70,cy-20,140,40, phaseI>=2?'#2e9e5b':'#e6ecf2','p21→G1 阻滞', phaseI>=2?'#fff':'#7a8aa0');
+      if(phaseI>=0) AnimKit.arrow(ctx,x0+60,cy,x0+step-62,cy,'#8aa0b8',2);
+      if(phaseI>=1) AnimKit.arrow(ctx,x0+step+60,cy,x0+step*2-72,cy,'#8aa0b8',2);
+      if(phaseI>=3){ AnimKit.pill(ctx,W-160,cy+70,140,36,'#c0392b','修复失败→凋亡','#fff'); AnimKit.arrow(ctx,x0+step*2+70,cy+18,W-160,cy+66,'#c0392b',2.2); }
+      AnimKit.label(ctx,'约半数癌症中 p53 突变或缺失 → 失去“卫士”',W/2,cy+120,'#c0392b','bold 12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①DNA损伤','②p53激活','③p21→G1阻滞','④修复失败→凋亡'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

@@ -1,0 +1,34 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自分泌生长刺激</title><link rel="stylesheet" href="anim.css?v=20260926e"></head><body>
+<script src="anim.js?v=20260926e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'癌细胞的自分泌生长刺激',
+    sub:'癌细胞能自己合成生长因子并作用于自身受体，持续刺激增殖，从而失去对正常生长信号的依赖(体外不依赖血清)。',
+    legend:[{c:'#c0392b',t:'癌细胞'},{c:'#2e9e5b',t:'生长因子'}],
+    phases:[
+      {name:'① 正常细胞需外源生长因子',dur:1400,note:'正常细胞依赖外部(血清)生长因子。'},
+      {name:'② 癌细胞自己合成生长因子',dur:1500,note:'癌细胞能不正常地合成生长因子。'},
+      {name:'③ 作用于自身受体',dur:1600,note:'生长因子结合自身受体，自分泌刺激。'},
+      {name:'④ 持续增殖/不依赖血清',dur:1500,note:'细胞持续增殖，体外培养不依赖血清。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'癌细胞的自分泌刺激',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.5;
+      // 正常细胞
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=2;ctx.beginPath();ctx.arc(W*0.25,cy,60,0,7);ctx.stroke();
+      AnimKit.label(ctx,'正常细胞',W*0.25,cy+80,'#45687f','12px "Microsoft YaHei"');
+      AnimKit.circle(ctx,W*0.25-90,cy,9,'#2e9e5b','G'); AnimKit.arrow(ctx,W*0.25-80,cy,W*0.25-38,cy,'#2e9e5b',2); AnimKit.label(ctx,'外部生长因子',W*0.25-70,cy-24,'#1e7a45','11px "Microsoft YaHei"');
+      // 癌细胞
+      ctx.strokeStyle='#c0392b';ctx.lineWidth=2;ctx.beginPath();ctx.arc(W*0.7,cy,60,0,7);ctx.stroke();
+      AnimKit.label(ctx,'癌细胞',W*0.7,cy+80,'#c0392b','12px "Microsoft YaHei"');
+      if(phaseI>=1){ AnimKit.circle(ctx,W*0.7-30,cy-34,9,'#2e9e5b','G'); }
+      if(phaseI>=2){ AnimKit.arrow(ctx,W*0.7-24,cy-30,W*0.7+20,cy-18,'#2e9e5b',2.5); AnimKit.circle(ctx,W*0.7+26,cy-14,8,'#5a7fa8','R'); }
+      if(phaseI>=3) AnimKit.label(ctx,'自身合成→自身受体→持续增殖(不依赖血清)',W*0.7,cy+108,'#c0392b','bold 11px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①需外源因子','②自己合成因子','③作用自身受体','④持续增殖/不依赖血清'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

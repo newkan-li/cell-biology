@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>非整倍体</title><link rel="stylesheet" href="anim.css?v=20260926e"></head><body>
+<script src="anim.js?v=20260926e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'癌细胞的染色体异常：非整倍体与易位',
+    sub:'癌细胞常出现染色体非整倍体(aneuploidy)——染色体缺失或增加；也有易位、双微体等，导致基因表达紊乱。',
+    legend:[{c:'#5a7fa8',t:'正常二倍体'},{c:'#c0392b',t:'癌:非整倍体'}],
+    phases:[
+      {name:'① 正常二倍体',dur:1400,note:'正常体细胞是二倍体，染色体数目稳定。'},
+      {name:'② 染色体数目异常',dur:1500,note:'癌细胞出现非整倍体：缺失或增加。'},
+      {name:'③ 易位/结构异常',dur:1600,note:'还可出现易位、双微体等结构异常。'},
+      {name:'④ 基因表达紊乱',dur:1500,note:'导致原癌基因激活、抑癌基因丢失，促进癌变。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'染色体异常',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.5;
+      function chrom(x,color,extra){ for(var i=0;i<2;i++){ ctx.strokeStyle=color;ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(x+i*6,cy-60);ctx.lineTo(x+i*6,cy+60);ctx.stroke(); } if(extra){ ctx.strokeStyle=color;ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(x+16,cy-50);ctx.lineTo(x+16,cy+40);ctx.stroke(); } }
+      AnimKit.label(ctx,'正常(2n)',W*0.25,cy-84,'#45687f','12px "Microsoft YaHei"');
+      chrom(W*0.25-8,'#5a7fa8',false);
+      AnimKit.label(ctx,'癌:非整倍体',W*0.68,cy-84,'#c0392b','12px "Microsoft YaHei"');
+      chrom(W*0.68-24,'#c0392b',true);
+      if(phaseI>=1) AnimKit.label(ctx,'缺失/增加',W*0.68,cy+80,'#c0392b','11px "Microsoft YaHei"');
+      if(phaseI>=2){ ctx.strokeStyle='#8e5bb5';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(W*0.85,cy-40);ctx.lineTo(W*0.95,cy+20);ctx.stroke(); AnimKit.label(ctx,'易位',W*0.9,cy+40,'#6a4a8a','11px "Microsoft YaHei"'); }
+      if(phaseI>=3) AnimKit.label(ctx,'基因表达紊乱 → 促癌变',W/2,cy+120,'#c0392b','bold 12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①正常2n','②非整倍体','③易位/结构异常','④基因表达紊乱'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

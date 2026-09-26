@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>点突变</title><link rel="stylesheet" href="anim.css?v=20260926e"></head><body>
+<script src="anim.js?v=20260926e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'原癌基因点突变：一个碱基之差，开关卡死',
+    sub:'点突变：基因中一个核苷酸改变即可使原癌基因产物持续活化。如膀胱癌细胞的 c-Ha-ras 与正常细胞仅差一个核苷酸，却使 Ras 持续激活。',
+    legend:[{c:'#2e9e5b',t:'正常 Ras(GDP 关)'},{c:'#c0392b',t:'突变 Ras(GTP 常开)'}],
+    phases:[
+      {name:'① 正常原癌基因',dur:1400,note:'正常 ras 产物按需激活、能自动关闭。'},
+      {name:'② 点突变(一个碱基)',dur:1600,note:'一个核苷酸改变即导致产物构象/活性改变。'},
+      {name:'③ 产物持续活化',dur:1600,note:'突变 Ras 的 GTPase 失活、开关卡在开。'},
+      {name:'④ 细胞增殖失控',dur:1500,note:'持续信号使细胞过度增殖，促成癌变。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'点突变与癌基因激活',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.45;
+      function gene(x,txt,col){ AnimKit.pill(ctx,x-70,cy-18,140,36,col,txt,'#fff'); }
+      if(phaseI===0){ gene(W/2,'ras(GDP→关)','#2e9e5b'); }
+      else { gene(W*0.35,'ras 正常','#2e9e5b'); gene(W*0.68,'ras 点突变','#c0392b');
+        AnimKit.arrow(ctx,W*0.35+70,cy,W*0.68-72,cy,'#c0392b',2.5); AnimKit.label(ctx,'一个碱基之差',W/2,cy-38,'#c0392b','12px "Microsoft YaHei"'); }
+      if(phaseI>=2){ AnimKit.circle(ctx,W*0.68,cy+80,16,'#c0392b','R'); AnimKit.label(ctx,'GTP 不能水解→持续开',W*0.68,cy+110,'#c0392b','12px "Microsoft YaHei"'); }
+      if(phaseI>=3) AnimKit.label(ctx,'产物持续活化 → 细胞增殖失控',W/2,cy+150,'#c0392b','bold 12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①正常原癌基因','②一个碱基改变','③产物持续活化','④增殖失控'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

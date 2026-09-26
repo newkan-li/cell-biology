@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>过量产生后淘汰</title><link rel="stylesheet" href="anim.css?v=20260926e"></head><body>
+<script src="anim.js?v=20260926e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'神经发育：过量产生后淘汰，使数量匹配',
+    sub:'脊椎动物神经发育中约 50% 的原始神经元与靶细胞建立连接、获得足够 NGF 才能存活；未连接者凋亡，使神经细胞与靶细胞数量相匹配。',
+    legend:[{c:'#2e9e5b',t:'存活(获 NGF)'},{c:'#c0392b',t:'凋亡(无连接)'}],
+    phases:[
+      {name:'① 过量产生神经元',dur:1400,note:'胚胎中产生的神经细胞通常是过量的。'},
+      {name:'② 竞争靶细胞的 NGF',dur:1500,note:'靶细胞分泌数量有限的 NGF。'},
+      {name:'③ 未连接者凋亡',dur:1600,note:'未与靶细胞建立连接的神经元发生凋亡。'},
+      {name:'④ 数量匹配/正确网络',dur:1500,note:'使神经细胞与靶细胞数量匹配，建立正确网络。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'过量产生后淘汰',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var cy=H*0.5, tx=W*0.78;
+      AnimKit.circle(ctx,tx,cy,30,'#8e5bb5','靶'); AnimKit.label(ctx,'靶细胞(NGF 有限)',tx,cy+52,'#6a4a8a','11px "Microsoft YaHei"');
+      var alive=phaseI>=3?3:(phaseI>=2?4:6);
+      for(var i=0;i<6;i++){ var x=W*0.16+i*54, col=i<alive?'#2e9e5b':'#c0392b';
+        AnimKit.circle(ctx,x,cy-90,12,col,null);
+        if(i<alive){ ctx.strokeStyle='#2e9e5b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,cy-78);ctx.lineTo(tx,cy-28);ctx.stroke(); }
+        else if(phaseI>=2){ ctx.strokeStyle='#c0392b';ctx.setLineDash([4,4]);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,cy-78);ctx.lineTo(x+10,cy-40);ctx.stroke();ctx.setLineDash([]); } }
+      AnimKit.label(ctx,phaseI>=3?'数量匹配 → 正确神经网络':'竞争有限的 NGF，未连接者凋亡',W/2,cy+90,phaseI>=3?'#1e7a45':'#c0392b','bold 12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①过量产生','②竞争有限NGF','③未连接者凋亡','④数量匹配/正确网络'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>
