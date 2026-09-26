@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>闯关模式 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926cd">
-<script src="assets/theme.js?v=20260926cd"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926ce">
+<script src="assets/theme.js?v=20260926ce"></script>
 <style>
 .qtop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
 .qbar{flex:1;min-width:180px;height:12px;background:#eef2f8;border-radius:8px;overflow:hidden}
@@ -85,6 +85,7 @@ html[data-theme="dark"] .exq-ex{background:#2a2618;border-color:#4a4326;color:#e
 .exq-acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
 .exq-msg{margin-top:5px;font-size:12px}
 .exq-msg.ok{color:#1a7f37}.exq-msg.no{color:#c0392b}.exq-msg.part{color:#9a6b00}
+.exq-foot{margin-top:5px}
 .exq-ans{margin-top:5px;font-size:12.3px;color:#25405a;background:#f3f8ff;border:1px solid #cfe0ee;border-radius:6px;padding:5px 8px}
 .exq-e{color:#5b6b7b;margin-top:3px}
 html[data-theme="dark"] .exq-q{background:#1b2531;border-color:#33475a}
@@ -159,18 +160,18 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   <footer style="margin-top:20px">仅供个人学习使用</footer>
 </div>
 
-<script src="data/manifest.js?v=20260926cd"></script>
-<script src="data/outline.js?v=20260926cd"></script>
-<script src="data/schedule.js?v=20260926cd"></script>
-<script src="data/expmap.js?v=20260926cd"></script>
-<script src="data/chapmeta.js?v=20260926cd"></script>
-<script src="data/zhenti.js?v=20260926cd"></script>
-<script src="data/ztobj.js?v=20260926cd"></script>
-<script src="data/history.js?v=20260926cd"></script>
-<script src="data/methods.js?v=20260926cd"></script>
-<script src="data/hotexp.js?v=20260926cd"></script>
-<script src="data/kpqa.js?v=20260926cd"></script>
-<script src="data/deriveqa.js?v=20260926cd"></script>
+<script src="data/manifest.js?v=20260926ce"></script>
+<script src="data/outline.js?v=20260926ce"></script>
+<script src="data/schedule.js?v=20260926ce"></script>
+<script src="data/expmap.js?v=20260926ce"></script>
+<script src="data/chapmeta.js?v=20260926ce"></script>
+<script src="data/zhenti.js?v=20260926ce"></script>
+<script src="data/ztobj.js?v=20260926ce"></script>
+<script src="data/history.js?v=20260926ce"></script>
+<script src="data/methods.js?v=20260926ce"></script>
+<script src="data/hotexp.js?v=20260926ce"></script>
+<script src="data/kpqa.js?v=20260926ce"></script>
+<script src="data/deriveqa.js?v=20260926ce"></script>
 <script>
 (function () {
   var PREFIX = "cellbio_";
@@ -435,18 +436,30 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
       var numRow = (item.n && item.n.length) ? '<div class="exq-fill"><input class="ans" data-qi="' + qi + '" placeholder="输入数值答案（可含单位，如 11180 或 5e5）"><button class="exq-btn" data-qi="' + qi + '" data-act="submitcalc">提交判分</button></div>' : "";
       body = numRow + '<textarea class="ta" rows="2" data-qi="' + qi + '" placeholder="' + (numRow ? "（可选）写出你的推导过程" : "先自己写要点，再点“参考答案”核对") + '"></textarea><div class="exq-acts"><button class="exq-btn" data-qi="' + qi + '" data-act="showans">📖 参考答案</button><button class="exq-btn ok" data-qi="' + qi + '" data-act="self" data-s="ok">✓ 掌握</button><button class="exq-btn part" data-qi="' + qi + '" data-act="self" data-s="part">△ 部分</button><button class="exq-btn no" data-qi="' + qi + '" data-act="self" data-s="no">✗ 不会</button></div>';
     }
-    return '<div class="exq-q" data-qi="' + qi + '"><div class="exq-qt"><span class="qk">' + esc(kn) + "</span> " + esc(item.q) + "</div>" + body + '<div class="exq-msg"></div><div class="exq-ans" hidden></div></div>';
+    return '<div class="exq-q" data-qi="' + qi + '"><div class="exq-qt"><span class="qk">' + esc(kn) + "</span> " + esc(item.q) + "</div>" + body + '<div class="exq-msg"></div><div class="exq-ans" hidden></div><div class="exq-foot" hidden><button class="exq-btn" data-qi="' + qi + '" data-act="retry">🔁 重做</button></div></div>';
   }
   function onQClick(ev) {
     var b = ev.target.closest ? ev.target.closest("[data-qi]") : null; if (!b) return;
     var qi = +b.dataset.qi, ctx = QPOOL[qi]; if (!ctx) return;
-    var box = b.closest(".exq-q"), item = ctx.item, cid = ctx.cid, msg = box.querySelector(".exq-msg"), ansEl = box.querySelector(".exq-ans");
+    var box = b.closest(".exq-q"), item = ctx.item, cid = ctx.cid, msg = box.querySelector(".exq-msg"), ansEl = box.querySelector(".exq-ans"), foot = box.querySelector(".exq-foot");
     function reveal(correctText, ok, chosen) {
       recordQ(cid, item, chosen, ok, correctText);
       ansEl.hidden = false;
       ansEl.innerHTML = "<b>正确答案：</b>" + esc(correctText) + (item.e ? '<div class="exq-e">' + esc(item.e) + "</div>" : "");
       msg.className = "exq-msg " + (ok ? "ok" : "no");
       msg.textContent = ok ? "✓ 答对（已掌握）" : "✗ 答错，已加入错题本";
+      if (foot) foot.hidden = false;
+    }
+    if (b.dataset.act === "retry") {
+      delete box.dataset.done;
+      Array.prototype.forEach.call(box.querySelectorAll(".exq-opt"), function (o) { o.disabled = false; o.classList.remove("right", "wrong"); });
+      Array.prototype.forEach.call(box.querySelectorAll('[data-act="self"]'), function (x) { x.disabled = false; x.classList.remove("on"); });
+      var fi = box.querySelector("input"); if (fi) { fi.disabled = false; fi.value = ""; }
+      var ti = box.querySelector("textarea"); if (ti) ti.value = "";
+      ansEl.hidden = true; ansEl.innerHTML = "";
+      msg.className = "exq-msg"; msg.textContent = "";
+      if (foot) foot.hidden = true;
+      return;
     }
     if (b.classList.contains("exq-opt")) {
       if (box.dataset.done) return; box.dataset.done = "1";
