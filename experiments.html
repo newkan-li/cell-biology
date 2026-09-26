@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>实验一览 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926ad">
-<script src="assets/theme.js?v=20260926ad"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926ae">
+<script src="assets/theme.js?v=20260926ae"></script>
 <style>
 .egrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px;margin-top:10px}
 .ecard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
@@ -21,9 +21,10 @@ html[data-theme="dark"] .ecard{background:#1b2531;border-color:#2c3a4a}
 html[data-theme="dark"] .ecard h3{color:#7fb3d8}
 html[data-theme="dark"] .ecard .ex{color:#c9d6e2}
 html[data-theme="dark"] .ecard .elink{background:#22303d;border-color:#33475a;color:#a8c6e0}
-.ecard.masked .ex{color:transparent;cursor:pointer;user-select:none;background:repeating-linear-gradient(45deg,#f2f5f9,#f2f5f9 8px,#e9eef5 8px,#e9eef5 16px);border-radius:6px}
+.ecard.masked .ex{color:transparent !important;cursor:pointer;user-select:none;background:repeating-linear-gradient(45deg,#f2f5f9,#f2f5f9 8px,#e9eef5 8px,#e9eef5 16px);border-radius:6px}
 .ecard.masked .ex::after{content:"👁 点击显示结论";color:#5b6b7b;font-size:12px}
 html[data-theme="dark"] .ecard.masked .ex{background:repeating-linear-gradient(45deg,#232c36,#232c36 8px,#1d2530 8px,#1d2530 16px)}
+html[data-theme="dark"] .ecard.masked .ex::after{color:#9fb2c7}
 .ecard .mfreq{font-size:11px;border-radius:20px;padding:1px 8px;margin-left:6px}
 .mf-高频{background:#fde3e0;color:#b03a2e;border:1px solid #f0c1ba}
 .mf-一般{background:#fdf3d9;color:#9a6b00;border:1px solid #f0dca8}
@@ -49,17 +50,17 @@ html[data-theme="dark"] .mf-了解{background:#232c36;color:#b9c6d6;border-color
   <input id="q" class="ans" placeholder="搜索实验名 / 关键词 …" style="margin-top:6px;width:100%">
   <div class="statsbox" id="hotbox">
     <h3 style="margin:0 0 4px">⭐ 高频实验 → 结论（考研速记）</h3>
-    <div class="hint" style="margin-bottom:6px">按“实验 → 证明了什么 → 考频”整理，优先背这些。<button id="maskbtn" class="navbtn" style="width:auto;margin:0 0 0 8px;display:inline-block;padding:2px 10px">🧠 遮住结论自测</button></div>
+    <div class="hint" style="margin-bottom:6px">按“实验 → 证明了什么 → 考频”整理，优先背这些。<button id="maskbtn" class="navbtn" style="width:auto;margin:0 0 0 8px;display:inline-block;padding:2px 10px">🧠 遮住结论自测</button> <span class="hint">（点卡片逐条显示；再点此按钮 → 全部显示）</span></div>
     <div class="egrid" id="hothost"></div>
   </div>
   <div id="count" class="hint" style="margin-top:6px"></div>
   <div id="host"></div>
   <footer style="margin-top:24px">仅供个人学习使用</footer>
 </div>
-<script src="data/manifest.js?v=20260926ad"></script>
-<script src="data/hotexp.js?v=20260926ad"></script>
-<script src="data/explist.js?v=20260926ad"></script>
-<script src="data/xref.js?v=20260926ad"></script>
+<script src="data/manifest.js?v=20260926ae"></script>
+<script src="data/hotexp.js?v=20260926ae"></script>
+<script src="data/explist.js?v=20260926ae"></script>
+<script src="data/xref.js?v=20260926ae"></script>
 <script>
 (function () {
   var ALL = window.EXPLIST || [];
