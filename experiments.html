@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f5c8b">
+<title>实验一览 · 细胞生物学</title>
+<link rel="stylesheet" href="assets/style.css?v=20260926o">
+<script src="assets/theme.js?v=20260926o"></script>
+<style>
+.egrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px;margin-top:10px}
+.ecard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.ecard h3{margin:0 0 3px;font-size:14.5px;color:#1f5c8b;border:0;padding:0}
+.ecard .em{font-size:11.5px;color:#5b6b7b;margin-bottom:6px}
+.ecard .ex{font-size:12.6px;color:#33465c;line-height:1.75;white-space:pre-wrap}
+.ecard .elink{display:inline-block;margin-top:8px;font-size:11.5px;text-decoration:none;color:#234f7a;background:#eef4fb;border:1px solid #ccd8ea;border-radius:20px;padding:2px 9px}
+html[data-theme="dark"] .ecard{background:#1b2531;border-color:#2c3a4a}
+html[data-theme="dark"] .ecard h3{color:#7fb3d8}
+html[data-theme="dark"] .ecard .ex{color:#c9d6e2}
+html[data-theme="dark"] .ecard .elink{background:#22303d;border-color:#33475a;color:#a8c6e0}
+</style>
+</head>
+<body data-page="experiments">
+<div class="wrap">
+  <header class="top">
+    <h1>🔬 实验一览</h1>
+    <p>各章经典实验与方法（含步骤与结果判读）｜ 点“前往讲义页”看上下文</p>
+  </header>
+  <p><a href="index.html">← 返回首页</a> ｜ <a href="experiments.html">🔬 实验一览</a>　<a href="schedule.html">🧭 学习路线</a> ｜ <a href="animations.html">🎬 动画目录</a> ｜ <a href="history.html">🕰 科学史</a> ｜ <a href="methods.html">🧪 实验方法</a> ｜ <a href="glossary.html">📖 术语表</a></p>
+  <div class="fc-chips" id="chips"></div>
+  <input id="q" class="ans" placeholder="搜索实验名 / 关键词 …" style="margin-top:6px;width:100%">
+  <div id="count" class="hint" style="margin-top:6px"></div>
+  <div id="host"></div>
+  <footer style="margin-top:24px">仅供个人学习使用</footer>
+</div>
+<script src="data/manifest.js?v=20260926o"></script>
+<script src="data/explist.js?v=20260926o"></script>
+<script>
+(function () {
+  var ALL = window.EXPLIST || [];
+  var cur = "all", kw = "";
+  var byCh = {}; ALL.forEach(function (a) { (byCh[a.ch] = byCh[a.ch] || []).push(a); });
+  var order = Object.keys(byCh).sort();
+  var chips = document.getElementById("chips"), host = document.getElementById("host"), cnt = document.getElementById("count"), qi = document.getElementById("q");
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function shortT(t) { return String(t || "").replace(/\s+/g, " ").replace(/[（(]\s*p[\d\-–,]+\s*[)）]/gi, "").trim(); }
+  function chip(label, val) { var b = document.createElement("button"); b.className = "fc-chip" + (val === cur ? " on" : ""); b.textContent = label; b.dataset.v = val; b.onclick = function () { cur = val; sync(); render(); }; chips.appendChild(b); }
+  chip("全部（" + ALL.length + "）", "all");
+  order.forEach(function (c) { chip((byCh[c][0].chTitle || c).slice(0, 12) + "（" + byCh[c].length + "）", c); });
+  function sync() { Array.prototype.forEach.call(chips.children, function (b) { b.classList.toggle("on", b.dataset.v === cur); }); }
+  qi.oninput = function () { kw = qi.value.trim().toLowerCase(); render(); };
+  function render() {
+    var list = ALL.filter(function (a) {
+      if (cur !== "all" && a.ch !== cur) return false;
+      if (kw && (a.title + a.chTitle + a.ex).toLowerCase().indexOf(kw) < 0) return false;
+      return true;
+    });
+    cnt.textContent = "共 " + list.length + " 个实验";
+    var h = "";
+    order.forEach(function (c) {
+      var arr = list.filter(function (a) { return a.ch === c; });
+      if (!arr.length) return;
+      h += '<div class="statsbox"><h3 style="margin:0 0 4px"><a href="' + c + '.html" style="text-decoration:none">' + esc(arr[0].chTitle) + '</a> <span class="hint">（' + arr.length + '）</span></h3><div class="egrid">';
+      arr.forEach(function (a) {
+        h += '<div class="ecard"><h3>' + esc(shortT(a.title)) + '</h3>' +
+          '<div class="em">p' + esc(a.page) + ' · ' + esc(shortT(a.mod).slice(0, 20)) + '</div>' +
+          '<div class="ex">' + esc(a.ex) + '</div>' +
+          '<a class="elink" href="' + a.ch + '.html#s_' + esc(a.kp) + '">📄 前往讲义页</a></div>';
+      });
+      h += '</div></div>';
+    });
+    host.innerHTML = h || '<p class="empty">没有匹配的实验。</p>';
+  }
+  render();
+})();
+</script>
+</body>
+</html>
