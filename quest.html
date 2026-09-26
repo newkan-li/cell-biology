@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>闯关模式 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926bz">
-<script src="assets/theme.js?v=20260926bz"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926ca">
+<script src="assets/theme.js?v=20260926ca"></script>
 <style>
 .qtop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
 .qbar{flex:1;min-width:180px;height:12px;background:#eef2f8;border-radius:8px;overflow:hidden}
@@ -122,6 +122,7 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
     <div class="qstat" id="qstat">读取中…</div>
   </div>
   <div class="qnext" id="qnext"></div>
+  <div class="qnext" id="qstuck" style="display:none;background:#fff8e8;border-color:#f0d9a8;color:#5a4a1a"></div>
 
   <div class="qlist" id="qhost"></div>
   <div class="qlist" id="qboss"></div>
@@ -140,6 +141,11 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   </div>
 
   <div class="statsbox" style="margin-top:14px">
+    <h3 style="margin:0 0 6px">📈 本周质检</h3>
+    <div id="qquality" style="margin-top:4px"></div>
+  </div>
+
+  <div class="statsbox" style="margin-top:14px">
     <h3 style="margin:0 0 6px">📅 节奏与时间预算</h3>
     <div id="qpace"></div>
   </div>
@@ -148,18 +154,18 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   <footer style="margin-top:20px">仅供个人学习使用</footer>
 </div>
 
-<script src="data/manifest.js?v=20260926bz"></script>
-<script src="data/outline.js?v=20260926bz"></script>
-<script src="data/schedule.js?v=20260926bz"></script>
-<script src="data/expmap.js?v=20260926bz"></script>
-<script src="data/chapmeta.js?v=20260926bz"></script>
-<script src="data/zhenti.js?v=20260926bz"></script>
-<script src="data/ztobj.js?v=20260926bz"></script>
-<script src="data/history.js?v=20260926bz"></script>
-<script src="data/methods.js?v=20260926bz"></script>
-<script src="data/hotexp.js?v=20260926bz"></script>
-<script src="data/kpqa.js?v=20260926bz"></script>
-<script src="data/deriveqa.js?v=20260926bz"></script>
+<script src="data/manifest.js?v=20260926ca"></script>
+<script src="data/outline.js?v=20260926ca"></script>
+<script src="data/schedule.js?v=20260926ca"></script>
+<script src="data/expmap.js?v=20260926ca"></script>
+<script src="data/chapmeta.js?v=20260926ca"></script>
+<script src="data/zhenti.js?v=20260926ca"></script>
+<script src="data/ztobj.js?v=20260926ca"></script>
+<script src="data/history.js?v=20260926ca"></script>
+<script src="data/methods.js?v=20260926ca"></script>
+<script src="data/hotexp.js?v=20260926ca"></script>
+<script src="data/kpqa.js?v=20260926ca"></script>
+<script src="data/deriveqa.js?v=20260926ca"></script>
 <script>
 (function () {
   var PREFIX = "cellbio_";
@@ -391,6 +397,26 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
       return Math.abs(x - t) <= Math.abs(t) * 0.05 + 1e-9;
     });
   }
+  function kpMastered(kp) {
+    var kq = (KPQA[kp] && KPQA[kp].q) || [];
+    for (var i = 0; i < kq.length; i++) {
+      var q = kq[i], cid = (q.kp ? q.kp.split("_s")[0] : String(q.id).split("_")[0]);
+      if (q.k === "mcq" || q.k === "judge") {
+        var r = jget(skey(cid, q.k), {})[q.id];
+        if (r && r.last != null) {
+          if (String(r.last).trim() === String(q.a).trim()) return true;
+          if (q.k === "mcq" && String(r.last).trim().charAt(0) === String(q.a).trim().charAt(0)) return true;
+        }
+      } else if (q.k === "fill") {
+        var rf = jget(skey(cid, "fill"), {})[q.id];
+        if (rf && rf.last != null && fillOk(q.a, rf.last)) return true;
+      } else {
+        var rs = jget(skey(cid, "self"), {})[q.id];
+        if (rs && rs.state === "ok") return true;
+      }
+    }
+    return false;
+  }
   function buildQHtml(cid, item) {
     var qi = QPOOL.push({ cid: cid, item: item }) - 1;
     var kn = KINDNAME[item.k] || item.k, body = "";
@@ -446,6 +472,42 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
       if (s === "part") { msg.className = "exq-msg part"; msg.textContent = "△ 部分掌握（未计入错题本，建议复习）"; }
     }
   }
+  function weekDates() {
+    var d = new Date(), dow = d.getDay() || 7, mon = new Date(d);
+    mon.setDate(d.getDate() - (dow - 1));
+    var arr = [];
+    for (var i = 0; i < 7; i++) { var x = new Date(mon); x.setDate(mon.getDate() + i); if (x > d) break; arr.push(todayStr(x)); }
+    return arr;
+  }
+  function renderWeeklyQ(mDone, mTot) {
+    var days = weekDates(), read = 0, prac = 0, rev = 0, chal = 0;
+    var CH = jget(PREFIX + "chalDays", {});
+    days.forEach(function (d) { var t = TASKS[d] || {}; read += t.read || 0; prac += t.practice || 0; rev += t.review || 0; if (CH[d]) chal++; });
+    var wb = WEEKBOSS[isoWeek(new Date())] || null;
+    var wrongTotal = 0;
+    try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k && k.indexOf(PREFIX + "wrong:") === 0) { var v = jget(k, []); wrongTotal += (v.length || 0); } } } catch (e) { }
+    function row(ok, txt) { return '<div class="qt ' + (ok ? "done" : "") + '"><span class="ic">' + (ok ? "✅" : "⚠️") + "</span>" + txt + "</div>"; }
+    document.getElementById("qquality").innerHTML = '<div class="qtasks">' +
+      row(chal >= 3, "今日挑战达标 <b>" + chal + "</b>/7 天（建议 ≥3）") +
+      row(read >= 30, "本周学习 <b>" + read + "</b> 页") +
+      row(prac >= 60, "本周练习 <b>" + prac + "</b> 题") +
+      row(rev >= 20, "本周复习 <b>" + rev + "</b> 次") +
+      row(wb && wb.best >= WB_TARGET, "🗡️ 周 Boss 最好 <b>" + (wb && wb.best != null ? wb.best + "%" : "未测") + "</b>（目标 ≥" + WB_TARGET + "%）") +
+      row(wrongTotal === 0, "错题剩余 <b>" + wrongTotal + "</b> 条") +
+      row(mTot === 0 || mDone / mTot >= 0.5, "掌握清单 <b>" + mDone + "/" + mTot + "</b>") +
+      "</div>";
+  }
+  function renderStuck() {
+    var now = Date.now(), stuck = [], el2 = document.getElementById("qstuck");
+    stats.forEach(function (s, i) {
+      if (s.done) return;
+      var last = jget(skey(s.cid, "last"), 0) || 0;
+      if (last && now - last > 3 * 86400000) stuck.push({ i: i + 1, cid: s.cid, days: Math.floor((now - last) / 86400000) });
+    });
+    if (!stuck.length) { el2.style.display = "none"; return; }
+    el2.style.display = "block";
+    el2.innerHTML = "⏳ <b>卡点提醒</b>（超过 3 天未推进）：" + stuck.slice(0, 8).map(function (x) { return '第 ' + x.i + ' 关（' + x.days + ' 天）<a href="' + x.cid + '.html">去推进</a>'; }).join("　");
+  }
   function render() {
     QPOOL.length = 0;
     var allow = true;
@@ -460,6 +522,10 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
       var sub = "第 " + s.cid.replace(/^(ch|tb)/, "") + (lt.length ? " 章 · 涉及第 " + lt[0].n + (lt.length > 1 ? "–" + lt[lt.length - 1].n : "") + " 讲" : " 章 · tb 教材章");
       function group(label, chips) { return '<div class="qgroup"><b>' + label + '</b><div class="subs">' + chips + '</div></div>'; }
       var seenO = s.seenObj || {};
+      /* 掌握 = 做对关联考题（无关联题时回退：讲义页已读） */
+      function masteredOf(kp, readFlag) { return (KPQA[kp] && KPQA[kp].q && KPQA[kp].q.length) ? kpMastered(kp) : !!readFlag; }
+      var expMast = (s.exp || []).map(function (e) { return masteredOf(e.k, e.done); });
+      var expMastDone = expMast.filter(Boolean).length;
       function hKey(h) { return "h:" + h.ch + ":" + String(h.t).slice(0, 24); }
       function hotKey(h) { return "hot:" + String(h.e).slice(0, 24); }
       var lessonDone = 0, lessonTot = (s.lessons || []).length;
@@ -467,28 +533,28 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
         var ok = L.ratio >= 0.8; if (ok) lessonDone++;
         return '<a class="sub' + (ok ? " ok" : "") + '" href="schedule.html?l=' + L.n + '" title="打开学习路线·第' + L.n + '讲（含该讲页码与讲义链接）">' + (ok ? "✅" : "◯") + " 第" + L.n + "讲 " + esc(L.name || "") + " <b>" + L.done + "/" + L.total + "</b></a>";
       }).join("");
-      var expBox = (s.exp || []).map(function (e) {
+      var expBox = (s.exp || []).map(function (e, ei) {
         var q = KPQA[e.k] || {};
         var pts = (q.p || []).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("");
         var qs = (q.q || []).map(function (x) { return buildQHtml(s.cid, x); }).join("");
         var ex = q.ex ? '<div class="exq-ex">🧪 ' + esc(q.ex) + "</div>" : "";
-        return '<details class="exq"><summary>' + (e.done ? "✅" : "◯") + " " + esc(String(e.title).slice(0, 28)) + "</summary>" +
+        return '<details class="exq"><summary>' + (expMast[ei] ? "✅" : "◯") + " " + esc(String(e.title).slice(0, 28)) + "（" + (expMast[ei] ? "已掌握" : "做对考题即掌握") + "）</summary>" +
           '<div class="exq-body">' +
           (pts ? "<b>考点：</b><ul class=\"exq-pts\">" + pts + "</ul>" : "") + ex +
           "<b>对应考题（先作答，再自动判分；答错自动进错题本）：</b>" + (qs ? '<div class="exq-qlist">' + qs + "</div>" : '<span class="hint">暂无精确对应题，去 <a href="' + s.cid + '.html">本章练习</a> / <a href="recite.html?ch=' + s.cid + '">背诵</a> 巩固</span>') +
           '<div style="margin-top:4px"><a class="sub" href="' + s.cid + '.html#s_' + esc(e.k) + '">📄 讲义页</a></div>' +
           "</div></details>";
       }).join("");
-      var hist = HIST.filter(function (h) { return h.ch === s.cid; }).map(function (h) { return { h: h, done: h.kp ? !!seenO[h.kp] : !!READMARKS[hKey(h)], key: hKey(h) }; });
-      var meth = METH.filter(function (m) { return m.kp && m.kp.split("_s")[0] === s.cid; }).map(function (m) { return { m: m, done: m.kp ? !!seenO[m.kp] : false }; });
-      var hot = HOTEXP.filter(function (h) { return h.ch === s.cid; }).map(function (h) { return { h: h, done: h.kp ? !!seenO[h.kp] : !!READMARKS[hotKey(h)], key: hotKey(h) }; });
+      var hist = HIST.filter(function (h) { return h.ch === s.cid; }).map(function (h) { return { h: h, done: h.kp ? masteredOf(h.kp, seenO[h.kp]) : !!READMARKS[hKey(h)], key: hKey(h) }; });
+      var meth = METH.filter(function (m) { return m.kp && m.kp.split("_s")[0] === s.cid; }).map(function (m) { return { m: m, done: m.kp ? masteredOf(m.kp, seenO[m.kp]) : false }; });
+      var hot = HOTEXP.filter(function (h) { return h.ch === s.cid; }).map(function (h) { return { h: h, done: h.kp ? masteredOf(h.kp, seenO[h.kp]) : !!READMARKS[hotKey(h)], key: hotKey(h) }; });
       function chipKp(obj, key, label, title) {
-        if (obj.kp) return '<a class="sub' + (obj.done ? " ok" : "") + '" href="' + obj.href + '" title="' + esc(title) + '（对应讲义页已读即掌握）">' + (obj.done ? "✅" : "◯") + " " + esc(label) + "</a>";
+        if (obj.kp) return '<a class="sub' + (obj.done ? " ok" : "") + '" href="' + obj.href + '" title="' + esc(title) + '（做对对应考题即掌握）">' + (obj.done ? "✅" : "◯") + " " + esc(label) + "</a>";
         return '<a class="sub' + (obj.done ? " ok" : "") + '" href="#" data-mk="' + esc(key) + '" title="点击标记已掌握：' + esc(title) + '">' + (obj.done ? "✅" : "◯") + " " + esc(label) + "</a>";
       }
       function kpTip(kp, base) { var p = kp && KPQA[kp] && KPQA[kp].p && KPQA[kp].p[0]; return base + (p ? " · 考点：" + p : ""); }
       var histChips = hist.map(function (x) { return chipKp({ kp: x.h.kp, done: x.done, href: x.h.kp ? x.h.ch + ".html#s_" + esc(x.h.kp) : "#" }, x.key, String(x.h.t).slice(0, 16), kpTip(x.h.kp, x.h.t)); }).join("");
-      var methChips = meth.map(function (x) { return '<a class="sub' + (x.done ? " ok" : "") + '" href="methods.html#mth_' + METH.indexOf(x.m) + '" title="' + esc(kpTip(x.m.kp, x.m.t)) + '（对应讲义页已读即掌握）">' + (x.done ? "✅" : "◯") + " " + esc(x.m.t) + "</a>"; }).join("");
+      var methChips = meth.map(function (x) { return '<a class="sub' + (x.done ? " ok" : "") + '" href="methods.html#mth_' + METH.indexOf(x.m) + '" title="' + esc(kpTip(x.m.kp, x.m.t)) + '（做对对应考题即掌握）">' + (x.done ? "✅" : "◯") + " " + esc(x.m.t) + "</a>"; }).join("");
       var hotChips = hot.map(function (x) { return chipKp({ kp: x.h.kp, done: x.done, href: x.h.kp ? "experiments.html?ch=" + s.cid + "#hot_" + esc(x.h.kp) : "experiments.html?ch=" + s.cid }, x.key, String(x.h.e).slice(0, 16), kpTip(x.h.kp, x.h.e)); }).join("");
       var ex = s.extra || {}, exChips = [];
       var derList = (CHAPMETA[s.cid] && CHAPMETA[s.cid].derive) || [];
@@ -508,7 +574,7 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
       var histDone = hist.filter(function (x) { return x.done; }).length;
       var methDone = meth.filter(function (x) { return x.done; }).length;
       var hotDone = hot.filter(function (x) { return x.done; }).length;
-      var masteryDone = lessonDone + expDone + histDone + methDone + hotDone + derDoneN;
+      var masteryDone = lessonDone + expMastDone + histDone + methDone + hotDone + derDoneN;
       var masteryTot = lessonTot + (s.exp || []).length + hist.length + meth.length + hot.length + derList.length;
       s.masteryDone = masteryDone; s.masteryTot = masteryTot;
       var groups = [];
@@ -615,6 +681,8 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
     renderDaily();
     renderPace(doneCount, lDone, lTot);
     renderWeekly();
+    renderWeeklyQ(mDone, mTot);
+    renderStuck();
   }
   document.getElementById("qhost").addEventListener("click", onQClick);
   render();
