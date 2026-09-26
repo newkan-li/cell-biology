@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>实验一览 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926s">
-<script src="assets/theme.js?v=20260926s"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926t">
+<script src="assets/theme.js?v=20260926t"></script>
 <style>
 .egrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px;margin-top:10px}
 .ecard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
@@ -51,12 +51,14 @@ html[data-theme="dark"] .mf-了解{background:#232c36;color:#b9c6d6;border-color
   <div id="host"></div>
   <footer style="margin-top:24px">仅供个人学习使用</footer>
 </div>
-<script src="data/manifest.js?v=20260926s"></script>
-<script src="data/hotexp.js?v=20260926s"></script>
-<script src="data/explist.js?v=20260926s"></script>
+<script src="data/manifest.js?v=20260926t"></script>
+<script src="data/hotexp.js?v=20260926t"></script>
+<script src="data/explist.js?v=20260926t"></script>
+<script src="data/xref.js?v=20260926t"></script>
 <script>
 (function () {
   var ALL = window.EXPLIST || [];
+  var XB = (window.XREF && window.XREF.byKp) || {};
   var cur = "all", kw = "";
   var byCh = {}; ALL.forEach(function (a) { (byCh[a.ch] = byCh[a.ch] || []).push(a); });
   var order = Object.keys(byCh).sort();
@@ -81,9 +83,13 @@ html[data-theme="dark"] .mf-了解{background:#232c36;color:#b9c6d6;border-color
       if (!arr.length) return;
       h += '<div class="statsbox"><h3 style="margin:0 0 4px"><a href="' + c + '.html" style="text-decoration:none">' + esc(arr[0].chTitle) + '</a> <span class="hint">（' + arr.length + '）</span></h3><div class="egrid">';
       arr.forEach(function (a) {
-        h += '<div class="ecard"><h3>' + esc(shortT(a.title)) + '</h3>' +
+        var mrefs = XB[a.kp] || [];
+        var mrow = mrefs.length ? '<div class="em" style="margin-top:6px">🧪 相关方法：' + mrefs.map(function (r) {
+          return '<a href="methods.html#mth_' + r.idx + '" style="color:#234f7a;text-decoration:none;border-bottom:1px dotted">' + esc(r.t) + '</a>';
+        }).join("、") + '</div>' : "";
+        h += '<div class="ecard" id="ex_' + esc(a.kp) + '"><h3>' + esc(shortT(a.title)) + '</h3>' +
           '<div class="em">p' + esc(a.page) + ' · ' + esc(shortT(a.mod).slice(0, 20)) + '</div>' +
-          '<div class="ex">' + esc(a.ex) + '</div>' +
+          '<div class="ex">' + esc(a.ex) + '</div>' + mrow +
           '<a class="elink" href="' + a.ch + '.html#s_' + esc(a.kp) + '">📄 前往讲义页</a></div>';
       });
       h += '</div></div>';
@@ -96,7 +102,11 @@ html[data-theme="dark"] .mf-了解{background:#232c36;color:#b9c6d6;border-color
     hh.innerHTML = HOT.map(function (h) {
       var f = h.freq ? '<span class="mfreq mf-' + esc(h.freq) + '">' + esc(h.freq) + '</span>' : "";
       var lk = h.kp ? '<a class="elink" href="' + h.ch + '.html#s_' + esc(h.kp) + '">📄 讲义页</a>' : "";
-      return '<div class="ecard"><h3>' + esc(h.e) + f + '</h3><div class="ex">' + esc(h.c) + '</div>' + lk + '</div>';
+      var mrefs = (h.kp && XB[h.kp]) || [];
+      var mrow = mrefs.length ? '<div class="em" style="margin-top:6px">🧪 相关方法：' + mrefs.map(function (r) {
+        return '<a href="methods.html#mth_' + r.idx + '" style="color:#234f7a;text-decoration:none;border-bottom:1px dotted">' + esc(r.t) + '</a>';
+      }).join("、") + '</div>' : "";
+      return '<div class="ecard" id="hot_' + esc(h.kp) + '"><h3>' + esc(h.e) + f + '</h3><div class="ex">' + esc(h.c) + '</div>' + mrow + lk + '</div>';
     }).join("");
     var maskOn = false, btn = document.getElementById("maskbtn");
     function applyMask() {
