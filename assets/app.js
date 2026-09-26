@@ -1521,7 +1521,7 @@
           aw.appendChild(el("div", "animhead", "🎬 动画演示（在老师原图下方）"));
           var ifr = document.createElement("iframe");
           ifr.className = "animframe"; ifr.loading = "lazy"; ifr.setAttribute("title", s.title);
-          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926bw");
+          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926bx");
           ifr.onload = function () { var o = jget(PREFIX + "animSeen", {}); if (!o[s.anim]) { o[s.anim] = 1; jset(PREFIX + "animSeen", o); } };
           aw.appendChild(ifr); card.appendChild(aw);
           if (animIO) animIO.observe(ifr); else ifr.src = ifr.getAttribute("data-src");
@@ -2242,6 +2242,28 @@
   }
 
   /* ================= 历年真题页 ================= */
+  /* 历年真题题型识别：判断题(对/错) / 选择题(选项内嵌,答案为字母) / 填空 / 其余简答 */
+  function ztParseMC(q, a) {
+    var s = String(q || ""), idx = s.search(/[A-D][.．、]/);
+    if (idx < 0) return null;
+    var stem = s.slice(0, idx).replace(/[（(]\s*[)）]\s*$/, "").trim();
+    var rest = s.slice(idx);
+    var parts = rest.split(/(?=[A-D][.．、])/).filter(function (x) { return /^[A-D][.．、]/.test(x); });
+    if (parts.length < 2) return null;
+    var ansL = String(a || "").trim().charAt(0);
+    if (!/^[A-D]$/.test(ansL)) return null;
+    return { q: stem, o: parts.map(function (p) { return p.replace(/\s+/g, " ").trim(); }), a: ansL };
+  }
+  function ztItemType(x) {
+    var a = String(x.a || "").trim(), q = String(x.q || "");
+    if (/^(对|错|正确|错误|√|×)[。.．]?$/.test(a)) {
+      var aa = a.replace(/[。.．]/g, ""); if (aa === "正确") aa = "对"; if (aa === "错误") aa = "错";
+      return { t: "judge", a: aa };
+    }
+    var mc = ztParseMC(q, a); if (mc) return { t: "mcq", mc: mc };
+    if (/(_{2,}|＿{2,}|[（(]\s*[)）])/.test(q) && a.length <= 20) return { t: "fill" };
+    return { t: "short" };
+  }
   function renderZhentiSub() {
     var ctl = document.getElementById("ztctl"), host = document.getElementById("zthost"), cnt = document.getElementById("ztcount");
     if (!host) return;
@@ -2283,7 +2305,12 @@
         sec.appendChild(el("h2", "", esc(names[cid] || cid) + "（" + arr.length + "）"));
         arr.forEach(function (x, i) {
           total++;
-          sec.appendChild(renderSelf("ZS" + cid, { id: "zts_" + cid + "_" + i, q: x.q, a: x.a, src: x.src }, i + 1, "short"));
+          var id = "zts_" + cid + "_" + i, ty = ztItemType(x), box;
+          if (ty.t === "judge") box = renderJudge("ZS" + cid, { id: id, q: x.q, a: ty.a, e: x.src ? ("来源：" + x.src) : "" }, i + 1);
+          else if (ty.t === "mcq") box = renderMCQ("ZS" + cid, { id: id, q: ty.mc.q, o: ty.mc.o, a: ty.mc.a, e: x.src ? ("来源：" + x.src) : "" }, i + 1);
+          else if (ty.t === "fill") box = renderFill("ZS" + cid, { id: id, q: x.q, a: x.a, e: x.src ? ("来源：" + x.src) : "" }, i + 1);
+          else box = renderSelf("ZS" + cid, { id: id, q: x.q, a: x.a, src: x.src }, i + 1, "short");
+          sec.appendChild(box);
         });
         host.appendChild(sec);
       });
