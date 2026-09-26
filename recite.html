@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f5c8b">
+<title>背诵 · 名词解释与简答 · 细胞生物学</title>
+<link rel="stylesheet" href="assets/style.css?v=20260926au">
+<script src="assets/theme.js?v=20260926au"></script>
+<style>
+.rbar2{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.rbar2 select,.rbar2 input{padding:5px 8px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:#fff}
+.ritem{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:8px 0}
+.rq{font-size:14px;font-weight:600;color:#1f5c8b;line-height:1.7}
+.rtag{font-size:11px;background:#eef4fb;color:#234f7a;border:1px solid #ccd8ea;border-radius:20px;padding:1px 8px;margin-right:6px;font-weight:500}
+.rr{font-size:12.2px;color:#5b6b7b;margin-top:2px}
+.rbtns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.rbtns button{border:1px solid var(--line);background:#fff;border-radius:16px;padding:3px 12px;font-size:12.5px;cursor:pointer}
+.rbtns button.ok.on{background:var(--ok);color:#fff;border-color:var(--ok)}
+.rbtns button.part.on{background:#9a6b00;color:#fff;border-color:#9a6b00}
+.rbtns button.no.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.rbtns a{border:1px solid #ccd8ea;background:#eef4fb;color:#234f7a;border-radius:16px;padding:3px 12px;font-size:12.5px;text-decoration:none}
+.rkeys{margin-top:8px;background:#f7fbff;border:1px dashed #cfe0ee;border-radius:8px;padding:8px 12px;font-size:13px;color:#25405a;line-height:1.8}
+.rkeys b{color:#1f5c8b}
+.rans{margin-top:8px;background:#f3f8ff;border:1px solid #cfe0ee;border-radius:8px;padding:8px 12px;font-size:13px;color:#33465c;line-height:1.8}
+.rprog{font-size:13px;color:#5b6b7b}
+html[data-theme="dark"] .ritem{background:#1b2531;border-color:#2c3a4a}
+html[data-theme="dark"] .rq{color:#7fb3d8}
+html[data-theme="dark"] .rbar2 select,html[data-theme="dark"] .rbar2 input,html[data-theme="dark"] .rbtns button{background:#1b2531;color:#c9d6e2;border-color:#2c3a4a}
+html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;border-color:#33475a;color:#c9d6e2}
+#printarea{display:none}
+.pitem{page-break-inside:avoid;margin:0 0 14px}
+.pq{font-weight:600;font-size:14px;margin-bottom:4px}
+.plines>div{border-bottom:1px dotted #999;height:26px}
+.pa{margin-top:4px;font-size:12.5px;color:#333;border-top:1px dashed #bbb;padding-top:4px}
+@media print{
+  .noprint{display:none!important}
+  body>.wrap{display:none!important}
+  #printarea{display:block!important}
+  body{background:#fff}
+}
+</style>
+</head>
+<body data-page="recite">
+<div class="wrap">
+  <header class="top">
+    <h1>✍️ 背诵 · 名词解释与简答</h1>
+    <p>提纲卡（先看题干想关键词） + 默写自测 + 🖨 打印默写纸（A4）</p>
+  </header>
+  <p class="noprint"><a href="index.html">← 返回首页</a> ｜ <a href="recite.html">✍️ 背诵/默写</a> ｜ <a href="guide.html">🚀 上手指南</a> ｜ <a href="flashcards.html">🃏 闪卡</a> ｜ <a href="review.html">🔁 今日复习</a> ｜ <a href="report.html">📊 学习报告</a> ｜ <a href="802.html">📋 802 真题</a></p>
+
+  <div class="rbar2 noprint">
+    <select id="fch"></select>
+    <select id="fkind">
+      <option value="">全部类型</option>
+      <option value="term">名词解释</option>
+      <option value="short">简答题</option>
+      <option value="calc">论述/推导</option>
+    </select>
+    <label style="font-size:13px"><input type="checkbox" id="fundo"> 只看未掌握</label>
+    <input id="fq" placeholder="搜索题干/关键词…" style="min-width:180px">
+    <button class="navbtn" style="width:auto;margin:0;display:inline-block;padding:4px 10px" id="prbtn">🖨 打印默写纸</button>
+    <label style="font-size:13px"><input type="checkbox" id="prans"> 打印时附答案</label>
+    <span class="rprog" id="rprog"></span>
+  </div>
+  <div id="host"></div>
+  <footer class="noprint" style="margin-top:20px">仅供个人学习使用</footer>
+</div>
+<div id="printarea"></div>
+
+<script src="data/outline.js?v=20260926au"></script>
+<script>
+(function () {
+  var ALL = window.OUTLINE || [];
+  var KEY = "cellbio_recite";
+  var marks = {}; try { marks = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { marks = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(marks)); } catch (e) { } }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  var KIND = { term: "名解", short: "简答", calc: "论述" };
+  var host = document.getElementById("host"), fch = document.getElementById("fch"), fkind = document.getElementById("fkind"), fundo = document.getElementById("fundo"), fq = document.getElementById("fq"), rprog = document.getElementById("rprog");
+
+  var chs = []; ALL.forEach(function (x) { if (x.cid && chs.indexOf(x.cid) < 0) chs.push(x.cid); });
+  fch.innerHTML = '<option value="">全部章节</option>' + chs.map(function (c) { var t = (ALL.find(function (x) { return x.cid === c; }) || {}).ctitle || c; return '<option value="' + c + '">' + esc(String(t).slice(0, 16)) + "</option>"; }).join("");
+
+  function list() {
+    var c = fch.value, k = fkind.value, u = fundo.checked, q = fq.value.trim().toLowerCase();
+    return ALL.filter(function (x) {
+      if (c && x.cid !== c) return false;
+      if (k && x.kind !== k) return false;
+      if (u && marks[x.id] === "ok") return false;
+      if (q && (x.q + " " + (x.keys || []).join(" ") + " " + x.a).toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+  }
+  function prog() {
+    var tot = ALL.length, ok = 0, part = 0, no = 0;
+    ALL.forEach(function (x) { var s = marks[x.id]; if (s === "ok") ok++; else if (s === "part") part++; else if (s === "no") no++; });
+    rprog.textContent = "已掌握 " + ok + " ｜ 部分 " + part + " ｜ 不会 " + no + " ｜ 共 " + tot;
+  }
+  function render() {
+    var arr = list();
+    if (!arr.length) { host.innerHTML = '<p class="hint">没有匹配的条目。</p>'; return; }
+    host.innerHTML = arr.map(function (x) {
+      var st = marks[x.id] || "";
+      var kp = x.kp ? '<a href="' + x.cid + '.html#s_' + esc(x.kp) + '">📄 讲义页</a>' : "";
+      return '<div class="ritem" data-id="' + esc(x.id) + '">' +
+        '<div class="rq"><span class="rtag">' + (KIND[x.kind] || "题") + '</span>' + esc(x.q) + '</div>' +
+        (x.ctitle ? '<div class="rr">' + esc(x.ctitle) + '</div>' : "") +
+        '<div class="rbtns">' +
+          '<button data-a="keys">💡 关键词提纲</button>' +
+          '<button data-a="ans">📖 完整答案</button>' +
+          '<button data-a="ok" class="' + (st === "ok" ? "on" : "") + '">✓ 掌握</button>' +
+          '<button data-a="part" class="' + (st === "part" ? "on" : "") + '">△ 部分</button>' +
+          '<button data-a="no" class="' + (st === "no" ? "on" : "") + '">✗ 不会</button>' + kp +
+        '</div>' +
+        '<div class="rkeys" hidden><b>关键词提纲：</b>' + (x.keys || []).map(esc).join(" ； ") + '</div>' +
+        '<div class="rans" hidden>' + esc(x.a).replace(/\n/g, "<br>") + '</div>' +
+      '</div>';
+    }).join("");
+  }
+  host.addEventListener("click", function (ev) {
+    var b = ev.target.closest ? ev.target.closest("button") : null; if (!b) return;
+    var item = b.closest(".ritem"), id = item.dataset.id, a = b.dataset.a;
+    if (a === "keys") { var e = item.querySelector(".rkeys"); e.hidden = !e.hidden; return; }
+    if (a === "ans") { var e2 = item.querySelector(".rans"); e2.hidden = !e2.hidden; return; }
+    ["ok", "part", "no"].forEach(function (s) { item.querySelector('[data-a="' + s + '"]').classList.toggle("on", s === a); });
+    if (marks[id] === a) { delete marks[id]; item.querySelector('[data-a="' + a + '"]').classList.remove("on"); } else { marks[id] = a; }
+    save(); prog();
+  });
+  [fch, fkind, fundo].forEach(function (el) { el.addEventListener("change", render); });
+  fq.addEventListener("input", render);
+
+  document.getElementById("prbtn").addEventListener("click", function () {
+    var arr = list(), withAns = document.getElementById("prans").checked;
+    document.getElementById("printarea").innerHTML = arr.map(function (x) {
+      var lines = '<div class="plines">' + new Array(4).join("<div></div>") + '<div></div></div>';
+      return '<div class="pitem"><div class="pq">[' + (KIND[x.kind] || "题") + '] ' + esc(x.q) + '</div>' + lines +
+        (withAns ? '<div class="pa">关键词：' + (x.keys || []).map(esc).join(" ； ") + '<br>' + esc(x.a) + '</div>' : "") + '</div>';
+    }).join("") || '<p>没有可打印的条目。</p>';
+    window.print();
+  });
+
+  render(); prog();
+})();
+</script>
+</body>
+</html>
