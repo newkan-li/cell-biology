@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>闯关模式 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926ba">
-<script src="assets/theme.js?v=20260926ba"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926bb">
+<script src="assets/theme.js?v=20260926bb"></script>
 <style>
 .qtop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
 .qbar{flex:1;min-width:180px;height:12px;background:#eef2f8;border-radius:8px;overflow:hidden}
@@ -66,17 +66,30 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   <div class="qnext" id="qnext"></div>
 
   <div class="qlist" id="qhost"></div>
+  <div class="statsbox" style="margin-top:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+      <h3 style="margin:0">✅ 今日挑战</h3><span class="qstat" id="qchstreak"></span>
+    </div>
+    <div id="qdaily" style="margin-top:8px"></div>
+  </div>
+
+  <div class="statsbox" style="margin-top:14px">
+    <h3 style="margin:0 0 6px">📅 节奏与时间预算</h3>
+    <div id="qpace"></div>
+  </div>
+
   <div class="statsbox" style="margin-top:14px"><h3 style="margin:0 0 4px">🏅 成就</h3><div class="achv" id="qachv"></div></div>
   <footer style="margin-top:20px">仅供个人学习使用</footer>
 </div>
 
-<script src="data/manifest.js?v=20260926ba"></script>
-<script src="data/outline.js?v=20260926ba"></script>
-<script src="data/schedule.js?v=20260926ba"></script>
+<script src="data/manifest.js?v=20260926bb"></script>
+<script src="data/outline.js?v=20260926bb"></script>
+<script src="data/schedule.js?v=20260926bb"></script>
 <script>
 (function () {
   var PREFIX = "cellbio_";
   function jget(k, d) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+  function jset(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { } }
   function skey(cid, kind) { return PREFIX + kind + ":" + cid; }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 
@@ -90,9 +103,63 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   var RECITE = jget(PREFIX + "recite", {});
   var KP_KEY = PREFIX + "kpStats";
   var STK = jget(PREFIX + "streak", { days: {} });
+  var TASKS = jget(PREFIX + "tasks", {});
+  var RLOG = jget(PREFIX + "reciteLog", {});
+  var PLAN = jget(PREFIX + "plan", { exam: "2027-12-20" });
+  var DAILY = jget(PREFIX + "daily", { read: 8, practice: 20, review: 5, cards: 10, recite: 5 });
   function todayStr(d) { d = d || new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
   function streakCount() { var n = 0, d = new Date(); for (var i = 0; i < 3650; i++) { if (STK.days && STK.days[todayStr(d)]) { n++; d.setDate(d.getDate() - 1); } else break; } return n; }
   function starStr(k, n) { return '<span class="stars">' + new Array(k + 1).join("★") + new Array(n - k + 1).join("☆") + "</span>"; }
+  function cardsToday() {
+    var t = todayStr(), n = 0;
+    Object.keys(FC).forEach(function (k) { var o = FC[k]; (o.attempts || []).forEach(function (a) { if (a && a.ts && todayStr(new Date(a.ts)) === t) n++; }); });
+    return n;
+  }
+  function chalStreak() { var CH = jget(PREFIX + "chalDays", {}), n = 0, d = new Date(); if (!CH[todayStr(d)]) d.setDate(d.getDate() - 1); for (var i = 0; i < 3650; i++) { if (CH[todayStr(d)]) { n++; d.setDate(d.getDate() - 1); } else break; } return n; }
+  function bar(p) { return '<div class="qprog" style="display:inline-block;width:120px;vertical-align:middle"><i style="width:' + Math.min(100, Math.round(p * 100)) + '%"></i></div>'; }
+  function renderDaily() {
+    var t = todayStr(), td = TASKS[t] || { read: 0, review: 0, practice: 0 };
+    var items = [
+      { k: "read", ic: "📖", t: "学习（已读页）", v: td.read || 0, g: DAILY.read },
+      { k: "practice", ic: "✍️", t: "练习（题）", v: td.practice || 0, g: DAILY.practice },
+      { k: "review", ic: "🔁", t: "复习", v: td.review || 0, g: DAILY.review },
+      { k: "cards", ic: "🃏", t: "闪卡", v: cardsToday(), g: DAILY.cards },
+      { k: "recite", ic: "🧠", t: "背诵掌握", v: RLOG[t] || 0, g: DAILY.recite }
+    ];
+    var all = items.every(function (x) { return x.v >= x.g; });
+    var CH = jget(PREFIX + "chalDays", {});
+    if (all) { if (!CH[t]) { CH[t] = 1; jset(PREFIX + "chalDays", CH); } }
+    document.getElementById("qdaily").innerHTML = '<div class="qtasks">' + items.map(function (x) {
+      var ok = x.v >= x.g;
+      return '<div class="qt ' + (ok ? "done" : "") + '"><span class="ic">' + (ok ? "✅" : "⬜") + "</span>" + x.ic + " " + x.t +
+        " <b>" + Math.min(x.v, x.g) + "/" + x.g + "</b> " + bar(x.g ? x.v / x.g : 0) + '</div>';
+    }).join("") + "</div>" +
+      '<div class="hint" style="margin-top:6px">目标可改：' +
+      ["read", "practice", "review", "cards", "recite"].map(function (k) {
+        return ["学", "练", "复", "卡", "背"][["read", "practice", "review", "cards", "recite"].indexOf(k)] + '<input type="number" min="0" data-dg="' + k + '" value="' + DAILY[k] + '" style="width:52px;margin:0 6px 0 2px">';
+      }).join("") + '</div>';
+    Array.prototype.forEach.call(document.querySelectorAll("#qdaily [data-dg]"), function (inp) {
+      inp.onchange = function () { DAILY[inp.dataset.dg] = Math.max(0, parseInt(inp.value, 10) || 0); jset(PREFIX + "daily", DAILY); renderDaily(); };
+    });
+    document.getElementById("qchstreak").textContent = "连续完成挑战 " + chalStreak() + " 天" + (all ? " · 今日已达成 🎉" : "");
+  }
+  function renderPace(doneCount, lDone, lTot) {
+    var exam = PLAN.exam || "2027-12-20";
+    var days = Math.max(0, Math.ceil((new Date(exam + "T00:00:00") - new Date()) / 86400000));
+    var left = stats.length - doneCount, weeks = Math.max(1, Math.ceil(days / 7));
+    var perWeek = left > 0 ? Math.ceil(left / weeks * 10) / 10 : 0;
+    var perLevel = left > 0 && perWeek > 0 ? (7 / perWeek).toFixed(1) : "—";
+    var lLeft = lTot - lDone;
+    document.getElementById("qpace").innerHTML =
+      '<div class="qtasks">' +
+      '<div class="qt">🗓 距考试 <b>' + days + '</b> 天（' + esc(exam) + '）</div>' +
+      '<div class="qt">🚩 未通关 <b>' + left + '</b> 关</div>' +
+      '<div class="qt">📈 建议每周通 <b>' + perWeek + '</b> 关（约每 ' + perLevel + ' 天 1 关）</div>' +
+      '<div class="qt">🧩 小关卡剩 <b>' + lLeft + '</b> 讲（每天 1 讲约 ' + lLeft + ' 天）</div>' +
+      '</div><div class="hint" style="margin-top:6px">考试日期：<input type="date" id="qexam" value="' + esc(exam) + '"></div>';
+    var ei = document.getElementById("qexam");
+    ei.onchange = function () { PLAN.exam = ei.value || exam; jset(PREFIX + "plan", PLAN); render(); };
+  }
 
   // 每章 必背 条目
   var bibeiByCh = {};
@@ -208,6 +275,9 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
     document.getElementById("qachv").innerHTML = ACH.map(function (a) {
       return '<div class="badge ' + (a.ok ? "" : "locked") + '"><b>' + a.icon + " " + a.t + '</b><span class="bd">' + a.d + '</span></div>';
     }).join("") + '<div class="badge" style="grid-column:1/-1"><b>已获得成就 ' + got + "/" + ACH.length + "</b><span class=\"bd\">继续闯关解锁更多成就</span></div>";
+
+    renderDaily();
+    renderPace(doneCount, lDone, lTot);
   }
   render();
 })();

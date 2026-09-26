@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>背诵 · 名词解释与简答 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926ba">
-<script src="assets/theme.js?v=20260926ba"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926bb">
+<script src="assets/theme.js?v=20260926bb"></script>
 <style>
 .rbar2{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
 .rbar2 select,.rbar2 input{padding:5px 8px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:#fff}
@@ -86,14 +86,16 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
 </div>
 <div id="printarea"></div>
 
-<script src="data/schedule.js?v=20260926ba"></script>
-<script src="data/outline.js?v=20260926ba"></script>
+<script src="data/schedule.js?v=20260926bb"></script>
+<script src="data/outline.js?v=20260926bb"></script>
 <script>
 (function () {
   var ALL = window.OUTLINE || [];
   var KEY = "cellbio_recite";
   var marks = {}; try { marks = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { marks = {}; }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(marks)); } catch (e) { } }
+  function today() { var d = new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+  function bumpLog() { try { var k = "cellbio_reciteLog", o = JSON.parse(localStorage.getItem(k) || "{}"), t = today(); o[t] = (o[t] || 0) + 1; localStorage.setItem(k, JSON.stringify(o)); } catch (e) { } }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   var KIND = { term: "名解", short: "简答", calc: "论述" };
   var host = document.getElementById("host"), flesson = document.getElementById("flesson"), fch = document.getElementById("fch"), ftier = document.getElementById("ftier"), fkind = document.getElementById("fkind"), fundo = document.getElementById("fundo"), fq = document.getElementById("fq"), rprog = document.getElementById("rprog");
@@ -151,8 +153,9 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
     var item = b.closest(".ritem"), id = item.dataset.id, a = b.dataset.a;
     if (a === "keys") { var e = item.querySelector(".rkeys"); e.hidden = !e.hidden; return; }
     if (a === "ans") { var e2 = item.querySelector(".rans"); e2.hidden = !e2.hidden; return; }
+    var before = marks[id];
     ["ok", "part", "no"].forEach(function (s) { item.querySelector('[data-a="' + s + '"]').classList.toggle("on", s === a); });
-    if (marks[id] === a) { delete marks[id]; item.querySelector('[data-a="' + a + '"]').classList.remove("on"); } else { marks[id] = a; }
+    if (marks[id] === a) { delete marks[id]; item.querySelector('[data-a="' + a + '"]').classList.remove("on"); } else { marks[id] = a; if (a === "ok" && before !== "ok") bumpLog(); }
     save(); prog();
   });
   [flesson, fch, ftier, fkind, fundo].forEach(function (el) { el.addEventListener("change", render); });
