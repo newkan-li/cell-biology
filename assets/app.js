@@ -1521,7 +1521,7 @@
           aw.appendChild(el("div", "animhead", "🎬 动画演示（在老师原图下方）"));
           var ifr = document.createElement("iframe");
           ifr.className = "animframe"; ifr.loading = "lazy"; ifr.setAttribute("title", s.title);
-          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926bv");
+          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926bw");
           ifr.onload = function () { var o = jget(PREFIX + "animSeen", {}); if (!o[s.anim]) { o[s.anim] = 1; jset(PREFIX + "animSeen", o); } };
           aw.appendChild(ifr); card.appendChild(aw);
           if (animIO) animIO.observe(ifr); else ifr.src = ifr.getAttribute("data-src");
@@ -2272,23 +2272,22 @@
     var search = document.getElementById("ztsearch");
     search.oninput = function () { q = (search.value || "").trim().toLowerCase(); render(); };
     function render() {
-      var html = "", total = 0;
+      host.innerHTML = ""; var total = 0;
       Object.keys(Z).sort().forEach(function (cid) {
         if (cur === "__ch") { if (!urlSet[cid]) return; }
         else if (cur === "covered") { if (!covered[cid]) return; }
         else if (cur !== "all" && cid !== cur) return;
         var arr = Z[cid].filter(function (x) { return !q || (x.q + " " + x.a).toLowerCase().indexOf(q) >= 0; });
         if (!arr.length) return;
-        html += "<h2>" + esc(names[cid] || cid) + "（" + arr.length + "）</h2>";
+        var sec = el("section");
+        sec.appendChild(el("h2", "", esc(names[cid] || cid) + "（" + arr.length + "）"));
         arr.forEach(function (x, i) {
           total++;
-          html += '<div class="zt"><div class="zt-q"><b>' + (i + 1) + ".</b> " + esc(x.q) + "</div>" +
-            (x.src ? '<div class="zt-src">📌 ' + esc(x.src) + "</div>" : "") +
-            (x.a ? '<details class="sol"><summary>答案</summary><div class="ansbox">' + esc(x.a) + "</div></details>" : "") +
-            "</div>";
+          sec.appendChild(renderSelf("ZS" + cid, { id: "zts_" + cid + "_" + i, q: x.q, a: x.a, src: x.src }, i + 1, "short"));
         });
+        host.appendChild(sec);
       });
-      host.innerHTML = html || '<p class="empty">没有匹配的真题。</p>';
+      if (!total) host.innerHTML = '<p class="empty">没有匹配的真题。</p>';
       if (cnt) cnt.textContent = total;
     }
     function startQuiz() {
@@ -2542,6 +2541,25 @@
       });
       host.appendChild(sec);
     });
+    /* 真题错题（cid 形如 ZS<ch>/ZT<ch>） */
+    var mset = {}; M.forEach(function (m) { mset[m.id] = 1; });
+    var pseudo = [];
+    try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k && k.indexOf(PREFIX + "wrong:") === 0) { var cid = k.slice((PREFIX + "wrong:").length); if (!mset[cid]) pseudo.push(cid); } } } catch (e) { }
+    pseudo.forEach(function (cid) {
+      var list = wrongList(cid); if (!list.length) return; total += list.length;
+      var sec = el("section");
+      var nm = (window.ZT_NAMES && window.ZT_NAMES[cid.replace(/^(ZS|ZT)/, "")]) || cid;
+      sec.appendChild(el("h2", "", "历年/客观真题 · " + esc(nm) + "（" + list.length + "）"));
+      list.slice().reverse().forEach(function (e) {
+        var item = el("div", "wb-entry");
+        item.innerHTML = '<div class="wq">' + esc(e.q) + '<span class="pill">' + esc(kindName(e.type)) + "</span></div>" +
+          '<div class="wa">正确答案：<b>' + esc(e.correct) + "</b></div>" + (e.chosen ? '<div class="wa">你的作答：' + esc(e.chosen) + "</div>" : "");
+        var act = el("div", "act"); var b = el("button", "", "标记已掌握");
+        b.onclick = function () { clearWrong(cid, e.id); item.remove(); };
+        act.appendChild(b); item.appendChild(act); sec.appendChild(item);
+      });
+      host.appendChild(sec);
+    });
     if (!total) host.innerHTML = '<p class="empty">还没有错题记录。去各章练习，答错的题会自动进入这里。</p>';
   }
 
@@ -2602,22 +2620,23 @@
     function inScope(cid) { if (cur === "__ch") return !!urlSet[cid]; if (cur === "covered") return !!covered[cid]; if (cur !== "all") return cid === cur; return true; }
     function types() { return ty === "all" ? ["mcq", "judge", "fill"] : [ty]; }
     function render() {
-      var html = "", total = 0;
+      host.innerHTML = ""; var total = 0;
       Object.keys(O).sort().forEach(function (cid) {
         if (!inScope(cid)) return;
         var rows = [];
         types().forEach(function (t) { (O[cid][t] || []).forEach(function (x) { if (!x.q || x.q.trim().length < 4) return; if (!q || (x.q + " " + (x.o || []).join(" ") + " " + x.a).toLowerCase().indexOf(q) >= 0) rows.push({ t: t, x: x }); }); });
         if (!rows.length) return;
-        html += "<h2>" + esc(names[cid] || cid) + "（" + rows.length + "）</h2>";
+        var sec = el("section");
+        sec.appendChild(el("h2", "", esc(names[cid] || cid) + "（" + rows.length + "）"));
         rows.forEach(function (r, i) {
-          total++; var x = r.x, tn = { mcq: "选择", judge: "判断", fill: "填空" }[r.t];
-          html += '<div class="zt"><div class="zt-q"><b>' + (i + 1) + ".</b> [" + tn + "] " + esc(x.q) + "</div>";
-          if (r.t === "mcq") html += '<div style="margin:4px 0;color:var(--sub)">' + x.o.map(function (o) { return esc(o); }).join("<br>") + "</div>";
-          var ex = r.t === "mcq" ? optsExplain(x) : (r.t === "judge" ? optsExplain({ o: ["对", "错"], a: x.a, oe: x.oe }) : fillExplain(x));
-          html += '<details class="sol"><summary>答案' + (x.src ? "（" + esc(x.src) + "）" : "") + '</summary><div class="ansbox"><b>答案：' + esc(x.a) + "</b>" + (x.e ? '<div style="margin-top:4px">解析：' + esc(x.e).replace(/\n/g, "<br>") + "</div>" : "") + ex + "</div></details></div>";
+          total++; var x = r.x;
+          var o = { id: "ztobj_" + cid + "_" + r.t + "_" + i, q: x.q, o: x.o, a: x.a, e: x.e, oe: x.oe, kp: null, src: x.src };
+          var box = r.t === "mcq" ? renderMCQ("ZT" + cid, o, i + 1) : (r.t === "judge" ? renderJudge("ZT" + cid, o, i + 1) : renderFill("ZT" + cid, o, i + 1));
+          sec.appendChild(box);
         });
+        host.appendChild(sec);
       });
-      host.innerHTML = html || '<p class="empty">没有匹配的客观题。</p>';
+      if (!total) host.innerHTML = '<p class="empty">没有匹配的客观题。</p>';
       if (cnt) cnt.textContent = total;
     }
     function startQuiz() {
