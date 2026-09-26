@@ -1,32 +1,41 @@
 <!doctype html><html lang="zh-CN"><head>
-<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>动态不稳定性</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
-<script src="anim.js?v=20260911e"></script>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>动态不稳定性</title><link rel="stylesheet" href="anim.css?v=20260926b"></head><body>
+<script src="anim.js?v=20260926b"></script>
 <script>
 (function(){
+  var shrinkTargets=[150,150,80,150];
   AnimKit.mount({
-    title:'微管的动态不稳定性与 GTP 帽',
-    sub:'微管末端结合 GTP：有 GTP 帽时持续聚合生长；GTP 水解为 GDP、帽丢失后则转为快速解聚。',
-    legend:[{c:'#2e9e5b',t:'GTP 帽(稳定)'},{c:'#c0392b',t:'GDP 帽(解聚)'}],
+    title:'微管的动态不稳定性：GTP 帽 ↔ GDP 帽',
+    sub:'末端结合 GTP(形成 GTP 帽)时持续聚合生长；GTP 水解为 GDP、帽丢失后转为快速解聚。生长与骤缩随机切换。',
+    legend:[{c:'#2e9e5b',t:'GTP 帽(生长)'},{c:'#c0392b',t:'GDP 帽(解聚)'}],
     phases:[
-      {name:'① 有 GTP 帽：聚合生长',dur:1800,note:'末端为 GTP-微管蛋白，形成 GTP 帽，微管继续延长。'},
-      {name:'② GTP 水解丢失帽',dur:1800,note:'聚合速率小于水解速率时，GTP 被水解为 GDP，帽丢失。'},
-      {name:'③ GDP 帽：快速解聚',dur:1800,note:'失去 GTP 帽，微管末端迅速解聚（灾难）。'},
-      {name:'④ 重新成核生长',dur:1500,note:'重新获得 GTP 帽后又可恢复生长，如此反复。'}
+      {name:'① GTP 帽：聚合生长',dur:1800,note:'末端为 GTP-微管蛋白，形成 GTP 帽，微管延长。'},
+      {name:'② GTP 水解、帽丢失',dur:1800,note:'聚合速率小于水解速率时，GTP 水解为 GDP，帽丢失。'},
+      {name:'③ GDP 帽：快速解聚',dur:1800,note:'失去 GTP 帽，末端迅速解聚(灾难)。'},
+      {name:'④ 重新获得 GTP 帽→再生长',dur:1800,note:'重新获得 GTP 帽后恢复生长，如此反复。'}
     ],
-    init:function(S){S.len=0;S._grow=true;},
-    step:function(S,dt){ var s=dt/1000; if(S._grow){ S.len+=s*22; if(S.len>150)S._grow=false; } else { S.len-=s*34; if(S.len<26)S._grow=true; } },
+    init:function(S){S.shrink=150;},
+    step:function(S,dt){ var t=shrinkTargets[window.__p||0]||150; S.shrink += (t-S.shrink)*0.06; },
     draw:function(ctx,W,H,S,fc,phaseI){
+      window.__p=phaseI;
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
-      AnimKit.label(ctx,'微管末端在“生长/骤缩”间随机切换',W/2,38,'#1f5c8b','bold 15px "Microsoft YaHei"');
-      var x=W/2, base=H-60, top=base-(S.len||40);
-      var cap = (phaseI===0||phaseI===3)?'#2e9e5b':(phaseI>=1?'#c0392b':'#2e9e5b');
-      if(phaseI<2)S._grow=true; if(phaseI===2)S._grow=false;
-      for(var i=0;i<10;i++){ var y=base-i*26; if(y<top-6)break; AnimKit.circle(ctx,x,y,11,i%2?'#5a7fa8':'#2e9e5b',null); }
-      AnimKit.circle(ctx,x,top,12,cap, phaseI<1?'G':'D');
-      AnimKit.label(ctx,phaseI<1?'GTP 帽':'GDP 帽',x+70,top,'#33465c','bold 12px "Microsoft YaHei"','left');
-      AnimKit.arrow(ctx,x,top-6,x,top-54,phaseI===2?'#c0392b':'#2e9e5b',2.5);
-      AnimKit.label(ctx,phaseI===2?'解聚':'聚合',x+16,top-40,phaseI===2?'#c0392b':'#2e9e5b','12px "Microsoft YaHei"','left');
-      AnimKit.label(ctx,'动态不稳定性 = 生长与骤缩之间的随机切换',W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,'GTP 帽 ↔ GDP 帽 的切换',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var base=H-40;
+      function stack(x,len,grow){
+        for(var y=base;y>base-len+4;y-=22){ AnimKit.circle(ctx,x,y,9,(Math.round((base-y)/22)%2)?'#5a7fa8':'#2e9e5b',null); }
+        var top=base-len; AnimKit.circle(ctx,x,top,10, grow?'#2e9e5b':'#c0392b', grow?'G':'D');
+        return top;
+      }
+      // 左：生长
+      var lx=W*0.33, lt=stack(lx,190,true);
+      AnimKit.arrow(ctx,lx,lt-8,lx,lt-44,'#2e9e5b',2.5); AnimKit.label(ctx,'聚合 ↑',lx+16,lt-30,'#1e7a45','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'GTP 帽(稳定)',lx,base+18,'#1e7a45','bold 12px "Microsoft YaHei"');
+      // 右：解聚
+      var rx=W*0.67, rt=stack(rx,S.shrink,false);
+      AnimKit.arrow(ctx,rx,rt+44,rx,rt+10,'#c0392b',2.5); AnimKit.label(ctx,'解聚 ↓',rx+16,rt+34,'#c0392b','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'GDP 帽(去稳定)',rx,base+18,'#c0392b','bold 12px "Microsoft YaHei"');
+      var act=(phaseI===0||phaseI===3)?'左：聚合生长':'右：快速解聚';
+      AnimKit.label(ctx,'当前：'+act,W/2,H-12,'#1f5c8b','bold 12px "Microsoft YaHei"');
     }
   });
 })();

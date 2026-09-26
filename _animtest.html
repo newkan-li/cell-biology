@@ -1,0 +1,15 @@
+<!doctype html><meta charset="utf-8"><body>
+<iframe id="f" src="anim/mt_assembly.html?p=3&embed=1" style="width:960px;height:380px"></iframe>
+<script>
+setTimeout(function(){
+  try{
+    var d=document.getElementById("f").contentDocument;
+    var cv=d.querySelector("canvas");
+    var info={w:cv&&cv.width,h:cv&&cv.height};
+    var x=cv.getContext("2d"); var nonwhite=0;
+    var im=x.getImageData(0,0,cv.width,cv.height).data;
+    for(var i=0;i<im.length;i+=4){ if(im[i+3]>10 && (im[i]<250||im[i+1]<250||im[i+2]<250)) nonwhite++; }
+    document.title="W="+info.w+" H="+info.h+" NONWHITE="+nonwhite;
+  }catch(e){document.title="ERR="+e.message;}
+},1200);
+</script></body>

@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-CN"><head>
-<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>信号类型</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
-<script src="anim.js?v=20260911e"></script>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>信号类型</title><link rel="stylesheet" href="anim.css?v=20260926b"></head><body>
+<script src="anim.js?v=20260926b"></script>
 <script>
 (function(){
   AnimKit.mount({
@@ -15,16 +15,26 @@
     ],
     draw:function(ctx,W,H,S,fc,phaseI){
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
-      AnimKit.label(ctx,'化学信号的作用方式',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
-      var y=H/2+10;
-      AnimKit.circle(ctx,160,y,26,'#5a7fa8','S');
-      var names=['内分泌(经血全身)','旁分泌(局部)','神经递质(点对点)','自分泌(自身)'];
-      AnimKit.label(ctx,names[phaseI],W/2,y-90,'#1f5c8b','bold 14px "Microsoft YaHei"');
-      if(phaseI===0){ for(var i=0;i<3;i++) AnimKit.circle(ctx,300+i*90,y,24,'#2e9e5b','T'); }
-      if(phaseI===1){ AnimKit.circle(ctx,240,y,24,'#2e9e5b','T'); AnimKit.circle(ctx,320,y,24,'#2e9e5b','T'); AnimKit.label(ctx,'局部介质',280,y+50,'#45687f','12px "Microsoft YaHei"'); }
-      if(phaseI===2){ AnimKit.circle(ctx,260,y,24,'#2e9e5b','T'); AnimKit.arrow(ctx,190,y,238,y,'#c0392b',2.5); AnimKit.label(ctx,'突触',215,y-40,'#c0392b','12px "Microsoft YaHei"'); }
-      if(phaseI===3){ AnimKit.circle(ctx,230,y,26,'#5a7fa8','S'); AnimKit.arrow(ctx,200,y-40,230,y-30,'#c0392b',2.5); AnimKit.label(ctx,'作用于自身',280,y+50,'#c0392b','12px "Microsoft YaHei"'); }
-      AnimKit.label(ctx,['①内分泌','②旁分泌','③神经递质','④自分泌'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,'化学信号的四种作用方式',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var bw=W*0.45, bh=118, L=W*0.03, R=W*0.52, T1=42, T2=T1+bh+16;
+      function S(x,y){ AnimKit.circle(ctx,x,y,12,'#5a7fa8','S'); }
+      function Tg(x,y,r){ AnimKit.circle(ctx,x,y,r||11,'#2e9e5b','T'); }
+      function panel(x,y,idx,label,draw){
+        var on=(phaseI===idx);
+        ctx.fillStyle=on?'#eef7f0':'#f7fafd'; ctx.strokeStyle=on?'#2e9e5b':'#d6e2ee'; ctx.lineWidth=on?2:1;
+        AnimKit.roundRect(ctx,x,y,bw,bh,10); ctx.fill(); ctx.stroke();
+        AnimKit.label(ctx,(idx+1)+'. '+label,x+12,y+18,on?'#1e7a45':'#5b6b7b',(on?'bold ':'')+'13px "Microsoft YaHei"','left');
+        draw(x,y);
+      }
+      panel(L,T1,0,'内分泌',function(x,y){ S(x+30,y+70); for(var i=0;i<3;i++) Tg(x+bw-40-i*46,y+92,10); ctx.strokeStyle='#8e5bb5';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x+30,y+82);ctx.lineTo(x+bw-24,y+92);ctx.stroke(); AnimKit.label(ctx,'经血液→全身',x+40,y+52,'#6a4a8a','11px "Microsoft YaHei"','left'); });
+      panel(R,T1,1,'旁分泌',function(x,y){ S(x+30,y+70); Tg(x+90,y+56,10); Tg(x+90,y+90,10); AnimKit.arrow(ctx,x+42,y+70,x+78,y+58,'#c0392b',2); AnimKit.arrow(ctx,x+42,y+70,x+78,y+88,'#c0392b',2); AnimKit.label(ctx,'只作用周围细胞',x+40,y+112,'#45687f','11px "Microsoft YaHei"','left'); });
+      panel(L,T2,2,'神经递质/突触',function(x,y){ S(x+30,y+64); Tg(x+130,y+64,12); AnimKit.arrow(ctx,x+42,y+64,x+116,y+64,'#c0392b',2.5); AnimKit.label(ctx,'突触(近·快·精确)',x+40,y+100,'#45687f','11px "Microsoft YaHei"','left'); });
+      panel(R,T2,3,'自分泌',function(x,y){ var sx=x+70, sy=y+70; S(sx,sy);
+        ctx.strokeStyle='#c0392b';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(sx,sy,26,-2.7,-0.5);ctx.stroke();
+        var ax=sx+Math.cos(-0.5)*26, ay=sy+Math.sin(-0.5)*26, bx=sx+Math.cos(-0.2)*26, by=sy+Math.sin(-0.2)*26;
+        AnimKit.arrow(ctx,ax,ay,bx,by,'#c0392b',2.5);
+        AnimKit.label(ctx,'作用于自身/同类',x+118,y+104,'#c0392b','11px "Microsoft YaHei"','left'); });
+      AnimKit.label(ctx,['①内分泌(经血全身)','②旁分泌(局部)','③神经递质(点对点)','④自分泌(自身)'][phaseI],W/2,H-8,'#1f5c8b','bold 12px "Microsoft YaHei"');
     }
   });
 })();

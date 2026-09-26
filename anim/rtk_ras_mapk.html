@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-CN"><head>
-<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RTK-Ras-MAPK</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
-<script src="anim.js?v=20260911e"></script>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RTK-Ras-MAPK</title><link rel="stylesheet" href="anim.css?v=20260926b"></head><body>
+<script src="anim.js?v=20260926b"></script>
 <script>
 (function(){
   AnimKit.mount({
@@ -8,32 +8,31 @@
     sub:'生长因子使 RTK 二聚化并自我磷酸化 → Grb2-SOS 激活 Ras → Raf→MAPK 级联放大 → 入核调节基因表达、促增殖。',
     legend:[{c:'#c0392b',t:'RTK'},{c:'#2e9e5b',t:'Ras-GTP'},{c:'#8e5bb5',t:'MAPK'}],
     phases:[
-      {name:'① 生长因子 + RTK 二聚化',dur:1500,note:'配体使两个 RTK 单体在膜上聚合成二聚体。'},
+      {name:'① 生长因子+RTK 二聚化',dur:1500,note:'配体使两个 RTK 单体在膜上聚合成二聚体。'},
       {name:'② 自我磷酸化',dur:1500,note:'二聚化受体酪氨酸残基互相磷酸化(自身磷酸化)而激活。'},
       {name:'③ Grb2-SOS 激活 Ras',dur:1600,note:'Grb2 用 SH2 抓磷酸酪氨酸、SH3 招 SOS；SOS(GEF) 使 Ras 结合 GTP 而激活。'},
       {name:'④ Raf→MAPK 级联入核',dur:1800,note:'Ras 启动 Raf(MAPKKK)→MAPK 磷酸化级联，信号入核调节基因表达。'}
     ],
     draw:function(ctx,W,H,S,fc,phaseI){
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
-      AnimKit.label(ctx,'RTK-Ras-MAPK 信号通路',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
-      var m=AnimKit.membrane(ctx,W,H,{yTop:H*0.34,yBot:H*0.50,cx:W*0.3,gap:80});
-      var cx=W*0.30;
-      // RTK
-      ctx.strokeStyle='#c0392b';ctx.lineWidth=6;
-      var spread=phaseI>=1?-26:-8;
-      ctx.beginPath(); ctx.moveTo(cx-8+spread,m.yTop-24); ctx.lineTo(cx-8+spread,m.yBot+24); ctx.moveTo(cx+8-spread,m.yTop-24); ctx.lineTo(cx+8-spread,m.yBot+24); ctx.stroke();
-      AnimKit.circle(ctx,cx,m.yTop-40,9,'#c0392b','L');
-      AnimKit.label(ctx,'RTK',cx,m.yBot+44,'#c0392b','12px "Microsoft YaHei"');
-      // Grb2-SOS
-      if(phaseI>=2){ AnimKit.pill(ctx,cx-40,m.yBot+56,90,26,'#d9e6f5','Grb2-SOS'); }
-      // Ras
-      if(phaseI>=2){ AnimKit.circle(ctx,cx-40,m.yBot+108,16,'#2e9e5b','R'); AnimKit.label(ctx,phaseI>=3?'Ras-GTP(开)':'Ras',cx-40,m.yBot+138,'#1e7a45','11px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,'RTK-Ras-MAPK 信号通路',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var m=AnimKit.membrane(ctx,W,H,{yTop:H*0.30,yBot:H*0.44,cx:W*0.28,gap:80});
+      var rx=W*0.28, sp=phaseI>=1?22:8;
+      [rx-sp,rx+sp].forEach(function(x){ ctx.strokeStyle='#c0392b';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(x,m.yTop-20);ctx.lineTo(x,m.yBot+20);ctx.stroke(); if(phaseI>=2) AnimKit.circle(ctx,x,m.yBot+12,6,'#2e9e5b','P'); });
+      AnimKit.circle(ctx,rx,m.yTop-36,9,'#c0392b','L');
+      AnimKit.label(ctx,'RTK',rx-sp-16,m.yBot+40,'#c0392b','11px "Microsoft YaHei"','right');
+      var y1=m.yBot+64, y2=m.yBot+112;
+      AnimKit.pill(ctx,rx-70,y1,140,30,'#d9e6f5','Grb2-SOS','#234f7a');
+      AnimKit.arrow(ctx,rx,m.yBot+24,rx,y1-2,'#8aa0b8',2);
+      AnimKit.circle(ctx,rx,y2+16,15, phaseI>=3?'#2e9e5b':'#9ad3a8','R'); AnimKit.label(ctx, phaseI>=3?'Ras-GTP(开)':'Ras',rx,y2+40, phaseI>=3?'#1e7a45':'#45687f','11px "Microsoft YaHei"');
+      AnimKit.arrow(ctx,rx,y1+30,rx,y2-2,'#8aa0b8',2);
       // 级联
-      var nodes=[['Raf',W*0.55],['MAPK',W*0.72],['入核',W*0.88]];
-      nodes.forEach(function(n,i){ var on=phaseI>=3; AnimKit.pill(ctx,n[1]-40,m.yBot+88,80,30, on?'#8e5bb5':'#e6ecf2', n[0], on?'#fff':'#7a8aa0');
-        if(i>0) AnimKit.arrow(ctx,nodes[i-1][1]+42,m.yBot+103,n[1]-44,m.yBot+103, on?'#8e5bb5':'#c6d8ea',2); });
-      if(phaseI>=3) AnimKit.arrow(ctx,W*0.88,m.yBot-6,W*0.88,m.yTop-30,'#8e5bb5',2.5);
-      AnimKit.label(ctx,['①配体+RTK二聚化','②自我磷酸化','③Grb2-SOS→Ras-GTP','④Raf→MAPK→入核'][phaseI],W/2,H-18,'#1f5c8b','bold 13px "Microsoft YaHei"');
+      var nd=[[W*0.52,'Raf'],[W*0.70,'MAPK'],[W*0.88,'入核']];
+      nd.forEach(function(n,i){ var on=phaseI>=3; AnimKit.pill(ctx,n[0]-38,y2,76,32, on?'#8e5bb5':'#e6ecf2', n[1], on?'#fff':'#7a8aa0');
+        if(i>0) AnimKit.arrow(ctx,nd[i-1][0]+40,y2+16,n[0]-42,y2+16, on?'#8e5bb5':'#c6d8ea',2); });
+      AnimKit.arrow(ctx,rx+18,y2+16,W*0.52-42,y2+16, phaseI>=3?'#2e9e5b':'#c6d8ea',2);
+      if(phaseI>=3){ AnimKit.arrow(ctx,W*0.88,y2+34,W*0.88,y2+70,'#8e5bb5',2.5); AnimKit.label(ctx,'信号入核 → 调节基因表达',W/2,H-12,'#1f5c8b','bold 12px "Microsoft YaHei"'); }
+      else AnimKit.label(ctx,['①配体+RTK二聚化','②自我磷酸化','③Grb2-SOS→Ras-GTP','④Raf→MAPK→入核'][phaseI],W/2,H-12,'#1f5c8b','bold 12px "Microsoft YaHei"');
     }
   });
 })();

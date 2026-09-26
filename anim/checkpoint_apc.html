@@ -1,36 +1,43 @@
 <!doctype html><html lang="zh-CN"><head>
-<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>纺锤体检验点</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
-<script src="anim.js?v=20260911e"></script>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>纺锤体检验点</title><link rel="stylesheet" href="anim.css?v=20260926b"></head><body>
+<script src="anim.js?v=20260926b"></script>
 <script>
 (function(){
   AnimKit.mount({
     title:'纺锤体装配检验点与 APC：Mad2 刹车、APC 放行',
-    sub:'只要还有染色体未附着纺锤体，Mad2 就抑制 APC（刹车）；全部附着后 APC 活化，降解 securin、释放 separase 切开 cohesin，姐妹染色单体分离。',
+    sub:'只要还有染色体未附着纺锤体，Mad2 就抑制 APC；全部附着后 APC 活化，降解 securin、释放 separase 切开 cohesin，姐妹染色单体分离。',
     legend:[{c:'#c0392b',t:'Mad2(抑制)'},{c:'#2e9e5b',t:'APC(活化)'},{c:'#5a7fa8',t:'securin/separase'}],
     phases:[
-      {name:'① 未附着：Mad2 抑制 APC',dur:1600,note:'有染色体未挂上纺锤体，Mad2 结合 Cdc20、抑制 APC，暂缓进入后期。'},
+      {name:'① 未附着：Mad2 抑制 APC',dur:1600,note:'有染色体未挂上纺锤体，Mad2 结合 Cdc20 抑制 APC，暂缓进入后期。'},
       {name:'② 全部附着',dur:1500,note:'所有动粒都被微管捕获，检验点满足。'},
-      {name:'③ APC 活化',dur:1500,note:'Mad2 释放，APC 被激活（E3 泛素连接酶）。'},
-      {name:'④ 降解 securin → 分离',dur:1800,note:'APC 泛素化降解 securin，释放 separase，切开 cohesin，姐妹染色单体分开。'}
+      {name:'③ APC 活化',dur:1500,note:'Mad2 释放，APC 被激活(E3 泛素连接酶)。'},
+      {name:'④ 降解 securin → 分离',dur:1800,note:'APC 泛素化降解 securin，释放 separase 切开 cohesin，姐妹染色单体分开。'}
     ],
     draw:function(ctx,W,H,S,fc,phaseI){
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
-      AnimKit.label(ctx,'纺锤体装配检验点 → APC',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
-      var cy=H/2+10;
+      AnimKit.label(ctx,'纺锤体装配检验点 → APC',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var attached=phaseI>=1;
+      AnimKit.circle(ctx,70,42,7,'#1f5c8b',null); AnimKit.circle(ctx,330,42,7,'#1f5c8b',null);
       // 染色体
-      var attached = phaseI>=1;
-      for(var i=0;i<3;i++){ var x=200+i*90; AnimKit.circle(ctx,x,cy,15,'#8e5bb5',null);
-        if(!attached && i===1){ AnimKit.circle(ctx,x+26,cy-24,9,'#c0392b','M'); }
+      for(var i=0;i<3;i++){ var x=110+i*80;
+        if(attached){ ctx.strokeStyle='#2e9e5b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(70,42);ctx.lineTo(x,74);ctx.moveTo(330,42);ctx.lineTo(x,74);ctx.stroke(); }
+        AnimKit.circle(ctx,x,86,14,'#8e5bb5',null);
+        if(!attached&&i===1) AnimKit.circle(ctx,x+22,66,9,'#c0392b','M');
       }
-      AnimKit.label(ctx,attached?'动粒全部附着纺锤体':'存在未附着动粒',W/2,cy-56,attached?'#1e7a45':'#c0392b','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx, attached?'动粒全部附着纺锤体':'存在未附着动粒', W/2, 46, attached?'#1e7a45':'#c0392b','bold 12px "Microsoft YaHei"');
       // APC
       var apc=phaseI>=2;
-      AnimKit.pill(ctx,W-230,cy-18,150,36, apc?'#2e9e5b':'#e6ecf2', 'APC', apc?'#fff':'#7a8aa0');
-      if(phaseI===0){ AnimKit.arrow(ctx,W-230,cy,W-300,cy,'#c0392b',3); AnimKit.label(ctx,'Mad2 抑制',W-330,cy-14,'#c0392b','12px "Microsoft YaHei"','right'); }
+      AnimKit.pill(ctx,W-190,68,150,36, apc?'#2e9e5b':'#e6ecf2','APC', apc?'#fff':'#7a8aa0');
+      if(!apc){ AnimKit.arrow(ctx,W-190,86,W-246,86,'#c0392b',2.5); AnimKit.label(ctx,'Mad2 抑制',W-252,86,'#c0392b','12px "Microsoft YaHei"','right'); }
+      else { AnimKit.label(ctx,'Mad2 已释放',W-40,86,'#7a8aa0','12px "Microsoft YaHei"','right'); }
       // securin/separase
-      if(phaseI>=3){ AnimKit.pill(ctx,240,cy+70,120,30,'#eee','securin'); AnimKit.arrow(ctx,360,cy+85,430,cy+85,'#2e9e5b',2.5);
-        AnimKit.pill(ctx,430,cy+70,120,30,'#2e9e5b','separase','#fff'); AnimKit.label(ctx,'切开 cohesin → 姐妹染色单体分离',W/2,cy+130,'#1e7a45','bold 13px "Microsoft YaHei"'); }
-      AnimKit.label(ctx,['①未附着→Mad2刹车','②全部附着','③APC活化','④securin降解→分离'][phaseI],W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+      AnimKit.pill(ctx,W/2-60,150,120,32,'#e8f1fb','securin','#234f7a');
+      AnimKit.pill(ctx,W/2+80,150,130,32, phaseI>=3?'#c0392b':'#e6ecf2','separase', phaseI>=3?'#fff':'#7a8aa0');
+      AnimKit.arrow(ctx,W/2+60,166,W/2+78,166, phaseI>=3?'#c0392b':'#c6d8ea',2.2);
+      AnimKit.arrow(ctx,W-115,104,W/2-10,150, apc?'#2e9e5b':'#c6d8ea',2.2);
+      if(phaseI>=3) AnimKit.label(ctx,'separase 切开 cohesin → 姐妹染色单体分离',W/2,214,'#1e7a45','bold 12px "Microsoft YaHei"');
+      else AnimKit.label(ctx,['①Mad2 抑制 APC(刹车)','②全部附着','③APC 活化','④securin 降解→分离'][phaseI],W/2,214,'#1f5c8b','bold 12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①未附着→Mad2刹车','②全部附着','③APC活化','④securin降解→分离'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
     }
   });
 })();

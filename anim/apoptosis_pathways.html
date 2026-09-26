@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-CN"><head>
-<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>凋亡通路</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
-<script src="anim.js?v=20260911e"></script>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>凋亡通路</title><link rel="stylesheet" href="anim.css?v=20260926b"></head><body>
+<script src="anim.js?v=20260926b"></script>
 <script>
 (function(){
   AnimKit.mount({
@@ -8,26 +8,30 @@
     sub:'外源：死亡受体(Fas)→caspase-8；内源：线粒体释放细胞色素 c→caspase-9；两者汇聚激活执行型 caspase-3，导致细胞凋亡。',
     legend:[{c:'#c0392b',t:'caspase'},{c:'#5a7fa8',t:'线粒体'},{c:'#8e5bb5',t:'死亡受体'}],
     phases:[
-      {name:'① 外源：死亡受体起始',dur:1600,note:'杀伤性 T 细胞的 FasL 结合靶细胞 Fas，组装 DISC，激活 caspase-8。'},
-      {name:'② 内源：线粒体释放 Cyt c',dur:1600,note:'Bax/Bak 在线粒体膜开孔，细胞色素 c 释放，与 Apaf-1 组装凋亡体。'},
-      {name:'③ 激活起始 caspase',dur:1500,note:'caspase-8 与 caspase-9 分别被激活（caspase-8 还可切 Bid 连接两途径）。'},
-      {name:'④ 汇合于执行型 caspase-3',dur:1700,note:'执行型 caspase-3/6/7 被激活，切割底物，细胞有序解体为凋亡小体。'}
+      {name:'① 外源：Fas→caspase-8',dur:1600,note:'FasL 结合 Fas，组装 DISC，激活 caspase-8。'},
+      {name:'② 内源：线粒体→caspase-9',dur:1600,note:'Bax/Bak 开孔，细胞色素 c 释放，激活 caspase-9。'},
+      {name:'③ 两途径可经 Bid 相连',dur:1500,note:'caspase-8 可切 Bid，连接两途径。'},
+      {name:'④ 汇聚于 caspase-3',dur:1700,note:'执行型 caspase-3/6/7 激活，细胞解体为凋亡小体。'}
     ],
     draw:function(ctx,W,H,S,fc,phaseI){
       ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
-      AnimKit.label(ctx,'凋亡的内源与外源途径',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
-      // 外源（左）
-      AnimKit.pill(ctx,80,90,170,44, phaseI>=1?'#8e5bb5':'#e6ecf2','Fas 死亡受体', phaseI>=1?'#fff':'#7a8aa0');
-      if(phaseI>=1){ AnimKit.arrow(ctx,165,160,165,210,'#8e5bb5',2.5);
-        AnimKit.pill(ctx,80,220,170,40, phaseI>=2?'#c0392b':'#e6ecf2','caspase-8', phaseI>=2?'#fff':'#7a8aa0'); }
-      // 内源（右）
-      AnimKit.pill(ctx,W-250,90,180,44, phaseI>=2?'#5a7fa8':'#e6ecf2','线粒体', phaseI>=2?'#fff':'#7a8aa0');
-      if(phaseI>=2){ AnimKit.arrow(ctx,W-160,160,W-160,210,'#5a7fa8',2.5); AnimKit.pill(ctx,W-250,220,180,40,'#c0392b','caspase-9','#fff'); }
+      AnimKit.label(ctx,'凋亡的内源与外源途径',W/2,22,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      var yF=58, yC=132, yN=224;
+      // 外源
+      AnimKit.pill(ctx,W*0.30-90,yF,180,34, phaseI>=0?'#8e5bb5':'#e6ecf2','Fas 死亡受体', phaseI>=0?'#fff':'#7a8aa0');
+      AnimKit.arrow(ctx,W*0.30,yF+34,W*0.30,yC-2,'#8e5bb5',2);
+      AnimKit.pill(ctx,W*0.30-70,yC,140,32, phaseI>=0?'#c0392b':'#e6ecf2','caspase-8', phaseI>=0?'#fff':'#7a8aa0');
+      // 内源
+      AnimKit.pill(ctx,W*0.70-80,yF,160,34, phaseI>=1?'#5a7fa8':'#e6ecf2','线粒体·Cyt c', phaseI>=1?'#fff':'#7a8aa0');
+      AnimKit.arrow(ctx,W*0.70,yF+34,W*0.70,yC-2,'#5a7fa8',2);
+      AnimKit.pill(ctx,W*0.70-70,yC,140,32, phaseI>=1?'#c0392b':'#e6ecf2','caspase-9', phaseI>=1?'#fff':'#7a8aa0');
       // 汇合
-      if(phaseI>=3){ AnimKit.pill(ctx,W/2-110,330,220,46,'#c0392b','执行型 caspase-3/6/7','#fff');
-        AnimKit.arrow(ctx,165,262,W/2-40,330,'#c0392b',2.5); AnimKit.arrow(ctx,W-160,262,W/2+40,330,'#c0392b',2.5);
-        AnimKit.label(ctx,'切割底物 → 凋亡小体 → 被吞噬(无炎症)',W/2,410,'#1e7a45','bold 13px "Microsoft YaHei"'); }
-      AnimKit.label(ctx,['①外源：Fas→caspase-8','②内源：线粒体→Cyt c','③起始caspase激活','④执行型caspase-3→凋亡'][phaseI],W/2,H-18,'#1f5c8b','bold 13px "Microsoft YaHei"');
+      AnimKit.pill(ctx,W/2-120,yN,240,36,'#c0392b','执行型 caspase-3/6/7','#fff');
+      AnimKit.arrow(ctx,W*0.30,yC+32,W/2-60,yN-2,'#c0392b',2.2);
+      AnimKit.arrow(ctx,W*0.70,yC+32,W/2+60,yN-2,'#c0392b',2.2);
+      if(phaseI>=2) AnimKit.label(ctx,'caspase-8 切 Bid 可连接两途径',W/2,yC+4,'#6a4a8a','11px "Microsoft YaHei"');
+      AnimKit.label(ctx,'切割底物 → 凋亡小体 → 被吞噬(无炎症)',W/2,yN+50,'#1e7a45','bold 12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①外源：Fas→caspase-8','②内源：线粒体→caspase-9','③Bid 连接两途径','④汇聚 caspase-3→凋亡'][phaseI],W/2,H-10,'#1f5c8b','bold 12px "Microsoft YaHei"');
     }
   });
 })();
