@@ -1101,7 +1101,15 @@
         html += "</div></div>";
       });
       host.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">' +
-        '<h3 style="margin:0">🧭 知识点掌握度</h3><span class="hint">已掌握 ' + mastered + "/" + total + ' ｜ 点方块跳到该页</span></div>' + html;
+        '<h3 style="margin:0">🧭 知识点掌握度</h3><span class="hint">已掌握 ' + mastered + "/" + total + ' ｜ 点方块跳到该页</span></div>' +
+        '<div class="hm-legend">' +
+        '<span><i class="hm-cell hm-0"></i>未学</span>' +
+        '<span><i class="hm-cell hm-c"></i>学过·未掌握</span>' +
+        '<span><i class="hm-cell hm-b"></i>已掌握</span>' +
+        '<span><i class="hm-cell hm-a"></i>熟练</span>' +
+        '<span><i class="hm-cell hm-0 hm-conf"></i>待问/没听懂</span>' +
+        '<span class="hint">掌握度 = 0.6×答对率 + 0.4×复习强度；答错或自评“不会”会下降</span>' +
+        '</div>' + html;
     }
     draw();
     window.__refreshHeat = draw;

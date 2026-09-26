@@ -278,6 +278,9 @@ html[data-theme="sepia"] .checkpoint .cp-opt.wrong{background:#f3ddd6;border-col
 .hm-cell{width:16px;height:16px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.06)}
 .hm-0{background:#e6ecf2}.hm-c{background:#f6d9a8}.hm-b{background:#9ad3a8}.hm-a{background:#2e9e5b}
 .hm-conf{outline:2px solid var(--acc);outline-offset:1px}
+.hm-legend{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:6px 0 2px;font-size:12px;color:var(--sub)}
+.hm-legend span{display:inline-flex;align-items:center;gap:4px}
+.hm-legend .hm-cell{width:13px;height:13px}
 .confbtn{font-size:12px;border:1px solid #e0b4a8;background:#fff;color:var(--acc);border-radius:16px;padding:2px 10px;cursor:pointer;margin-left:6px}
 .confbtn.on{background:var(--acc);color:#fff;border-color:var(--acc)}
 .confnote{display:block;width:100%;margin-top:6px;padding:5px 9px;border:1px solid var(--line);border-radius:8px;font-size:12.5px;background:#fff}
