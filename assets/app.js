@@ -2754,6 +2754,24 @@
     else if (page === "textbook") renderTextbook();
     else if (page === "zhenti") renderZhenti();
     else if (page === "zt802") renderZT802();
+    // 页面内容由 JS 动态渲染，加载时的 #hash 锚点目标此时尚不存在；渲染后再跳转
+    function jumpHash() {
+      try {
+        var id = decodeURIComponent(String(location.hash || "").replace(/^#/, ""));
+        if (!id) return;
+        var t = document.getElementById(id);
+        if (!t) return;
+        var html = document.documentElement, prev = html.style.scrollBehavior;
+        html.style.scrollBehavior = "auto";
+        var y = t.getBoundingClientRect().top + (window.pageYOffset || 0) - 8;
+        window.scrollTo(0, y < 0 ? 0 : y);
+        html.style.scrollBehavior = prev || "";
+      } catch (e) { }
+    }
+    jumpHash();
+    requestAnimationFrame(jumpHash);
+    setTimeout(jumpHash, 260);
+    setTimeout(jumpHash, 760);
   });
 
   window.CELL = {

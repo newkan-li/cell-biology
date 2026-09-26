@@ -11,7 +11,8 @@ ids.forEach(function (id) {
   ch.modules.forEach(function (m, mi) {
     (m.slides || []).forEach(function (s, si) {
       if (!s.experiment) return;
-      out.push({ ch: id, chTitle: ch.title, mod: m.name, kp: id + "_s" + mi + "_" + si, page: s.page, title: s.title, ex: s.experiment });
+      var key = id + "_s" + (m.i != null ? m.i : mi) + "_" + (s.i != null ? s.i : si);
+      out.push({ ch: id, chTitle: ch.title, mod: m.name, kp: key, page: s.page, title: s.title, ex: s.experiment });
     });
   });
 });
