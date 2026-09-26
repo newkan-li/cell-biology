@@ -1360,32 +1360,40 @@
       ents.forEach(function (en) { if (en.isIntersecting) { var f = en.target; if (!f.src) f.src = f.getAttribute("data-src"); animIO.unobserve(f); } });
     }, { rootMargin: "500px" }) : null;
     var pageMeta = {};
-    ch.modules.forEach(function (m) { (m.slides || []).forEach(function (s) { pageMeta[cid + "_s" + m.i + "_" + s.i] = { page: s.page, title: s.title }; }); });
+    ch.modules.forEach(function (m, mi) { (m.slides || []).forEach(function (s, si) {
+      var meta = { page: s.page, title: s.title };
+      pageMeta[cid + "_s" + m.i + "_" + s.i] = meta;
+      pageMeta[cid + "_s" + mi + "_" + si] = meta;
+    }); });
     var seqPrev = {}, relMap = {};
     ((window.MIND && window.MIND[cid] && window.MIND[cid].edges) || []).forEach(function (e) {
       if (e.k === "seq") { seqPrev[e.b] = e.a; return; }
       (relMap[e.a] = relMap[e.a] || []).push(e.b);
       (relMap[e.b] = relMap[e.b] || []).push(e.a);
     });
-    ch.modules.forEach(function (m) {
+    ch.modules.forEach(function (m, mi) {
       var sec = el("section"); sec.id = "m" + m.i;
       sec.appendChild(el("h2", "", esc(m.name)));
-      m.slides.forEach(function (s) {
+      m.slides.forEach(function (s, si) {
         var key = cid + "_s" + m.i + "_" + s.i;
+        var altKey = cid + "_s" + mi + "_" + si;
         var card = el("div", "slide"); card.id = "s_" + key;
+        if (altKey !== key) { var anch = document.createElement("span"); anch.id = "s_" + altKey; anch.style.cssText = "display:block;height:0;overflow:hidden"; card.appendChild(anch); }
+        var seqPrevK = (seqPrev[key] != null ? seqPrev[key] : seqPrev[altKey]);
+        var relK = (relMap[key] && relMap[key].length ? relMap[key] : (relMap[altKey] || []));
         if (s.explain) card.classList.add("tbslide");
         var lv = s.level || "掌握";
         var head = el("div", "sh");
         head.innerHTML = '<span class="t">' + esc(s.title) + '</span><span class="lv lv-' + esc(lv) + '">' + esc(lv) + "</span>";
         card.appendChild(head);
-        if (s.summary || s.goal || seqPrev[key] || (relMap[key] && relMap[key].length)) {
+        if (s.summary || s.goal || seqPrevK || (relK && relK.length)) {
           var ob = el("div", "objbox");
           var oh = '<div class="ob-h">🎯 本页主旨与目标</div>';
           if (s.summary) oh += '<p class="ob-sum">' + esc(s.summary) + '</p>';
           if (s.goal) oh += '<div class="ob-goal">' + esc(s.goal) + '</div>';
           var links = [];
-          if (seqPrev[key] && pageMeta[seqPrev[key]]) links.push('<a class="ob-link" href="#s_' + seqPrev[key] + '">⬅ 承接上一页 p' + pageMeta[seqPrev[key]].page + ' ' + esc(String(pageMeta[seqPrev[key]].title).slice(0, 16)) + '</a>');
-          (relMap[key] || []).slice(0, 4).forEach(function (r) { if (pageMeta[r]) links.push('<a class="ob-link" href="#s_' + r + '">🔗 相关 p' + pageMeta[r].page + ' ' + esc(String(pageMeta[r].title).slice(0, 14)) + '</a>'); });
+          if (seqPrevK && pageMeta[seqPrevK]) links.push('<a class="ob-link" href="#s_' + seqPrevK + '">⬅ 承接上一页 p' + pageMeta[seqPrevK].page + ' ' + esc(String(pageMeta[seqPrevK].title).slice(0, 16)) + '</a>');
+          (relK || []).slice(0, 4).forEach(function (r) { if (pageMeta[r]) links.push('<a class="ob-link" href="#s_' + r + '">🔗 相关 p' + pageMeta[r].page + ' ' + esc(String(pageMeta[r].title).slice(0, 14)) + '</a>'); });
           if (links.length) oh += '<div class="ob-links">' + links.join("") + '</div>';
           ob.innerHTML = oh;
           card.appendChild(ob);
