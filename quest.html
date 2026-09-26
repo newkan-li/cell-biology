@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>闯关模式 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926bu">
-<script src="assets/theme.js?v=20260926bu"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926bv">
+<script src="assets/theme.js?v=20260926bv"></script>
 <style>
 .qtop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
 .qbar{flex:1;min-width:180px;height:12px;background:#eef2f8;border-radius:8px;overflow:hidden}
@@ -148,18 +148,18 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   <footer style="margin-top:20px">仅供个人学习使用</footer>
 </div>
 
-<script src="data/manifest.js?v=20260926bu"></script>
-<script src="data/outline.js?v=20260926bu"></script>
-<script src="data/schedule.js?v=20260926bu"></script>
-<script src="data/expmap.js?v=20260926bu"></script>
-<script src="data/chapmeta.js?v=20260926bu"></script>
-<script src="data/zhenti.js?v=20260926bu"></script>
-<script src="data/ztobj.js?v=20260926bu"></script>
-<script src="data/history.js?v=20260926bu"></script>
-<script src="data/methods.js?v=20260926bu"></script>
-<script src="data/hotexp.js?v=20260926bu"></script>
-<script src="data/kpqa.js?v=20260926bu"></script>
-<script src="data/deriveqa.js?v=20260926bu"></script>
+<script src="data/manifest.js?v=20260926bv"></script>
+<script src="data/outline.js?v=20260926bv"></script>
+<script src="data/schedule.js?v=20260926bv"></script>
+<script src="data/expmap.js?v=20260926bv"></script>
+<script src="data/chapmeta.js?v=20260926bv"></script>
+<script src="data/zhenti.js?v=20260926bv"></script>
+<script src="data/ztobj.js?v=20260926bv"></script>
+<script src="data/history.js?v=20260926bv"></script>
+<script src="data/methods.js?v=20260926bv"></script>
+<script src="data/hotexp.js?v=20260926bv"></script>
+<script src="data/kpqa.js?v=20260926bv"></script>
+<script src="data/deriveqa.js?v=20260926bv"></script>
 <script>
 (function () {
   var PREFIX = "cellbio_";
@@ -201,6 +201,13 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   var KPQA = window.KPQA || {};
   var DERIVEQA = window.DERIVEQA || {};
   var KINDNAME = { mcq: "选择", judge: "判断", fill: "填空", short: "简答", calc: "论述", term: "名解" };
+  /* 本站章节 → 历年真题（教材章号）映射 */
+  var SITE2ZH = {
+    ch01: ["ch01", "ch02"], ch02: ["ch04", "ch05"], ch03: ["ch07"], ch04: ["ch08"], ch05: ["ch08"],
+    ch06: ["ch10"], ch07: ["ch10"], ch08: ["ch10"], ch09: ["ch13", "ch14"], ch10: ["ch09"], ch11: ["ch09"],
+    ch12: ["ch16"], ch13: ["ch14"],
+    tb03: ["ch03"], tb06: ["ch06"], tb11: ["ch11"], tb12: ["ch12"], tb13: ["ch13"], tb15: ["ch15"], tb17: ["ch17"]
+  };
   function ztCount(cid) {
     var a = (ZT[cid] && (ZT[cid].length || (ZT[cid].items || []).length)) || 0;
     var b = (ZO[cid] && (ZO[cid].length || (ZO[cid].items || []).length)) || 0;
@@ -481,7 +488,7 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
       function kpTip(kp, base) { var p = kp && KPQA[kp] && KPQA[kp].p && KPQA[kp].p[0]; return base + (p ? " · 考点：" + p : ""); }
       var histChips = hist.map(function (x) { return chipKp({ kp: x.h.kp, done: x.done, href: x.h.kp ? x.h.ch + ".html#s_" + esc(x.h.kp) : "#" }, x.key, String(x.h.t).slice(0, 16), kpTip(x.h.kp, x.h.t)); }).join("");
       var methChips = meth.map(function (x) { return '<a class="sub' + (x.done ? " ok" : "") + '" href="methods.html#mth_' + METH.indexOf(x.m) + '" title="' + esc(kpTip(x.m.kp, x.m.t)) + '（对应讲义页已读即掌握）">' + (x.done ? "✅" : "◯") + " " + esc(x.m.t) + "</a>"; }).join("");
-      var hotChips = hot.map(function (x) { return chipKp({ kp: x.h.kp, done: x.done, href: x.h.kp ? "experiments.html#hot_" + esc(x.h.kp) : "#" }, x.key, String(x.h.e).slice(0, 16), kpTip(x.h.kp, x.h.e)); }).join("");
+      var hotChips = hot.map(function (x) { return chipKp({ kp: x.h.kp, done: x.done, href: x.h.kp ? "experiments.html?ch=" + s.cid + "#hot_" + esc(x.h.kp) : "experiments.html?ch=" + s.cid }, x.key, String(x.h.e).slice(0, 16), kpTip(x.h.kp, x.h.e)); }).join("");
       var ex = s.extra || {}, exChips = [];
       var derList = (CHAPMETA[s.cid] && CHAPMETA[s.cid].derive) || [];
       var selfSt = jget(skey(s.cid, "self"), {});
@@ -493,7 +500,8 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
         return '<details class="exq"><summary>' + (okc ? "✅" : "◯") + " " + esc(String(d.title).slice(0, 28)) + "</summary><div class=\"exq-body\">" + buildQHtml(s.cid, item) + '<div style="margin-top:4px"><a class="sub" href="' + s.cid + '.html#s_' + esc(d.k) + '">📄 讲义页</a></div></div></details>';
       }).join("");
       exChips.push('<a class="sub' + (ex.wrong ? "" : " ok") + '" href="wrong.html?ch=' + s.cid + '">' + (ex.wrong ? "❌ 错题 " + ex.wrong + " 条（点开重做/清除）" : "❌ 错题 已清零") + "</a>");
-      exChips.push('<a class="sub" href="zhenti.html">📋 历年真题（去练）</a>');
+      var zh = SITE2ZH[s.cid] || [];
+      exChips.push('<a class="sub" href="zhenti.html' + (zh.length ? "?ch=" + zh.join(",") : "") + '">📋 本章历年真题' + (zh.length ? "（" + zh.length + " 组）" : "") + "</a>");
       var expDone = (s.exp || []).filter(function (e) { return e.done; }).length;
       var histDone = hist.filter(function (x) { return x.done; }).length;
       var methDone = meth.filter(function (x) { return x.done; }).length;

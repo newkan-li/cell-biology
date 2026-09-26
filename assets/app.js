@@ -1521,7 +1521,7 @@
           aw.appendChild(el("div", "animhead", "🎬 动画演示（在老师原图下方）"));
           var ifr = document.createElement("iframe");
           ifr.className = "animframe"; ifr.loading = "lazy"; ifr.setAttribute("title", s.title);
-          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926bu");
+          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926bv");
           ifr.onload = function () { var o = jget(PREFIX + "animSeen", {}); if (!o[s.anim]) { o[s.anim] = 1; jset(PREFIX + "animSeen", o); } };
           aw.appendChild(ifr); card.appendChild(aw);
           if (animIO) animIO.observe(ifr); else ifr.src = ifr.getAttribute("data-src");
@@ -2266,12 +2266,16 @@
     chip("全部（17章）", "all"); chip("只看已讲章节", "covered");
     Object.keys(Z).sort().forEach(function (cid) { chip(esc(names[cid] || cid), cid); });
     function syncChips() { Array.prototype.forEach.call(chips.children, function (b) { b.classList.toggle("on", b.dataset.v === cur); }); }
+    var urlSet = {};
+    try { var _q = new URLSearchParams(location.search).get("ch"); if (_q) _q.split(",").forEach(function (c) { if (Z[c]) urlSet[c] = 1; }); } catch (e) { }
+    if (Object.keys(urlSet).length) { cur = "__ch"; chip("本章相关真题（" + Object.keys(urlSet).length + "）", "__ch"); syncChips(); }
     var search = document.getElementById("ztsearch");
     search.oninput = function () { q = (search.value || "").trim().toLowerCase(); render(); };
     function render() {
       var html = "", total = 0;
       Object.keys(Z).sort().forEach(function (cid) {
-        if (cur === "covered") { if (!covered[cid]) return; }
+        if (cur === "__ch") { if (!urlSet[cid]) return; }
+        else if (cur === "covered") { if (!covered[cid]) return; }
         else if (cur !== "all" && cid !== cur) return;
         var arr = Z[cid].filter(function (x) { return !q || (x.q + " " + x.a).toLowerCase().indexOf(q) >= 0; });
         if (!arr.length) return;
@@ -2587,12 +2591,15 @@
     function chapChip(label, val) { var b = el("button", "fc-chip" + (val === cur ? " on" : ""), label); b.dataset.v = val; b.onclick = function () { cur = val; sync(); render(); }; cc.appendChild(b); }
     chapChip("全部（17章）", "all"); chapChip("只看已讲章节", "covered");
     Object.keys(O).sort().forEach(function (cid) { chapChip(esc(names[cid] || cid), cid); });
+    var urlSet = {};
+    try { var _q = new URLSearchParams(location.search).get("ch"); if (_q) _q.split(",").forEach(function (c) { if (O[c]) urlSet[c] = 1; }); } catch (e) { }
+    if (Object.keys(urlSet).length) { cur = "__ch"; chapChip("本章相关（" + Object.keys(urlSet).length + "）", "__ch"); sync(); }
     function sync() {
       Array.prototype.forEach.call(yc.children, function (b) { b.classList.toggle("on", b.dataset.v === ty); });
       Array.prototype.forEach.call(cc.children, function (b) { b.classList.toggle("on", b.dataset.v === cur); });
     }
     var search = document.getElementById("ztsearch"); search.oninput = function () { q = (search.value || "").trim().toLowerCase(); render(); };
-    function inScope(cid) { if (cur === "covered") return !!covered[cid]; if (cur !== "all") return cid === cur; return true; }
+    function inScope(cid) { if (cur === "__ch") return !!urlSet[cid]; if (cur === "covered") return !!covered[cid]; if (cur !== "all") return cid === cur; return true; }
     function types() { return ty === "all" ? ["mcq", "judge", "fill"] : [ty]; }
     function render() {
       var html = "", total = 0;
