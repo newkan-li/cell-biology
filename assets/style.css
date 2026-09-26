@@ -111,6 +111,10 @@ table.tbl{border-collapse:collapse;width:100%;margin:.5em 0 1em;font-size:14px}
 html[data-theme="dark"] .previewbox{background:#182a20;border-color:#2c4a38}
 html[data-theme="dark"] .previewbox .pv-main,html[data-theme="dark"] .previewbox li{color:#a8d8bc}
 html[data-theme="dark"] .previewbox .pv-q{color:#6fd09a}
+html[data-theme="dark"] .pv-qa summary{color:#9fd8b8}
+html[data-theme="dark"] .pv-a{background:#16241d;border-color:#2e7d4a;color:#a8d8bc}
+html[data-theme="dark"] .narbox summary{color:#7cc0ef}
+html[data-theme="dark"] .narbox .nar-body{color:#c2ccd8}
 html[data-theme="sepia"] .previewbox{background:#eaf0da;border-color:#cddcae}
 #lightbox{position:fixed;inset:0;background:rgba(15,20,30,.9);display:none;align-items:flex-start;justify-content:center;z-index:2000;padding:20px;overflow:auto}
 #lightbox.on{display:flex}
