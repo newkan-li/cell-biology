@@ -1515,7 +1515,7 @@
           aw.appendChild(el("div", "animhead", "🎬 动画演示（在老师原图下方）"));
           var ifr = document.createElement("iframe");
           ifr.className = "animframe"; ifr.loading = "lazy"; ifr.setAttribute("title", s.title);
-          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926bd");
+          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926be");
           ifr.onload = function () { var o = jget(PREFIX + "animSeen", {}); if (!o[s.anim]) { o[s.anim] = 1; jset(PREFIX + "animSeen", o); } };
           aw.appendChild(ifr); card.appendChild(aw);
           if (animIO) animIO.observe(ifr); else ifr.src = ifr.getAttribute("data-src");
@@ -1962,11 +1962,12 @@
     var ztToggle = document.getElementById("exZt"), ztRow = document.getElementById("exZtRow");
     if (ztToggle) ztToggle.onchange = function () { ztRow.style.display = ztToggle.checked ? "" : "none"; };
     Object.keys(window.ZTOBJ || {}).forEach(function (c) { names["T" + c] = "真题·" + (ztNames[c] || c); });
-    var timer = null, remain = 0, current = [];
+    var timer = null, remain = 0, current = [], examMode = "custom";
     function stopTimer() { if (timer) { clearInterval(timer); timer = null; } }
     function fmt(s) { var m = Math.floor(s / 60), x = s % 60; return (m < 10 ? "0" : "") + m + ":" + (x < 10 ? "0" : "") + x; }
     function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
     function start(plan) {
+      examMode = plan ? "full" : "custom";
       var chs = Array.prototype.map.call(ctl.querySelectorAll(".ex-ch:checked"), function (x) { return x.value; });
       var tys = Array.prototype.map.call(ctl.querySelectorAll(".ex-ty:checked"), function (x) { return x.value; });
       if (!plan && (!chs.length || !tys.length)) { alert("请至少选择一个章节和一个题型。"); return; }
@@ -2020,6 +2021,13 @@
       var ok = 0, weak = {};
       current.forEach(function (it) { if (isCorrect(it)) ok++; else if (it.q.kp) weak[it.q.kp] = 1; });
       var total = current.length || 1;
+      var pct = Math.round(ok * 100 / total);
+      try {
+        var o = jget(PREFIX + "examBest", {});
+        if (!o.best || pct > o.best) { o.best = pct; o.bestTs = Date.now(); }
+        o.last = pct; o.lastTs = Date.now(); o.n = current.length; o.mode = examMode;
+        jset(PREFIX + "examBest", o);
+      } catch (e) { }
       var h = '<div class="statsbox"><h3 style="margin:0">📊 成绩</h3>' +
         "<p>得分（客观自动 + 主观自评）：<b>" + ok + " / " + current.length + "</b>（" + Math.round(ok * 100 / total) + "%）" + (auto ? " · 时间到自动交卷" : "") + "</p>" +
         (Object.keys(weak).length ? "<p>待加强知识点 " + Object.keys(weak).length + " 个，去「今日复习」巩固。</p>" : "<p>全部正确，很好！</p>") +
