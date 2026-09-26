@@ -1,0 +1,34 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>securin-separase</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'APC → securin 降解 → 释放 separase → 分离姐妹染色单体',
+    sub:'平时 securin 像刀鞘一样结合并抑制 separase；后期 APC 泛素化降解 securin，释放 separase，由其切开 cohesin，使姐妹染色单体分离。',
+    legend:[{c:'#5a7fa8',t:'securin'},{c:'#c0392b',t:'separase'},{c:'#2e9e5b',t:'cohesin'}],
+    phases:[
+      {name:'① securin 抑制 separase',dur:1500,note:'securin 结合 separase，像刀鞘一样抑制它。'},
+      {name:'② APC 泛素化 securin',dur:1500,note:'后期 APC 给 securin 挂泛素链。'},
+      {name:'③ securin 被降解',dur:1500,note:'securin 被蛋白酶体降解。'},
+      {name:'④ separase 出鞘切开 cohesin',dur:1600,note:'separase 切开 cohesin，姐妹染色单体分离。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'securin / separase 与染色体分离',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+10;
+      // 染色单体
+      var sep=phaseI>=3?80:18;
+      ctx.strokeStyle='#c0392b';ctx.lineWidth=10;ctx.beginPath();ctx.moveTo(W*0.28-sep/2,cy-70);ctx.lineTo(W*0.28-sep/2,cy+70);ctx.moveTo(W*0.28+sep/2,cy-70);ctx.lineTo(W*0.28+sep/2,cy+70);ctx.stroke();
+      if(phaseI<3) AnimKit.circle(ctx,W*0.28,cy,12,'#2e9e5b','C');
+      AnimKit.label(ctx,'姐妹染色单体',W*0.28,cy+110,'#c0392b','12px "Microsoft YaHei"');
+      if(phaseI<2){ AnimKit.pill(ctx,W*0.6,cy-40,150,34,'#5a7fa8','securin','#fff'); AnimKit.pill(ctx,W*0.6,cy+10,150,34,'#c0392b','separase','#fff');
+        AnimKit.label(ctx,'securin 抑制 separase',W*0.6,cy+70,'#45687f','12px "Microsoft YaHei"'); }
+      else { AnimKit.pill(ctx,W*0.6,cy-40,150,34,'#e6ecf2','securin(降解)','#7a8aa0'); AnimKit.pill(ctx,W*0.6,cy+10,150,34,'#c0392b','separase','#fff');
+        AnimKit.arrow(ctx,W*0.6+80,cy+27,W*0.28+40,cy+10,'#c0392b',2.5); }
+      if(phaseI>=3) AnimKit.label(ctx,'separase 切开 cohesin → 姐妹染色单体分离',W/2,cy+150,'#1e7a45','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①securin抑制','②APC泛素化','③securin降解','④separase切开cohesin'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

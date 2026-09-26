@@ -1,0 +1,33 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>程序性细胞死亡</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'程序性细胞死亡(PCD)塑造发育',
+    sub:'PCD 是基因决定的主动死亡，是发育中“计划内的拆除”：清除指趾间、塑造肠腔、淘汰多余神经元等。',
+    legend:[{c:'#c0392b',t:'将凋亡的细胞'},{c:'#2e9e5b',t:'保留的细胞'}],
+    phases:[
+      {name:'① 指趾间中胚层',dur:1500,note:'胎儿手指/脚趾之间最初有中胚层连接。'},
+      {name:'② PCD 去除连接',dur:1500,note:'指趾间中胚层经 PCD 被清除，手指分开。'},
+      {name:'③ 神经发育淘汰多余',dur:1600,note:'过量神经元竞争 NGF，未连接者凋亡。'},
+      {name:'④ 塑造器官/网络',dur:1500,note:'PCD 使细胞数与靶细胞匹配、塑造器官形态。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'PCD 塑造发育',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var y=H/2+10;
+      if(phaseI<=1){ // 手指
+        for(var i=0;i<4;i++){ ctx.fillStyle='#c0392b'; AnimKit.roundRect(ctx,W*0.3+i*60,y-80,40,160,10); ctx.fill(); }
+        AnimKit.label(ctx,phaseI===0?'指趾间有中胚层连接':'PCD 清除连接 → 手指分开',W*0.48,y+110,phaseI===0?'#45687f':'#1e7a45','13px "Microsoft YaHei"'); }
+      else { // 神经元
+        AnimKit.circle(ctx,W*0.35,y,20,'#8e5bb5','靶');
+        var alive=phaseI>=3?3:6;
+        for(var j=0;j<6;j++){ var ax=W*0.2+j*50, col=j<alive?'#2e9e5b':'#c0392b';
+          AnimKit.circle(ctx,ax,y-60,12,col,null); ctx.strokeStyle=col;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ax,y-50);ctx.lineTo(W*0.35,y);ctx.stroke(); }
+        AnimKit.label(ctx,'过量神经元竞争 NGF，未连接者凋亡',W/2,y+110,'#c0392b','13px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①指趾间中胚层','②PCD去除连接','③淘汰多余神经元','④塑造器官/网络'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

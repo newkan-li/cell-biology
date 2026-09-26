@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>G蛋白开K通道</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'心肌细胞：ACh 经 G 蛋白 βγ 打开 K⁺ 通道',
+    sub:'心肌细胞 G 蛋白偶联受体结合乙酰胆碱 → G 蛋白 βγ 亚基直接打开质膜 K⁺ 通道 → K⁺ 外流、膜超极化 → 减慢心肌收缩频率。',
+    legend:[{c:'#8e5bb5',t:'βγ亚基'},{c:'#5a7fa8',t:'K⁺通道'},{c:'#2e9e5b',t:'K⁺外流'}],
+    phases:[
+      {name:'① ACh 结合受体',dur:1500,note:'ACh 结合心肌细胞 GPCR。'},
+      {name:'② G 蛋白激活、βγ 分离',dur:1500,note:'G 蛋白活化，βγ 亚基释放。'},
+      {name:'③ βγ 打开 K⁺ 通道',dur:1600,note:'βγ 直接结合并打开 K⁺ 通道。'},
+      {name:'④ K⁺ 外流→超极化→减慢',dur:1600,note:'K⁺ 外流使膜超极化，减慢心肌收缩。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'ACh→G蛋白βγ→K⁺通道',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var m=AnimKit.membrane(ctx,W,H,{yTop:H*0.36,yBot:H*0.50,cx:W*0.35,gap:70});
+      AnimKit.circle(ctx,W*0.35,m.yTop-30,10,'#8e5bb5','L'); AnimKit.label(ctx,'ACh',W*0.35,m.yTop-56,'#6a4a8a','12px "Microsoft YaHei"');
+      if(phaseI>=1) AnimKit.circle(ctx,W*0.35,m.yBot+40,14,'#8e5bb5','βγ');
+      if(phaseI>=2){ AnimKit.pill(ctx,W*0.62,m.yTop-24,120,120,'#e8f1fb','K⁺通道','#45687f'); AnimKit.arrow(ctx,W*0.35+20,m.yBot+40,W*0.62+20,m.yBot+10,'#8e5bb5',2.5); }
+      if(phaseI>=3){ for(var i=0;i<4;i++) AnimKit.circle(ctx,W*0.62+50+i*30,m.yBot+40,8,'#2e9e5b','K'); AnimKit.arrow(ctx,W*0.62+70,m.yBot+4,W*0.62+70,m.yBot+36,'#2e9e5b',2.5);
+        AnimKit.label(ctx,'K⁺外流→膜超极化→减慢心肌收缩',W/2,H-30,'#1f5c8b','bold 13px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①ACh结合受体','②G蛋白激活','③βγ开K⁺通道','④K⁺外流→减慢'][phaseI],W/2,H-12,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

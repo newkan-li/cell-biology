@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>信号类型</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'化学信号的四种作用方式',
+    sub:'内分泌(激素经血远距离)、旁分泌(局部介质)、神经递质/化学突触(点对点)、自分泌(作用于自身)。',
+    legend:[{c:'#5a7fa8',t:'信号细胞'},{c:'#2e9e5b',t:'靶细胞'}],
+    phases:[
+      {name:'① 内分泌',dur:1500,note:'激素分泌入血、广泛运送全身。'},
+      {name:'② 旁分泌',dur:1500,note:'局部介质只作用于周围细胞。'},
+      {name:'③ 神经递质/突触',dur:1500,note:'神经末梢释放，作用近、快、精确。'},
+      {name:'④ 自分泌',dur:1500,note:'作用于自身或同类细胞，常见于癌细胞。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'化学信号的作用方式',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var y=H/2+10;
+      AnimKit.circle(ctx,160,y,26,'#5a7fa8','S');
+      var names=['内分泌(经血全身)','旁分泌(局部)','神经递质(点对点)','自分泌(自身)'];
+      AnimKit.label(ctx,names[phaseI],W/2,y-90,'#1f5c8b','bold 14px "Microsoft YaHei"');
+      if(phaseI===0){ for(var i=0;i<3;i++) AnimKit.circle(ctx,300+i*90,y,24,'#2e9e5b','T'); }
+      if(phaseI===1){ AnimKit.circle(ctx,240,y,24,'#2e9e5b','T'); AnimKit.circle(ctx,320,y,24,'#2e9e5b','T'); AnimKit.label(ctx,'局部介质',280,y+50,'#45687f','12px "Microsoft YaHei"'); }
+      if(phaseI===2){ AnimKit.circle(ctx,260,y,24,'#2e9e5b','T'); AnimKit.arrow(ctx,190,y,238,y,'#c0392b',2.5); AnimKit.label(ctx,'突触',215,y-40,'#c0392b','12px "Microsoft YaHei"'); }
+      if(phaseI===3){ AnimKit.circle(ctx,230,y,26,'#5a7fa8','S'); AnimKit.arrow(ctx,200,y-40,230,y-30,'#c0392b',2.5); AnimKit.label(ctx,'作用于自身',280,y+50,'#c0392b','12px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①内分泌','②旁分泌','③神经递质','④自分泌'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>
