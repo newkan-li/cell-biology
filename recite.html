@@ -8,14 +8,18 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>背诵 · 名词解释与简答 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926av">
-<script src="assets/theme.js?v=20260926av"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926aw">
+<script src="assets/theme.js?v=20260926aw"></script>
 <style>
 .rbar2{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
 .rbar2 select,.rbar2 input{padding:5px 8px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:#fff}
 .ritem{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:8px 0}
 .rq{font-size:14px;font-weight:600;color:#1f5c8b;line-height:1.7}
 .rtag{font-size:11px;background:#eef4fb;color:#234f7a;border:1px solid #ccd8ea;border-radius:20px;padding:1px 8px;margin-right:6px;font-weight:500}
+.rtier{font-size:11px;border-radius:20px;padding:1px 8px;margin-right:6px;font-weight:600;border:1px solid}
+.rtier.t-必背{background:#fde3e0;color:#b03a2e;border-color:#f0c1ba}
+.rtier.t-常考{background:#fdf3d9;color:#9a6b00;border-color:#f0dca8}
+.rtier.t-了解{background:#eef1f4;color:#5b6b7b;border-color:#d6dee6}
 .rr{font-size:12.2px;color:#5b6b7b;margin-top:2px}
 .rbtns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .rbtns button{border:1px solid var(--line);background:#fff;border-radius:16px;padding:3px 12px;font-size:12.5px;cursor:pointer}
@@ -35,11 +39,15 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
 .pitem{page-break-inside:avoid;margin:0 0 14px}
 .pq{font-weight:600;font-size:14px;margin-bottom:4px}
 .plines>div{border-bottom:1px dotted #999;height:26px}
+.phead{font-weight:700;font-size:15px;margin:0 0 8px}
+.pseq{color:#1f5c8b;font-weight:700;margin-right:4px}
+.pch{font-size:11.5px;color:#666;font-weight:400;margin-left:6px}
 .pa{margin-top:4px;font-size:12.5px;color:#333;border-top:1px dashed #bbb;padding-top:4px}
 @media print{
   .noprint{display:none!important}
   body>.wrap{display:none!important}
-  #printarea{display:block!important}
+  #printarea{display:block!important;column-count:2;column-gap:20px}
+  .pitem{break-inside:avoid}
   body{background:#fff}
 }
 </style>
@@ -54,6 +62,12 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
 
   <div class="rbar2 noprint">
     <select id="fch"></select>
+    <select id="ftier" title="分层：必背优先，了解层可选">
+      <option value="必背">分层：必背</option>
+      <option value="常考">分层：常考</option>
+      <option value="了解">分层：了解</option>
+      <option value="">分层：全部</option>
+    </select>
     <select id="fkind">
       <option value="">全部类型</option>
       <option value="term">名词解释</option>
@@ -71,7 +85,7 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
 </div>
 <div id="printarea"></div>
 
-<script src="data/outline.js?v=20260926av"></script>
+<script src="data/outline.js?v=20260926aw"></script>
 <script>
 (function () {
   var ALL = window.OUTLINE || [];
@@ -80,14 +94,15 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
   function save() { try { localStorage.setItem(KEY, JSON.stringify(marks)); } catch (e) { } }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   var KIND = { term: "名解", short: "简答", calc: "论述" };
-  var host = document.getElementById("host"), fch = document.getElementById("fch"), fkind = document.getElementById("fkind"), fundo = document.getElementById("fundo"), fq = document.getElementById("fq"), rprog = document.getElementById("rprog");
+  var host = document.getElementById("host"), fch = document.getElementById("fch"), ftier = document.getElementById("ftier"), fkind = document.getElementById("fkind"), fundo = document.getElementById("fundo"), fq = document.getElementById("fq"), rprog = document.getElementById("rprog");
 
   var chs = []; ALL.forEach(function (x) { if (x.cid && chs.indexOf(x.cid) < 0) chs.push(x.cid); });
   fch.innerHTML = '<option value="">全部章节</option>' + chs.map(function (c) { var t = (ALL.find(function (x) { return x.cid === c; }) || {}).ctitle || c; return '<option value="' + c + '">' + esc(String(t).slice(0, 16)) + "</option>"; }).join("");
 
   function list() {
-    var c = fch.value, k = fkind.value, u = fundo.checked, q = fq.value.trim().toLowerCase();
+    var c = fch.value, k = fkind.value, u = fundo.checked, q = fq.value.trim().toLowerCase(), t = ftier.value;
     return ALL.filter(function (x) {
+      if (t && x.tier !== t) return false;
       if (c && x.cid !== c) return false;
       if (k && x.kind !== k) return false;
       if (u && marks[x.id] === "ok") return false;
@@ -96,9 +111,9 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
     });
   }
   function prog() {
-    var tot = ALL.length, ok = 0, part = 0, no = 0;
-    ALL.forEach(function (x) { var s = marks[x.id]; if (s === "ok") ok++; else if (s === "part") part++; else if (s === "no") no++; });
-    rprog.textContent = "已掌握 " + ok + " ｜ 部分 " + part + " ｜ 不会 " + no + " ｜ 共 " + tot;
+    var tot = ALL.length, ok = 0, part = 0, no = 0, tier = { 必背: 0, 常考: 0, 了解: 0 };
+    ALL.forEach(function (x) { var s = marks[x.id]; if (s === "ok") ok++; else if (s === "part") part++; else if (s === "no") no++; tier[x.tier] = (tier[x.tier] || 0) + 1; });
+    rprog.textContent = "必背 " + tier.必背 + " ｜ 常考 " + tier.常考 + " ｜ 了解 " + tier.了解 + " ｜ 已掌握 " + ok + " ／ 不会 " + no + " ｜ 共 " + tot;
   }
   function render() {
     var arr = list();
@@ -107,7 +122,7 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
       var st = marks[x.id] || "";
       var kp = x.kp ? '<a href="' + x.cid + '.html#s_' + esc(x.kp) + '">📄 讲义页</a>' : "";
       return '<div class="ritem" data-id="' + esc(x.id) + '">' +
-        '<div class="rq"><span class="rtag">' + (KIND[x.kind] || "题") + '</span>' + esc(x.q) + '</div>' +
+        '<div class="rq"><span class="rtier t-' + esc(x.tier || "了解") + '">' + esc(x.tier || "了解") + '</span><span class="rtag">' + (KIND[x.kind] || "题") + '</span>' + esc(x.q) + '</div>' +
         (x.ctitle ? '<div class="rr">' + esc(x.ctitle) + '</div>' : "") +
         '<div class="rbtns">' +
           '<button data-a="keys">💡 关键词提纲</button>' +
@@ -130,16 +145,19 @@ html[data-theme="dark"] .rkeys,html[data-theme="dark"] .rans{background:#22303d;
     if (marks[id] === a) { delete marks[id]; item.querySelector('[data-a="' + a + '"]').classList.remove("on"); } else { marks[id] = a; }
     save(); prog();
   });
-  [fch, fkind, fundo].forEach(function (el) { el.addEventListener("change", render); });
+  [fch, ftier, fkind, fundo].forEach(function (el) { el.addEventListener("change", render); });
   fq.addEventListener("input", render);
 
   document.getElementById("prbtn").addEventListener("click", function () {
     var arr = list(), withAns = document.getElementById("prans").checked;
-    document.getElementById("printarea").innerHTML = arr.map(function (x) {
-      var lines = '<div class="plines">' + new Array(4).join("<div></div>") + '<div></div></div>';
-      return '<div class="pitem"><div class="pq">[' + (KIND[x.kind] || "题") + '] ' + esc(x.q) + '</div>' + lines +
+    var tierSel = ftier.value || "全部";
+    var head = '<div class="phead">细胞生物学 · 名词解释/简答 默写纸　［' + esc(tierSel) + '］　共 ' + arr.length + ' 题　' + new Date().toLocaleDateString() + '</div>';
+    document.getElementById("printarea").innerHTML = head + (arr.map(function (x, i) {
+      var lines = '<div class="plines"><div></div><div></div><div></div></div>';
+      return '<div class="pitem"><div class="pq"><span class="pseq">' + (i + 1) + '.</span>[' + (KIND[x.kind] || "题") + '] ' + esc(x.q) +
+        (x.ctitle ? '<span class="pch">' + esc(String(x.ctitle).slice(0, 14)) + '</span>' : "") + '</div>' + lines +
         (withAns ? '<div class="pa">关键词：' + (x.keys || []).map(esc).join(" ； ") + '<br>' + esc(x.a) + '</div>' : "") + '</div>';
-    }).join("") || '<p>没有可打印的条目。</p>';
+    }).join("") || '<p>没有可打印的条目。</p>');
     window.print();
   });
 
