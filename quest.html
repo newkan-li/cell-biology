@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>闯关模式 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926bi">
-<script src="assets/theme.js?v=20260926bi"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926bj">
+<script src="assets/theme.js?v=20260926bj"></script>
 <style>
 .qtop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
 .qbar{flex:1;min-width:180px;height:12px;background:#eef2f8;border-radius:8px;overflow:hidden}
@@ -30,12 +30,18 @@
 .qt{font-size:12.6px;color:#33465c;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .qt .ic{width:16px}
 .qt.done{color:#1a7f37}
-.qt a{color:#234f7a;background:#eef4fb;border:1px solid #ccd8ea;border-radius:14px;padding:1px 8px;text-decoration:none;font-size:12px}
+.qt a{color:#234f7a;background:#eef4fb;border:1px solid #ccd8ea;border-radius:14px;padding:1px 8px;text-decoration:none;font-size:12px;white-space:nowrap}
 .qprog{height:6px;background:#eef2f8;border-radius:6px;overflow:hidden;margin-top:4px}
 .qprog>i{display:block;height:100%;background:#4a90d9}
 .stars{color:#e0a800;letter-spacing:1px;font-size:13px}
 .step{display:inline-flex;width:18px;height:18px;border-radius:50%;background:#eef4fb;color:#234f7a;font-size:11px;align-items:center;justify-content:center;font-weight:700;flex:0 0 18px}
 .qorder{font-size:11.5px;color:#7a8aa0;margin:4px 0 2px}
+.qextra{margin-top:8px;border:1px dashed var(--line);border-radius:8px;padding:6px 10px;background:#fafcff}
+.qextra>summary{cursor:pointer;font-size:12.5px;color:#234f7a;font-weight:600}
+.qgroup{margin:6px 0}
+.qgroup>b{display:block;font-size:12px;color:#5b6b7b;margin-bottom:3px}
+html[data-theme="dark"] .qextra{background:#1b2531;border-color:#2c3a4a}
+html[data-theme="dark"] .qextra>summary{color:#9fc3e6}
 html[data-theme="dark"] .step{background:#22303d;color:#9fc3e6}
 .subs{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
 .sub{font-size:11.5px;color:#5b6b7b;background:#f4f7fb;border:1px solid #dde6f0;border-radius:16px;padding:1px 9px}
@@ -88,16 +94,16 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   <footer style="margin-top:20px">仅供个人学习使用</footer>
 </div>
 
-<script src="data/manifest.js?v=20260926bi"></script>
-<script src="data/outline.js?v=20260926bi"></script>
-<script src="data/schedule.js?v=20260926bi"></script>
-<script src="data/expmap.js?v=20260926bi"></script>
-<script src="data/chapmeta.js?v=20260926bi"></script>
-<script src="data/zhenti.js?v=20260926bi"></script>
-<script src="data/ztobj.js?v=20260926bi"></script>
-<script src="data/history.js?v=20260926bi"></script>
-<script src="data/methods.js?v=20260926bi"></script>
-<script src="data/hotexp.js?v=20260926bi"></script>
+<script src="data/manifest.js?v=20260926bj"></script>
+<script src="data/outline.js?v=20260926bj"></script>
+<script src="data/schedule.js?v=20260926bj"></script>
+<script src="data/expmap.js?v=20260926bj"></script>
+<script src="data/chapmeta.js?v=20260926bj"></script>
+<script src="data/zhenti.js?v=20260926bj"></script>
+<script src="data/ztobj.js?v=20260926bj"></script>
+<script src="data/history.js?v=20260926bj"></script>
+<script src="data/methods.js?v=20260926bj"></script>
+<script src="data/hotexp.js?v=20260926bj"></script>
 <script>
 (function () {
   var PREFIX = "cellbio_";
@@ -272,34 +278,39 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
       if (cur) nextRec = s;
       if (s.done) doneCount++;
       var lt = (lessonByCh[s.cid] || []);
-      var sub = "第 " + s.cid.replace(/^(ch|tb)/, "") + (lt.length ? " 章 · 涉及第 " + lt[0] + (lt.length > 1 ? "–" + lt[lt.length - 1] : "") + " 讲" : " 章 · tb 教材章");
-      var subs = (s.lessons && s.lessons.length) ? '<div class="subs">' + s.lessons.map(function (L) {
+      var sub = "第 " + s.cid.replace(/^(ch|tb)/, "") + (lt.length ? " 章 · 涉及第 " + lt[0].n + (lt.length > 1 ? "–" + lt[lt.length - 1].n : "") + " 讲" : " 章 · tb 教材章");
+      function group(label, chips) { return '<div class="qgroup"><b>' + label + '</b><div class="subs">' + chips + '</div></div>'; }
+      var lessonChips = (s.lessons || []).map(function (L) {
         var ok = L.ratio >= 0.8;
         return '<span class="sub' + (ok ? " ok" : "") + '">' + (ok ? "✅" : "◻") + " 第" + L.n + "讲 " + esc(L.name || "") + " <b>" + L.done + "/" + L.total + "</b></span>";
-      }).join("") + "</div>" : "";
+      }).join("");
+      var expChips = (s.exp || []).map(function (e) {
+        return '<a class="sub' + (e.done ? " ok" : "") + '" href="' + s.cid + '.html#s_' + esc(e.k) + '" title="' + esc(e.title) + '">' + (e.done ? "✅" : "◯") + " " + esc(String(e.title).slice(0, 20)) + "</a>";
+      }).join("");
       var ex = s.extra || {}, exChips = [];
       if (ex.der) exChips.push('<span class="sub' + (ex.derDone >= ex.der ? " ok" : "") + '">🧮 推导 ' + ex.derDone + "/" + ex.der + "</span>");
       exChips.push('<span class="sub' + (ex.wrong ? "" : " ok") + '">❌ 错题 ' + (ex.wrong ? ex.wrong + " 条" : "已清零") + "</span>");
       if (ex.zt) exChips.push('<span class="sub">📋 真题 ' + ex.zt + ' <a href="zhenti.html">去练</a></span>');
-      var extraRow = '<div class="subs" style="margin-top:6px">' + exChips.join("") + "</div>";
-      /* 本章科学史 / 方法 / 高频实验（逐条，按章对应） */
       var hist = HIST.filter(function (h) { return h.ch === s.cid; });
       var meth = METH.filter(function (m) { return m.kp && m.kp.split("_s")[0] === s.cid; });
       var hot = HOTEXP.filter(function (h) { return h.ch === s.cid; });
-      var histRow = hist.length ? '<div class="subs" style="margin-top:6px"><span class="sub">🕰 本章科学史</span>' + hist.map(function (h) {
+      var histChips = hist.map(function (h) {
         var href = h.kp ? h.ch + ".html#s_" + esc(h.kp) : "history.html";
         return '<a class="sub" href="' + href + '" title="' + esc(h.t) + '">' + esc(String(h.t).slice(0, 16)) + "</a>";
-      }).join("") + "</div>" : "";
-      var methRow = meth.length ? '<div class="subs" style="margin-top:6px"><span class="sub">🧪 本章方法</span>' + meth.map(function (m) {
-        return '<a class="sub" href="methods.html#mth_' + METH.indexOf(m) + '" title="' + esc(m.t) + '">' + esc(m.t) + "</a>";
-      }).join("") + "</div>" : "";
-      var hotRow = hot.length ? '<div class="subs" style="margin-top:6px"><span class="sub">⭐ 高频实验</span>' + hot.map(function (h) {
+      }).join("");
+      var methChips = meth.map(function (m) { return '<a class="sub" href="methods.html#mth_' + METH.indexOf(m) + '" title="' + esc(m.t) + '">' + esc(m.t) + "</a>"; }).join("");
+      var hotChips = hot.map(function (h) {
         var href = h.kp ? "experiments.html#hot_" + esc(h.kp) : "experiments.html?ch=" + s.cid;
         return '<a class="sub" href="' + href + '" title="' + esc(h.e) + '">' + esc(String(h.e).slice(0, 16)) + "</a>";
-      }).join("") + "</div>" : "";
-      var expRow = (s.exp && s.exp.length) ? '<div class="subs" style="margin-top:6px"><span class="sub">🔬 本章实验</span>' + s.exp.map(function (e) {
-        return '<a class="sub' + (e.done ? " ok" : "") + '" href="' + s.cid + '.html#s_' + esc(e.k) + '" title="' + esc(e.title) + '">' + (e.done ? "✅" : "◯") + " " + esc(String(e.title).slice(0, 20)) + "</a>";
-      }).join("") + "</div>" : "";
+      }).join("");
+      var groups = [];
+      if (lessonChips) groups.push(group("🧩 讲次小关卡", lessonChips));
+      if (expChips) groups.push(group("🔬 本章实验（" + (s.exp || []).length + "）", expChips));
+      if (histChips) groups.push(group("🕰 本章科学史（" + hist.length + "）", histChips));
+      if (methChips) groups.push(group("🧪 本章方法（" + meth.length + "）", methChips));
+      if (hotChips) groups.push(group("⭐ 高频实验（" + hot.length + "）", hotChips));
+      if (exChips.length) groups.push(group("📌 支线", exChips.join("")));
+      var extraBox = groups.length ? '<details class="qextra"><summary>📚 拓展内容（讲次 ' + (s.lessons || []).length + " · 实验 " + (s.exp || []).length + " · 科学史 " + hist.length + " · 方法 " + meth.length + " · 高频实验 " + hot.length + "）</summary>" + groups.join("") + "</details>" : "";
       var rows = s.tasks.map(function (t, k) {
         var link = "";
         if (k === 0) link = '<a href="' + s.cid + '.html">去学习</a>';
@@ -317,7 +328,7 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
         '<div class="qsub">' + esc(sub) + ' · 任务 ' + s.doneN + "/" + s.n + '</div>' +
         '<div class="qorder">按 1→7 顺序完成：①学习 ②练习 ③背诵 ④闪卡/复习 ⑤通关测 ⑥实验 ⑦动画 —— 全部完成后通关并解锁下一关</div>' +
         '<div class="qprog"><i style="width:' + Math.round(s.doneN / s.n * 100) + '%"></i></div>' +
-        '<div class="qtasks" style="margin-top:6px">' + rows + '</div>' + subs + expRow + histRow + methRow + hotRow + extraRow + '</div></div>';
+        '<div class="qtasks" style="margin-top:6px">' + rows + '</div>' + extraBox + '</div></div>';
       prevDone = s.done;
     });
     document.getElementById("qhost").innerHTML = host;
