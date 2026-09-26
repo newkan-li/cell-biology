@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>学习报告 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926as">
-<script src="assets/theme.js?v=20260926as"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926at">
+<script src="assets/theme.js?v=20260926at"></script>
 <style>
 .rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:10px 0}
 .rcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:center}
@@ -42,7 +42,7 @@ html[data-theme="dark"] .rbar{background:#232c36}
 
   <div class="rsec">
     <h2>分章进度</h2>
-    <div class="hint" style="margin-bottom:6px">正确率按“首次作答”计（重做答对不覆盖首次）。<b>平均掌握度</b>＝该章已答考点掌握度的平均：单点掌握度＝正确率×0.6＋复习强度×0.4（复习强度由 SRS 复习次数算，上限 1）。所以<b>正确率 50% 且未复习时掌握度≈30%</b>，达不到 0.6，故“掌握页”为 0。已读*＝在讲义页手动点“已读”的页数。</div>
+    <div class="hint" style="margin-bottom:6px"><b>正确率＝答对题数 ÷ 本章总题量</b>（答对按“首次作答”计，重做答对不覆盖首次）。<b>平均掌握度</b>＝该章已答考点掌握度的平均：单点掌握度＝正确率×0.6＋复习强度×0.4（复习强度由 SRS 复习次数算，上限 1）；≥0.6 记为“掌握页”。已读*＝在讲义页手动点“已读”的页数。</div>
     <div style="overflow:auto"><table class="rtab" id="tab"></table></div>
   </div>
 
@@ -56,7 +56,7 @@ html[data-theme="dark"] .rbar{background:#232c36}
   <footer>仅供个人学习使用</footer>
 </div>
 
-<script src="data/manifest.js?v=20260926as"></script>
+<script src="data/manifest.js?v=20260926at"></script>
 <script>
 (function () {
   var PREFIX = "cellbio_";
@@ -119,7 +119,7 @@ html[data-theme="dark"] .rbar{background:#232c36}
   var reviewsDone = 0; Object.keys(SRS).forEach(function (k) { if (SRS[k] && (SRS[k].reps || 0) > 0) reviewsDone++; });
   var t = todayStr();
   var td = TASKS[t] || { read: 0, review: 0, practice: 0 };
-  var accAll = totalAtt > 0 ? Math.min(100, Math.round(totalOk / totalAtt * 100)) : null;
+  var accAll = totalQ > 0 ? Math.min(100, Math.round(totalOk / totalQ * 100)) : null;
   var studyRate = totalSlides ? Math.round(totalSeen / totalSlides * 100) : 0;
 
   function card(n, l) { return '<div class="rcard"><div class="rn">' + n + '</div><div class="rl">' + l + '</div></div>'; }
@@ -137,15 +137,15 @@ html[data-theme="dark"] .rbar{background:#232c36}
     card((td.read || 0) + "/" + (td.review || 0) + "/" + (td.practice || 0), "今日 读/复习/练");
   document.getElementById("g-practice").innerHTML =
     card(totalPract, "已做题目（含自测）") +
-    card(accAll == null ? "—" : accAll + "%", "总正确率") +
+    card(accAll == null ? "—" : accAll + "%", "答对 / 总题量（首次正确）") +
     card(totalWrong, "错题本条目") +
     card(Object.keys(PASSED).length, "通关章节数") +
     card(Object.keys(FC).length, "闪卡作答数");
 
-  var h = "<tr><th>章</th><th>页</th><th title='讲义页上手动点“已读”的页数；不做题也可能为 0'>已读*</th><th>掌握页</th><th title='平均掌握度 = mean(0.6×正确率+0.4×复习强度)；≥0.6 记为“掌握页”'>平均掌握度</th><th>做题</th><th title='按“首次作答”统计：重做答对不覆盖首次结果'>正确率</th><th>错题</th><th>通关</th><th>最近</th></tr>";
+  var h = "<tr><th>章</th><th>页</th><th title='讲义页上手动点“已读”的页数；不做题也可能为 0'>已读*</th><th>掌握页</th><th title='平均掌握度 = mean(0.6×正确率+0.4×复习强度)；≥0.6 记为“掌握页”'>平均掌握度</th><th>做题</th><th title='正确率 = 答对题数 / 本章总题量（n_q）；答对按“首次作答”计'>正确率</th><th>错题</th><th>通关</th><th>最近</th></tr>";
   row.forEach(function (r) {
     var done = r.pract, qrate = r.n_q ? Math.round(done / r.n_q * 100) : 0;
-    var acc = r.att > 0 ? Math.min(100, Math.round(r.ok / r.att * 100)) : null;
+    var acc = r.n_q > 0 ? Math.min(100, Math.round(r.ok / r.n_q * 100)) : null;
     var mrate = r.avgMastery == null ? null : Math.min(100, Math.round(r.avgMastery * 100));
     h += "<tr><td><a href='" + r.cid + ".html' style='color:#234f7a;text-decoration:none'>" + esc(String(r.title).slice(0, 14)) + "</a></td>" +
       "<td class='num'>" + r.n_slides + "</td>" +
