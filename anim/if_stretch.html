@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IF拉伸</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'中间纤维的机械性能：可拉伸、抗断裂',
+    sub:'单根中间纤维可被拉伸超过原长的 3 倍；拉伸时亚基间相互滑动、纤维变细而不易断裂，从而缓冲机械力。',
+    legend:[{c:'#2e9e5b',t:'中间纤维'}],
+    phases:[
+      {name:'① 原长(约280nm)',dur:1400,note:'中间纤维原长约 280nm。'},
+      {name:'② 受力拉伸',dur:1500,note:'受到机械力时被拉长。'},
+      {name:'③ 亚基滑动、变细',dur:1600,note:'亚基间相互滑动，纤维变细但不断。'},
+      {name:'④ 抗断裂、缓冲机械力',dur:1500,note:'可拉伸到原长 3 倍以上，缓冲机械力。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'IF 的拉伸',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+10, len=[280,420,700,700][phaseI]||280;
+      var wpx=Math.min(700,len*0.9); var thick=[22,16,8,8][phaseI];
+      ctx.strokeStyle='#2e9e5b';ctx.lineWidth=thick;ctx.beginPath();ctx.moveTo(W/2-wpx/2,cy);ctx.lineTo(W/2+wpx/2,cy);ctx.stroke();
+      AnimKit.label(ctx,'长度 ≈ '+len+'nm',W/2,cy+50,'#1e7a45','bold 13px "Microsoft YaHei"');
+      if(phaseI>=2) AnimKit.label(ctx,'变细 · 亚基相互滑动',W/2,cy+80,'#45687f','12px "Microsoft YaHei"');
+      if(phaseI>=3) AnimKit.label(ctx,'可拉伸>3倍而不断裂 → 缓冲机械力',W/2,cy+112,'#1f5c8b','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①原长','②受力拉伸','③变细/滑动','④抗断裂'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>钙信号</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'细胞内低 Ca²⁺ 的维持与释放',
+    sub:'细胞把胞质 Ca²⁺ 压得极低(约 10⁻⁷M)：膜对 Ca²⁺ 不通透、质膜与 ER 膜有 Ca²⁺ 泵、线粒体也 Ca²⁺ 转运；受刺激时打开质膜/ER 的 Ca²⁺ 通道，Ca²⁺ 迅速升高成为强信号。',
+    legend:[{c:'#2e9e5b',t:'Ca²⁺'},{c:'#5a7fa8',t:'Ca²⁺泵(排出/储存)'}],
+    phases:[
+      {name:'① 维持极低胞质 Ca²⁺',dur:1500,note:'质膜不通透 + 泵把 Ca²⁺ 排出/存入 ER。'},
+      {name:'② 刺激：打开 Ca²⁺ 通道',dur:1500,note:'受刺激时质膜与 ER 的 Ca²⁺ 通道开放。'},
+      {name:'③ 胞质 Ca²⁺ 迅速升高',dur:1600,note:'Ca²⁺ 从膜外/ER 快速进入胞质。'},
+      {name:'④ 触发细胞反应',dur:1500,note:'Ca²⁺ 作为第二信使触发收缩、分泌等。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'胞质低 Ca²⁺ 的维持与释放',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var m=AnimKit.membrane(ctx,W,H,{yTop:H*0.36,yBot:H*0.50,cx:W*0.5,gap:90});
+      AnimKit.pill(ctx,W*0.7,m.yBot+40,150,90,'#eef4fa','内质网(钙库)','#45687f');
+      if(phaseI<1){ AnimKit.label(ctx,'泵把 Ca²⁺ 排出/存入 ER → 胞质极低',W/2,H-50,'#45687f','12px "Microsoft YaHei"'); }
+      if(phaseI>=1){ for(var i=0;i<5;i++) AnimKit.circle(ctx,W*0.5-40+i*20,m.yTop+10,6,'#2e9e5b','C');
+        AnimKit.circle(ctx,W*0.7,m.yBot+4,10,'#2e9e5b','C'); }
+      if(phaseI>=2){ AnimKit.arrow(ctx,W*0.7,m.yBot+40,W*0.7,m.yBot-6,'#2e9e5b',2.5); AnimKit.label(ctx,'Ca²⁺ 释放',W*0.7,m.yBot+140,'#1e7a45','12px "Microsoft YaHei"'); }
+      if(phaseI>=3){ AnimKit.label(ctx,'Ca²⁺ 升高 → 肌肉收缩/分泌/基因表达',W/2,H-30,'#1f5c8b','bold 13px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①维持极低','②打开通道','③Ca²⁺升高','④触发反应'][phaseI],W/2,H-10,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

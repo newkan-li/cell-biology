@@ -1,0 +1,34 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HPV</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'人乳头瘤病毒(HPV)与宫颈癌、HPV 疫苗',
+    sub:'HPV 是嗜上皮性的小 DNA 病毒（直径 45–55nm，衣壳二十面体对称），高危型与子宫颈癌、肛门癌有关；HPV 疫苗可显著降低相关早期癌风险。',
+    legend:[{c:'#8e5bb5',t:'HPV'},{c:'#c0392b',t:'高危型→癌'}],
+    phases:[
+      {name:'① HPV 是嗜上皮小 DNA 病毒',dur:1500,note:'直径 45–55nm、衣壳二十面体对称，嗜上皮。'},
+      {name:'② 高危型持续感染',dur:1500,note:'高危型 HPV 持续感染上皮细胞。'},
+      {name:'③ 干扰生长调控→癌前',dur:1600,note:'病毒基因产物干扰细胞生长调控，形成癌前病变。'},
+      {name:'④ 疫苗预防',dur:1500,note:'HPV 疫苗对早期癌提供>90% 保护。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'HPV 与宫颈癌',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+10;
+      // 病毒
+      AnimKit.circle(ctx,W*0.25,cy,44,'#efe8fb',null);
+      for(var i=0;i<12;i++){ var a=i/12*Math.PI*2; AnimKit.circle(ctx,W*0.25+34*Math.cos(a),cy+34*Math.sin(a),6,'#8e5bb5',null); }
+      AnimKit.circle(ctx,W*0.25,cy,14,'#8e5bb5','DNA');
+      AnimKit.label(ctx,'HPV(小DNA病毒)',W*0.25,cy+70,'#6a4a8a','12px "Microsoft YaHei"');
+      // 上皮
+      AnimKit.pill(ctx,W*0.58,cy-70,180,140,'#eef4fa','子宫颈上皮','#45687f');
+      if(phaseI>=1) AnimKit.circle(ctx,W*0.58+30,cy-20,10,'#8e5bb5','V');
+      if(phaseI>=2) AnimKit.circle(ctx,W*0.58-20,cy+20,14,'#c0392b',null), AnimKit.label(ctx,'癌前病变',W*0.58,cy+90,'#c0392b','12px "Microsoft YaHei"');
+      if(phaseI>=3) AnimKit.pill(ctx,W-250,cy-20,180,40,'#2e9e5b','HPV疫苗>90%保护','#fff');
+      AnimKit.label(ctx,['①嗜上皮小DNA病毒','②高危型持续感染','③干扰调控→癌前','④疫苗预防'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

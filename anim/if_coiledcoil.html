@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IF超螺旋</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'中间纤维装配：双股超螺旋与反平行四聚体',
+    sub:'两个相邻 IF 蛋白亚基的对应 α-螺旋区盘绕成双股超螺旋(二聚体)；两个二聚体反向平行交错成四聚体，因此无极性。',
+    legend:[{c:'#2e9e5b',t:'单体'},{c:'#5a7fa8',t:'二聚体'},{c:'#8e5bb5',t:'四聚体'}],
+    phases:[
+      {name:'① 两单体 α-螺旋对应',dur:1500,note:'两个单体的 α-螺旋区彼此对应。'},
+      {name:'② 盘绕成双股超螺旋',dur:1600,note:'盘绕成双股超螺旋，即二聚体。'},
+      {name:'③ 反向平行成四聚体',dur:1600,note:'两个二聚体反向平行交错排列成四聚体。'},
+      {name:'④ 无极性',dur:1500,note:'二聚体指向相反，故四聚体本身无极性。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'IF 超螺旋装配',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+10;
+      if(phaseI<=1){ ctx.strokeStyle='#2e9e5b';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(W/2-24,cy-70);ctx.lineTo(W/2-24,cy+70);ctx.stroke();
+        ctx.strokeStyle='#5a7fa8';ctx.beginPath();ctx.moveTo(W/2+24,cy-70+(phaseI>=1?0:30));ctx.lineTo(W/2+24,cy+70);ctx.stroke();
+        if(phaseI>=1) AnimKit.label(ctx,'双股超螺旋(二聚体)',W/2,cy+96,'#45687f','12px "Microsoft YaHei"'); }
+      else { ctx.strokeStyle='#5a7fa8';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(W/2-100,cy-70);ctx.lineTo(W/2-100,cy+70);ctx.moveTo(W/2-80,cy+70);ctx.lineTo(W/2-80,cy-70);ctx.stroke();
+        ctx.strokeStyle='#8e5bb5';ctx.beginPath();ctx.moveTo(W/2+40,cy-70);ctx.lineTo(W/2+40,cy+70);ctx.moveTo(W/2+60,cy+70);ctx.lineTo(W/2+60,cy-70);ctx.stroke();
+        AnimKit.label(ctx,'反向平行四聚体(无极性)',W/2,cy+96,'#6a4a8a','12px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①α-螺旋对应','②双股超螺旋','③反平行四聚体','④无极性'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

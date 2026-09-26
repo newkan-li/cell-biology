@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自由基损伤</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'自由基对生物大分子的氧化损伤与衰老',
+    sub:'自由基具有高度氧化活性、力图得电子，会损伤 DNA、蛋白质和脂类（尤其多不饱和脂肪酸），损伤累积导致衰老。',
+    legend:[{c:'#c0392b',t:'自由基(ROS)'},{c:'#5a7fa8',t:'生物大分子'}],
+    phases:[
+      {name:'① 产生自由基',dur:1400,note:'外源(辐射/污染)与内源(线粒体呼吸链泄漏)产生。'},
+      {name:'② 掠夺电子、氧化',dur:1500,note:'自由基抢夺生物大分子的电子，发生氧化。'},
+      {name:'③ 损伤 DNA/蛋白/脂',dur:1600,note:'使大分子变性、交联，损伤 DNA、生物膜、蛋白。'},
+      {name:'④ 累积 → 衰老',dur:1500,note:'损伤累积导致细胞衰老、功能下降。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'自由基与氧化损伤',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+10;
+      if(phaseI>=0){ for(var i=0;i<6;i++) AnimKit.circle(ctx,150+i*40, cy-80+((Math.floor(fc/20)+i)%2)*20,10,'#c0392b','R'); AnimKit.label(ctx,'自由基(ROS)',W*0.35,cy-120,'#c0392b','12px "Microsoft YaHei"'); }
+      var targets=[['DNA','#5a7fa8'],['蛋白质','#8e5bb5'],['膜脂','#e0a95a']];
+      targets.forEach(function(o,i){ var x=W*0.35+i*W*0.15; var hit=phaseI>=2;
+        ctx.fillStyle=hit?'#f2d6d1':'#eef4fa'; ctx.strokeStyle=o[1]; ctx.lineWidth=2; AnimKit.roundRect(ctx,x-50,cy+10,100,60,10); ctx.fill(); ctx.stroke();
+        AnimKit.label(ctx,o[0],x,cy+44,o[1],'12px "Microsoft YaHei"');
+        if(hit){ for(var j=0;j<3;j++) AnimKit.circle(ctx,x-30+j*30,cy-10,7,'#c0392b','R'); AnimKit.arrow(ctx,x,cy-10,x,cy+8,'#c0392b',2); } });
+      if(phaseI>=3) AnimKit.label(ctx,'损伤累积 → 衰老',W/2,cy+120,'#c0392b','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①产生自由基','②氧化夺电子','③损伤大分子','④累积→衰老'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

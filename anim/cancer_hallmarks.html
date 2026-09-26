@@ -1,0 +1,28 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>癌细胞特征</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'癌细胞的五大基本特征',
+    sub:'①生长分裂失控、无接触抑制；②“永生”（端粒酶高/自分泌）；③染色体异常、表达谱改变；④细胞黏着降低、相互作用改变；⑤浸润性与扩散性。',
+    legend:[{c:'#c0392b',t:'异常'}],
+    phases:[
+      {name:'① 生长分裂失控',dur:1500,note:'无接触抑制，持续增殖。'},
+      {name:'② 永生',dur:1500,note:'自分泌生长因子/端粒酶活性高。'},
+      {name:'③ 染色体异常',dur:1500,note:'非整倍体、缺失/增加，表达谱改变。'},
+      {name:'④⑤ 黏着降低、浸润转移',dur:1600,note:'突破连接控制、异常表达水解酶，具浸润与扩散性。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'癌细胞基本特征',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var feats=[['生长失控','无接触抑制'],['永生','自分泌/端粒酶高'],['染色体异常','非整倍体/表达谱变'],['黏着降低','相互作用改变'],['浸润转移','扩散性']];
+      feats.forEach(function(f,i){ var cols=3, x=W*0.2+(i%cols)*W*0.28, y=120+Math.floor(i/cols)*140, on=(phaseI===i||phaseI===3);
+        ctx.fillStyle=on?'#f2d6d1':'#eef4fa'; ctx.strokeStyle=on?'#c0392b':'#c6d8ea'; ctx.lineWidth=on?3:1.5; AnimKit.roundRect(ctx,x-90,y-46,180,92,10); ctx.fill(); ctx.stroke();
+        AnimKit.label(ctx,f[0],x,y-6,on?'#c0392b':'#45687f','bold 13px "Microsoft YaHei"');
+        AnimKit.label(ctx,f[1],x,y+18,'#6a7a8a','11px "Microsoft YaHei"'); });
+      AnimKit.label(ctx,'①失控  ②永生  ③染色体异常  ④黏着降低  ⑤浸润转移',W/2,H-16,'#1f5c8b','bold 12.5px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

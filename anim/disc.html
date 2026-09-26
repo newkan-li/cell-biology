@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DISC</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'外源凋亡：Fas 受体组装 DISC 激活 caspase-8',
+    sub:'杀伤性 T 细胞的 Fas 配体结合靶细胞 Fas 受体 → 受体聚拢 → 与接头蛋白、caspase-8 组成 DISC(死亡诱导信号复合体) → 激活 caspase-8 → 启动凋亡。',
+    legend:[{c:'#8e5bb5',t:'Fas/L配体'},{c:'#c0392b',t:'caspase-8'},{c:'#5a7fa8',t:'接头蛋白'}],
+    phases:[
+      {name:'① FasL 结合 Fas',dur:1500,note:'杀伤性 T 细胞的 FasL 结合靶细胞 Fas。'},
+      {name:'② 受体聚拢、招募接头蛋白',dur:1600,note:'受体聚拢，死亡结构域招募接头蛋白 FADD。'},
+      {name:'③ 组装 DISC',dur:1600,note:'接头蛋白与 caspase-8 组成 DISC。'},
+      {name:'④ 激活 caspase-8 → 凋亡',dur:1600,note:'caspase-8 被激活，启动 caspase 级联。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'外源凋亡与 DISC',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var m=AnimKit.membrane(ctx,W,H,{yTop:H*0.38,yBot:H*0.52,cx:W/2,gap:90});
+      var xs=[W/2-40,W/2-13,W/2+13,W/2+40];
+      xs.forEach(function(x,i){ ctx.strokeStyle='#8e5bb5';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(x,m.yTop-24);ctx.lineTo(x,m.yBot+24);ctx.stroke(); });
+      if(phaseI>=0) for(var i=0;i<3;i++) AnimKit.circle(ctx,W/2-34+i*34,m.yTop-48,8,'#8e5bb5','L');
+      AnimKit.label(ctx,'Fas(死亡受体)',W/2,m.yBot+44,'#6a4a8a','12px "Microsoft YaHei"');
+      if(phaseI>=1) for(var j=0;j<4;j++) AnimKit.pill(ctx,xs[j]-12,m.yBot+40,24,26,'#5a7fa8','A');
+      if(phaseI>=2) AnimKit.pill(ctx,W/2-70,m.yBot+84,140,36,'#8e5bb5','DISC','#fff');
+      if(phaseI>=3){ AnimKit.circle(ctx,W/2,m.yBot+150,20,'#c0392b','8'); AnimKit.arrow(ctx,W/2,m.yBot+122,W/2,m.yBot+132,'#c0392b',2.5); AnimKit.label(ctx,'caspase-8 激活 → 凋亡',W/2,m.yBot+190,'#c0392b','bold 13px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①FasL结合Fas','②受体聚拢/接头','③组装DISC','④激活caspase-8'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

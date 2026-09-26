@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>G蛋白开关</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'异三聚体 G 蛋白的开/关循环',
+    sub:'G 蛋白由 α、β、γ 三亚基组成：α 结合 GTP 时激活并与 βγ 分离、开启效应器；α 的 GTPase 水解 GTP 为 GDP 后失活、与 βγ 复位。',
+    legend:[{c:'#2e9e5b',t:'α-GTP(开)'},{c:'#8e5bb5',t:'βγ'},{c:'#5a7fa8',t:'α-GDP(关)'}],
+    phases:[
+      {name:'① 静止态',dur:1400,note:'α、β、γ 结合，α 上为 GDP，处于关闭。'},
+      {name:'② 结合 GTP → 激活',dur:1500,note:'受体催化 GDP→GTP，α 激活。'},
+      {name:'③ α 与 βγ 分离、开启效应器',dur:1600,note:'活化的 α-GTP 去开启效应器(酶/通道)。'},
+      {name:'④ GTPase 水解 → 关闭',dur:1600,note:'α 水解 GTP 为 GDP，与 βγ 复位(失活)。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'G 蛋白开关',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+10, cx=W/2;
+      var on=phaseI===1||phaseI===2;
+      var a1=cx-(on?60:0);
+      AnimKit.circle(ctx,a1,cy,26, on?'#2e9e5b':'#5a7fa8','α');
+      AnimKit.label(ctx, on?'GTP':'GDP', a1,cy, '#fff','bold 11px Arial');
+      AnimKit.circle(ctx,cx+(on?40:0),cy,18,'#8e5bb5','β'); AnimKit.circle(ctx,cx+(on?66:0),cy,18,'#8e5bb5','γ');
+      if(phaseI===2){ AnimKit.pill(ctx,W-260,cy-20,180,40,'#e6ecf2','效应器被开启','#45687f'); AnimKit.arrow(ctx,a1+28,cy,W-266,cy,'#2e9e5b',2.5); }
+      if(phaseI===3){ AnimKit.label(ctx,'GTPase 水解 GTP → GDP',cx,cy-70,'#c0392b','12px "Microsoft YaHei"'); AnimKit.label(ctx,'α 与 βγ 复位(失活)',cx,cy+70,'#45687f','12px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①静止(GDP)','②GTP→激活','③分离/开启效应器','④水解→关闭'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>
