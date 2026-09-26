@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>闯关模式 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926bp">
-<script src="assets/theme.js?v=20260926bp"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926bq">
+<script src="assets/theme.js?v=20260926bq"></script>
 <style>
 .qtop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
 .qbar{flex:1;min-width:180px;height:12px;background:#eef2f8;border-radius:8px;overflow:hidden}
@@ -62,6 +62,29 @@ html[data-theme="dark"] .exq{background:#1b2531;border-color:#2c3a4a}
 html[data-theme="dark"] .exq>summary{color:#9fc3e6}
 html[data-theme="dark"] .exq-body{color:#c9d6e2}
 html[data-theme="dark"] .exq-ex{background:#2a2618;border-color:#4a4326;color:#e0c060}
+.exq-qlist{margin-top:2px}
+.exq-q{border:1px dashed #dde6f0;border-radius:8px;padding:6px 9px;margin:5px 0;background:#fdfefe}
+.exq-qt{font-size:12.6px;color:#33465c;line-height:1.6}
+.exq-opts{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.exq-opt{border:1px solid var(--line);background:#fff;border-radius:14px;padding:3px 10px;font-size:12.3px;cursor:pointer}
+.exq-opt:disabled{cursor:default}
+.exq-opt.right{background:#eef8f0;border-color:#7fc98f;color:#1a7f37}
+.exq-opt.wrong{background:#fdecea;border-color:#e6a9a0;color:#b03a2e;text-decoration:line-through}
+.exq-fill{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap}
+.exq-fill input{flex:1;min-width:200px;padding:4px 8px;border:1px solid var(--line);border-radius:8px;font-size:12.5px}
+.exq-btn{border:1px solid var(--line);background:#fff;border-radius:14px;padding:3px 10px;font-size:12.2px;cursor:pointer}
+.exq-btn:disabled{cursor:default}
+.exq-btn.ok{border-color:#7fc98f;color:#1a7f37}.exq-btn.ok.on{background:#2f9e5b;color:#fff}
+.exq-btn.part{border-color:#d9b25a;color:#9a6b00}.exq-btn.part.on{background:#9a6b00;color:#fff}
+.exq-btn.no{border-color:#e6a9a0;color:#b03a2e}.exq-btn.no.on{background:#c0392b;color:#fff}
+.exq-acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+.exq-msg{margin-top:5px;font-size:12px}
+.exq-msg.ok{color:#1a7f37}.exq-msg.no{color:#c0392b}.exq-msg.part{color:#9a6b00}
+.exq-ans{margin-top:5px;font-size:12.3px;color:#25405a;background:#f3f8ff;border:1px solid #cfe0ee;border-radius:6px;padding:5px 8px}
+.exq-e{color:#5b6b7b;margin-top:3px}
+html[data-theme="dark"] .exq-q{background:#1b2531;border-color:#33475a}
+html[data-theme="dark"] .exq-opt,html[data-theme="dark"] .exq-btn,html[data-theme="dark"] .exq-fill input{background:#22303d;border-color:#33475a;color:#c9d6e2}
+html[data-theme="dark"] .exq-ans{background:#22303d;border-color:#33475a;color:#c9d6e2}
 html[data-theme="dark"] .step{background:#22303d;color:#9fc3e6}
 .subs{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
 .sub{font-size:11.5px;color:#5b6b7b;background:#f4f7fb;border:1px solid #dde6f0;border-radius:16px;padding:1px 9px}
@@ -121,22 +144,43 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   <footer style="margin-top:20px">仅供个人学习使用</footer>
 </div>
 
-<script src="data/manifest.js?v=20260926bp"></script>
-<script src="data/outline.js?v=20260926bp"></script>
-<script src="data/schedule.js?v=20260926bp"></script>
-<script src="data/expmap.js?v=20260926bp"></script>
-<script src="data/chapmeta.js?v=20260926bp"></script>
-<script src="data/zhenti.js?v=20260926bp"></script>
-<script src="data/ztobj.js?v=20260926bp"></script>
-<script src="data/history.js?v=20260926bp"></script>
-<script src="data/methods.js?v=20260926bp"></script>
-<script src="data/hotexp.js?v=20260926bp"></script>
-<script src="data/kpqa.js?v=20260926bp"></script>
+<script src="data/manifest.js?v=20260926bq"></script>
+<script src="data/outline.js?v=20260926bq"></script>
+<script src="data/schedule.js?v=20260926bq"></script>
+<script src="data/expmap.js?v=20260926bq"></script>
+<script src="data/chapmeta.js?v=20260926bq"></script>
+<script src="data/zhenti.js?v=20260926bq"></script>
+<script src="data/ztobj.js?v=20260926bq"></script>
+<script src="data/history.js?v=20260926bq"></script>
+<script src="data/methods.js?v=20260926bq"></script>
+<script src="data/hotexp.js?v=20260926bq"></script>
+<script src="data/kpqa.js?v=20260926bq"></script>
 <script>
 (function () {
   var PREFIX = "cellbio_";
   function jget(k, d) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
   function jset(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { } }
+  var QPOOL = [];
+  function addWrongQ(cid, e) { var a = jget(skey(cid, "wrong"), []).filter(function (x) { return x.id !== e.id; }); a.push(e); jset(skey(cid, "wrong"), a); }
+  function clearWrongQ(cid, id) { jset(skey(cid, "wrong"), jget(skey(cid, "wrong"), []).filter(function (x) { return x.id !== id; })); }
+  function recordKp(kp, ok) { if (!kp) return; var o = jget(PREFIX + "kpStats", {}); var c = o[kp] || { ok: 0, n: 0 }; if (c.first === undefined) c.first = !!ok; c.lastOk = !!ok; c.n = (c.n || 0) + 1; if (ok) c.ok = (c.ok || 0) + 1; o[kp] = c; jset(PREFIX + "kpStats", o); }
+  function recordQ(cid, item, chosen, ok, correctText) {
+    var kind = item.k;
+    if (kind === "mcq" || kind === "judge" || kind === "fill") {
+      var store = jget(skey(cid, kind), {}), r = store[item.id] || { ok: 0, miss: 0 };
+      if (r.first === undefined) r.first = ok; r.n = (r.n || 0) + 1; r.last = chosen;
+      if (ok) { r.ok = (r.ok || 0) + 1; r.miss = Math.max(0, (r.miss || 0) - 1); } else { r.miss = (r.miss || 0) + 1; r.ok = Math.max(0, (r.ok || 0) - 1); }
+      store[item.id] = r; jset(skey(cid, kind), store);
+    } else {
+      var st = jget(skey(cid, "self"), {}), r2 = st[item.id] || { ok: 0, miss: 0 };
+      if (ok) { r2.ok = (r2.ok || 0) + 1; r2.miss = Math.max(0, (r2.miss || 0) - 1); r2.state = "ok"; }
+      else { r2.miss = (r2.miss || 0) + 1; r2.ok = Math.max(0, (r2.ok || 0) - 1); r2.state = (chosen === "part" ? "part" : "no"); }
+      st[item.id] = r2; jset(skey(cid, "self"), st);
+    }
+    if (ok) clearWrongQ(cid, item.id);
+    else if (!(kind !== "mcq" && kind !== "judge" && kind !== "fill" && chosen === "part")) addWrongQ(cid, { id: item.id, type: kind, q: item.q, correct: correctText, chosen: String(chosen), cause: "", ts: Date.now() });
+    recordKp(item.kp, ok);
+  }
   function skey(cid, kind) { return PREFIX + kind + ":" + cid; }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 
@@ -315,7 +359,69 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
     var inp = document.getElementById("qwt");
     if (inp) inp.onchange = function () { WB_TARGET = Math.max(10, Math.min(100, parseInt(inp.value, 10) || 70)); jset(PREFIX + "weekBossTarget", WB_TARGET); renderWeekly(); };
   }
+  function correctTextOf(item) {
+    if (item.k === "mcq") { var L = String(item.a).trim().charAt(0); for (var i = 0; i < (item.o || []).length; i++) { if (String(item.o[i]).trim().charAt(0) === L) return item.o[i]; } return item.a; }
+    return item.a;
+  }
+  function fillOk(ans, val) {
+    var norm = function (x) { return String(x).replace(/[\s，,、；;。.]/g, ""); };
+    var A = norm(val); if (!A) return false;
+    var toks = String(ans).split(/[；;，,、]/).map(norm).filter(function (x) { return x.length >= 1; });
+    if (!toks.length) return false;
+    return toks.every(function (t) { return A.indexOf(t) >= 0; });
+  }
+  function buildQHtml(cid, item) {
+    var qi = QPOOL.push({ cid: cid, item: item }) - 1;
+    var kn = KINDNAME[item.k] || item.k, body = "";
+    if (item.k === "mcq") {
+      body = '<div class="exq-opts">' + (item.o || []).map(function (o) { var L = String(o).trim().charAt(0); return '<button class="exq-opt" data-qi="' + qi + '" data-ch="' + esc(L) + '">' + esc(o) + "</button>"; }).join("") + "</div>";
+    } else if (item.k === "judge") {
+      body = '<div class="exq-opts"><button class="exq-opt" data-qi="' + qi + '" data-ch="对">对</button><button class="exq-opt" data-qi="' + qi + '" data-ch="错">错</button></div>';
+    } else if (item.k === "fill") {
+      body = '<div class="exq-fill"><input class="ans" data-qi="' + qi + '" placeholder="输入答案（多空用逗号/分号分隔）"><button class="exq-btn" data-qi="' + qi + '" data-act="submitfill">提交</button></div>';
+    } else {
+      body = '<textarea class="ta" rows="2" data-qi="' + qi + '" placeholder="先自己写要点，再点“参考答案”核对"></textarea><div class="exq-acts"><button class="exq-btn" data-qi="' + qi + '" data-act="showans">📖 参考答案</button><button class="exq-btn ok" data-qi="' + qi + '" data-act="self" data-s="ok">✓ 掌握</button><button class="exq-btn part" data-qi="' + qi + '" data-act="self" data-s="part">△ 部分</button><button class="exq-btn no" data-qi="' + qi + '" data-act="self" data-s="no">✗ 不会</button></div>';
+    }
+    return '<div class="exq-q" data-qi="' + qi + '"><div class="exq-qt"><span class="qk">' + esc(kn) + "</span>" + esc(item.q) + "</div>" + body + '<div class="exq-msg"></div><div class="exq-ans" hidden></div></div>';
+  }
+  function onQClick(ev) {
+    var b = ev.target.closest ? ev.target.closest("[data-qi]") : null; if (!b) return;
+    var qi = +b.dataset.qi, ctx = QPOOL[qi]; if (!ctx) return;
+    var box = b.closest(".exq-q"), item = ctx.item, cid = ctx.cid, msg = box.querySelector(".exq-msg"), ansEl = box.querySelector(".exq-ans");
+    function reveal(correctText, ok, chosen) {
+      recordQ(cid, item, chosen, ok, correctText);
+      ansEl.hidden = false;
+      ansEl.innerHTML = "<b>正确答案：</b>" + esc(correctText) + (item.e ? '<div class="exq-e">' + esc(item.e) + "</div>" : "");
+      msg.className = "exq-msg " + (ok ? "ok" : "no");
+      msg.textContent = ok ? "✓ 答对（已掌握）" : "✗ 答错，已加入错题本";
+    }
+    if (b.classList.contains("exq-opt")) {
+      if (box.dataset.done) return; box.dataset.done = "1";
+      var ch = b.dataset.ch, correct = String(item.a).trim();
+      var isOk = (item.k === "mcq") ? (ch === correct.charAt(0)) : (ch === correct);
+      Array.prototype.forEach.call(box.querySelectorAll(".exq-opt"), function (o) {
+        o.disabled = true; var L = String(o.dataset.ch);
+        if ((item.k === "mcq" ? L === correct.charAt(0) : L === correct)) o.classList.add("right");
+        if (L === ch && !isOk) o.classList.add("wrong");
+      });
+      reveal(correctTextOf(item), isOk, ch);
+    } else if (b.dataset.act === "submitfill") {
+      if (box.dataset.done) return; box.dataset.done = "1";
+      var inp = box.querySelector("input"), val = inp.value; inp.disabled = true;
+      reveal(item.a, fillOk(item.a, val), val || "(空)");
+    } else if (b.dataset.act === "showans") {
+      ansEl.hidden = false;
+      ansEl.innerHTML = "<b>参考答案：</b>" + esc(item.a) + (item.e ? '<div class="exq-e">' + esc(item.e) + "</div>" : "");
+    } else if (b.dataset.act === "self") {
+      if (box.dataset.done) return; box.dataset.done = "1";
+      var s = b.dataset.s, ok = (s === "ok");
+      Array.prototype.forEach.call(box.querySelectorAll('[data-act="self"]'), function (x) { x.disabled = true; if (x.dataset.s === s) x.classList.add("on"); });
+      reveal(item.a, ok, s);
+      if (s === "part") { msg.className = "exq-msg part"; msg.textContent = "△ 部分掌握（未计入错题本，建议复习）"; }
+    }
+  }
   function render() {
+    QPOOL.length = 0;
     var allow = skipEl.checked;
     var doneCount = 0, prevDone = true, host = "", nextRec = null;
     var icon = ["📖 学习", "✍️ 练习", "🧠 背诵", "🃏 闪卡/复习", "🏁 通关测", "🔬 实验", "🎬 动画"];
@@ -338,14 +444,12 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
       var expBox = (s.exp || []).map(function (e) {
         var q = KPQA[e.k] || {};
         var pts = (q.p || []).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("");
-        var qs = (q.q || []).map(function (x) {
-          return '<li><span class="qk">' + esc(KINDNAME[x[0]] || x[0]) + "</span>" + esc(x[1]) + ' <span class="qa">答：' + esc(x[2]) + "</span></li>";
-        }).join("");
+        var qs = (q.q || []).map(function (x) { return buildQHtml(s.cid, x); }).join("");
         var ex = q.ex ? '<div class="exq-ex">🧪 ' + esc(q.ex) + "</div>" : "";
         return '<details class="exq"><summary>' + (e.done ? "✅" : "◯") + " " + esc(String(e.title).slice(0, 28)) + "</summary>" +
           '<div class="exq-body">' +
           (pts ? "<b>考点：</b><ul class=\"exq-pts\">" + pts + "</ul>" : "") + ex +
-          "<b>对应考题：</b>" + (qs ? '<ul class="exq-qs">' + qs + "</ul>" : '<span class="hint">暂无精确对应题，去 <a href="' + s.cid + '.html">本章练习</a> / <a href="recite.html?ch=' + s.cid + '">背诵</a> 巩固</span>') +
+          "<b>对应考题（先作答，再自动判分；答错自动进错题本）：</b>" + (qs ? '<div class="exq-qlist">' + qs + "</div>" : '<span class="hint">暂无精确对应题，去 <a href="' + s.cid + '.html">本章练习</a> / <a href="recite.html?ch=' + s.cid + '">背诵</a> 巩固</span>') +
           '<div style="margin-top:4px"><a class="sub" href="' + s.cid + '.html#s_' + esc(e.k) + '">📄 讲义页</a></div>' +
           "</div></details>";
       }).join("");
@@ -472,6 +576,7 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
     renderPace(doneCount, lDone, lTot);
     renderWeekly();
   }
+  document.getElementById("qhost").addEventListener("click", onQClick);
   render();
 })();
 </script>
