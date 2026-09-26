@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MPF结构</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'MPF 的结构：催化亚基 CDK + 调节亚基 cyclin',
+    sub:'MPF 是异二聚体：催化亚基为 CDK（丝氨酸/苏氨酸激酶），调节亚基为 cyclin（周期蛋白）。cylin 是调节亚基，CDK 是催化亚基。',
+    legend:[{c:'#5a7fa8',t:'CDK(催化亚基)'},{c:'#2e9e5b',t:'cyclin(调节亚基)'}],
+    phases:[
+      {name:'① 催化亚基 CDK',dur:1400,note:'CDK 是丝氨酸/苏氨酸型蛋白激酶。'},
+      {name:'② 调节亚基 cyclin',dur:1400,note:'cyclin 是调节亚基，控制 CDK 活性能否表现。'},
+      {name:'③ 结合成异二聚体',dur:1500,note:'CDK 与 cyclin 结合形成 MPF（异二聚体）。'},
+      {name:'④ 磷酸化底物→启动M期',dur:1500,note:'MPF 磷酸化多种底物，启动 M 期。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'MPF = CDK + cyclin',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+10;
+      var join=phaseI>=2;
+      var x1=join?W/2-30:W*0.35, x2=join?W/2+30:W*0.65;
+      AnimKit.circle(ctx,x1,cy,40,'#5a7fa8','CDK'); AnimKit.label(ctx,'催化亚基',x1,cy+60,'#45687f','12px "Microsoft YaHei"');
+      AnimKit.circle(ctx,x2,cy,40,'#2e9e5b','cyc'); AnimKit.label(ctx,'调节亚基',x2,cy+60,'#1e7a45','12px "Microsoft YaHei"');
+      if(join){ AnimKit.pill(ctx,W/2-90,cy-100,180,36,'#8e5bb5','MPF(异二聚体)','#fff'); }
+      if(phaseI>=3){ AnimKit.arrow(ctx,W/2,cy+80,W/2,cy+130,'#8e5bb5',3); AnimKit.label(ctx,'磷酸化底物 → 启动 M 期',W/2,cy+158,'#1f5c8b','bold 13px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①催化亚基CDK','②调节亚基cyclin','③结合成MPF','④磷酸化→M期'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

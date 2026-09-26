@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DNA梯状条带</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'凋亡 DNA 的“梯状条带”与 TUNEL',
+    sub:'凋亡细胞特异核酸内切酶(CAD)在核小体间规律切割 DNA，产生 180–200bp 及其整数倍的片段，电泳呈梯状条带(DNA ladder)。',
+    legend:[{c:'#c0392b',t:'凋亡DNA片段'},{c:'#5a7fa8',t:'凝胶'}],
+    phases:[
+      {name:'① CAD 在核小体间切割',dur:1500,note:'核酸内切酶在核小体之间规律切割染色质 DNA。'},
+      {name:'② 产生整数倍片段',dur:1500,note:'片段大小为 180–200bp 的整数倍。'},
+      {name:'③ 电泳呈梯状条带',dur:1600,note:'凝胶电泳出现规律的梯状条带(DNA ladder)。'},
+      {name:'④ TUNEL 原位标记',dur:1500,note:'TUNEL 标记 DNA 断端 3′-OH，原位检出凋亡。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'DNA 梯状条带',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var gx=W/2-40, gy=90, gw=90, gh=H-160;
+      ctx.fillStyle='#e8f1fb';ctx.strokeStyle='#5a7fa8';ctx.lineWidth=2;ctx.fillRect(gx,gy,gw,gh);ctx.strokeRect(gx,gy,gw,gh);
+      var bands=phaseI>=1?6:0;
+      for(var i=0;i<bands;i++){ ctx.fillStyle='#c0392b'; ctx.fillRect(gx+8, gy+20+i*((gh-40)/6), gw-16, 7);
+        AnimKit.label(ctx,(180+i*180)+'bp',gx+gw+16,gy+24+i*((gh-40)/6),'#c0392b','11px Arial','left'); }
+      AnimKit.label(ctx,'凝胶电泳',gx+gw/2,gy+gh+22,'#45687f','12px "Microsoft YaHei"');
+      if(phaseI>=3) AnimKit.label(ctx,'TUNEL 标记 3′-OH 端，原位检出凋亡',W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+      else AnimKit.label(ctx,['①核小体间切割','②整数倍片段','③梯状条带','④TUNEL标记'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

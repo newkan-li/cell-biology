@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Myosin II结构</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'Myosin II 的结构与双极粗肌丝',
+    sub:'Myosin II 有两条重链、两条轻链，重链尾部互相盘绕、头部具 ATP 酶活性；多个 myosin II 尾部相对排列，形成双极粗肌丝。',
+    legend:[{c:'#c0392b',t:'头部(ATP酶)'},{c:'#5a7fa8',t:'尾部杆状'}],
+    phases:[
+      {name:'① 双头分子',dur:1500,note:'myosin II 由两条重链和两条轻链组成。'},
+      {name:'② 尾部盘绕成杆',dur:1500,note:'两条重链尾部盘绕成杆状(coiled-coil)。'},
+      {name:'③ 组装双极粗肌丝',dur:1600,note:'多个分子尾部相对聚集，头部朝外，形成双极粗肌丝。'},
+      {name:'④ 拉动肌动蛋白',dur:1500,note:'两端的头部朝相反方向拉动细肌丝，产生收缩。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'Myosin II',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+20;
+      // 单体
+      if(phaseI<=1){ ctx.strokeStyle='#5a7fa8';ctx.lineWidth=10;ctx.beginPath();ctx.moveTo(W/2-140,cy);ctx.lineTo(W/2+140,cy);ctx.stroke();
+        AnimKit.circle(ctx,W/2-140,cy-26,12,'#c0392b','H'); AnimKit.circle(ctx,W/2-140,cy+26,12,'#c0392b','H');
+        AnimKit.label(ctx,'尾部盘绕 + 两个头',W/2,cy+60,'#45687f','12px "Microsoft YaHei"'); }
+      else { ctx.strokeStyle='#5a7fa8';ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(150,cy);ctx.lineTo(W-150,cy);ctx.stroke();
+        for(var i=0;i<5;i++){ var x=200+i*80; AnimKit.circle(ctx,x,cy-26,10,'#c0392b','H'); AnimKit.circle(ctx,x,cy+26,10,'#c0392b','H'); }
+        AnimKit.label(ctx,'双极粗肌丝：头部朝外、两向拉动',W/2,cy+60,'#1e7a45','13px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①双头分子','②尾部成杆','③组装双极粗肌丝','④两向拉动细肌丝'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

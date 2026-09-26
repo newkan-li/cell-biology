@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hayflick界限</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'Hayflick 界限：正常体细胞分裂次数有限',
+    sub:'1958 年 Hayflick 证实正常体细胞在体外分裂到一定次数后停止，说明体细胞有有限寿命（Hayflick 界限），并非永生。',
+    legend:[{c:'#2e9e5b',t:'分裂次数'}],
+    phases:[
+      {name:'① 体外培养分裂',dur:1500,note:'正常体细胞在体外可分裂增殖。'},
+      {name:'② 分裂次数累积',dur:1500,note:'每分裂一次，记录一次，端粒逐渐缩短。'},
+      {name:'③ 到达界限停止',dur:1600,note:'分裂到一定次数后停止（Hayflick 界限）。'},
+      {name:'④ 进入衰老',dur:1500,note:'细胞进入衰老、不再分裂，说明有有限寿命。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'Hayflick 界限',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var x0=130, y0=H-100, w=W-260, h=H-220;
+      ctx.strokeStyle='#c6d8ea';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x0+w,y0);ctx.moveTo(x0,y0);ctx.lineTo(x0,y0-h);ctx.stroke();
+      AnimKit.label(ctx,'分裂次数 →',x0+w/2,y0+26,'#7a8aa0','12px "Microsoft YaHei"');
+      var n=phaseI===0?8:phaseI===1?24:phaseI===2?40:40;
+      for(var i=0;i<Math.min(n,40);i++){ AnimKit.circle(ctx,x0+10+i*(w-20)/40,y0-8-((i%5)+1)*6,4,'#2e9e5b',null); }
+      if(phaseI>=2){ ctx.setLineDash([6,6]); ctx.strokeStyle='#c0392b'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x0+w*0.7,y0); ctx.lineTo(x0+w*0.7,y0-h); ctx.stroke(); ctx.setLineDash([]); AnimKit.label(ctx,'Hayflick 界限',x0+w*0.7,y0-h-12,'#c0392b','12px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①体外可分裂','②次数累积','③到达界限停止','④进入衰老'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

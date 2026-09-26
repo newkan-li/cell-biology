@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>接触抑制</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'接触抑制：正常细胞停在一层，癌细胞堆叠',
+    sub:'正常细胞在培养中相互接触后停止运动与分裂（接触抑制），只长成单层；癌细胞失去接触抑制，会堆叠、无限生长。',
+    legend:[{c:'#2e9e5b',t:'正常细胞'},{c:'#c0392b',t:'癌细胞'}],
+    phases:[
+      {name:'① 正常细胞长成单层',dur:1500,note:'正常细胞接触后停止分裂，形成单层。'},
+      {name:'② 接触抑制',dur:1400,note:'相互接触即“停车熄火”。'},
+      {name:'③ 癌细胞失去接触抑制',dur:1600,note:'癌细胞不理会，继续分裂、堆叠。'},
+      {name:'④ 形成肿瘤/无限生长',dur:1500,note:'失去接触抑制是癌细胞的重要特征。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'接触抑制',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var base=H-70;
+      // 正常单层
+      for(var i=0;i<8;i++) AnimKit.circle(ctx,140+i*52,base,22,'#9ad3a8',null);
+      AnimKit.label(ctx,'正常：单层(接触抑制)',200,base+40,'#1e7a45','12px "Microsoft YaHei"','left');
+      // 癌细胞堆叠
+      var layers=(phaseI>=2)?3:1;
+      for(var L=0;L<layers;L++) for(var j=0;j<5;j++) AnimKit.circle(ctx,W*0.62+j*52,base-L*40,22,'#f2b8ae',null);
+      AnimKit.label(ctx,'癌细胞：堆叠生长',W*0.7,base+40,'#8a2a20','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,['①正常单层','②接触即停','③癌细胞不停','④堆叠/无限生长'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

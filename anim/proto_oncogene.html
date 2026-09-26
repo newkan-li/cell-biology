@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>原癌基因激活</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'原癌基因 → 癌基因的三种机制',
+    sub:'原癌基因（正常参与生长调控）可通过点突变、基因扩增、染色体易位被激活为癌基因，导致蛋白过量或过度活化，细胞增殖失控。',
+    legend:[{c:'#2e9e5b',t:'原癌基因'},{c:'#c0392b',t:'癌基因'}],
+    phases:[
+      {name:'① 点突变：一个碱基之差',dur:1600,note:'如 ras 点突变，产物持续活化。'},
+      {name:'② 基因扩增：拷贝增多',dur:1600,note:'原癌基因拷贝数增加，表达过量。'},
+      {name:'③ 染色体易位：换强启动子',dur:1600,note:'易位使原癌基因处于强启动子下游、过度表达。'},
+      {name:'④ 结果：增殖失控',dur:1500,note:'蛋白过量或过度活化→细胞增殖失控。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'原癌基因激活机制',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var y=H/2+10;
+      function gene(x,n,c){ AnimKit.pill(ctx,x,y-16,n*40+20,32,c,'gene','#fff'); }
+      if(phaseI===0){ gene(W*0.35,1,'#9ad3a8'); AnimKit.label(ctx,'正常',W*0.35,y+40,'#1e7a45','12px "Microsoft YaHei"');
+        gene(W*0.62,1,'#c0392b'); AnimKit.label(ctx,'点突变→持续活化',W*0.62,y+40,'#c0392b','12px "Microsoft YaHei"'); }
+      else if(phaseI===1){ gene(W*0.35,1,'#9ad3a8'); for(var i=0;i<4;i++) AnimKit.pill(ctx,W*0.55+i*44,y-16,36,32,'#c0392b',null); AnimKit.label(ctx,'扩增→表达过量',W*0.72,y+40,'#c0392b','12px "Microsoft YaHei"'); }
+      else if(phaseI>=2){ ctx.strokeStyle='#c0392b';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(W*0.3,y);ctx.lineTo(W*0.6,y);ctx.stroke(); ctx.strokeStyle='#8e5bb5';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(W*0.6,y-20);ctx.lineTo(W*0.8,y-20);ctx.stroke();
+        AnimKit.label(ctx,'易位→换强启动子→过度表达',W*0.55,y+50,'#c0392b','12px "Microsoft YaHei"'); }
+      if(phaseI>=3) AnimKit.label(ctx,'蛋白过量/过度活化 → 增殖失控',W/2,y+110,'#c0392b','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①点突变','②基因扩增','③染色体易位','④增殖失控'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>
