@@ -1521,7 +1521,7 @@
           aw.appendChild(el("div", "animhead", "🎬 动画演示（在老师原图下方）"));
           var ifr = document.createElement("iframe");
           ifr.className = "animframe"; ifr.loading = "lazy"; ifr.setAttribute("title", s.title);
-          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926br");
+          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926bs");
           ifr.onload = function () { var o = jget(PREFIX + "animSeen", {}); if (!o[s.anim]) { o[s.anim] = 1; jset(PREFIX + "animSeen", o); } };
           aw.appendChild(ifr); card.appendChild(aw);
           if (animIO) animIO.observe(ifr); else ifr.src = ifr.getAttribute("data-src");
@@ -2513,8 +2513,10 @@
   function renderWrongPage() {
     var host = document.getElementById("wronghost");
     var M = window.MANIFEST || [];
+    var onlyCh = ""; try { onlyCh = new URLSearchParams(location.search).get("ch") || ""; } catch (e) { }
     var total = 0;
     M.forEach(function (m) {
+      if (onlyCh && m.id !== onlyCh) return;
       var ch = window.CHAPTERS[m.id]; if (!ch) return;
       var list = wrongList(m.id);
       if (!list.length) return;

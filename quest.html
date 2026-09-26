@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>闯关模式 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926br">
-<script src="assets/theme.js?v=20260926br"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926bs">
+<script src="assets/theme.js?v=20260926bs"></script>
 <style>
 .qtop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
 .qbar{flex:1;min-width:180px;height:12px;background:#eef2f8;border-radius:8px;overflow:hidden}
@@ -148,17 +148,17 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   <footer style="margin-top:20px">仅供个人学习使用</footer>
 </div>
 
-<script src="data/manifest.js?v=20260926br"></script>
-<script src="data/outline.js?v=20260926br"></script>
-<script src="data/schedule.js?v=20260926br"></script>
-<script src="data/expmap.js?v=20260926br"></script>
-<script src="data/chapmeta.js?v=20260926br"></script>
-<script src="data/zhenti.js?v=20260926br"></script>
-<script src="data/ztobj.js?v=20260926br"></script>
-<script src="data/history.js?v=20260926br"></script>
-<script src="data/methods.js?v=20260926br"></script>
-<script src="data/hotexp.js?v=20260926br"></script>
-<script src="data/kpqa.js?v=20260926br"></script>
+<script src="data/manifest.js?v=20260926bs"></script>
+<script src="data/outline.js?v=20260926bs"></script>
+<script src="data/schedule.js?v=20260926bs"></script>
+<script src="data/expmap.js?v=20260926bs"></script>
+<script src="data/chapmeta.js?v=20260926bs"></script>
+<script src="data/zhenti.js?v=20260926bs"></script>
+<script src="data/ztobj.js?v=20260926bs"></script>
+<script src="data/history.js?v=20260926bs"></script>
+<script src="data/methods.js?v=20260926bs"></script>
+<script src="data/hotexp.js?v=20260926bs"></script>
+<script src="data/kpqa.js?v=20260926bs"></script>
 <script>
 (function () {
   var PREFIX = "cellbio_";
@@ -467,15 +467,20 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
       var methChips = meth.map(function (x) { return '<a class="sub' + (x.done ? " ok" : "") + '" href="methods.html#mth_' + METH.indexOf(x.m) + '" title="' + esc(kpTip(x.m.kp, x.m.t)) + '（对应讲义页已读即掌握）">' + (x.done ? "✅" : "◯") + " " + esc(x.m.t) + "</a>"; }).join("");
       var hotChips = hot.map(function (x) { return chipKp({ kp: x.h.kp, done: x.done, href: x.h.kp ? "experiments.html#hot_" + esc(x.h.kp) : "#" }, x.key, String(x.h.e).slice(0, 16), kpTip(x.h.kp, x.h.e)); }).join("");
       var ex = s.extra || {}, exChips = [];
-      if (ex.der) exChips.push('<span class="sub' + (ex.derDone >= ex.der ? " ok" : "") + '">🧮 推导 ' + ex.derDone + "/" + ex.der + "</span>");
-      exChips.push('<span class="sub' + (ex.wrong ? "" : " ok") + '">❌ 错题 ' + (ex.wrong ? ex.wrong + " 条" : "已清零") + "</span>");
-      if (ex.zt) exChips.push('<span class="sub">📋 真题 ' + ex.zt + ' <a href="zhenti.html">去练</a></span>');
+      var derList = (CHAPMETA[s.cid] && CHAPMETA[s.cid].derive) || [];
+      var derDoneN = derList.filter(function (d) { return !!seenO[d.k]; }).length;
+      if (derList.length) exChips.push('<span class="sub' + (derDoneN >= derList.length ? " ok" : "") + '">🧮 推导 ' + derDoneN + "/" + derList.length + "（点右侧题目）</span>");
+      derList.forEach(function (d) {
+        exChips.push('<a class="sub' + (seenO[d.k] ? " ok" : "") + '" href="' + s.cid + '.html#s_' + esc(d.k) + '" title="' + esc(d.title) + '">' + (seenO[d.k] ? "✅" : "◯") + " " + esc(String(d.title).slice(0, 20)) + "</a>");
+      });
+      exChips.push('<a class="sub' + (ex.wrong ? "" : " ok") + '" href="wrong.html?ch=' + s.cid + '">' + (ex.wrong ? "❌ 错题 " + ex.wrong + " 条（点开重做/清除）" : "❌ 错题 已清零") + "</a>");
+      exChips.push('<a class="sub" href="zhenti.html">📋 历年真题（去练）</a>');
       var expDone = (s.exp || []).filter(function (e) { return e.done; }).length;
       var histDone = hist.filter(function (x) { return x.done; }).length;
       var methDone = meth.filter(function (x) { return x.done; }).length;
       var hotDone = hot.filter(function (x) { return x.done; }).length;
-      var masteryDone = lessonDone + expDone + histDone + methDone + hotDone;
-      var masteryTot = lessonTot + (s.exp || []).length + hist.length + meth.length + hot.length;
+      var masteryDone = lessonDone + expDone + histDone + methDone + hotDone + derDoneN;
+      var masteryTot = lessonTot + (s.exp || []).length + hist.length + meth.length + hot.length + derList.length;
       s.masteryDone = masteryDone; s.masteryTot = masteryTot;
       var groups = [];
       if (lessonChips) groups.push('<div class="qgroup"><b>🧩 讲次小关卡（' + lessonDone + "/" + lessonTot + '）</b><div class="hint" style="font-size:11.5px;margin:-2px 0 4px">按「学习路线」把本章拆成若干“讲”；每讲页面已读 ≥80% 记为通过。点讲次可看该讲的全部页码与讲义链接。</div><div class="subs">' + lessonChips + "</div></div>");
@@ -484,7 +489,7 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
       if (methChips) groups.push(group("🧪 本章方法（" + methDone + "/" + meth.length + "）", methChips));
       if (hotChips) groups.push(group("⭐ 高频实验（" + hotDone + "/" + hot.length + "）", hotChips));
       if (exChips.length) groups.push(group("📌 必做补充", exChips.join("")));
-      var extraBox = groups.length ? '<details class="qextra" open><summary>📚 本关掌握清单（掌握 ' + masteryDone + "/" + masteryTot + "：讲次 " + lessonTot + " · 实验 " + (s.exp || []).length + " · 科学史 " + hist.length + " · 方法 " + meth.length + " · 高频实验 " + hot.length + "）</summary>" + groups.join("") + "</details>" : "";
+      var extraBox = groups.length ? '<details class="qextra" open><summary>📚 本关掌握清单（掌握 ' + masteryDone + "/" + masteryTot + "：讲次 " + lessonTot + " · 实验 " + (s.exp || []).length + " · 科学史 " + hist.length + " · 方法 " + meth.length + " · 高频实验 " + hot.length + " · 推导 " + derList.length + "）</summary>" + groups.join("") + "</details>" : "";
       var rows = s.tasks.map(function (t, k) {
         var link = "";
         if (k === 0) link = '<a href="' + s.cid + '.html">去学习</a>';
