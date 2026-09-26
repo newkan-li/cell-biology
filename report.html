@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>学习报告 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926aq">
-<script src="assets/theme.js?v=20260926aq"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926ar">
+<script src="assets/theme.js?v=20260926ar"></script>
 <style>
 .rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:10px 0}
 .rcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:center}
@@ -42,7 +42,7 @@ html[data-theme="dark"] .rbar{background:#232c36}
 
   <div class="rsec">
     <h2>分章进度</h2>
-    <div class="hint" style="margin-bottom:6px">掌握度 = 正确率×0.6 + 复习强度×0.4。 <b>已读*</b>＝在讲义页手动点过“已读”的页数（不做题也可能为 0）；<b>掌握页</b>＝有作答且掌握度≥0.6 的考点。</div>
+    <div class="hint" style="margin-bottom:6px">掌握度 = 正确率×0.6 + 复习强度×0.4。<b>正确率按“首次作答”计</b>（重做答对不覆盖首次）。<b>已读*</b>＝在讲义页手动点过“已读”的页数（不做题也可能为 0）；<b>掌握页</b>＝有作答且掌握度≥0.6 的考点。</div>
     <div style="overflow:auto"><table class="rtab" id="tab"></table></div>
   </div>
 
@@ -56,7 +56,7 @@ html[data-theme="dark"] .rbar{background:#232c36}
   <footer>仅供个人学习使用</footer>
 </div>
 
-<script src="data/manifest.js?v=20260926aq"></script>
+<script src="data/manifest.js?v=20260926ar"></script>
 <script>
 (function () {
   var PREFIX = "cellbio_";
@@ -91,12 +91,17 @@ html[data-theme="dark"] .rbar{background:#232c36}
     var mcq = jget(skey(cid, "mcq"), {}), judge = jget(skey(cid, "judge"), {}), fill = jget(skey(cid, "fill"), {}), self = jget(skey(cid, "self"), {});
     var pract = Object.keys(mcq).length + Object.keys(judge).length + Object.keys(fill).length + Object.keys(self).length;
     var ok = 0, att = 0;
+    /* 正确率按“首次作答”统计：重做答对不覆盖首次结果，避免越刷越高 */
+    function firstOk(r) { if (r.first !== undefined) return !!r.first; return (r.ok || 0) > 0 && !(r.miss > 0); }
     [mcq, judge, fill].forEach(function (o) { Object.keys(o).forEach(function (k) {
-      var r = o[k]; var oo = Math.max(0, r.ok || 0); var n = Math.max(0, r.n || 0);
-      if (n < oo) n = oo;                    /* 旧记录可能缺 n，按已答对次数兜底 */
-      ok += oo; att += n;
+      var r = o[k]; if ((r.n || 0) === 0 && r.last == null && r.first === undefined) return;
+      att++; if (firstOk(r)) ok++;
     }); });
-    Object.keys(self).forEach(function (k) { var r = self[k]; var oo = Math.max(0, r.ok || 0); var mi = Math.max(0, r.miss || 0); ok += oo; att += (oo + mi); });
+    Object.keys(self).forEach(function (k) {
+      var r = self[k];
+      if (r.state === undefined && (r.ok || 0) === 0 && (r.miss || 0) === 0) return;
+      att++; if (r.state ? r.state === "ok" : firstOk(r)) ok++;
+    });
     var wrong = (jget(skey(cid, "wrong"), []) || []).length;
     var kps = {}, mastered = 0;
     Object.keys(KP).forEach(function (kp) { if (kp.indexOf(cid + "_s") === 0) { kps[kp] = 1; if (mastery(kp) >= 0.6) mastered++; } });
@@ -136,7 +141,7 @@ html[data-theme="dark"] .rbar{background:#232c36}
     card(Object.keys(PASSED).length, "通关章节数") +
     card(Object.keys(FC).length, "闪卡作答数");
 
-  var h = "<tr><th>章</th><th>页</th><th title='讲义页上手动点“已读”的页数；不做题也可能为 0'>已读*</th><th>掌握页</th><th>掌握度</th><th>做题</th><th>正确率</th><th>错题</th><th>通关</th><th>最近</th></tr>";
+  var h = "<tr><th>章</th><th>页</th><th title='讲义页上手动点“已读”的页数；不做题也可能为 0'>已读*</th><th>掌握页</th><th>掌握度</th><th>做题</th><th title='按“首次作答”统计：重做答对不覆盖首次结果'>正确率</th><th>错题</th><th>通关</th><th>最近</th></tr>";
   row.forEach(function (r) {
     var done = r.pract, qrate = r.n_q ? Math.round(done / r.n_q * 100) : 0;
     var acc = r.att > 0 ? Math.min(100, Math.round(r.ok / r.att * 100)) : null;
