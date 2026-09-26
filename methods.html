@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>实验方法与技术 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926t">
-<script src="assets/theme.js?v=20260926t"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926u">
+<script src="assets/theme.js?v=20260926u"></script>
 <style>
 .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-top:10px}
 .mcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
@@ -45,9 +45,9 @@ html[data-theme="dark"] .mcard .mrow b{color:#8fc0e6}
   <div class="mgrid" id="host"></div>
   <footer style="margin-top:24px">仅供个人学习使用</footer>
 </div>
-<script src="data/manifest.js?v=20260926t"></script>
-<script src="data/methods.js?v=20260926t"></script>
-<script src="data/xref.js?v=20260926t"></script>
+<script src="data/manifest.js?v=20260926u"></script>
+<script src="data/methods.js?v=20260926u"></script>
+<script src="data/xref.js?v=20260926u"></script>
 <script>
 (function () {
   var ALL = window.METHODS || [];
@@ -74,7 +74,9 @@ html[data-theme="dark"] .mcard .mrow b{color:#8fc0e6}
       var fb = m.freq ? '<span class="mfreq mf-' + esc(m.freq) + '">' + esc(m.freq) + '</span>' : "";
       var x = XM[m.t];
       var xr = (x && x.exps && x.exps.length) ? '<div class="mrow"><b>🔬 相关实验：</b>' + x.exps.map(function (g) {
-        return '<a class="mlink" style="margin:2px 4px 0 0" href="experiments.html#' + (g.kind === "hot" ? "hot_" : "ex_") + esc(g.k) + '">' + (g.kind === "hot" ? "⭐ " : "🔬 ") + esc(g.label) + '</a>';
+        var href = g.kind === "page" ? (g.k.split("_s")[0] + ".html#s_" + esc(g.k)) : ("experiments.html#" + (g.kind === "hot" ? "hot_" : "ex_") + esc(g.k));
+        var pre = g.kind === "hot" ? "⭐ " : g.kind === "exp" ? "🔬 " : "📄 ";
+        return '<a class="mlink" style="margin:2px 4px 0 0" href="' + href + '">' + pre + esc(g.label) + '</a>';
       }).join("") + '</div>' : "";
       return '<div class="mcard" id="mth_' + (x ? x.idx : 0) + '"><h3>' + esc(m.t) + '<span class="mcat">' + esc(m.cat) + '</span>' + fb + '</h3><div class="men">' + esc(m.en || "") + '</div>' +
         '<div class="mrow"><b>原理：</b>' + esc(m.principle) + '</div>' +
