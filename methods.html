@@ -8,14 +8,21 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>实验方法与技术 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926o">
-<script src="assets/theme.js?v=20260926o"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926p">
+<script src="assets/theme.js?v=20260926p"></script>
 <style>
 .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-top:10px}
 .mcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
 .mcard h3{margin:0 0 2px;font-size:15px;color:#1f5c8b;border:0;padding:0}
 .mcard .men{font-size:11.5px;color:#6a4a8a}
 .mcard .mcat{font-size:11px;color:#fff;background:#5a7fa8;border-radius:20px;padding:1px 8px;margin-left:6px}
+.mcard .mfreq{font-size:11px;border-radius:20px;padding:1px 8px;margin-left:6px}
+.mf-高频{background:#fde3e0;color:#b03a2e;border:1px solid #f0c1ba}
+.mf-一般{background:#fdf3d9;color:#9a6b00;border:1px solid #f0dca8}
+.mf-了解{background:#eef1f4;color:#5b6b7b;border:1px solid #d6dee6}
+html[data-theme="dark"] .mf-高频{background:#3a201d;color:#e0715c;border-color:#8a3a30}
+html[data-theme="dark"] .mf-一般{background:#2a2618;color:#e0c060;border-color:#4a4326}
+html[data-theme="dark"] .mf-了解{background:#232c36;color:#b9c6d6;border-color:#33404d}
 .mcard .mrow{font-size:12.6px;color:#33465c;line-height:1.7;margin-top:6px}
 .mcard .mrow b{color:#1f5c8b}
 .mcard .mlink{display:inline-block;margin-top:8px;font-size:11.5px;text-decoration:none;color:#234f7a;background:#eef4fb;border:1px solid #ccd8ea;border-radius:20px;padding:2px 9px}
@@ -38,8 +45,8 @@ html[data-theme="dark"] .mcard .mrow b{color:#8fc0e6}
   <div class="mgrid" id="host"></div>
   <footer style="margin-top:24px">仅供个人学习使用</footer>
 </div>
-<script src="data/manifest.js?v=20260926o"></script>
-<script src="data/methods.js?v=20260926o"></script>
+<script src="data/manifest.js?v=20260926p"></script>
+<script src="data/methods.js?v=20260926p"></script>
 <script>
 (function () {
   var ALL = window.METHODS || [];
@@ -62,7 +69,8 @@ html[data-theme="dark"] .mcard .mrow b{color:#8fc0e6}
     cnt.textContent = "共 " + list.length + " 项方法";
     host.innerHTML = list.map(function (m) {
       var link = (m.kp && CHN[m.kp.split("_")[0]]) ? '<a class="mlink" href="' + m.kp.split("_")[0] + '.html#s_' + esc(m.kp) + '">📄 对应讲义页</a>' : "";
-      return '<div class="mcard"><h3>' + esc(m.t) + '<span class="mcat">' + esc(m.cat) + '</span></h3><div class="men">' + esc(m.en || "") + '</div>' +
+      var fb = m.freq ? '<span class="mfreq mf-' + esc(m.freq) + '">' + esc(m.freq) + '</span>' : "";
+      return '<div class="mcard"><h3>' + esc(m.t) + '<span class="mcat">' + esc(m.cat) + '</span>' + fb + '</h3><div class="men">' + esc(m.en || "") + '</div>' +
         '<div class="mrow"><b>原理：</b>' + esc(m.principle) + '</div>' +
         (m.steps ? '<div class="mrow"><b>步骤：</b>' + esc(m.steps) + '</div>' : "") +
         '<div class="mrow"><b>结果/用途：</b>' + esc(m.result) + '</div>' +

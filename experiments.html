@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>实验一览 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926o">
-<script src="assets/theme.js?v=20260926o"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926p">
+<script src="assets/theme.js?v=20260926p"></script>
 <style>
 .egrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px;margin-top:10px}
 .ecard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
@@ -21,6 +21,13 @@ html[data-theme="dark"] .ecard{background:#1b2531;border-color:#2c3a4a}
 html[data-theme="dark"] .ecard h3{color:#7fb3d8}
 html[data-theme="dark"] .ecard .ex{color:#c9d6e2}
 html[data-theme="dark"] .ecard .elink{background:#22303d;border-color:#33475a;color:#a8c6e0}
+.ecard .mfreq{font-size:11px;border-radius:20px;padding:1px 8px;margin-left:6px}
+.mf-高频{background:#fde3e0;color:#b03a2e;border:1px solid #f0c1ba}
+.mf-一般{background:#fdf3d9;color:#9a6b00;border:1px solid #f0dca8}
+.mf-了解{background:#eef1f4;color:#5b6b7b;border:1px solid #d6dee6}
+html[data-theme="dark"] .mf-高频{background:#3a201d;color:#e0715c;border-color:#8a3a30}
+html[data-theme="dark"] .mf-一般{background:#2a2618;color:#e0c060;border-color:#4a4326}
+html[data-theme="dark"] .mf-了解{background:#232c36;color:#b9c6d6;border-color:#33404d}
 </style>
 </head>
 <body data-page="experiments">
@@ -32,12 +39,18 @@ html[data-theme="dark"] .ecard .elink{background:#22303d;border-color:#33475a;co
   <p><a href="index.html">← 返回首页</a> ｜ <a href="experiments.html">🔬 实验一览</a>　<a href="schedule.html">🧭 学习路线</a> ｜ <a href="animations.html">🎬 动画目录</a> ｜ <a href="history.html">🕰 科学史</a> ｜ <a href="methods.html">🧪 实验方法</a> ｜ <a href="glossary.html">📖 术语表</a></p>
   <div class="fc-chips" id="chips"></div>
   <input id="q" class="ans" placeholder="搜索实验名 / 关键词 …" style="margin-top:6px;width:100%">
+  <div class="statsbox" id="hotbox">
+    <h3 style="margin:0 0 4px">⭐ 高频实验 → 结论（考研速记）</h3>
+    <div class="hint" style="margin-bottom:6px">按“实验 → 证明了什么 → 考频”整理，优先背这些。</div>
+    <div class="egrid" id="hothost"></div>
+  </div>
   <div id="count" class="hint" style="margin-top:6px"></div>
   <div id="host"></div>
   <footer style="margin-top:24px">仅供个人学习使用</footer>
 </div>
-<script src="data/manifest.js?v=20260926o"></script>
-<script src="data/explist.js?v=20260926o"></script>
+<script src="data/manifest.js?v=20260926p"></script>
+<script src="data/hotexp.js?v=20260926p"></script>
+<script src="data/explist.js?v=20260926p"></script>
 <script>
 (function () {
   var ALL = window.EXPLIST || [];
@@ -75,6 +88,14 @@ html[data-theme="dark"] .ecard .elink{background:#22303d;border-color:#33475a;co
     host.innerHTML = h || '<p class="empty">没有匹配的实验。</p>';
   }
   render();
+  (function () {
+    var HOT = window.HOTEXP || [], hh = document.getElementById("hothost"); if (!hh) return;
+    hh.innerHTML = HOT.map(function (h) {
+      var f = h.freq ? '<span class="mfreq mf-' + esc(h.freq) + '">' + esc(h.freq) + '</span>' : "";
+      var lk = h.kp ? '<a class="elink" href="' + h.ch + '.html#s_' + esc(h.kp) + '">📄 讲义页</a>' : "";
+      return '<div class="ecard"><h3>' + esc(h.e) + f + '</h3><div class="ex">' + esc(h.c) + '</div>' + lk + '</div>';
+    }).join("");
+  })();
 })();
 </script>
 </body>
