@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>闯关模式 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926bf">
-<script src="assets/theme.js?v=20260926bf"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926bg">
+<script src="assets/theme.js?v=20260926bg"></script>
 <style>
 .qtop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
 .qbar{flex:1;min-width:180px;height:12px;background:#eef2f8;border-radius:8px;overflow:hidden}
@@ -85,13 +85,16 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   <footer style="margin-top:20px">仅供个人学习使用</footer>
 </div>
 
-<script src="data/manifest.js?v=20260926bf"></script>
-<script src="data/outline.js?v=20260926bf"></script>
-<script src="data/schedule.js?v=20260926bf"></script>
-<script src="data/expmap.js?v=20260926bf"></script>
-<script src="data/chapmeta.js?v=20260926bf"></script>
-<script src="data/zhenti.js?v=20260926bf"></script>
-<script src="data/ztobj.js?v=20260926bf"></script>
+<script src="data/manifest.js?v=20260926bg"></script>
+<script src="data/outline.js?v=20260926bg"></script>
+<script src="data/schedule.js?v=20260926bg"></script>
+<script src="data/expmap.js?v=20260926bg"></script>
+<script src="data/chapmeta.js?v=20260926bg"></script>
+<script src="data/zhenti.js?v=20260926bg"></script>
+<script src="data/ztobj.js?v=20260926bg"></script>
+<script src="data/history.js?v=20260926bg"></script>
+<script src="data/methods.js?v=20260926bg"></script>
+<script src="data/hotexp.js?v=20260926bg"></script>
 <script>
 (function () {
   var PREFIX = "cellbio_";
@@ -107,6 +110,7 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   var CHAPMETA = window.CHAPMETA || {};
   var ANIMSEEN = jget(PREFIX + "animSeen", {});
   var ZT = window.ZHENTI || {}, ZO = window.ZTOBJ || {};
+  var HIST = window.HISTORY || [], METH = window.METHODS || [], HOTEXP = window.HOTEXP || [];
   function ztCount(cid) {
     var a = (ZT[cid] && (ZT[cid].length || (ZT[cid].items || []).length)) || 0;
     var b = (ZO[cid] && (ZO[cid].length || (ZO[cid].items || []).length)) || 0;
@@ -255,10 +259,22 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
       if (ex.der) exChips.push('<span class="sub' + (ex.derDone >= ex.der ? " ok" : "") + '">🧮 推导 ' + ex.derDone + "/" + ex.der + "</span>");
       exChips.push('<span class="sub' + (ex.wrong ? "" : " ok") + '">❌ 错题 ' + (ex.wrong ? ex.wrong + " 条" : "已清零") + "</span>");
       if (ex.zt) exChips.push('<span class="sub">📋 真题 ' + ex.zt + ' <a href="zhenti.html">去练</a></span>');
-      exChips.push('<span class="sub">🕰 <a href="history.html?ch=' + s.cid + '">科学史</a></span>');
-      exChips.push('<span class="sub">🧪 <a href="methods.html">实验方法</a></span>');
-      exChips.push('<span class="sub">⭐ <a href="experiments.html?ch=' + s.cid + '#hotbox">高频实验</a></span>');
       var extraRow = '<div class="subs" style="margin-top:6px">' + exChips.join("") + "</div>";
+      /* 本章科学史 / 方法 / 高频实验（逐条，按章对应） */
+      var hist = HIST.filter(function (h) { return h.ch === s.cid; });
+      var meth = METH.filter(function (m) { return m.kp && m.kp.split("_s")[0] === s.cid; });
+      var hot = HOTEXP.filter(function (h) { return h.ch === s.cid; });
+      var histRow = hist.length ? '<div class="subs" style="margin-top:6px"><span class="sub">🕰 本章科学史</span>' + hist.map(function (h) {
+        var href = h.kp ? h.ch + ".html#s_" + esc(h.kp) : "history.html";
+        return '<a class="sub" href="' + href + '" title="' + esc(h.t) + '">' + esc(String(h.t).slice(0, 16)) + "</a>";
+      }).join("") + "</div>" : "";
+      var methRow = meth.length ? '<div class="subs" style="margin-top:6px"><span class="sub">🧪 本章方法</span>' + meth.map(function (m) {
+        return '<a class="sub" href="methods.html#mth_' + METH.indexOf(m) + '" title="' + esc(m.t) + '">' + esc(m.t) + "</a>";
+      }).join("") + "</div>" : "";
+      var hotRow = hot.length ? '<div class="subs" style="margin-top:6px"><span class="sub">⭐ 高频实验</span>' + hot.map(function (h) {
+        var href = h.kp ? "experiments.html#hot_" + esc(h.kp) : "experiments.html?ch=" + s.cid;
+        return '<a class="sub" href="' + href + '" title="' + esc(h.e) + '">' + esc(String(h.e).slice(0, 16)) + "</a>";
+      }).join("") + "</div>" : "";
       var expRow = (s.exp && s.exp.length) ? '<div class="subs" style="margin-top:6px"><span class="sub">🔬 本章实验</span>' + s.exp.map(function (e) {
         return '<a class="sub' + (e.done ? " ok" : "") + '" href="' + s.cid + '.html#s_' + esc(e.k) + '" title="' + esc(e.title) + '">' + (e.done ? "✅" : "◯") + " " + esc(String(e.title).slice(0, 20)) + "</a>";
       }).join("") + "</div>" : "";
@@ -278,7 +294,7 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
         '<div class="qbody"><div class="qtitle">第 ' + (i + 1) + ' 关 · ' + esc(String(s.title).slice(0, 22)) + " " + starStr(s.doneN, s.n) + (s.done ? ' <span style="color:#2f9e5b">已通关</span>' : "") + '</div>' +
         '<div class="qsub">' + esc(sub) + ' · 任务 ' + s.doneN + "/" + s.n + '</div>' +
         '<div class="qprog"><i style="width:' + Math.round(s.doneN / s.n * 100) + '%"></i></div>' +
-        '<div class="qtasks" style="margin-top:6px">' + rows + '</div>' + subs + expRow + extraRow + '</div></div>';
+        '<div class="qtasks" style="margin-top:6px">' + rows + '</div>' + subs + expRow + histRow + methRow + hotRow + extraRow + '</div></div>';
       prevDone = s.done;
     });
     document.getElementById("qhost").innerHTML = host;
