@@ -1419,7 +1419,7 @@
           ctr.appendChild(bTxt); ctr.appendChild(bImg); ctr.appendChild(bZoom);
           wrap.appendChild(ctr); wrap.appendChild(errd); wrap.appendChild(page); wrap.appendChild(img);
           body.appendChild(wrap);
-        } else {
+        } else if (s.img) {
           var img2 = el("img"); img2.alt = s.title;
           img2.onclick = function () { document.getElementById("lbimg").src = (s.big || s.img); document.getElementById("lightbox").classList.add("on"); };
           img2.loading = /^tb/.test(cid) ? "eager" : "lazy";
