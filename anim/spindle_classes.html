@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>纺锤体三类微管</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'动物细胞纺锤体的三类微管',
+    sub:'星体微管（定位）、动粒微管（牵引染色体）、极性/极间微管（维持纺锤体结构）。',
+    legend:[{c:'#e0a95a',t:'星体微管'},{c:'#5a7fa8',t:'动粒微管'},{c:'#2e9e5b',t:'极性微管'}],
+    phases:[
+      {name:'① 星体微管',dur:1500,note:'由两极伸向细胞皮层，参与纺锤体定位。'},
+      {name:'② 动粒微管',dur:1500,note:'连接染色体动粒，负责染色体的牵引与分离。'},
+      {name:'③ 极性/极间微管',dur:1500,note:'从两极伸向赤道、相互重叠，维持纺锤体结构。'},
+      {name:'④ 三类协同完成分裂',dur:1500,note:'三类微管协同完成染色体排列与分离。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'纺锤体三类微管',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+10, lx=W*0.28, rx=W*0.72;
+      AnimKit.circle(ctx,lx,cy,10,'#1f5c8b',null); AnimKit.circle(ctx,rx,cy,10,'#1f5c8b',null);
+      if(phaseI>=0){ for(var i=0;i<3;i++){ ctx.strokeStyle='#e0a95a';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(lx,cy);ctx.lineTo(lx-20-i*18,cy-70+i*30);ctx.stroke(); ctx.beginPath();ctx.moveTo(rx,cy);ctx.lineTo(rx+20+i*18,cy-70+i*30);ctx.stroke(); } AnimKit.label(ctx,'星体微管',lx-40,cy-80,'#b0791f','12px "Microsoft YaHei"'); }
+      // 染色体
+      AnimKit.circle(ctx,W/2,cy,16,'#8e5bb5',null);
+      if(phaseI>=1){ ctx.strokeStyle='#5a7fa8';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(lx+12,cy);ctx.lineTo(W/2-16,cy);ctx.moveTo(rx-12,cy);ctx.lineTo(W/2+16,cy);ctx.stroke(); AnimKit.label(ctx,'动粒微管',W/2,cy-30,'#45687f','12px "Microsoft YaHei"'); }
+      if(phaseI>=2){ ctx.strokeStyle='#2e9e5b';ctx.lineWidth=4; ctx.beginPath();ctx.moveTo(lx,cy+8);ctx.lineTo(rx,cy+30);ctx.stroke(); ctx.beginPath();ctx.moveTo(rx,cy+8);ctx.lineTo(lx,cy+30);ctx.stroke(); AnimKit.label(ctx,'极性微管',W/2,cy+52,'#1e7a45','12px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①星体微管(定位)','②动粒微管(牵引)','③极性微管(结构)','④协同完成分裂'][phaseI],W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>微丝踏车</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'微丝的脚踏车运动与临界浓度',
+    sub:'正端(倒钩端)临界浓度低、优先聚合；负端(尖头端)临界浓度高、优先解聚。两端速度相等时长度不变。',
+    legend:[{c:'#c98a3a',t:'G-actin'},{c:'#2e9e5b',t:'正端(+ 加)'},{c:'#5a7fa8',t:'负端(− 减)'}],
+    phases:[
+      {name:'① 正端加单体',dur:1500,note:'正端临界浓度低，优先加入单体。'},
+      {name:'② 负端减单体',dur:1500,note:'负端临界浓度高，优先解聚。'},
+      {name:'③ 速度相等：长度不变',dur:1600,note:'两端速度相等时微丝长度不变（踏车）。'},
+      {name:'④ 为细胞提供聚合动力',dur:1500,note:'踏车使微丝原地流动，推动伪足前伸等。'}
+    ],
+    init:function(S){S.flow=0;},
+    step:function(S,dt){ S.flow=(S.flow+dt/1000*60)%26; },
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'微丝踏车运动',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var y=H/2+20, x0=150, x1=W-150;
+      for(var x=x0;x<=x1;x+=26){ var i=Math.floor((x+((phaseI>=3)?S.flow:0))/26); AnimKit.circle(ctx,x,y,11,(i%2)?'#c98a3a':'#e0b060','A'); }
+      AnimKit.label(ctx,'(+) 倒钩端：加',x1+12,y-26,'#2e9e5b','bold 12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'(−) 尖头端：减',x0-12,y-26,'#5a7fa8','bold 12px "Microsoft YaHei"','right');
+      AnimKit.arrow(ctx,x1+10,y+30,x1+70,y+30,'#2e9e5b',2.5);
+      AnimKit.arrow(ctx,x0-10,y+30,x0-70,y+30,'#5a7fa8',2.5);
+      AnimKit.label(ctx,['①正端加','②负端减','③等速→长度不变','④提供聚合动力'][phaseI],W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

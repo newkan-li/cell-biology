@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>p53检验点</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'DNA 损伤 → p53 → p21 → 细胞周期阻滞',
+    sub:'DNA 损伤激活 ATM/ATR，稳定 p53；p53 启动 p21 转录，p21 抑制 CDK1-cyclin，使周期停在 G1；损伤严重则启动凋亡。',
+    legend:[{c:'#c0392b',t:'DNA损伤'},{c:'#8e5bb5',t:'p53'},{c:'#2e9e5b',t:'p21→阻滞'}],
+    phases:[
+      {name:'① DNA 损伤',dur:1500,note:'辐射/化学物造成 DNA 损伤，ATM/ATR 识别。'},
+      {name:'② p53 被稳定/活化',dur:1500,note:'p53 通常寿命短，被磷酸化后稳定并激活。'},
+      {name:'③ p53 启动 p21',dur:1600,note:'p53 作为转录因子启动 p21 转录。'},
+      {name:'④ 周期阻滞或凋亡',dur:1600,note:'p21 抑制 CDK→G1 阻滞、争取修复；修不好则凋亡。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'p53 响应 DNA 损伤',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+20,x0=130,step=200;
+      AnimKit.pill(ctx,x0-70,cy-60,150,40,phaseI>=0?'#c0392b':'#e6ecf2','DNA 损伤',phaseI>=0?'#fff':'#7a8aa0');
+      AnimKit.pill(ctx,x0+step-100,cy-22,140,44,phaseI>=1?'#8e5bb5':'#e6ecf2','p53 稳定',phaseI>=1?'#fff':'#7a8aa0');
+      AnimKit.pill(ctx,x0+step*2-100,cy-22,140,44,phaseI>=2?'#2e9e5b':'#e6ecf2','p21 转录',phaseI>=2?'#fff':'#7a8aa0');
+      if(phaseI>=0) AnimKit.arrow(ctx,x0+80,cy-40,x0+step-104,cy-4,'#8aa0b8',2);
+      if(phaseI>=1) AnimKit.arrow(ctx,x0+step+40,cy,x0+step*2-104,cy,'#8aa0b8',2);
+      if(phaseI>=3){ AnimKit.pill(ctx,W-190,cy-22,150,44,'#5a7fa8','CDK 被抑制','#fff'); AnimKit.arrow(ctx,x0+step*2+40,cy,W-194,cy,'#2e9e5b',2.5);
+        AnimKit.label(ctx,'G1 阻滞(修复) 或 凋亡(损伤过重)',W/2,cy+80,'#1f5c8b','bold 13px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①DNA损伤','②p53稳定','③启动p21','④周期阻滞/凋亡'][phaseI],W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

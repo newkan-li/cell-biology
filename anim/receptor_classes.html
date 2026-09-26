@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>三类膜受体</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'细胞膜表面受体的三大类',
+    sub:'①离子通道偶联受体（反应快，突触传递）；②G 蛋白偶联受体（7 次跨膜，靠 G 蛋白传话）；③酶联受体（本身即酶，常二聚化激活）。',
+    legend:[{c:'#e0a95a',t:'离子通道偶联'},{c:'#5a7fa8',t:'G蛋白偶联'},{c:'#8e5bb5',t:'酶联'}],
+    phases:[
+      {name:'① 离子通道偶联受体',dur:1500,note:'既是结合位点又是通道，无需中间步骤、反应快。'},
+      {name:'② G 蛋白偶联受体',dur:1500,note:'7 次跨膜，结合后经 G 蛋白激活下游效应器。'},
+      {name:'③ 酶联受体',dur:1500,note:'本身即酶(常为酪氨酸激酶)，二聚化后激活。'},
+      {name:'④ 三类反应快慢与用途',dur:1500,note:'通道最快；GPCR 与酶联常需级联放大、作用较慢。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'三类膜表面受体',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var m=AnimKit.membrane(ctx,W,H,{yTop:H*0.34,yBot:H*0.50,cx:W/2,gap:60});
+      var xs=[W*0.22,W*0.5,W*0.78], cols=['#e0a95a','#5a7fa8','#8e5bb5'], names=['离子通道偶联','G蛋白偶联(7次跨膜)','酶联(本身即酶/激酶)'];
+      xs.forEach(function(x,i){ var on=(phaseI===i||phaseI===3);
+        ctx.strokeStyle=cols[i];ctx.lineWidth=on?7:4;ctx.beginPath();ctx.moveTo(x,m.yTop-20);ctx.lineTo(x,m.yBot+20);ctx.stroke();
+        AnimKit.label(ctx,names[i],x,m.yBot+44,on?cols[i]:'#9aa','13px "Microsoft YaHei"');
+      });
+      if(phaseI===0) AnimKit.label(ctx,'结合即开通道、反应最快',xs[0],m.yTop-34,'#b0791f','12px "Microsoft YaHei"');
+      if(phaseI===1) AnimKit.label(ctx,'经 G 蛋白 → 第二信使',xs[1],m.yTop-34,'#45687f','12px "Microsoft YaHei"');
+      if(phaseI===2) AnimKit.label(ctx,'二聚化→自身磷酸化',xs[2],m.yTop-34,'#6a4a8a','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①通道偶联(快)','②G蛋白偶联','③酶联','④三类协同/分工'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

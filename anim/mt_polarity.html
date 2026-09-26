@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>微管极性</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'微管的极性：正端生长快、负端锚定',
+    sub:'αβ 二聚体头尾相接使微管两端结构不同；正端装配快、朝外生长，负端装配慢、常锚定在 MTOC。',
+    legend:[{c:'#2e9e5b',t:'正端(+)'},{c:'#5a7fa8',t:'负端(−)'}],
+    phases:[
+      {name:'① 二聚体头尾相接',dur:1500,note:'αβ 二聚体以同一方向首尾相连，微管两端不同。'},
+      {name:'② 正端装配快',dur:1500,note:'正端(+)优先加入二聚体，生长快。'},
+      {name:'③ 负端装配慢/锚定',dur:1500,note:'负端(−)生长慢，常锚定在微管组织中心(MTOC)。'},
+      {name:'④ 极性决定方向',dur:1500,note:'极性为马达蛋白定向运输与微管功能提供方向。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'微管极性',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var y=H/2+20, x0=150, x1=W-150;
+      for(var x=x0;x<=x1;x+=30){ var i=Math.round((x-x0)/30); AnimKit.circle(ctx,x,y,12,(i%2)?'#5a7fa8':'#2e9e5b', (i%2)?'β':'α'); }
+      AnimKit.label(ctx,'(−) 负端',x0-10,y-30,'#5a7fa8','bold 12px "Microsoft YaHei"','right');
+      AnimKit.label(ctx,'(+) 正端',x1+10,y-30,'#2e9e5b','bold 12px "Microsoft YaHei"','left');
+      if(phaseI>=1) AnimKit.arrow(ctx,x1+20,y,x1+80,y,'#2e9e5b',3), AnimKit.label(ctx,'生长快',x1+50,y+26,'#1e7a45','12px "Microsoft YaHei"');
+      if(phaseI>=2) AnimKit.pill(ctx,x0-120,y+40,110,32,'#e6ecf2','MTOC锚定'), AnimKit.arrow(ctx,x0-10,y+56,x0,y+40,'#5a7fa8',2.5);
+      AnimKit.label(ctx,['①头尾相接成极性','②正端生长快','③负端慢/锚定','④极性决定方向'][phaseI],W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

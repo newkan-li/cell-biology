@@ -1,0 +1,34 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>凋亡vs坏死</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'细胞凋亡与坏死的区别',
+    sub:'凋亡：膜起泡但完整、碎成凋亡小体、被邻胞吞噬、无炎症；坏死：膜失去完整性、破裂外溢、溶酶体破坏、引起炎症。',
+    legend:[{c:'#2e9e5b',t:'凋亡(apoptosis)'},{c:'#c0392b',t:'坏死(necrosis)'}],
+    phases:[
+      {name:'① 两种死亡方式',dur:1400,note:'同为细胞死亡，但形态与结局完全不同。'},
+      {name:'② 凋亡：膜完整、成小体',dur:1600,note:'细胞起泡、碎裂成凋亡小体，被周围细胞吞噬。'},
+      {name:'③ 凋亡：无炎症',dur:1400,note:'内容物不外溢，不引起炎症反应。'},
+      {name:'④ 坏死：膜破、外溢、炎症',dur:1600,note:'细胞破裂、胞浆外溢、溶酶体破坏、引起炎症。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'凋亡 vs 坏死',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+20;
+      // 左：凋亡
+      ctx.strokeStyle='#2e9e5b';ctx.lineWidth=2; ctx.beginPath(); ctx.arc(W*0.28,cy,60,0,7); ctx.stroke();
+      if(phaseI>=1){ for(var i=0;i<6;i++){ var a=i/6*Math.PI*2; AnimKit.circle(ctx,W*0.28+70*Math.cos(a),cy+70*Math.sin(a),9,'#2e9e5b',null); } }
+      AnimKit.label(ctx,'凋亡',W*0.28,cy-80,'#1e7a45','bold 14px "Microsoft YaHei"');
+      AnimKit.label(ctx,phaseI>=2?'膜完整·无炎症':'膜起泡',W*0.28,cy+110,'#1e7a45','12px "Microsoft YaHei"');
+      // 右：坏死
+      ctx.strokeStyle='#c0392b';ctx.lineWidth=2; ctx.setLineDash([8,7]); ctx.beginPath(); ctx.arc(W*0.72,cy,60,0,7); ctx.stroke(); ctx.setLineDash([]);
+      if(phaseI>=3){ for(var j=0;j<10;j++) AnimKit.circle(ctx,W*0.72+(Math.random()*160-80),cy+(Math.random()*140-70),5,'#c0392b',null); }
+      AnimKit.label(ctx,'坏死',W*0.72,cy-80,'#c0392b','bold 14px "Microsoft YaHei"');
+      AnimKit.label(ctx,phaseI>=3?'膜破·内容外溢·炎症':'膜失去完整性',W*0.72,cy+110,'#c0392b','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①两种死亡','②凋亡成小体','③凋亡无炎症','④坏死破裂+炎症'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

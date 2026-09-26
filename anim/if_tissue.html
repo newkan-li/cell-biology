@@ -1,0 +1,28 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IF组织特异性</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'中间纤维的组织特异性',
+    sub:'不同组织表达不同中间纤维蛋白：上皮—角蛋白、间充质—波形蛋白、肌—结蛋白、神经—神经丝蛋白、核内—核纤层蛋白。',
+    legend:[{c:'#2e9e5b',t:'角蛋白'},{c:'#5a7fa8',t:'波形蛋白'},{c:'#8e5bb5',t:'核纤层蛋白'},{c:'#e0a95a',t:'神经丝/结蛋白'}],
+    phases:[
+      {name:'① 上皮细胞：角蛋白',dur:1400,note:'上皮细胞表达角蛋白，构成细胞的 IF 网络。'},
+      {name:'② 间充质：波形蛋白',dur:1400,note:'间充质来源细胞表达波形蛋白。'},
+      {name:'③ 肌/神经：结蛋白/神经丝',dur:1400,note:'肌细胞用结蛋白，神经细胞用神经丝蛋白。'},
+      {name:'④ 核内：核纤层蛋白',dur:1400,note:'核膜下由核纤层蛋白(lamin)构成核纤层。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'IF 的组织特异性',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var y=H/2+20, labels=[['上皮\n角蛋白','#2e9e5b'],['间充质\n波形蛋白','#5a7fa8'],['肌/神经\n结蛋白/神经丝','#e0a95a'],['核内\n核纤层蛋白','#8e5bb5']];
+      labels.forEach(function(o,i){ var x=110+i*210; var on=(phaseI===i);
+        ctx.fillStyle='#eef4fa';ctx.strokeStyle=on?o[1]:'#c6d8ea';ctx.lineWidth=on?3:1.5; AnimKit.roundRect(ctx,x,y-70,170,140,10); ctx.fill(); ctx.stroke();
+        o[0].split('\n').forEach(function(ln,k){ AnimKit.label(ctx,ln,x+85,y-10+k*22,on?o[1]:'#45687f',(on?'bold ':'')+'13px "Microsoft YaHei"'); });
+      });
+      AnimKit.label(ctx,['①上皮→角蛋白','②间充质→波形蛋白','③肌/神经→结蛋白/神经丝','④核内→核纤层蛋白'][phaseI],W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

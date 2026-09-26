@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bcl-2拔河</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'Bcl-2 家族：促凋亡与抗凋亡的“拔河”',
+    sub:'Bax/Bak 促凋亡，在线粒体外膜开孔放出细胞色素 c；Bcl-2/Bcl-x 抗凋亡，拉住 Bax/Bak 不让开孔。二者平衡决定细胞生死。',
+    legend:[{c:'#c0392b',t:'促凋亡(Bax/Bak)'},{c:'#2e9e5b',t:'抗凋亡(Bcl-2/Bcl-x)'}],
+    phases:[
+      {name:'① 平衡：闸门关闭',dur:1400,note:'Bcl-2 与 Bax/Bak 结合，阻止其寡聚化，线粒体完整。'},
+      {name:'② 促凋亡信号激活',dur:1600,note:'Bid 等活化，解除 Bcl-2 对 Bax/Bak 的抑制。'},
+      {name:'③ Bax/Bak 寡聚开孔',dur:1600,note:'Bax/Bak 寡聚、插到线粒体外膜，通道开放。'},
+      {name:'④ 细胞色素 c 释放→凋亡',dur:1600,note:'细胞色素 c 释放到胞质，启动 caspase 级联。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'Bcl-2 家族的生死平衡',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cx=W/2, cy=H/2+20, r=90;
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=4; ctx.beginPath(); ctx.arc(cx,cy,r,0,7); ctx.stroke();
+      AnimKit.label(ctx,'线粒体',cx,cy+4,'#234f7a','bold 13px "Microsoft YaHei"');
+      if(phaseI<2){ AnimKit.circle(ctx,cx-24,cy-r+6,12,'#2e9e5b','B'); AnimKit.circle(ctx,cx+24,cy-r+6,12,'#c0392b','X'); AnimKit.label(ctx,'Bcl-2 拉住 Bax/Bak → 闸门关',cx,cy-r-24,'#1e7a45','12px "Microsoft YaHei"'); }
+      if(phaseI>=2){ for(var i=-2;i<=2;i++) AnimKit.circle(ctx,cx+i*20,cy-r+6,10,'#c0392b','X'); AnimKit.label(ctx,'Bax/Bak 寡聚开孔',cx,cy-r-24,'#c0392b','12px "Microsoft YaHei"'); }
+      if(phaseI>=3){ for(var j=0;j<5;j++) AnimKit.circle(ctx,cx-60+j*30,cy+r+30,7,'#c0392b','c'); AnimKit.arrow(ctx,cx,cy+r+4,cx,cy+r+26,'#c0392b',2.5); AnimKit.label(ctx,'细胞色素 c 释放 → 凋亡',cx,cy+r+70,'#c0392b','bold 13px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①平衡(闸门关)','②促凋亡信号','③Bax/Bak开孔','④Cyt c释放→凋亡'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

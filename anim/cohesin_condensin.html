@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>cohesin与condensin</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'SMC 复合体：cohesin 黏连 vs condensin 凝缩',
+    sub:'cohesin(黏连蛋白)把姐妹染色单体像夹子一样夹在一起，直至后期；condensin(凝缩蛋白)在 ATP 作用下把染色质卷紧、缩成染色体。',
+    legend:[{c:'#2e9e5b',t:'cohesin(黏连)'},{c:'#8e5bb5',t:'condensin(凝缩)'}],
+    phases:[
+      {name:'① cohesin 夹住姐妹染色单体',dur:1500,note:'cohesin 环把两条姐妹染色单体黏连为整体。'},
+      {name:'② 保持黏连直至后期',dur:1500,note:'黏连保证分裂时两条染色体准确分配。'},
+      {name:'③ condensin 卷曲凝缩',dur:1600,note:'condensin 在 ATP 作用下把染色质卷成超螺旋、缩成染色体。'},
+      {name:'④ 后期分离酶切开 cohesin',dur:1600,note:'后期 securin 释放 separase，切开 cohesin，姐妹染色单体分离。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'cohesin 黏连、condensin 凝缩',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+16;
+      var sep=phaseI>=3?70:16;
+      ctx.strokeStyle='#c0392b';ctx.lineWidth=10;ctx.beginPath();ctx.moveTo(W/2-sep/2,cy-90);ctx.lineTo(W/2-sep/2,cy+90);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(W/2+sep/2,cy-90);ctx.lineTo(W/2+sep/2,cy+90);ctx.stroke();
+      AnimKit.label(ctx,'姐妹染色单体',W/2-sep/2-70,cy,'#c0392b','12px "Microsoft YaHei"','right');
+      if(phaseI<3){ AnimKit.circle(ctx,W/2,cy-30,12,'#2e9e5b','C'); AnimKit.circle(ctx,W/2,cy+40,12,'#2e9e5b','C'); AnimKit.label(ctx,'cohesin 环',W/2+40,cy-30,'#1e7a45','12px "Microsoft YaHei"','left'); }
+      else { AnimKit.circle(ctx,W/2,cy-30,12,'#8e5bb5','S'); AnimKit.label(ctx,'separase 切开 cohesin→分离',W/2,cy+120,'#c0392b','bold 13px "Microsoft YaHei"'); }
+      if(phaseI>=2 && phaseI<3){ for(var i=0;i<5;i++){ AnimKit.circle(ctx,W/2-40+i*20,cy-120,7,'#8e5bb5',null); AnimKit.circle(ctx,W/2-40+i*20,cy+120,7,'#8e5bb5',null); } AnimKit.label(ctx,'condensin 卷曲凝缩',W/2,cy-150,'#6a4a8a','12px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①cohesin黏连','②保持黏连','③condensin凝缩','④后期切开→分离'][phaseI],W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

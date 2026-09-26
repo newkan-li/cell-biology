@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>cAMP-PKA</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'cAMP-PKA 通路：从膜到胞质/细胞核',
+    sub:'激素→GPCR→腺苷酸环化酶→cAMP→PKA：胞质中 PKA 促糖原分解；PKA 入核磷酸化 CREB，调节基因表达。',
+    legend:[{c:'#2e9e5b',t:'cAMP'},{c:'#5a7fa8',t:'PKA'},{c:'#8e5bb5',t:'CREB'}],
+    phases:[
+      {name:'① 激素激活 GPCR',dur:1400,note:'激素结合 G 蛋白偶联受体。'},
+      {name:'② 腺苷酸环化酶生成 cAMP',dur:1600,note:'G 蛋白激活腺苷酸环化酶，ATP→cAMP。'},
+      {name:'③ cAMP 激活 PKA',dur:1500,note:'cAMP 结合 PKA 调节亚基，释放催化亚基。'},
+      {name:'④ 胞质/入核产生效应',dur:1600,note:'胞质促糖原分解；入核磷酸化 CREB 调节基因。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'cAMP-PKA 通路',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var m=AnimKit.membrane(ctx,W,H,{yTop:H*0.34,yBot:H*0.48,cx:W*0.3,gap:76});
+      AnimKit.circle(ctx,W*0.3,m.yTop-30,10,'#8e5bb5','H'); AnimKit.label(ctx,'激素→GPCR',W*0.3,m.yTop-50,'#6a4a8a','12px "Microsoft YaHei"');
+      if(phaseI>=1) AnimKit.pill(ctx,W*0.3-90,m.yBot+40,180,32,'#5a7fa8','腺苷酸环化酶','#fff');
+      var cy=m.yBot+120;
+      if(phaseI>=1){ for(var i=0;i<4;i++) AnimKit.circle(ctx,W*0.3-60+i*40,cy,10,'#2e9e5b','c'); AnimKit.label(ctx,'cAMP 增多',W*0.3+120,cy,'#1e7a45','12px "Microsoft YaHei"','left'); }
+      if(phaseI>=2){ AnimKit.pill(ctx,W*0.62,cy-18,150,40,'#5a7fa8','PKA 激活','#fff'); AnimKit.arrow(ctx,W*0.3+80,cy,W*0.62-4,cy,'#2e9e5b',2.5); }
+      if(phaseI>=3){ AnimKit.pill(ctx,W*0.62,cy+80,180,40,'#8e5bb5','CREB(入核)','#fff'); AnimKit.arrow(ctx,W*0.62+75,cy+22,W*0.62+75,cy+78,'#5a7fa8',2);
+        AnimKit.label(ctx,'胞质：促糖原分解',W*0.62,cy+150,'#1e7a45','12px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①激素→GPCR','②生成cAMP','③激活PKA','④胞质/入核效应'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

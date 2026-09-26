@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>katanin剪切</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'微管切割蛋白 katanin 的作用',
+    sub:'katanin 消耗 ATP 把长微管切断，产生更多末端，促进微管解聚与重组。',
+    legend:[{c:'#2e9e5b',t:'微管'},{c:'#c0392b',t:'katanin'}],
+    phases:[
+      {name:'① katanin 结合微管',dur:1500,note:'微管切割蛋白 katanin 结合到微管上。'},
+      {name:'② 依赖 ATP 切断',dur:1600,note:'水解 ATP，把长微管切断。'},
+      {name:'③ 产生更多末端',dur:1500,note:'切断后微管数量增多、末端数增加。'},
+      {name:'④ 促进解聚与重组',dur:1500,note:'更多末端使微管更易解聚、重组。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'katanin 切断微管',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var y=H/2+10, x0=140, x1=W-140, cut=(phaseI>=2);
+      if(!cut){ ctx.strokeStyle='#2e9e5b';ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(x0,y);ctx.lineTo(x1,y);ctx.stroke(); }
+      else { ctx.strokeStyle='#2e9e5b';ctx.lineWidth=12; [0,1,2].forEach(function(i){ var a=x0+i*(x1-x0)/3, b=a+(x1-x0)/3-30; ctx.beginPath();ctx.moveTo(a,y);ctx.lineTo(b,y);ctx.stroke(); }); }
+      if(phaseI>=1){ [0.33,0.66].forEach(function(t){ AnimKit.circle(ctx,x0+t*(x1-x0),y-24,11,'#c0392b','K'); }); }
+      if(phaseI>=3){ for(var i=0;i<4;i++) AnimKit.arrow(ctx,x0+i*(x1-x0)/3+10,y+30,x0+i*(x1-x0)/3+10,y+66,'#8aa0b8',2); }
+      AnimKit.label(ctx,cut?'切断为多段 → 末端增多':'长微管',W/2,y-70,'#33465c','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①结合微管','②ATP切断','③末端增多','④促解聚/重组'][phaseI],W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

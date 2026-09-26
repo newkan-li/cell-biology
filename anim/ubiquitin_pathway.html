@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>泛素-蛋白酶体</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'泛素-蛋白酶体途径：贴标签 → 碎纸机',
+    sub:'E1 激活泛素、E2 传递、E3 识别靶蛋白并挂上泛素链；被标记的蛋白送入 26S 蛋白酶体降解。E3 决定底物特异性。',
+    legend:[{c:'#8e5bb5',t:'泛素(Ub)'},{c:'#5a7fa8',t:'E1/E2/E3'},{c:'#c0392b',t:'靶蛋白'},{c:'#2e9e5b',t:'蛋白酶体'}],
+    phases:[
+      {name:'① E1 激活泛素',dur:1400,note:'E1 泛素活化酶在 ATP 下激活泛素。'},
+      {name:'② E2 传递泛素',dur:1400,note:'泛素转移到 E2 泛素结合酶。'},
+      {name:'③ E3 挂泛素链到靶蛋白',dur:1600,note:'E3 泛素连接酶识别特定靶蛋白并挂上泛素链（决定特异性）。'},
+      {name:'④ 26S 蛋白酶体降解',dur:1600,note:'泛素化蛋白被送入蛋白酶体，切成小肽。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'泛素-蛋白酶体途径',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+20, x0=120;
+      function node(x,txt,color,on){ AnimKit.pill(ctx,x,cy-22,120,44,on?color:'#e6ecf2',txt,on?'#fff':'#7a8aa0'); }
+      node(x0,'E1','#5a7fa8',phaseI>=0);
+      node(x0+190,'E2','#5a7fa8',phaseI>=1);
+      node(x0+380,'E3','#5a7fa8',phaseI>=2);
+      if(phaseI>=2){ AnimKit.circle(ctx,x0+520,cy,16,'#c0392b','P'); for(var i=0;i<3;i++) AnimKit.circle(ctx,x0+520-8+i*8,cy-26-i*10,6,'#8e5bb5','U'); AnimKit.label(ctx,'泛素链',x0+560,cy-40,'#6a4a8a','11px "Microsoft YaHei"','left'); }
+      if(phaseI>=3){ AnimKit.pill(ctx,W-170,cy-22,140,44,'#2e9e5b','26S 蛋白酶体','#fff'); AnimKit.arrow(ctx,x0+540,cy,W-166,cy,'#c0392b',2.5); AnimKit.label(ctx,'降解为小肽',W-160,cy+64,'#1e7a45','12px "Microsoft YaHei"'); }
+      AnimKit.arrow(ctx,x0+120,cy,x0+190,cy,'#8aa0b8',2); AnimKit.arrow(ctx,x0+310,cy,x0+380,cy,'#8aa0b8',2);
+      AnimKit.label(ctx,['①E1激活','②E2传递','③E3挂泛素链','④蛋白酶体降解'][phaseI],W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

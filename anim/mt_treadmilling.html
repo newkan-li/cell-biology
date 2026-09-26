@@ -1,0 +1,33 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>微管踏车</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'微管的脚踏车运动(treadmilling)',
+    sub:'正端不断聚合、负端不断解聚；两端速度相等时微管总长度不变，但亚基像流水一样从正端流向负端。',
+    legend:[{c:'#2e9e5b',t:'正端(+ 聚合)'},{c:'#5a7fa8',t:'负端(− 解聚)'}],
+    phases:[
+      {name:'① 正端聚合',dur:1500,note:'游离二聚体不断加到正端，微管延长。'},
+      {name:'② 负端解聚',dur:1500,note:'负端亚基不断脱落，微管缩短。'},
+      {name:'③ 速度相等：长度不变',dur:1600,note:'两端速度相等时总长度不变，出现踏车现象。'},
+      {name:'④ 亚基定向流动',dur:1600,note:'亚基从正端流入、负端流出，微管“原地流动”。'}
+    ],
+    init:function(S){S.flow=0;},
+    step:function(S,dt){ S.flow=(S.flow+dt/1000*60)%26; },
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'脚踏车运动：长度不变，亚基流动',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var x=W/2, top=90, bot=H-90;
+      for(var y=top;y<=bot;y+=26){ var idx=Math.floor((y+((phaseI>=3)?S.flow:0))/26); AnimKit.circle(ctx,x,y,11,(idx%2)?'#2e9e5b':'#5a7fa8',null); }
+      AnimKit.label(ctx,'正端(+)：不断加入',x+40,top,'#2e9e5b','bold 12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,'负端(−)：不断脱落',x+40,bot,'#5a7fa8','bold 12px "Microsoft YaHei"','left');
+      AnimKit.arrow(ctx,x-44,top+10,x-44,top+70,'#2e9e5b',2.5);
+      AnimKit.arrow(ctx,x-44,bot-10,x-44,bot-70,'#5a7fa8',2.5);
+      AnimKit.arrow(ctx,x+18,top+40,x+18,bot-40,'#8aa0b8',2);
+      AnimKit.label(ctx,'亚基定向流动 →',x+26,(top+bot)/2,'#7a8aa0','12px "Microsoft YaHei"','left');
+      AnimKit.label(ctx,['①正端聚合','②负端解聚','③速度相等→长度不变','④亚基从+流向−'][phaseI],W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

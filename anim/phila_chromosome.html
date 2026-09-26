@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>费城染色体</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'染色体易位与费城染色体（慢性髓性白血病）',
+    sub:'9 号与 22 号染色体发生易位，把 BCR 与 ABL 基因拼接成 BCR-ABL，产生持续活化的酪氨酸激酶，导致慢性髓性白血病。',
+    legend:[{c:'#5a7fa8',t:'9号染色体'},{c:'#8e5bb5',t:'22号染色体'},{c:'#c0392b',t:'BCR-ABL(致病)'}],
+    phases:[
+      {name:'① 正常：9 号与 22 号',dur:1500,note:'ABL 位于 9 号，BCR 位于 22 号。'},
+      {name:'② 易位：片段互换',dur:1600,note:'9 号与 22 号之间发生染色体易位。'},
+      {name:'③ 形成费城染色体',dur:1600,note:'22 号上出现 BCR-ABL 融合基因（费城染色体）。'},
+      {name:'④ 持续活化→白血病',dur:1600,note:'BCR-ABL 是持续活化的酪氨酸激酶，驱动细胞异常增殖。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'染色体易位与费城染色体',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+10;
+      function chrom(x,color,txt){ AnimKit.pill(ctx,x-30,cy-16,60,32,color,txt,'#fff'); }
+      if(phaseI<2){ chrom(W*0.3,'#5a7fa8','9'); chrom(W*0.6,'#8e5bb5','22');
+        AnimKit.label(ctx,'9号:ABL',W*0.3,cy+46,'#45687f','12px "Microsoft YaHei"'); AnimKit.label(ctx,'22号:BCR',W*0.6,cy+46,'#6a4a8a','12px "Microsoft YaHei"'); }
+      else { chrom(W*0.3,'#5a7fa8','9'); chrom(W*0.6,'#c0392b','费城'); AnimKit.label(ctx,'9号:含 BCR 片段',W*0.3,cy+46,'#45687f','12px "Microsoft YaHei"');
+        AnimKit.label(ctx,'22号:BCR-ABL 融合基因',W*0.6,cy+46,'#c0392b','12px "Microsoft YaHei"'); }
+      if(phaseI>=2) AnimKit.arrow(ctx,W*0.45,cy-40,W*0.62,cy-24,'#c0392b',2.5);
+      if(phaseI>=3){ AnimKit.label(ctx,'BCR-ABL = 持续活化的酪氨酸激酶',W/2,cy+90,'#c0392b','bold 13px "Microsoft YaHei"'); AnimKit.arrow(ctx,W*0.6,cy+70,W*0.6,cy+30,'#c0392b',2.5); }
+      AnimKit.label(ctx,['①正常9/22','②易位互换','③形成费城染色体','④持续活化→慢粒'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

@@ -1,0 +1,36 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>微丝药物</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'微丝特异性药物：细胞松弛素 vs 鬼笔环肽',
+    sub:'细胞松弛素破坏微丝网络（抑制聚合、促解聚）；鬼笔环肽稳定微丝、抑制解聚。它们是研究微丝功能的工具药。',
+    legend:[{c:'#c0392b',t:'细胞松弛素(拆)'},{c:'#2e9e5b',t:'鬼笔环肽(锁)'}],
+    phases:[
+      {name:'① 正常微丝网络',dur:1400,note:'细胞内有完整的微丝网络。'},
+      {name:'② 细胞松弛素：拆网',dur:1600,note:'抑制聚合、促进解聚，微丝网络被破坏。'},
+      {name:'③ 鬼笔环肽：锁死',dur:1600,note:'稳定微丝、抑制解聚，微丝被固定。'},
+      {name:'④ 用于研究微丝功能',dur:1400,note:'一拆一锁，帮助判断微丝在细胞中的功能。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'微丝药物作用',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+20;
+      function net(cx,state){
+        ctx.strokeStyle=state==='break'?'#c0392b':(state==='lock'?'#2e9e5b':'#c98a3a');
+        ctx.lineWidth=4;
+        for(var i=0;i<6;i++){ var x=cx-100+i*40; ctx.beginPath(); ctx.moveTo(x,cy-70); ctx.lineTo(x+(state==='break'?20:0),cy+70); ctx.stroke(); }
+        if(state==='break'){ ctx.setLineDash([8,10]); }
+      }
+      net(W/2,'norm');
+      if(phaseI>=1){ ctx.setLineDash([10,12]); ctx.strokeStyle='#c0392b'; ctx.lineWidth=4; for(var i=0;i<5;i++){ var x=W/2-80+i*40; ctx.beginPath(); ctx.moveTo(x,cy-70); ctx.lineTo(x+20,cy-10); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x+20,cy+10); ctx.lineTo(x,cy+70); ctx.stroke(); } ctx.setLineDash([]); }
+      if(phaseI>=2){ ctx.strokeStyle='#2e9e5b'; ctx.lineWidth=8; ctx.beginPath(); ctx.moveTo(W*0.78,cy-70); ctx.lineTo(W*0.78,cy+70); ctx.stroke(); }
+      AnimKit.label(ctx,'正常网络',W*0.30,cy+96,'#b0791f','12px "Microsoft YaHei"');
+      if(phaseI>=1) AnimKit.label(ctx,'细胞松弛素→断裂',W*0.52,cy+96,'#c0392b','12px "Microsoft YaHei"');
+      if(phaseI>=2) AnimKit.label(ctx,'鬼笔环肽→稳定',W*0.78,cy+96,'#1e7a45','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①正常','②细胞松弛素拆网','③鬼笔环肽锁死','④研究微丝功能'][phaseI],W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

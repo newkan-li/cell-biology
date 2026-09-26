@@ -1,0 +1,34 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>应力纤维</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'应力纤维与黏着斑',
+    sub:'应力纤维是含 actin、myosin、Tm、filamin、α-actinin 的微丝束，通过黏着斑(integrin-肌动蛋白)固定在细胞外基质上，与细胞黏附、张力有关。',
+    legend:[{c:'#c98a3a',t:'应力纤维(微丝束)'},{c:'#8e5bb5',t:'黏着斑'},{c:'#5a7fa8',t:'基质'}],
+    phases:[
+      {name:'① 组装应力纤维',dur:1500,note:'actin、myosin 等在细胞内组装成束状应力纤维。'},
+      {name:'② 形成黏着斑',dur:1500,note:'纤维两端形成黏着斑（整合素连接肌动蛋白与基质）。'},
+      {name:'③ 固定于基质',dur:1500,note:'黏着斑把细胞固定在细胞外基质上。'},
+      {name:'④ 产生张力/参与黏附',dur:1500,note:'myosin 收缩使纤维产生张力，与细胞黏附有关。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'应力纤维',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+10;
+      // 基质
+      ctx.strokeStyle='#bcd0e2';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(100,cy+110);ctx.lineTo(W-100,cy+110);ctx.stroke();
+      AnimKit.label(ctx,'细胞外基质',110,cy+130,'#7a8aa0','12px "Microsoft YaHei"','left');
+      // 应力纤维
+      ctx.strokeStyle='#c98a3a';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(180,cy);ctx.lineTo(W-180,cy);ctx.stroke();
+      for(var i=0;i<4;i++){ AnimKit.circle(ctx,260+i*120,cy,5,'#2e9e5b',null); }
+      AnimKit.label(ctx,'actin + myosin + Tm + filamin',W/2,cy-26,'#a9742e','12px "Microsoft YaHei"');
+      if(phaseI>=1){ AnimKit.circle(ctx,180,cy,12,'#8e5bb5',null); AnimKit.circle(ctx,W-180,cy,12,'#8e5bb5',null); AnimKit.label(ctx,'黏着斑',180,cy+34,'#6a4a8a','12px "Microsoft YaHei"'); }
+      if(phaseI>=2){ AnimKit.arrow(ctx,180,cy+16,180,cy+104,'#8e5bb5',2.5); AnimKit.arrow(ctx,W-180,cy+16,W-180,cy+104,'#8e5bb5',2.5); }
+      if(phaseI>=3){ AnimKit.arrow(ctx,W/2-40,cy-50,W/2+40,cy-50,'#2e9e5b',3); AnimKit.label(ctx,'收缩→张力',W/2,cy-62,'#1e7a45','12px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①组装应力纤维','②形成黏着斑','③固定于基质','④产生张力/参与黏附'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

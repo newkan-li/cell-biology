@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>第二信使</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'常见胞内第二信使：cAMP、cGMP、IP3/DAG、Ca²⁺',
+    sub:'胞外信号(第一信使)作用于表面受体后，在胞内产生小分子第二信使，把信号放大并传向效应器。',
+    legend:[{c:'#8e5bb5',t:'第一信使'},{c:'#2e9e5b',t:'第二信使'}],
+    phases:[
+      {name:'① 第一信使结合表面受体',dur:1500,note:'亲水信号分子只能结合细胞表面受体。'},
+      {name:'② 产生第二信使',dur:1600,note:'受体激活酶，生成 cAMP / cGMP / IP3+DAG 等。'},
+      {name:'③ IP3→Ca²⁺、DAG→PKC',dur:1600,note:'IP3 使 ER 释放 Ca²⁺；DAG 与 Ca²⁺ 激活 PKC。'},
+      {name:'④ 放大并传向效应器',dur:1500,note:'第二信使逐级放大信号，引起细胞反应。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'胞内第二信使',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var m=AnimKit.membrane(ctx,W,H,{yTop:H*0.36,yBot:H*0.50,cx:W*0.25,gap:70});
+      AnimKit.circle(ctx,W*0.25,m.yTop-30,10,'#8e5bb5','L'); AnimKit.label(ctx,'第一信使',W*0.25,m.yTop-50,'#8e5bb5','12px "Microsoft YaHei"');
+      var cy=m.yBot+70;
+      var names=[['cAMP','#2e9e5b'],['cGMP','#5a7fa8'],['IP3','#e0a95a'],['DAG','#c0392b'],['Ca²⁺','#8e5bb5']];
+      names.forEach(function(o,i){ var on=phaseI>=1 && (phaseI<2? true : true); AnimKit.circle(ctx,180+i*130,cy,20,on?o[1]:'#e6ecf2', o[0], on?'#fff':'#9aa'); });
+      if(phaseI>=2){ AnimKit.label(ctx,'IP3→内质网释放 Ca²⁺；DAG+Ca²⁺→激活 PKC',W/2,cy+70,'#33465c','bold 13px "Microsoft YaHei"'); }
+      if(phaseI>=3){ AnimKit.arrow(ctx,W/2-200,cy+110,W/2+200,cy+110,'#2e9e5b',3); AnimKit.label(ctx,'逐级放大 → 细胞反应',W/2,cy+140,'#1e7a45','bold 13px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①第一信使','②生成第二信使','③IP3/DAG→Ca²⁺/PKC','④放大→效应'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PLC-IP3-DAG</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'肌醇磷脂信号通路（双信使系统）',
+    sub:'GPCR→G 蛋白激活磷脂酶 C(PLC)→把 PIP2 剪成 IP3 和 DAG 两个第二信使：IP3 使内质网释放 Ca²⁺，DAG 与 Ca²⁺ 激活 PKC。',
+    legend:[{c:'#2e9e5b',t:'IP3(水溶)'},{c:'#c0392b',t:'DAG(留膜)'},{c:'#8e5bb5',t:'PKC'}],
+    phases:[
+      {name:'① G 蛋白激活 PLC',dur:1400,note:'受体经 G 蛋白激活质膜上的磷脂酶 C。'},
+      {name:'② PIP2 剪成 IP3 + DAG',dur:1600,note:'PLC 把 PIP2 水解成 IP3(水溶) 和 DAG(留膜) 两个信使。'},
+      {name:'③ IP3→内质网释放 Ca²⁺',dur:1600,note:'IP3 扩散到内质网，使 Ca²⁺ 通道开放、胞质 Ca²⁺ 升高。'},
+      {name:'④ Ca²⁺+DAG→激活 PKC',dur:1600,note:'Ca²⁺ 与 DAG 共同激活蛋白激酶 C(PKC)，调节多种反应。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'PLC-IP3-DAG 双信使',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var m=AnimKit.membrane(ctx,W,H,{yTop:H*0.34,yBot:H*0.48,cx:W*0.3,gap:80});
+      if(phaseI>=1) AnimKit.pill(ctx,W*0.3-80,m.yBot+38,160,32,'#5a7fa8','磷脂酶C(PLC)','#fff');
+      var cy=m.yBot+120;
+      if(phaseI>=1){ AnimKit.circle(ctx,W*0.3-40,cy,16,'#2e9e5b','I'); AnimKit.label(ctx,'IP3',W*0.3-40,cy+36,'#1e7a45','12px "Microsoft YaHei"');
+        AnimKit.circle(ctx,W*0.3+40,m.yBot+8,16,'#c0392b','D'); AnimKit.label(ctx,'DAG(留膜)',W*0.3+40,m.yBot-14,'#c0392b','12px "Microsoft YaHei"'); }
+      if(phaseI>=2){ AnimKit.pill(ctx,W*0.66,cy-70,150,40,'#eef4fa','内质网 Ca²⁺库','#45687f'); AnimKit.arrow(ctx,W*0.3-40,cy,W*0.66-76,cy-40,'#2e9e5b',2.5); AnimKit.label(ctx,'释放 Ca²⁺',W*0.52,cy-6,'#1e7a45','12px "Microsoft YaHei"'); }
+      if(phaseI>=3){ AnimKit.pill(ctx,W*0.66,cy+30,180,40,'#8e5bb5','PKC 激活 → 磷酸化底物','#fff'); AnimKit.arrow(ctx,W*0.66+30,cy-24,W*0.66+30,cy+28,'#c0392b',2.5); }
+      AnimKit.label(ctx,['①G蛋白激活PLC','②PIP2→IP3+DAG','③IP3→Ca²⁺','④Ca²⁺+DAG→PKC'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

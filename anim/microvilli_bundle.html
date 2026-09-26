@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>微绒毛</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'肠上皮微绒毛：成束微丝支撑，终末网锚定',
+    sub:'微绒毛是上皮细胞游离面的指状突起，内部有紧密成束的微丝；微丝束根部进入细胞顶部交织成终末网，把微绒毛锚住。',
+    legend:[{c:'#c98a3a',t:'微丝束'},{c:'#5a7fa8',t:'质膜'},{c:'#8e5bb5',t:'终末网'}],
+    phases:[
+      {name:'① 游离面形成微绒毛',dur:1500,note:'上皮细胞游离面伸出指状突起，扩大吸收面积。'},
+      {name:'② 内部成束微丝',dur:1500,note:'微绒毛内有紧密平行的微丝束(由成束蛋白交联)。'},
+      {name:'③ 根部形成终末网',dur:1600,note:'微丝束根部进入细胞顶部，交织成终末网。'},
+      {name:'④ 锚定并维持形态',dur:1500,note:'终末网把微绒毛锚住，维持其直立形态。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'肠上皮微绒毛',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var baseY=H-110;
+      ctx.fillStyle='#eef4fa';ctx.strokeStyle='#5a7fa8';ctx.lineWidth=2; ctx.fillRect(120,baseY,W-240,80); ctx.strokeRect(120,baseY,W-240,80);
+      for(var i=0;i<7;i++){ var x=170+i*90;
+        ctx.strokeStyle='#5a7fa8';ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x-14,baseY); ctx.lineTo(x-14,baseY-90); ctx.quadraticCurveTo(x,baseY-104,x+14,baseY-90); ctx.lineTo(x+14,baseY); ctx.stroke();
+        if(phaseI>=1){ ctx.strokeStyle='#c98a3a';ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(x,baseY-6); ctx.lineTo(x,baseY-84); ctx.stroke(); }
+        if(phaseI>=3){ ctx.strokeStyle='#8e5bb5';ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(x,baseY); ctx.lineTo(W/2,baseY+50); ctx.stroke(); }
+      }
+      if(phaseI>=2) AnimKit.label(ctx,'终末网',W/2,baseY+72,'#6a4a8a','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①形成微绒毛','②成束微丝','③终末网','④锚定维持形态'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

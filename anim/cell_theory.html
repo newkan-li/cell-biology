@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>细胞学说</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'细胞学说的建立与三个基本原则',
+    sub:'1838 Schleiden（植物）与 1839 Schwann（动物）提出，1855 Virchow 补充“细胞来自已有细胞”。',
+    legend:[{c:'#2e9e5b',t:'细胞'},{c:'#5a7fa8',t:'细胞学说'}],
+    phases:[
+      {name:'① 施莱登：植物由细胞构成',dur:1500,note:'1838 年 Schleiden 提出植物组织都由细胞构成。'},
+      {name:'② 施旺：动物也由细胞构成',dur:1500,note:'1839 年 Schwann 把结论推广到动物，提出细胞学说。'},
+      {name:'③ 魏尔肖：细胞来自细胞',dur:1600,note:'1855 年 Virchow 补充：Omnis cellula e cellula。'},
+      {name:'④ 三个基本原则',dur:1600,note:'所有生物由细胞构成；细胞是基本单位；细胞来自已有细胞。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'细胞学说',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+10;
+      function cell(x,y,r,c){ ctx.fillStyle='#e8f1fb';ctx.strokeStyle=c;ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();ctx.stroke(); AnimKit.circle(ctx,x,y,r*0.4,c,null); }
+      if(phaseI>=0) for(var i=0;i<4;i++) cell(140+i*70,cy-40,22,'#2e9e5b');
+      if(phaseI>=1) for(var j=0;j<4;j++) cell(140+j*70,cy+20,22,'#2e9e5b');
+      AnimKit.label(ctx,'植物',140+105,cy-84,'#1e7a45','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'动物',140+105,cy+66,'#1e7a45','12px "Microsoft YaHei"');
+      if(phaseI>=2){ AnimKit.arrow(ctx,W*0.62,cy-40,W*0.72,cy-40,'#5a7fa8',2.5); AnimKit.label(ctx,'细胞来自已有细胞',W*0.72,cy-52,'#45687f','12px "Microsoft YaHei"','left'); }
+      if(phaseI>=3){ AnimKit.label(ctx,'①所有生物由细胞构成',W/2,cy+120,'#1f5c8b','bold 13px "Microsoft YaHei"');
+        AnimKit.label(ctx,'②细胞是结构与功能的基本单位  ③细胞来自已有细胞',W/2,cy+146,'#1f5c8b','bold 13px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①植物由细胞构成','②动物也由细胞构成','③细胞来自细胞','④三个基本原则'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>
