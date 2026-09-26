@@ -5,7 +5,7 @@ require(path.join(ROOT, "data", "methods.js"));
 require(path.join(ROOT, "data", "hotexp.js"));
 require(path.join(ROOT, "data", "explist.js"));
 const M = window.METHODS, H = window.HOTEXP, E = window.EXPLIST;
-const MANUAL = { "膜片钳": ["ch02_s1_23"] };
+const MANUAL = {};
 const hotKps = {}, expKps = {};
 H.forEach(h => { if (h.kp) hotKps[h.kp] = 1; });
 E.forEach(e => { expKps[e.kp] = 1; });
