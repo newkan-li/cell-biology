@@ -1521,7 +1521,7 @@
           aw.appendChild(el("div", "animhead", "🎬 动画演示（在老师原图下方）"));
           var ifr = document.createElement("iframe");
           ifr.className = "animframe"; ifr.loading = "lazy"; ifr.setAttribute("title", s.title);
-          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926bx");
+          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926by");
           ifr.onload = function () { var o = jget(PREFIX + "animSeen", {}); if (!o[s.anim]) { o[s.anim] = 1; jset(PREFIX + "animSeen", o); } };
           aw.appendChild(ifr); card.appendChild(aw);
           if (animIO) animIO.observe(ifr); else ifr.src = ifr.getAttribute("data-src");
@@ -2306,11 +2306,14 @@
         arr.forEach(function (x, i) {
           total++;
           var id = "zts_" + cid + "_" + i, ty = ztItemType(x), box;
-          if (ty.t === "judge") box = renderJudge("ZS" + cid, { id: id, q: x.q, a: ty.a, e: x.src ? ("来源：" + x.src) : "" }, i + 1);
-          else if (ty.t === "mcq") box = renderMCQ("ZS" + cid, { id: id, q: ty.mc.q, o: ty.mc.o, a: ty.mc.a, e: x.src ? ("来源：" + x.src) : "" }, i + 1);
-          else if (ty.t === "fill") box = renderFill("ZS" + cid, { id: id, q: x.q, a: x.a, e: x.src ? ("来源：" + x.src) : "" }, i + 1);
-          else box = renderSelf("ZS" + cid, { id: id, q: x.q, a: x.a, src: x.src }, i + 1, "short");
+          var zq = (window.ZTQA || {})["ZS" + cid + "_" + i] || {};
+          var ex = (zq.e || "") + (x.src ? ((zq.e ? " " : "") + "（来源：" + x.src + "）") : "");
+          if (ty.t === "judge") box = renderJudge("ZS" + cid, { id: id, q: x.q, a: ty.a, e: ex }, i + 1);
+          else if (ty.t === "mcq") box = renderMCQ("ZS" + cid, { id: id, q: ty.mc.q, o: ty.mc.o, a: ty.mc.a, e: ex }, i + 1);
+          else if (ty.t === "fill") box = renderFill("ZS" + cid, { id: id, q: x.q, a: x.a, e: ex }, i + 1);
+          else box = renderSelf("ZS" + cid, { id: id, q: x.q, a: x.a, src: x.src, kps: zq.e || "" }, i + 1, "short");
           sec.appendChild(box);
+          if (zq.kp) { var a = el("a", "navbtn", "📄 相关讲义页"); a.style.cssText = "width:auto;margin:2px 0;display:inline-block;text-decoration:none;font-size:12px"; a.href = zq.kp.split("_s")[0] + ".html#s_" + zq.kp; sec.appendChild(a); }
         });
         host.appendChild(sec);
       });
@@ -2657,9 +2660,11 @@
         sec.appendChild(el("h2", "", esc(names[cid] || cid) + "（" + rows.length + "）"));
         rows.forEach(function (r, i) {
           total++; var x = r.x;
-          var o = { id: "ztobj_" + cid + "_" + r.t + "_" + i, q: x.q, o: x.o, a: x.a, e: x.e, oe: x.oe, kp: null, src: x.src };
+          var zq = (window.ZTQA || {})["ZT" + cid + "_" + r.t + "_" + i] || {};
+          var o = { id: "ztobj_" + cid + "_" + r.t + "_" + i, q: x.q, o: x.o, a: x.a, e: (x.e || zq.e || ""), oe: x.oe, kp: null, src: x.src };
           var box = r.t === "mcq" ? renderMCQ("ZT" + cid, o, i + 1) : (r.t === "judge" ? renderJudge("ZT" + cid, o, i + 1) : renderFill("ZT" + cid, o, i + 1));
           sec.appendChild(box);
+          if (zq.kp) { var a = el("a", "navbtn", "📄 相关讲义页"); a.style.cssText = "width:auto;margin:2px 0;display:inline-block;text-decoration:none;font-size:12px"; a.href = zq.kp.split("_s")[0] + ".html#s_" + zq.kp; sec.appendChild(a); }
         });
         host.appendChild(sec);
       });
