@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>实验一览 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926be">
-<script src="assets/theme.js?v=20260926be"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926bf">
+<script src="assets/theme.js?v=20260926bf"></script>
 <style>
 .egrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px;margin-top:10px}
 .ecard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
@@ -59,10 +59,10 @@ html[data-theme="dark"] .mf-了解{background:#232c36;color:#b9c6d6;border-color
   <div id="host"></div>
   <footer style="margin-top:24px">仅供个人学习使用</footer>
 </div>
-<script src="data/manifest.js?v=20260926be"></script>
-<script src="data/hotexp.js?v=20260926be"></script>
-<script src="data/explist.js?v=20260926be"></script>
-<script src="data/xref.js?v=20260926be"></script>
+<script src="data/manifest.js?v=20260926bf"></script>
+<script src="data/hotexp.js?v=20260926bf"></script>
+<script src="data/explist.js?v=20260926bf"></script>
+<script src="data/xref.js?v=20260926bf"></script>
 <script>
 (function () {
   var ALL = window.EXPLIST || [];
@@ -77,6 +77,7 @@ html[data-theme="dark"] .mf-了解{background:#232c36;color:#b9c6d6;border-color
   chip("全部（" + ALL.length + "）", "all");
   order.forEach(function (c) { chip((byCh[c][0].chTitle || c).slice(0, 12) + "（" + byCh[c].length + "）", c); });
   function sync() { Array.prototype.forEach.call(chips.children, function (b) { b.classList.toggle("on", b.dataset.v === cur); }); }
+  try { var _Q = new URLSearchParams(location.search), _c = _Q.get("ch"); if (_c && byCh[_c]) { cur = _c; sync(); } } catch (e) { }
   qi.oninput = function () { kw = qi.value.trim().toLowerCase(); render(); };
   function render() {
     var list = ALL.filter(function (a) {
@@ -107,6 +108,8 @@ html[data-theme="dark"] .mf-了解{background:#232c36;color:#b9c6d6;border-color
   render();
   (function () {
     var HOT = window.HOTEXP || [], hh = document.getElementById("hothost"); if (!hh) return;
+    var urlCh = ""; try { urlCh = new URLSearchParams(location.search).get("ch") || ""; } catch (e) { }
+    if (urlCh) { HOT = HOT.filter(function (h) { return h.ch === urlCh; }); if (!HOT.length) { hh.innerHTML = '<p class="empty">该章暂无“高频实验→结论”速记。</p>'; return; } }
     hh.innerHTML = HOT.map(function (h) {
       var f = h.freq ? '<span class="mfreq mf-' + esc(h.freq) + '">' + esc(h.freq) + '</span>' : "";
       var lk = h.kp ? '<a class="elink" href="' + h.ch + '.html#s_' + esc(h.kp) + '">📄 讲义页</a>' : "";

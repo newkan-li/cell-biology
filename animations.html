@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>动画总目录 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926be">
-<script src="assets/theme.js?v=20260926be"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926bf">
+<script src="assets/theme.js?v=20260926bf"></script>
 <style>
 .anim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:8px}
 .anim-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 11px}
@@ -37,8 +37,8 @@ html[data-theme="dark"] .anim-card .ac-b a{background:#22303d;border-color:#3347
   <div id="host"></div>
   <footer style="margin-top:24px">仅供个人学习使用</footer>
 </div>
-<script src="data/manifest.js?v=20260926be"></script>
-<script src="data/animlist.js?v=20260926be"></script>
+<script src="data/manifest.js?v=20260926bf"></script>
+<script src="data/animlist.js?v=20260926bf"></script>
 <script>
 (function () {
   var ALL = window.ANIMLIST || [];
@@ -53,6 +53,7 @@ html[data-theme="dark"] .anim-card .ac-b a{background:#22303d;border-color:#3347
   chip("全部（" + ALL.length + "）", "all");
   order.forEach(function (c) { chip((byCh[c][0].chTitle || c).slice(0, 14) + "（" + byCh[c].length + "）", c); });
   function sync() { Array.prototype.forEach.call(chips.children, function (b) { b.classList.toggle("on", b.dataset.v === cur); }); }
+  try { var _Q = new URLSearchParams(location.search), _c = _Q.get("ch"); if (_c && byCh[_c]) { cur = _c; sync(); } } catch (e) { }
   qi.oninput = function () { kw = qi.value.trim().toLowerCase(); render(); };
   function render() {
     var list = ALL.filter(function (a) {

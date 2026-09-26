@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>科学史 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926be">
-<script src="assets/theme.js?v=20260926be"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926bf">
+<script src="assets/theme.js?v=20260926bf"></script>
 <style>
 .tl{position:relative;margin:10px 0 0 6px;padding-left:22px;border-left:2px solid #d6e2ee}
 .tl-item{position:relative;margin:0 0 14px}
@@ -38,8 +38,8 @@ html[data-theme="dark"] .tl-d{color:#c9d6e2}
   <div class="tl" id="host"></div>
   <footer style="margin-top:24px">仅供个人学习使用</footer>
 </div>
-<script src="data/manifest.js?v=20260926be"></script>
-<script src="data/history.js?v=20260926be"></script>
+<script src="data/manifest.js?v=20260926bf"></script>
+<script src="data/history.js?v=20260926bf"></script>
 <script>
 (function () {
   var ALL = (window.HISTORY || []).slice();
@@ -53,6 +53,7 @@ html[data-theme="dark"] .tl-d{color:#c9d6e2}
   chip("全部（" + ALL.length + "）", "all");
   chs.forEach(function (c) { chip((CHN[c] || c).slice(0, 12), c); });
   function sync() { Array.prototype.forEach.call(chips.children, function (b) { b.classList.toggle("on", b.dataset.v === cur); }); }
+  try { var _Q = new URLSearchParams(location.search), _c = _Q.get("ch"); if (_c && chs.indexOf(_c) >= 0) { cur = _c; sync(); } } catch (e) { }
   qi.oninput = function () { kw = qi.value.trim().toLowerCase(); render(); };
   function render() {
     var list = ALL.filter(function (h) {

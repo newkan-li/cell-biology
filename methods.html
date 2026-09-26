@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>实验方法与技术 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926be">
-<script src="assets/theme.js?v=20260926be"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926bf">
+<script src="assets/theme.js?v=20260926bf"></script>
 <style>
 .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-top:10px}
 .mcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
@@ -50,9 +50,9 @@ html[data-theme="dark"] .mcard .mrow b{color:#8fc0e6}
   <div class="mgrid" id="host"></div>
   <footer style="margin-top:24px">仅供个人学习使用</footer>
 </div>
-<script src="data/manifest.js?v=20260926be"></script>
-<script src="data/methods.js?v=20260926be"></script>
-<script src="data/xref.js?v=20260926be"></script>
+<script src="data/manifest.js?v=20260926bf"></script>
+<script src="data/methods.js?v=20260926bf"></script>
+<script src="data/xref.js?v=20260926bf"></script>
 <script>
 (function () {
   var ALL = window.METHODS || [];
@@ -66,9 +66,12 @@ html[data-theme="dark"] .mcard .mrow b{color:#8fc0e6}
   chip("全部（" + ALL.length + "）", "all");
   cats.forEach(function (c) { chip(c, c); });
   function sync() { Array.prototype.forEach.call(chips.children, function (b) { b.classList.toggle("on", b.dataset.v === cur); }); }
+  var urlCh = ""; try { urlCh = new URLSearchParams(location.search).get("ch") || ""; } catch (e) { }
+  if (urlCh && CHN[urlCh]) { chip("本章相关：" + String(CHN[urlCh]).replace(/^第[一二三四五六七八九十]+章\s*/, "").slice(0, 10), "ch:" + urlCh); cur = "ch:" + urlCh; sync(); }
   qi.oninput = function () { kw = qi.value.trim().toLowerCase(); render(); };
   function render() {
     var list = ALL.filter(function (m) {
+      if (cur.indexOf("ch:") === 0) { return m.kp && m.kp.split("_s")[0] === cur.slice(3); }
       if (cur !== "all" && m.cat !== cur) return false;
       if (kw && (m.t + m.en + m.principle + (m.steps || "") + m.result).toLowerCase().indexOf(kw) < 0) return false;
       return true;
