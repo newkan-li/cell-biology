@@ -160,6 +160,12 @@
 
   /* ---------- helpers ---------- */
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (m) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[m]; }); }
+  /* 参考难度（按题型分层）：客观→基础、填空/名词/简答→中等、论述/计算/设计→提高 */
+  function diffTag(kind) {
+    var m = { mcq: ["基础", 1], judge: ["基础", 1], fill: ["中等", 2], term: ["中等", 2], short: ["中等", 2], calc: ["提高", 3] };
+    var x = m[kind]; if (!x) return "";
+    return '<span class="diff d' + x[1] + '" title="参考难度（按题型分层）">' + x[0] + "</span>";
+  }
   function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
 
   function lev(a, b) {
@@ -321,7 +327,7 @@
   }
   function renderMCQ(cid, q, idx) {
     var box = el("div", "q"); box.id = "q_" + q.id;
-    box.appendChild(el("p", "qq", "第 " + idx + " 题 " + esc(q.q) + (q.mod ? '<span class="src">[' + esc(q.mod) + "]</span>" : "")));
+    box.appendChild(el("p", "qq", "第 " + idx + " 题 " + diffTag("mcq") + " " + esc(q.q) + (q.mod ? '<span class="src">[' + esc(q.mod) + "]</span>" : "")));
     var opts = el("div", "mcq");
     q.o.forEach(function (o) {
       var letter = o.trim().charAt(0);
@@ -380,7 +386,7 @@
   /* ================= 判断题 ================= */
   function renderJudge(cid, q, idx) {
     var box = el("div", "q"); box.id = "q_" + q.id;
-    box.appendChild(el("p", "qq", "第 " + idx + " 题（判断对错） " + esc(q.q)));
+    box.appendChild(el("p", "qq", "第 " + idx + " 题（判断对错） " + diffTag("judge") + " " + esc(q.q)));
     var opts = el("div", "mcq");
     ["对", "错"].forEach(function (v) {
       var b = el("button", "mopt", v); b.dataset.l = v;
@@ -432,7 +438,7 @@
   /* ================= fill ================= */
   function renderFill(cid, q, idx) {
     var box = el("div", "q"); box.id = "q_" + q.id;
-    box.appendChild(el("p", "qq", "第 " + idx + " 题 " + esc(q.q)));
+    box.appendChild(el("p", "qq", "第 " + idx + " 题 " + diffTag("fill") + " " + esc(q.q)));
     var inp = el("input", "ans"); inp.placeholder = "输入答案（多个空用逗号分隔）"; box.appendChild(inp);
     var bar = el("div", "self");
     var bChk = el("button", "ok", "检查"), bShow = el("button", "", "显示答案");
@@ -484,7 +490,7 @@
       answerHTML = "<b>标准定义：</b><br>" + esc(q.def).replace(/\n/g, "<br>");
       kps = q.kps || "";
     } else {
-      title = (kind === "short" ? "简答题 " : "论述/推导 ") + idx + "：" + esc(q.q) + (q.type ? ' <span class="src">[' + esc(q.type) + "]</span>" : "") + (q.src ? ' <span class="src">[' + esc(q.src) + "]</span>" : "");
+      title = (kind === "short" ? "简答题 " : "论述/推导 ") + idx + "：" + diffTag(kind) + " " + esc(q.q) + (q.type ? ' <span class="src">[' + esc(q.type) + "]</span>" : "") + (q.src ? ' <span class="src">[' + esc(q.src) + "]</span>" : "");
       answerHTML = "<b>参考答案：</b><br>" + esc(kind === "calc" ? (q.steps || q.a) : q.a).replace(/\n/g, "<br>");
       kps = q.kps || "";
     }
@@ -1498,7 +1504,7 @@
           aw.appendChild(el("div", "animhead", "🎬 动画演示（在老师原图下方）"));
           var ifr = document.createElement("iframe");
           ifr.className = "animframe"; ifr.loading = "lazy"; ifr.setAttribute("title", s.title);
-          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926ag");
+          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926ah");
           aw.appendChild(ifr); card.appendChild(aw);
           if (animIO) animIO.observe(ifr); else ifr.src = ifr.getAttribute("data-src");
         }
