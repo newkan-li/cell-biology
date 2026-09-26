@@ -1,0 +1,57 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>iPS 重编程</title><link rel="stylesheet" href="anim.css?v=20260926an"></head><body>
+<script src="anim.js?v=20260926an"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'诱导多能干细胞(iPS)：重编程与定向分化',
+    sub:'向已分化的体细胞转入 Oct4、Sox2、c-myc、KLF4 四个转录因子，可把它“倒带”回多能状态（iPS），再定向分化为所需细胞——绕开胚胎干细胞的伦理争议。',
+    legend:[{c:'#c0392b',t:'转录因子'},{c:'#8e5bb5',t:'iPS 多能干细胞'},{c:'#2e9e5b',t:'分化细胞'}],
+    phases:[
+      {name:'① 已分化的体细胞',dur:1500,note:'体细胞基因表达被“锁定”，只表现特定功能。'},
+      {name:'② 转入四个转录因子',dur:1700,note:'导入 Oct4、Sox2、c-myc、KLF4（山中因子）。'},
+      {name:'③ 重编程为 iPS 细胞',dur:1700,note:'基因组被重新“打开”，细胞恢复自我更新与多向分化能力。'},
+      {name:'④ 定向分化',dur:1700,note:'改变培养条件可定向分化为神经、心肌、胰岛等细胞，用于疾病模型与治疗性移植。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'iPS：体细胞重编程 ↔ 定向分化',W/2,30,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cx=W/2, cy=H/2+8, R=78;
+      // 主细胞
+      var col = phaseI>=2 ? '#f1e9fb' : '#eaf5ee';
+      var edge = phaseI>=2 ? '#8e5bb5' : '#2e9e5b';
+      ctx.beginPath(); ctx.arc(cx,cy,R,0,7); ctx.fillStyle=col; ctx.fill();
+      ctx.strokeStyle=edge; ctx.lineWidth=3; ctx.stroke();
+      // 核
+      ctx.beginPath(); ctx.arc(cx,cy-6,26,0,7); ctx.fillStyle=phaseI>=2?'#d9c8f0':'#cfe6d8'; ctx.fill();
+      ctx.strokeStyle=edge; ctx.lineWidth=2; ctx.stroke();
+      var name = phaseI<2 ? '体细胞' : 'iPS 多能干细胞';
+      AnimKit.label(ctx,name,cx,cy+R+30,edge,'bold 13px "Microsoft YaHei"');
+      if(phaseI===0){ AnimKit.label(ctx,'基因表达被锁定',cx,cy+2,'#5b6b7b','12px "Microsoft YaHei"'); }
+      // 四因子
+      var fs=['Oct4','Sox2','c-myc','KLF4'];
+      if(phaseI>=1 && phaseI<3){
+        var t=fc/30;
+        fs.forEach(function(f,i){
+          var bx=cx-R-150, by=cy-70+i*40;
+          AnimKit.pill(ctx,bx,by,96,26,'#c0392b',f,'#fff');
+          if(phaseI===1){ var ax=bx+120+Math.sin(t+i)*4; AnimKit.arrow(ctx,ax,by+13,cx-24,cy-6+i*4,'#c0392b',2); }
+        });
+      }
+      if(phaseI>=2){ AnimKit.label(ctx,'多能性基因开启',cx,cy+2,'#6a4a8a','12px "Microsoft YaHei"'); }
+      // 定向分化
+      if(phaseI>=3){
+        var outs=[['神经',-1],['心肌',0],['胰岛',1]];
+        outs.forEach(function(o,i){
+          var ex=cx+o[1]*200, ey=cy+R+34;
+          AnimKit.arrow(ctx,cx+o[1]*40,cy+R-6,ex,ey-16,'#2e9e5b',2.5);
+          AnimKit.circle(ctx,ex,ey+12,20,'#2e9e5b','');
+          AnimKit.label(ctx,o[0],ex,ey+42,'#1e7a45','12px "Microsoft YaHei"');
+        });
+      }
+      var cap=['① 已分化的体细胞：基因表达被锁定','② 转入 Oct4 / Sox2 / c-myc / KLF4','③ 重编程：恢复多能性 → iPS 细胞','④ 定向分化：神经 / 心肌 / 胰岛等'][phaseI];
+      AnimKit.label(ctx,cap,W/2,H-14,'#1f5c8b','bold 12.5px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

@@ -1,0 +1,48 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>核糖体翻译</title><link rel="stylesheet" href="anim.css?v=20260926an"></head><body>
+<script src="anim.js?v=20260926an"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'核糖体的翻译：进位 → 成肽 → 转位 → 释放',
+    sub:'核糖体沿 mRNA 5′→3′ 移动，按密码子把氨酰-tRNA 依次带入 A 位、形成肽键、转位后从 E 位释放；肽键由大亚基 rRNA（核酶）催化。',
+    legend:[{c:'#4a90d9',t:'核糖体'},{c:'#c0392b',t:'氨酰-tRNA / A位'},{c:'#2e9e5b',t:'肽链 / P位'},{c:'#5b6b7b',t:'E位(释放)'}],
+    phases:[
+      {name:'① 起始',dur:1500,note:'小亚基结合 mRNA 并识别起始密码子 AUG，大亚基随后加入。'},
+      {name:'② 进位',dur:1600,note:'携带氨基酸的氨酰-tRNA 进入 A 位（受密码子-反密码子配对指导）。'},
+      {name:'③ 成肽',dur:1600,note:'肽酰转移酶（本质是 rRNA 核酶）催化 P 位肽链转移到 A 位氨基酸，形成肽键。'},
+      {name:'④ 转位',dur:1600,note:'核糖体沿 mRNA 移动一个密码子，A→P、P→E，空载 tRNA 从 E 位释放。'},
+      {name:'⑤ 终止',dur:1600,note:'到达终止密码子，肽链被释放，核糖体解离回收。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'核糖体翻译：进位 → 成肽 → 转位 → 释放',W/2,30,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var codons=['AUG','GGC','AAA','UAA'];
+      var cw=64,chh=22, y=H-72, x0=W/2-codons.length*cw/2;
+      for(var i=0;i<codons.length;i++){
+        var x=x0+i*cw;
+        ctx.fillStyle = (i===codons.length-1)?'#fde3e0':'#eef4fa';
+        ctx.strokeStyle='#9bb0c4'; ctx.lineWidth=2;
+        ctx.fillRect(x,y,cw-6,chh); ctx.strokeRect(x,y,cw-6,chh);
+        AnimKit.label(ctx,codons[i],x+(cw-6)/2,y+chh/2+4,'#234f7a','12px "Microsoft YaHei"');
+      }
+      AnimKit.label(ctx,'mRNA',x0-10,y+chh+18,'#7a8aa0','11px "Microsoft YaHei"','left');
+      var idx=[0,0,1,2,3][phaseI];
+      var rx=x0+idx*cw+(cw-6)/2;
+      ctx.fillStyle='#dbe9f8'; ctx.strokeStyle='#4a90d9'; ctx.lineWidth=2.5;
+      AnimKit.roundRect(ctx,rx-95,y-126,190,120,16); ctx.fill(); ctx.stroke();
+      AnimKit.label(ctx,'核糖体（大亚基+小亚基）',rx,y-108,'#1f5c8b','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'E',rx-60,y-56,'#5b6b7b','bold 12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'P',rx,y-56,'#2e9e5b','bold 12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'A',rx+60,y-56,'#c0392b','bold 12px "Microsoft YaHei"');
+      if(phaseI>=1){ AnimKit.circle(ctx,rx+60,y-24,15,'#c0392b','aa'); AnimKit.arrow(ctx,rx+60,y-9,rx+60,y+2,'#c0392b',2); }
+      var nAA=[0,0,1,2,3][phaseI];
+      for(var k=0;k<nAA;k++) AnimKit.circle(ctx,rx-4,y-150-k*22,11,'#2e9e5b','');
+      if(nAA>0) AnimKit.label(ctx,'肽链',rx+34,y-150-(nAA-1)*11,'#1e7a45','12px "Microsoft YaHei"','left');
+      if(phaseI>=3){ AnimKit.circle(ctx,rx-60,y-16,13,'#c9d6e2',''); AnimKit.arrow(ctx,rx-60,y+1,rx-60-0,y+6,'#8aa0b8',1.6); }
+      var cap=['① 起始：小亚基识别 AUG、大亚基加入','② 进位：氨酰-tRNA 进入 A 位','③ 成肽：rRNA（核酶）催化形成肽键','④ 转位：核糖体移动一格（A→P→E）','⑤ 终止：终止密码子处释放肽链'][phaseI];
+      AnimKit.label(ctx,cap,W/2,H-14,'#1f5c8b','bold 12.5px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>
