@@ -1,0 +1,38 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>肌丝滑动</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'肌肉收缩：肌丝滑动模型',
+    sub:'Ca²⁺ 结合肌钙蛋白解除原肌球蛋白对 actin 的抑制，myosin 拉动细肌丝向肌节中央滑动，肌节缩短而肌丝长度不变。',
+    legend:[{c:'#c98a3a',t:'细肌丝(actin)'},{c:'#2e9e5b',t:'粗肌丝(myosin II)'},{c:'#5a7fa8',t:'Z盘'}],
+    phases:[
+      {name:'① 静息：Tm 挡住结合位点',dur:1500,note:'原肌球蛋白(Tm)遮挡 actin 的结合位点，myosin 无法结合。'},
+      {name:'② Ca²⁺ 结合 Tn 解除抑制',dur:1500,note:'神经冲动使肌质网释放 Ca²⁺，Ca²⁺-Tn 使 Tm 移位、露出位点。'},
+      {name:'③ myosin 拉动细肌丝',dur:1800,note:'myosin 头部结合并拉动细肌丝向肌节中央滑动。'},
+      {name:'④ 肌节缩短',dur:1500,note:'肌节(Z盘间距)缩短，肌肉收缩；肌丝本身长度不变。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'肌丝滑动模型',W/2,36,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+20, half=(phaseI>=3)?210:(phaseI>=2?250:290);
+      var lz=W/2-half, rz=W/2+half;
+      // Z 盘
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(lz,cy-80);ctx.lineTo(lz,cy+80);ctx.moveTo(rz,cy-80);ctx.lineTo(rz,cy+80);ctx.stroke();
+      AnimKit.label(ctx,'Z盘',lz,cy+98,'#5a7fa8','11px "Microsoft YaHei"');
+      AnimKit.label(ctx,'Z盘',rz,cy+98,'#5a7fa8','11px "Microsoft YaHei"');
+      // 细肌丝（从 Z 盘伸向中央）
+      var thin=(phaseI>=2)?150:120;
+      ctx.strokeStyle='#c98a3a';ctx.lineWidth=5;
+      [[-20],[6],[30]].forEach(function(o){ ctx.beginPath(); ctx.moveTo(lz+4,cy+o[0]); ctx.lineTo(lz+4+thin,cy+o[0]); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(rz-4,cy+o[0]); ctx.lineTo(rz-4-thin,cy+o[0]); ctx.stroke(); });
+      // 粗肌丝
+      ctx.strokeStyle='#2e9e5b';ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(W/2-90,cy);ctx.lineTo(W/2+90,cy);ctx.stroke();
+      // myosin 头
+      for(var i=-2;i<=2;i++){ AnimKit.circle(ctx,W/2+i*30,cy-14,6,'#2e9e5b',null); AnimKit.circle(ctx,W/2+i*30,cy+14,6,'#2e9e5b',null); }
+      AnimKit.label(ctx,phaseI>=2?'myosin 拉动细肌丝向中央滑动':'Tm 遮挡结合位点',W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

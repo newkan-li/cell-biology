@@ -1,0 +1,27 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>中间纤维装配</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'中间纤维的装配：二聚体 → 反平行四聚体 → 无极性纤维',
+    sub:'两个单体 α-螺旋盘绕成二聚体；两个二聚体反向平行交错成四聚体（无极性）；四聚体端端相接、侧向聚集形成原纤维与中间纤维。',
+    legend:[{c:'#2e9e5b',t:'单体'},{c:'#5a7fa8',t:'二聚体'},{c:'#8e5bb5',t:'四聚体(无极性)'}],
+    phases:[
+      {name:'① 单体形成双股超螺旋',dur:1500,note:'相邻两单体的 α-螺旋区盘绕成双股超螺旋(二聚体)。'},
+      {name:'② 反向平行成四聚体',dur:1600,note:'两个二聚体以反向平行交错排列成四聚体。'},
+      {name:'③ 四聚体无极性',dur:1500,note:'两个二聚体指向相反，故四聚体本身没有极性。'},
+      {name:'④ 聚成原纤维与纤维',dur:1600,note:'四聚体端端相接、侧向聚集，最终 4 条原纤维组成中间纤维。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'中间纤维装配',W/2,36,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+20;
+      if(phaseI>=1){ ctx.strokeStyle='#5a7fa8';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(W*0.28,cy-60);ctx.lineTo(W*0.28,cy+60);ctx.moveTo(W*0.28+14,cy+60);ctx.lineTo(W*0.28+14,cy-60);ctx.stroke(); AnimKit.label(ctx,'二聚体',W*0.28+7,cy+84,'#45687f','12px "Microsoft YaHei"'); }
+      if(phaseI>=2){ ctx.strokeStyle='#8e5bb5';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(W*0.52,cy-60);ctx.lineTo(W*0.52,cy+60);ctx.moveTo(W*0.52+14,cy+60);ctx.lineTo(W*0.52+14,cy-60);ctx.stroke(); ctx.beginPath();ctx.moveTo(W*0.52+40,cy-60);ctx.lineTo(W*0.52+40,cy+60);ctx.moveTo(W*0.52+54,cy+60);ctx.lineTo(W*0.52+54,cy-60);ctx.stroke(); AnimKit.label(ctx,'四聚体(无极性)',W*0.52+27,cy+84,'#6a4a8a','12px "Microsoft YaHei"'); }
+      if(phaseI>=3){ for(var i=0;i<4;i++){ ctx.strokeStyle='#2e9e5b';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(W*0.78+i*12,cy-70);ctx.lineTo(W*0.78+i*12,cy+70);ctx.stroke(); } AnimKit.label(ctx,'原纤维×4 → 中间纤维',W*0.80,cy+90,'#45687f','12px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,'无极性、抗拉强，是细胞骨架里的“钢筋”',W/2,H-18,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

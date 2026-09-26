@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NO信号</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'NO 信号：ACh → 内皮 NO → 平滑肌 cGMP → 血管舒张',
+    sub:'ACh 作用于内皮细胞 → 磷脂酶 C-IP3 升高 Ca²⁺ → NOS 催化精氨酸生成 NO → NO 扩散入平滑肌 → 激活鸟苷酸环化酶生成 cGMP → 平滑肌舒张。',
+    legend:[{c:'#2e9e5b',t:'NO'},{c:'#8e5bb5',t:'内皮细胞'},{c:'#5a7fa8',t:'平滑肌'}],
+    phases:[
+      {name:'① ACh 刺激内皮细胞',dur:1500,note:'血管神经末梢释放 ACh，作用于内皮细胞的 GPCR。'},
+      {name:'② Ca²⁺ 升高、NOS 生成 NO',dur:1600,note:'PLC-IP3 使 Ca²⁺ 升高，激活一氧化氮合酶(NOS)，催化精氨酸生成 NO。'},
+      {name:'③ NO 扩散入平滑肌、生成 cGMP',dur:1600,note:'NO 扩散到平滑肌，激活鸟苷酸环化酶，使 GTP→cGMP 增多。'},
+      {name:'④ 平滑肌舒张',dur:1600,note:'cGMP 活化 PKG，抑制 actin/myosin，血管平滑肌舒张、血管扩张。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'NO 信号通路',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var y=H/2+10;
+      // 内皮细胞
+      AnimKit.pill(ctx,80,y-70,240,120,'#efe8fa','内皮细胞');
+      AnimKit.label(ctx,'ACh → GPCR → IP3 → Ca²⁺ → NOS',200,y-30,'#6a4a8a','12px "Microsoft YaHei"');
+      if(phaseI>=1) AnimKit.label(ctx,'L-精氨酸 → NO',200,y+6,'#1e7a45','bold 12px "Microsoft YaHei"');
+      if(phaseI>=1){ for(var i=0;i<3;i++) AnimKit.circle(ctx,330+i*34,y-40+i*20,7,'#2e9e5b','N'); AnimKit.label(ctx,'NO',380,y+8,'#1e7a45','11px "Microsoft YaHei"'); }
+      // 平滑肌
+      AnimKit.pill(ctx,W-340,y-80,270,150,'#e8f1fb','平滑肌细胞');
+      if(phaseI>=2) AnimKit.label(ctx,'鸟苷酸环化酶: GTP→cGMP',W-205,y-42,'#45687f','12px "Microsoft YaHei"');
+      if(phaseI>=3) AnimKit.label(ctx,'PKG → 抑制 actin/myosin',W-205,y-16,'#45687f','12px "Microsoft YaHei"');
+      // 血管
+      if(phaseI>=3){ AnimKit.arrow(ctx,W/2-60,y+90,W/2+60,y+90,'#2e9e5b',3); AnimKit.label(ctx,'平滑肌舒张、血管扩张',W/2,y+118,'#1e7a45','bold 13px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①ACh刺激内皮','②Ca²⁺→NOS→NO','③NO→鸟苷酸环化酶→cGMP','④PKG→平滑肌舒张'][phaseI],W/2,H-18,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

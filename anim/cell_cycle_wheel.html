@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>细胞周期</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'细胞周期的时相：G1 → S → G2 → M',
+    sub:'间期(G1+S+G2)进行物质准备与 DNA 复制，M 期完成核分裂与胞质分裂；周期由 CDK-cyclin 驱动、检验点监控。',
+    legend:[{c:'#5a7fa8',t:'间期'},{c:'#c0392b',t:'M期'}],
+    phases:[
+      {name:'① G1 期',dur:1500,note:'合成生长所需蛋白与 RNA，为 DNA 复制做准备（长短差别主要在 G1）。'},
+      {name:'② S 期',dur:1500,note:'DNA 复制，染色体由 G1 的单线变为双线。'},
+      {name:'③ G2 期',dur:1500,note:'继续准备，检查复制是否完成，为分裂做准备。'},
+      {name:'④ M 期',dur:1700,note:'核分裂（前中后末）+ 胞质分裂，完成细胞增殖。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'细胞周期',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cx=W/2, cy=H/2+16, r=120;
+      var segs=[['G1',-Math.PI/2,Math.PI/2,'#9ec1e0'],['S',Math.PI/2,Math.PI,'#2e9e5b'],['G2',Math.PI,Math.PI*1.5,'#e0b060'],['M',Math.PI*1.5,Math.PI*2.5,'#c0392b']];
+      segs.forEach(function(sg){ ctx.beginPath(); ctx.arc(cx,cy,r,sg[1],sg[2]); ctx.lineWidth=26; ctx.strokeStyle=sg[3]; ctx.stroke(); });
+      var a; var idx=phaseI%4;
+      var mid=[[0],[Math.PI*0.75],[Math.PI*1.25],[Math.PI*2.0]][idx][0];
+      var mx=cx+r*Math.cos(mid), my=cy+r*Math.sin(mid);
+      AnimKit.circle(ctx,mx,my,11,'#1f5c8b',null);
+      AnimKit.label(ctx,'G1',cx,cy-r+9,'#234f7a','bold 13px Arial');
+      AnimKit.label(ctx,'S',cx+r-14,cy+4,'#1e7a45','bold 13px Arial');
+      AnimKit.label(ctx,'G2',cx,cy+r+20,'#b0791f','bold 13px Arial');
+      AnimKit.label(ctx,'M',cx-r+16,cy+4,'#c0392b','bold 13px Arial');
+      AnimKit.label(ctx,['G1：备料','S：复制 DNA','G2：备分裂','M：分裂'][idx],cx,cy+4,'#33465c','bold 14px "Microsoft YaHei"');
+      AnimKit.label(ctx,'周期长度差别主要在 G1',W/2,H-18,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

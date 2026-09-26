@@ -1,0 +1,41 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>驱动蛋白行走</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'驱动蛋白(kinesin)沿微管向正端“行走”运输货物',
+    sub:'kinesin 的两个球状头部交替结合微管，水解 ATP 供能，带着货物向微管正端(通常朝细胞周边)移动。',
+    legend:[{c:'#c0392b',t:'驱动蛋白'},{c:'#5a7fa8',t:'货物'},{c:'#2e9e5b',t:'微管'}],
+    phases:[
+      {name:'① 尾部结合货物',dur:1400,note:'kinesin 尾部结合被运输的货物（囊泡/细胞器）。'},
+      {name:'② 头部结合微管',dur:1400,note:'两个球状头部结合到微管上，准备行走。'},
+      {name:'③ ATP 供能、交替迈步',dur:2000,note:'水解 ATP，两个头部交替吸附、沿微管迈步前进。'},
+      {name:'④ 向正端(+端)移动',dur:1600,note:'整体向微管正端移动（顺向运输）。'}
+    ],
+    init:function(S){S.x=120;},
+    step:function(S,dt){ if(S.x<720) S.x+=dt/1000*70; },
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'驱动蛋白向微管正端行走',W/2,38,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var y=H/2+30;
+      // 微管
+      ctx.strokeStyle='#2e9e5b';ctx.lineWidth=14;
+      for(var i=0;i<2;i++){ ctx.beginPath(); ctx.moveTo(60,y-9+i*18); ctx.lineTo(W-60,y-9+i*18); ctx.stroke(); }
+      AnimKit.label(ctx,'微管',W-40,y,'#2e9e5b','12px "Microsoft YaHei"','right');
+      AnimKit.arrow(ctx,90,y+50,W-70,y+50,'#2e9e5b',2.5);
+      AnimKit.label(ctx,'(+ 端)',W-70,y+68,'#2e9e5b','12px "Microsoft YaHei"','right');
+      // kinesin
+      var x=(phaseI>=3)?S.x:120;
+      AnimKit.arrow(ctx,x+8,y-24,x,y-6,'#c0392b',2);
+      // 两个头部交替
+      var off=(Math.floor(fc/12)%2)?10:-4;
+      AnimKit.circle(ctx,x-8,y-24,9,'#c0392b','H');
+      AnimKit.circle(ctx,x+10+off,y-24-off,9,'#c0392b','H');
+      // 货物
+      if(phaseI>=0){ AnimKit.circle(ctx,x+4,y-58,16,'#5a7fa8','C'); AnimKit.label(ctx,'货物',x+4,y-58-24,'#45687f','11px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,'水解 ATP → 交替迈步 → 顺向运输',W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

@@ -1,0 +1,38 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>G蛋白开关</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'G 蛋白偶联受体与 G 蛋白的“开/关”循环',
+    sub:'配体结合 GPCR → G 蛋白 α 亚基结合 GTP 而激活、与 βγ 分离 → 激活效应器；α 的 GTPase 水解 GTP 为 GDP 后失活、复位。',
+    legend:[{c:'#c0392b',t:'配体'},{c:'#5a7fa8',t:'GPCR'},{c:'#2e9e5b',t:'G蛋白(GTP=开)'},{c:'#8e5bb5',t:'效应器'}],
+    phases:[
+      {name:'① 配体结合受体',dur:1500,note:'胞外信号分子(配体)结合 7 次跨膜的 GPCR。'},
+      {name:'② G 蛋白活化(结合 GTP)',dur:1600,note:'受体激活 G 蛋白，α 亚基结合 GTP，与 βγ 分离。'},
+      {name:'③ 激活效应器',dur:1600,note:'活化 α 亚基开启下游效应器（如腺苷酸环化酶 → cAMP）。'},
+      {name:'④ GTPase 水解、关闭',dur:1600,note:'α 亚基的 GTPase 把 GTP 水解为 GDP，与靶蛋白脱离、与 βγ 复位(灭活)。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'GPCR 与 G 蛋白的开/关循环',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var m=AnimKit.membrane(ctx,W,H,{yTop:H*0.36,yBot:H*0.56});
+      var cx=W*0.42;
+      // GPCR（7次跨膜）
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=6;ctx.beginPath();
+      for(var i=0;i<7;i++){ var x=cx-36+i*12; ctx.moveTo(x,m.yTop-30); ctx.lineTo(x,m.yBot+30); }
+      ctx.stroke();
+      AnimKit.label(ctx,'GPCR(7次跨膜)',cx,m.yBot+54,'#45687f','12px "Microsoft YaHei"');
+      if(phaseI>=0){ AnimKit.circle(ctx,cx,m.yTop-48,10,'#c0392b','L'); AnimKit.label(ctx,'配体',cx+26,m.yTop-48,'#c0392b','12px "Microsoft YaHei"','left'); }
+      var on=phaseI>=1 && phaseI<3;
+      var a1=cx+(on?-46:0), a2=cx+(on?46:0);
+      AnimKit.circle(ctx,a1,m.yBot+70,16,on?'#2e9e5b':'#9ad3a8', on?'α':'α');
+      AnimKit.label(ctx,on?'GTP':'GDP',a1,m.yBot+70, on?'#fff':'#fff','bold 11px Arial');
+      AnimKit.circle(ctx,a2,m.yBot+70,12,'#8e5bb5','β'); AnimKit.circle(ctx,a2+24,m.yBot+70,12,'#8e5bb5','γ');
+      // 效应器
+      if(phaseI>=2){ AnimKit.pill(ctx,W-220,m.yBot+50,170,34,'#8e5bb5','效应器 → cAMP','#fff'); AnimKit.arrow(ctx,a1+18,m.yBot+70,W-220,m.yBot+67,'#2e9e5b',2.5); }
+      AnimKit.label(ctx,['①配体结合','②G蛋白结合GTP激活','③激活效应器','④水解GTP→失活'][phaseI],W/2,H-18,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

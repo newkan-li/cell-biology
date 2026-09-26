@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>后期A/B</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'有丝分裂后期：后期A（染色体向极）+ 后期B（两极分离）',
+    sub:'后期A 动粒微管变短、把染色体拉向两极；后期B 极间微管延长滑动、把两极推开。',
+    legend:[{c:'#c0392b',t:'染色体'},{c:'#2e9e5b',t:'极间微管'},{c:'#5a7fa8',t:'动粒微管'}],
+    phases:[
+      {name:'① 中期：染色体排赤道板',dur:1500,note:'染色体在赤道板排列整齐，两极距离较近。'},
+      {name:'② 后期A：染色体移向两极',dur:1800,note:'动粒微管解聚变短，把染色单体拉向两极。'},
+      {name:'③ 后期B：两极分离',dur:1800,note:'极间微管延长并相互滑动，两极距离拉大。'},
+      {name:'④ 完成：两组染色体',dur:1400,note:'两组染色体分别到达两极，为胞质分裂做准备。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'后期 A 与 后期 B',W/2,36,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+20, spread=(phaseI>=3)?330:(phaseI>=2?230:170);
+      var sep=(phaseI>=2)?1:0;
+      var lx=W/2-spread/2-sep*40, rx=W/2+spread/2+sep*40;
+      var px = (phaseI>=1)? (phaseI>=2?150:110) : 60; // 染色体离两极距离
+      function pole(x,dir){ AnimKit.circle(ctx,x,cy,8,'#1f5c8b',null); for(var i=0;i<4;i++){ ctx.strokeStyle='#bcd0e2'; ctx.beginPath(); ctx.moveTo(x,cy); ctx.lineTo(x+dir*(30+i*22),cy-60+i*34); ctx.stroke(); } }
+      pole(lx,-1); pole(rx,1);
+      // 极间微管
+      if(phaseI>=2){ ctx.strokeStyle='#2e9e5b'; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(lx,cy); ctx.lineTo(rx,cy); ctx.stroke(); }
+      // 染色体
+      function ch(x){ AnimKit.circle(ctx,x,cy-6,14,'#c0392b',null); }
+      if(phaseI===0){ ch(W/2-40); ch(W/2-14); ch(W/2+14); ch(W/2+40); }
+      else { ch(lx+px); ch(lx+px+26); ch(rx-px); ch(rx-px-26); }
+      AnimKit.label(ctx,phaseI<=1?'后期A：动粒微管变短，染色体向极':'后期B：极间微管延长，两极分离',W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

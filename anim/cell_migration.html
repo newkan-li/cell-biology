@@ -1,0 +1,40 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>细胞迁移</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'细胞爬行(变形运动)的四步循环',
+    sub:'①前缘伸出伪足 → ②形成黏着斑附着基质 → ③myosin 收缩使细胞体前移 → ④解除尾部黏着，循环前进。',
+    legend:[{c:'#c98a3a',t:'片状伪足'},{c:'#8e5bb5',t:'黏着斑'},{c:'#2e9e5b',t:'收缩'}],
+    phases:[
+      {name:'① 前缘伸出伪足',dur:1600,note:'actin 快速聚合把细胞前缘顶出去，形成片状/丝状伪足。'},
+      {name:'② 形成黏着斑',dur:1600,note:'伪足与基质接触处形成黏着斑(整合素-肌动蛋白)，抓住基质。'},
+      {name:'③ myosin 收缩、身体前移',dur:1800,note:'myosin 拉动 actin 网络，使细胞主体向前移动。'},
+      {name:'④ 解除尾部黏附',dur:1500,note:'尾部黏着点解除，细胞整体前移，如此循环。'}
+    ],
+    init:function(S){S.x=0;},
+    step:function(S,dt){ if(S.x<220) S.x+=dt/1000*40; },
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'细胞爬行四步循环',W/2,36,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var y=H/2+20, x=W/2-160+(phaseI>=3?S.x:0);
+      // 基质
+      ctx.strokeStyle='#bcd0e2';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(60,y+80);ctx.lineTo(W-60,y+80);ctx.stroke();
+      AnimKit.label(ctx,'基质(substratum)',70,y+100,'#7a8aa0','12px "Microsoft YaHei"','left');
+      // 细胞体
+      ctx.fillStyle='#e8f1fb';ctx.strokeStyle='#5a7fa8';ctx.lineWidth=2;
+      ctx.beginPath(); ctx.ellipse(x,y,70,40,0,0,7); ctx.fill(); ctx.stroke();
+      // 前缘伪足
+      var probe=(phaseI===0||phaseI===1);
+      ctx.fillStyle='#f6d9a8'; ctx.beginPath(); ctx.ellipse(x+70,y+10,probe?26:14,12,0,0,7); ctx.fill();
+      if(probe) AnimKit.label(ctx,'伪足',x+96,y-8,'#a9742e','11px "Microsoft YaHei"');
+      // 黏着斑
+      if(phaseI>=1){ AnimKit.circle(ctx,x+64,y+48,7,'#8e5bb5',null); AnimKit.circle(ctx,x-60,y+48,7,'#8e5bb5',null); AnimKit.label(ctx,'黏着斑',x+64,y+64,'#6a4a8a','11px "Microsoft YaHei"'); }
+      // 收缩箭头
+      if(phaseI>=2){ AnimKit.arrow(ctx,x+40,y,x+10,y,'#2e9e5b',3); AnimKit.label(ctx,'收缩',x-30,y-30,'#2e9e5b','11px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①伸出伪足','②形成黏着斑','③myosin收缩前移','④解除尾部'][phaseI],W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

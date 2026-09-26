@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MTOC成核</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'微管组织中心(MTOC)与 γ-tubulin 成核',
+    sub:'γ-tubulin 环是微管生长的起点：负端埋在中心体内，正端向外生长。',
+    legend:[{c:'#8e5bb5',t:'γ-tubulin 环'},{c:'#2e9e5b',t:'微管(−)→(+)'}],
+    phases:[
+      {name:'① γ-tubulin 环',dur:1400,note:'中心体上有 γ-tubulin 组成的环状结构（成核部位）。'},
+      {name:'② 二聚体加到环上',dur:1400,note:'αβ 二聚体以一定方向加到 γ-tubulin 环上。'},
+      {name:'③ 负端埋入、正端朝外',dur:1500,note:'长出的微管负端埋在中心体内，正端向外延伸。'},
+      {name:'④ 决定微管方向',dur:1400,note:'MTOC 为微管提供起点并决定方向性。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'微管组织中心(MTOC)',W/2,38,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cx=W/2, cy=H/2+30;
+      AnimKit.circle(ctx,cx,cy,26,'#e7dcf7',null);
+      AnimKit.circle(ctx,cx,cy,18,'#8e5bb5','γ');
+      AnimKit.label(ctx,'γ-tubulin 环',cx,cy+44,'#6a4a8a','12px "Microsoft YaHei"');
+      var n=(phaseI>=2)?6:(phaseI>=1?3:0);
+      for(var i=0;i<n;i++){ var y=cy-34-i*24; AnimKit.circle(ctx,cx,y,11,i%2?'#5a7fa8':'#2e9e5b',null); }
+      if(n>0){ AnimKit.label(ctx,'(−)端',cx-40,cy-38,'#33465c','11px "Microsoft YaHei"');
+        AnimKit.arrow(ctx,cx,cy-40-n*24,cx,cy-150,'#2e9e5b',2.5);
+        AnimKit.label(ctx,'(+)端 向外生长',cx+70,cy-150,'#2e9e5b','12px "Microsoft YaHei"','left'); }
+      AnimKit.label(ctx,'中心体是动物细胞的主要 MTOC',W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

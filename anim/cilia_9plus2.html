@@ -1,0 +1,40 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>纤毛9+2</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'鞭毛/纤毛的“9+2”轴丝与 dynein 滑动→弯曲',
+    sub:'轴丝由外围 9 组二联体微管环绕中央 2 根单微管构成；动力蛋白臂使相邻二联体滑动，因 nexin 连接而转为弯曲。',
+    legend:[{c:'#2e9e5b',t:'微管二联体'},{c:'#c0392b',t:'动力蛋白臂'},{c:'#8e5bb5',t:'nexin'}],
+    phases:[
+      {name:'① 横切：9+2 排列',dur:1500,note:'外围 9 组二联体 + 中央 2 根单微管。'},
+      {name:'② 动力蛋白臂',dur:1500,note:'dynein 一端固定在 A 管、头部伸向相邻 B 管。'},
+      {name:'③ 二联体相对滑动',dur:1600,note:'dynein 水解 ATP，驱动相邻二联体相互滑动。'},
+      {name:'④ 因 nexin 约束转为弯曲',dur:1600,note:'nexin 连接相邻二联体，滑动被转化为弯曲运动。'}
+    ],
+    init:function(S){S.b=0;},
+    step:function(S,dt){ S.b=Math.min(1,S.b+dt/1000*0.6); },
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'纤毛轴丝 9+2',W/2,36,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cx=W*0.30, cy=H/2+20, r=88;
+      for(var k=0;k<9;k++){ var a=k/9*Math.PI*2-0.3, x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
+        AnimKit.circle(ctx,x,y,10,'#2e9e5b',null);
+        if(phaseI>=1){ ctx.strokeStyle='#c0392b'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(cx+r*0.7*Math.cos(a),cy+r*0.7*Math.sin(a)); ctx.stroke(); }
+      }
+      AnimKit.circle(ctx,cx-8,cy,8,'#2e9e5b',null); AnimKit.circle(ctx,cx+8,cy,8,'#2e9e5b',null);
+      if(phaseI>=3){ ctx.strokeStyle='#8e5bb5'; ctx.lineWidth=2; for(var m=0;m<9;m++){ var a2=(m+0.5)/9*Math.PI*2-0.3; ctx.beginPath(); ctx.moveTo(cx+r*Math.cos(a2),cy+r*Math.sin(a2)); ctx.lineTo(cx+r*Math.cos(a2+0.5),cy+r*Math.sin(a2+0.5)); ctx.stroke(); } }
+      AnimKit.label(ctx,'横切面：9 组二联体 + 中央 2 单管',cx,cy+r+34,'#45687f','12px "Microsoft YaHei"');
+      // 侧视弯曲
+      var bx=W*0.66, by=cy;
+      ctx.strokeStyle='#2e9e5b'; ctx.lineWidth=6; ctx.beginPath();
+      var bend=(phaseI>=3? 1:0)*S.b;
+      for(var t=0;t<=10;t++){ var yy=by-90+t*18, xx=bx+Math.sin(t/10*Math.PI)*70*bend; if(t===0)ctx.moveTo(xx,yy); else ctx.lineTo(xx,yy); }
+      ctx.stroke();
+      AnimKit.label(ctx,'滑动 → 弯曲',bx,by+120,'#1f5c8b','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,'dynein 驱动滑动，nexin 使滑动转为弯曲',W/2,H-18,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

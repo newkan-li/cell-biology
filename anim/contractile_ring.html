@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>收缩环</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'胞质分裂：收缩环缢缩',
+    sub:'分裂赤道处由肌动蛋白和肌球蛋白 II 组成收缩环，像收口绳一样越收越紧，把细胞缢成两个子细胞。',
+    legend:[{c:'#c98a3a',t:'F-actin 收缩环'},{c:'#2e9e5b',t:'myosin II'}],
+    phases:[
+      {name:'① 赤道处组装收缩环',dur:1500,note:'F-actin 与 myosin II 在细胞赤道处聚集成环。'},
+      {name:'② 收缩环开始缢缩',dur:1600,note:'myosin 拉动 actin，环收紧，形成分裂沟。'},
+      {name:'③ 分裂沟加深',dur:1600,note:'收缩环继续收缩，分裂沟不断加深。'},
+      {name:'④ 缢断为两个子细胞',dur:1600,note:'细胞被缢成两个子细胞，完成胞质分裂。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'胞质分裂 · 收缩环',W/2,36,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cx=W/2, cy=H/2+20, R=130;
+      var neck=[0,0.0,0.35,0.7,0.95][phaseI] || 0;
+      // 细胞轮廓：左右两个圆在赤道处被缢
+      ctx.fillStyle='#eef4fa';ctx.strokeStyle='#5a7fa8';ctx.lineWidth=2;
+      ctx.beginPath();
+      for(var t=0;t<=120;t++){ var a=t/120*Math.PI*2; var x=cx+R*Math.cos(a)*(1-0.85*neck*Math.pow(Math.abs(Math.sin(a)),0.5)); var y=cy+R*Math.sin(a); if(t===0)ctx.moveTo(x,y); else ctx.lineTo(x,y); }
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+      // 收缩环
+      var rw=13*(1-neck);
+      ctx.strokeStyle='#c98a3a';ctx.lineWidth=6;ctx.beginPath();
+      ctx.ellipse(cx,cy,rw+3,R,0,0,7); ctx.stroke();
+      for(var m=0;m<6;m++){ AnimKit.circle(ctx,cx-rw+4,cy-R+ (m+0.5)*2*R/6,4,'#2e9e5b',null); AnimKit.circle(ctx,cx+rw-4,cy-R+(m+0.5)*2*R/6,4,'#2e9e5b',null); }
+      AnimKit.label(ctx,['①组装收缩环','②开始缢缩','③分裂沟加深','④缢成两个子细胞'][phaseI],W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

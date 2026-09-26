@@ -1,0 +1,36 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>微管装配</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'微管的装配：αβ 二聚体 → 原纤维 → 13 条围成中空管',
+    sub:'微管由 αβ-微管蛋白异二聚体首尾相接成原纤维，13 条原纤维纵向平行排列围成中空管，外径约 24nm，且有极性。',
+    legend:[{c:'#2e9e5b',t:'α-tubulin'},{c:'#5a7fa8',t:'β-tubulin'}],
+    phases:[
+      {name:'① αβ 异二聚体',dur:1500,note:'α- 与 β-微管蛋白结合成异二聚体，是微管装配的基本单元。'},
+      {name:'② 形成原纤维',dur:1500,note:'二聚体首尾相接、纵向排成原纤维(protofilament)。'},
+      {name:'③ 13 条围成管壁',dur:1500,note:'13 条原纤维平行排列，围成中空的微管管壁。'},
+      {name:'④ 中空微管',dur:1500,note:'形成外径约 24nm 的中空微管；两端结构不同，具极性。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'微管装配',W/2,38,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+16;
+      // 二聚体
+      for(var i=0;i<4;i++){ var x=90+i*52;
+        AnimKit.circle(ctx,x,cy-70,12,'#2e9e5b','α'); AnimKit.circle(ctx,x,cy-40,12,'#5a7fa8','β');
+      }
+      AnimKit.label(ctx,'异二聚体',165,cy-6,'#45687f','12px "Microsoft YaHei"');
+      // 原纤维
+      if(phaseI>=1){ for(var j=0;j<5;j++){ AnimKit.pill(ctx,330,cy-110+j*30,28,26,j%2?'#5a7fa8':'#2e9e5b',j%2?'β':'α'); }
+        AnimKit.label(ctx,'原纤维',368,cy+52,'#45687f','12px "Microsoft YaHei"'); }
+      // 横切面
+      if(phaseI>=2){ var r=62,cx=W-160;
+        for(var k=0;k<13;k++){ var a=k/13*Math.PI*2-0.3; AnimKit.circle(ctx,cx+r*Math.cos(a),cy+r*Math.sin(a),9,'#2e9e5b',null); }
+        AnimKit.label(ctx,'横切：13 条',cx,cy+2,'#45687f','12px "Microsoft YaHei"'); }
+      if(phaseI>=3){ AnimKit.label(ctx,'中空管壁 · 外径约 24nm · 有极性(+端/−端)',W/2,H-26,'#1f5c8b','bold 13px "Microsoft YaHei"'); }
+    }
+  });
+})();
+</script></body></html>

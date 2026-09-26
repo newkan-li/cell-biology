@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Arp2/3分支</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'Arp2/3 复合体促进微丝成核与分支',
+    sub:'Arp2/3 结合到已有微丝侧面成核，长出新分支，形成细胞前缘那种“刷子状”的微丝网。',
+    legend:[{c:'#8e5bb5',t:'Arp2/3'},{c:'#c98a3a',t:'微丝'}],
+    phases:[
+      {name:'① 已有微丝',dur:1400,note:'细胞前缘已有微丝作为“母丝”。'},
+      {name:'② Arp2/3 结合侧面',dur:1400,note:'Arp2/3 复合体结合到母丝侧面。'},
+      {name:'③ 成核长出分支',dur:1600,note:'以 70° 角成核、长出新分支。'},
+      {name:'④ 形成分支网',dur:1500,note:'反复分支形成推动膜前伸的微丝网。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'Arp2/3 成核分支',W/2,38,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      function filament(x,y,len,ang,color){
+        var x2=x+len*Math.cos(ang), y2=y-len*Math.sin(ang);
+        ctx.strokeStyle=color;ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();
+        return [x2,y2];
+      }
+      var base=[W/2-140,H-70];
+      filament(base[0],base[1],300,Math.PI/2,'#c98a3a');
+      if(phaseI>=1) AnimKit.circle(ctx,base[0]+8,base[1]-140,11,'#8e5bb5','A');
+      if(phaseI>=2){ filament(base[0]+8,base[1]-140,150,Math.PI/2+0.6,'#e0a95a');
+        filament(base[0]+8,base[1]-140,150,Math.PI/2-0.6,'#e0a95a'); }
+      if(phaseI>=3){ filament(base[0]+40,base[1]-240,90,Math.PI/2+0.9,'#e0a95a');
+        filament(base[0]-40,base[1]-240,90,Math.PI/2-0.9,'#e0a95a'); }
+      AnimKit.label(ctx,'以 70° 分支 → 推动膜前伸',W/2,H-18,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

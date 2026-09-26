@@ -1,0 +1,33 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>cyclin-CDK</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'CDK 是发动机，cyclin 是周期性油门',
+    sub:'CDK 本身活性恒定需求 cyclin 结合；cyclin 随周期积累与降解，CDK 活性随之升高又关闭，推动细胞进出分裂。',
+    legend:[{c:'#2e9e5b',t:'cyclin'},{c:'#5a7fa8',t:'CDK'}],
+    phases:[
+      {name:'① cyclin 积累',dur:1600,note:'cyclin 随周期逐渐积累，为激活 CDK 做准备。'},
+      {name:'② 结合 CDK、活性升高',dur:1600,note:'cyclin 与 CDK 结合并调好状态，激酶活性逐渐升高（如 MPF）。'},
+      {name:'③ 活性峰值：进入 M 期',dur:1600,note:'cyclin-CDK 活性达峰，推动细胞进入 M 期。'},
+      {name:'④ cyclin 降解、活性下降',dur:1600,note:'APC 泛素化降解 cyclin，CDK 失活，周期推进到下一轮。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'cyclin 涨落驱动 CDK 活性',W/2,36,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var x0=90, y0=H-80, w=W-180, h=H-190;
+      ctx.strokeStyle='#c6d8ea';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x0+w,y0);ctx.moveTo(x0,y0);ctx.lineTo(x0,y0-h);ctx.stroke();
+      AnimKit.label(ctx,'周期进程 →',x0+w/2,y0+26,'#7a8aa0','12px "Microsoft YaHei"');
+      function curve(color,peak){ ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=3;
+        for(var i=0;i<=100;i++){ var x=x0+w*i/100; var yy=y0 - h*peak*Math.exp(-Math.pow((i-62)/22,2)); if(i===0)ctx.moveTo(x,yy); else ctx.lineTo(x,yy); } ctx.stroke(); }
+      curve('#2e9e5b',0.9);
+      var cdkPeak=[[0.5],[0.75],[0.95],[0.1]][phaseI][0];
+      curve('#5a7fa8',cdkPeak);
+      AnimKit.label(ctx,'cyclin 含量',x0+ w*0.62 -20, y0-h*0.9-6,'#1e7a45','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,'CDK 活性',x0+ w*0.62 +80, y0-h*0.6,'#45687f','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①积累','②结合激活','③峰值→进入M期','④降解失活'][phaseI],W/2,H-22,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

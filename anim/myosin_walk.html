@@ -1,0 +1,36 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>肌球蛋白</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'肌球蛋白(myosin)沿微丝“行走”并拉动',
+    sub:'myosin 头部具 ATP 酶活性，水解 ATP 后沿肌动蛋白丝朝正端(倒钩端)迈步，从而拉动微丝或货物。',
+    legend:[{c:'#c0392b',t:'myosin 头部'},{c:'#c98a3a',t:'肌动蛋白丝'}],
+    phases:[
+      {name:'① myosin 结合微丝',dur:1400,note:'myosin 头部结合到肌动蛋白丝上。'},
+      {name:'② ATP 水解、头部摆动',dur:1500,note:'水解 ATP，头部发生构象改变(划桨)。'},
+      {name:'③ 沿微丝迈步',dur:1800,note:'头部交替结合、沿微丝朝正端移动。'},
+      {name:'④ 拉动微丝滑动',dur:1500,note:'带动微丝相对滑动（肌肉收缩的基础）。'}
+    ],
+    init:function(S){S.x=140;},
+    step:function(S,dt){ if(S.x<700) S.x+=dt/1000*70; },
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'myosin 沿微丝行走',W/2,38,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var y=H/2+30;
+      ctx.strokeStyle='#c98a3a';ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(80,y);ctx.lineTo(W-80,y);ctx.stroke();
+      AnimKit.label(ctx,'肌动蛋白丝(F-actin)',W-70,y-30,'#a9742e','12px "Microsoft YaHei"','right');
+      AnimKit.arrow(ctx,110,y+40,260,y+40,'#c98a3a',2.5);
+      AnimKit.label(ctx,'(+)端',260,y+58,'#a9742e','12px "Microsoft YaHei"');
+      var x=(phaseI>=2)?S.x:140;
+      var off=(Math.floor(fc/12)%2)?8:-4;
+      AnimKit.circle(ctx,x-8,y-22,10,'#c0392b','H');
+      AnimKit.circle(ctx,x+10+off,y-22-off,10,'#c0392b','H');
+      AnimKit.arrow(ctx,x+4,y-36,x+4,y-58,'#c0392b',2);
+      AnimKit.label(ctx,'myosin II',x+4,y-72,'#c0392b','11px "Microsoft YaHei"');
+      AnimKit.label(ctx,'水解 ATP → 朝正端迈步 → 拉动微丝',W/2,H-20,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

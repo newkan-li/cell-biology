@@ -1,0 +1,37 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>肿瘤血管发生</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'肿瘤的血管发生：从 1–2mm 到无限生长',
+    sub:'没有血管时肿瘤只能长到 1–2mm；肿瘤分泌血管发生因子(VEGF)刺激内皮细胞长入，有了血供后肿瘤即可无限制生长。',
+    legend:[{c:'#c0392b',t:'肿瘤'},{c:'#5a7fa8',t:'血管'}],
+    phases:[
+      {name:'① 无血管：保持很小',dur:1500,note:'没有血管供血时，肿瘤只能长到 1–2mm。'},
+      {name:'② 分泌血管发生因子',dur:1500,note:'肿瘤团产生 VEGF 等因子，刺激附近内皮细胞。'},
+      {name:'③ 新血管长入肿瘤',dur:1700,note:'内皮细胞增殖、形成新生血管长入肿瘤。'},
+      {name:'④ 获得血供→无限生长',dur:1600,note:'肿瘤获得营养与氧气后，可以无限制生长并转移。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'肿瘤血管发生',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cx=W/2, cy=H/2+20;
+      var r=(phaseI>=3)?150:(phaseI>=2?80:46);
+      ctx.fillStyle='#f2b8ae';ctx.strokeStyle='#c0392b';ctx.lineWidth=2; ctx.beginPath(); ctx.arc(cx,cy,r,0,7); ctx.fill(); ctx.stroke();
+      AnimKit.label(ctx,'肿瘤',cx,cy+4,'#8a2a20','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,'直径约 '+ (phaseI>=2?'增大':'1–2mm'), cx, cy+r+22, '#c0392b','12px "Microsoft YaHei"');
+      // 原血管
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(120,cy);ctx.lineTo(cx-r-6,cy);ctx.stroke();
+      AnimKit.label(ctx,'原有血管',120,cy-20,'#45687f','12px "Microsoft YaHei"');
+      // VEGF
+      if(phaseI>=1 && phaseI<3){ for(var i=0;i<4;i++) AnimKit.circle(ctx,cx-r-30-i*26,cy+(i%2?18:-18),6,'#e0a95a',null); AnimKit.label(ctx,'VEGF',cx-r-70,cy-40,'#b0791f','12px "Microsoft YaHei"'); }
+      // 新生血管
+      if(phaseI>=2){ ctx.strokeStyle='#5a7fa8';ctx.lineWidth=5;
+        for(var j=-1;j<=1;j++){ ctx.beginPath(); ctx.moveTo(cx-r-6,cy+j*30); ctx.quadraticCurveTo(cx-r/2, cy+j*40, cx, cy+j*20); ctx.stroke(); } }
+      if(phaseI>=3){ AnimKit.label(ctx,'获得血供 → 无限制生长',W/2,cy+r+52,'#1e7a45','bold 13px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①无血管→很小','②分泌血管发生因子','③新血管长入','④获血供→无限生长'][phaseI],W/2,H-18,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

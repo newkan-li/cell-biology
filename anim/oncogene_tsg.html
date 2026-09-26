@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>癌基因与抑癌基因</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'癌的发生：油门(原癌基因)卡住 + 刹车(抑癌基因)失灵',
+    sub:'原癌基因正常时按需促进增殖，被激活后＝油门卡住(显性)；抑癌基因正常时抑制增殖，失活后＝刹车失灵(隐性)。两者叠加，细胞持续增殖→癌。',
+    legend:[{c:'#c0392b',t:'卡住的油门'},{c:'#5a7fa8',t:'失灵的刹车'},{c:'#2e9e5b',t:'正常'}],
+    phases:[
+      {name:'① 正常：油门+刹车',dur:1500,note:'原癌基因按需踩油门，抑癌基因随时能刹车，增殖受控。'},
+      {name:'② 原癌基因被激活(油门卡住)',dur:1600,note:'点突变/扩增/易位使原癌基因持续活化，一直催增殖。'},
+      {name:'③ 抑癌基因失活(刹车失灵)',dur:1600,note:'如 p53、Rb 缺失或失活，细胞失去刹车。'},
+      {name:'④ 增殖失控→癌',dur:1600,note:'油门卡住 + 刹车失灵，细胞持续增殖、逐步癌变。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'油门 + 刹车：两类基因与癌',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cx=W/2, cy=H/2+20;
+      ctx.fillStyle='#e8f1fb';ctx.strokeStyle='#5a7fa8';ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(cx,cy,220,90,0,0,7); ctx.fill(); ctx.stroke();
+      AnimKit.label(ctx,'细胞增殖',cx,cy+4,'#234f7a','bold 14px "Microsoft YaHei"');
+      // 油门
+      var gasOn=phaseI>=1;
+      AnimKit.pill(ctx,cx-190,cy-150,180,40, gasOn?'#c0392b':'#9ad3a8','原癌基因(油门)', gasOn?'#fff':'#1e5a2a');
+      AnimKit.label(ctx, gasOn?'卡住（持续活化）':'正常', cx-100,cy-100, gasOn?'#c0392b':'#1e7a45','12px "Microsoft YaHei"');
+      // 刹车
+      var brkBad=phaseI>=2;
+      AnimKit.pill(ctx,cx+10,cy-150,180,40, brkBad?'#e6ecf2':'#9ad3a8','抑癌基因(刹车)', brkBad?'#7a8aa0':'#1e5a2a');
+      AnimKit.label(ctx, brkBad?'失灵（失活）':'正常', cx+100,cy-100, brkBad?'#5a7fa8':'#1e7a45','12px "Microsoft YaHei"');
+      if(phaseI>=3){ AnimKit.arrow(ctx,cx-40,cy+100,cx+80,cy+100,'#c0392b',3); AnimKit.label(ctx,'增殖失控 → 癌变',cx+20,cy+128,'#c0392b','bold 13px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①正常受控','②油门卡住(显性)','③刹车失灵(隐性)','④持续增殖→癌'][phaseI],W/2,H-18,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>
