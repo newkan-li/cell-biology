@@ -1515,7 +1515,7 @@
           aw.appendChild(el("div", "animhead", "🎬 动画演示（在老师原图下方）"));
           var ifr = document.createElement("iframe");
           ifr.className = "animframe"; ifr.loading = "lazy"; ifr.setAttribute("title", s.title);
-          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926ay");
+          ifr.setAttribute("data-src", "anim/" + s.anim + ".html?embed=1&v=20260926az");
           aw.appendChild(ifr); card.appendChild(aw);
           if (animIO) animIO.observe(ifr); else ifr.src = ifr.getAttribute("data-src");
         }

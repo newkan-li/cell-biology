@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>闯关模式 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926ay">
-<script src="assets/theme.js?v=20260926ay"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926az">
+<script src="assets/theme.js?v=20260926az"></script>
 <style>
 .qtop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0}
 .qbar{flex:1;min-width:180px;height:12px;background:#eef2f8;border-radius:8px;overflow:hidden}
@@ -33,6 +33,14 @@
 .qt a{color:#234f7a;background:#eef4fb;border:1px solid #ccd8ea;border-radius:14px;padding:1px 8px;text-decoration:none;font-size:12px}
 .qprog{height:6px;background:#eef2f8;border-radius:6px;overflow:hidden;margin-top:4px}
 .qprog>i{display:block;height:100%;background:#4a90d9}
+.stars{color:#e0a800;letter-spacing:1px;font-size:13px}
+.achv{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px}
+.badge{border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12.5px;background:#fff}
+.badge.locked{opacity:.42;filter:grayscale(1)}
+.badge b{display:block;color:#1f5c8b}
+.badge .bd{color:#5b6b7b;font-size:11.5px}
+html[data-theme="dark"] .badge{background:#1b2531;border-color:#2c3a4a}
+html[data-theme="dark"] .badge b{color:#7fb3d8}
 html[data-theme="dark"] .qlevel{background:#1b2531;border-color:#2c3a4a}
 html[data-theme="dark"] .qtitle{color:#7fb3d8}
 html[data-theme="dark"] .qt{color:#c9d6e2}
@@ -52,12 +60,13 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   <div class="qnext" id="qnext"></div>
 
   <div class="qlist" id="qhost"></div>
+  <div class="statsbox" style="margin-top:14px"><h3 style="margin:0 0 4px">🏅 成就</h3><div class="achv" id="qachv"></div></div>
   <footer style="margin-top:20px">仅供个人学习使用</footer>
 </div>
 
-<script src="data/manifest.js?v=20260926ay"></script>
-<script src="data/outline.js?v=20260926ay"></script>
-<script src="data/schedule.js?v=20260926ay"></script>
+<script src="data/manifest.js?v=20260926az"></script>
+<script src="data/outline.js?v=20260926az"></script>
+<script src="data/schedule.js?v=20260926az"></script>
 <script>
 (function () {
   var PREFIX = "cellbio_";
@@ -74,6 +83,10 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
   var FC = jget(PREFIX + "fcans", {});
   var RECITE = jget(PREFIX + "recite", {});
   var KP_KEY = PREFIX + "kpStats";
+  var STK = jget(PREFIX + "streak", { days: {} });
+  function todayStr(d) { d = d || new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+  function streakCount() { var n = 0, d = new Date(); for (var i = 0; i < 3650; i++) { if (STK.days && STK.days[todayStr(d)]) { n++; d.setDate(d.getDate() - 1); } else break; } return n; }
+  function starStr(k, n) { return '<span class="stars">' + new Array(k + 1).join("★") + new Array(n - k + 1).join("☆") + "</span>"; }
 
   // 每章 必背 条目
   var bibeiByCh = {};
@@ -136,7 +149,7 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
       }).join("");
       var cls = s.done ? "done" : (unlocked ? "cur" : "locked");
       host += '<div class="qlevel ' + cls + '"><div class="qnode">' + (s.done ? "✓" : (unlocked ? (i + 1) : "🔒")) + '</div>' +
-        '<div class="qbody"><div class="qtitle">第 ' + (i + 1) + ' 关 · ' + esc(String(s.title).slice(0, 22)) + (s.done ? ' <span style="color:#2f9e5b">已通关</span>' : "") + '</div>' +
+        '<div class="qbody"><div class="qtitle">第 ' + (i + 1) + ' 关 · ' + esc(String(s.title).slice(0, 22)) + " " + starStr(s.doneN, s.n) + (s.done ? ' <span style="color:#2f9e5b">已通关</span>' : "") + '</div>' +
         '<div class="qsub">' + esc(sub) + ' · 任务 ' + s.doneN + "/" + s.n + '</div>' +
         '<div class="qprog"><i style="width:' + Math.round(s.doneN / s.n * 100) + '%"></i></div>' +
         '<div class="qtasks" style="margin-top:6px">' + rows + '</div></div></div>';
@@ -144,8 +157,9 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
     });
     document.getElementById("qhost").innerHTML = host;
     var pct = Math.round(doneCount / stats.length * 100);
+    var totalStars = 0; stats.forEach(function (s) { totalStars += s.doneN; });
     document.getElementById("qfill").style.width = pct + "%";
-    document.getElementById("qstat").textContent = "已通关 " + doneCount + "/" + stats.length + "（" + pct + "%）";
+    document.getElementById("qstat").textContent = "已通关 " + doneCount + "/" + stats.length + "（" + pct + "%） · ⭐ " + totalStars + "/" + (stats.length * 5);
     if (nextRec) {
       var t = nextRec.tasks.filter(function (x) { return !x.done; });
       document.getElementById("qnext").innerHTML = "👉 <b>下一步</b>：第 " + (stats.indexOf(nextRec) + 1) + " 关「" + esc(String(nextRec.title).slice(0, 16)) + "」—— 建议先完成 <b>" + (t.length ? t[0].txt : "") + "</b>。" +
@@ -153,6 +167,28 @@ html[data-theme="dark"] .qnext{background:#22303d;border-color:#33475a;color:#c9
     } else {
       document.getElementById("qnext").innerHTML = "🎉 全部通关！可去 <a href='exam.html'>📝 模拟测验</a> / <a href='802.html'>📋 802 真题</a> 冲刺。";
     }
+
+    /* 成就 */
+    var passedN = 0, bestMax = 0;
+    Object.keys(PASSED).forEach(function (cid) { var p = PASSED[cid]; if (p && p.passed) passedN++; if (p && (p.best || 0) > bestMax) bestMax = p.best || 0; });
+    var masteredRecite = 0; OUTLINE.forEach(function (x) { if (RECITE[x.id] === "ok") masteredRecite++; });
+    var fcN = Object.keys(FC).length, streak = streakCount();
+    var ACH = [
+      { icon: "🚩", t: "出发", d: "通关第 1 关", ok: doneCount >= 1 },
+      { icon: "📗", t: "学而时习", d: "通关 5 关", ok: doneCount >= 5 },
+      { icon: "📘", t: "半壁江山", d: "通关 10 关", ok: doneCount >= 10 },
+      { icon: "👑", t: "全通关", d: "通关全部 20 关", ok: doneCount >= stats.length },
+      { icon: "🏁", t: "首战告捷", d: "任一通关测通过", ok: passedN >= 1 },
+      { icon: "🏅", t: "高分选手", d: "通关测最好 ≥90%", ok: bestMax >= 90 },
+      { icon: "🔥", t: "坚持", d: "连续打卡 ≥7 天", ok: streak >= 7 },
+      { icon: "🧠", t: "背诵达人", d: "必背“掌握” ≥50 条", ok: masteredRecite >= 50 },
+      { icon: "🃏", t: "闪卡达人", d: "闪卡作答 ≥100 次", ok: fcN >= 100 },
+      { icon: "⭐", t: "满星关", d: "任一章 5/5 任务", ok: (function () { return stats.some(function (s) { return s.doneN === s.n; }); })() }
+    ];
+    var got = ACH.filter(function (a) { return a.ok; }).length;
+    document.getElementById("qachv").innerHTML = ACH.map(function (a) {
+      return '<div class="badge ' + (a.ok ? "" : "locked") + '"><b>' + a.icon + " " + a.t + '</b><span class="bd">' + a.d + '</span></div>';
+    }).join("") + '<div class="badge" style="grid-column:1/-1"><b>已获得成就 ' + got + "/" + ACH.length + "</b><span class=\"bd\">继续闯关解锁更多成就</span></div>";
   }
   render();
 })();
