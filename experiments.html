@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>实验一览 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926ae">
-<script src="assets/theme.js?v=20260926ae"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926af">
+<script src="assets/theme.js?v=20260926af"></script>
 <style>
 .egrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px;margin-top:10px}
 .ecard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
@@ -25,6 +25,8 @@ html[data-theme="dark"] .ecard .elink{background:#22303d;border-color:#33475a;co
 .ecard.masked .ex::after{content:"👁 点击显示结论";color:#5b6b7b;font-size:12px}
 html[data-theme="dark"] .ecard.masked .ex{background:repeating-linear-gradient(45deg,#232c36,#232c36 8px,#1d2530 8px,#1d2530 16px)}
 html[data-theme="dark"] .ecard.masked .ex::after{color:#9fb2c7}
+.ecard.revealed{outline:2px solid #4a90d9;outline-offset:2px;background:#f4f9ff}
+html[data-theme="dark"] .ecard.revealed{background:#22303d;outline-color:#5a8fc0}
 .ecard .mfreq{font-size:11px;border-radius:20px;padding:1px 8px;margin-left:6px}
 .mf-高频{background:#fde3e0;color:#b03a2e;border:1px solid #f0c1ba}
 .mf-一般{background:#fdf3d9;color:#9a6b00;border:1px solid #f0dca8}
@@ -57,10 +59,10 @@ html[data-theme="dark"] .mf-了解{background:#232c36;color:#b9c6d6;border-color
   <div id="host"></div>
   <footer style="margin-top:24px">仅供个人学习使用</footer>
 </div>
-<script src="data/manifest.js?v=20260926ae"></script>
-<script src="data/hotexp.js?v=20260926ae"></script>
-<script src="data/explist.js?v=20260926ae"></script>
-<script src="data/xref.js?v=20260926ae"></script>
+<script src="data/manifest.js?v=20260926af"></script>
+<script src="data/hotexp.js?v=20260926af"></script>
+<script src="data/explist.js?v=20260926af"></script>
+<script src="data/xref.js?v=20260926af"></script>
 <script>
 (function () {
   var ALL = window.EXPLIST || [];
@@ -116,12 +118,12 @@ html[data-theme="dark"] .mf-了解{background:#232c36;color:#b9c6d6;border-color
     }).join("");
     var maskOn = false, btn = document.getElementById("maskbtn");
     function applyMask() {
-      Array.prototype.forEach.call(hh.querySelectorAll(".ecard"), function (c) { c.classList.toggle("masked", maskOn); });
+      Array.prototype.forEach.call(hh.querySelectorAll(".ecard"), function (c) { c.classList.toggle("masked", maskOn); if (maskOn) c.classList.remove("revealed"); });
     }
     hh.addEventListener("click", function (ev) {
       if (!maskOn) return;
       var c = ev.target.closest ? ev.target.closest(".ecard") : null;
-      if (c) c.classList.remove("masked");
+      if (c) { c.classList.remove("masked"); c.classList.add("revealed"); }
     });
     if (btn) btn.onclick = function () {
       maskOn = !maskOn;
