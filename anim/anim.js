@@ -52,8 +52,6 @@ window.AnimKit = (function () {
       '<div class="a-stage"><canvas class="a-canvas"></canvas></div>' +
       '<div class="a-bar"><button data-act="step">⏭ 单步</button>' +
       '<button class="ghost" data-act="reset">↺ 重置</button>' +
-      '<button class="ghost" data-act="audio">🔊 语音：关</button>' +
-      '<button class="ghost" data-act="title">🔈 本页讲解</button>' +
       '<span style="color:var(--sub);font-size:12.5px">速度</span>' +
       '<span class="a-seg" data-act="speed"><button data-s="0.5">0.5×</button><button data-s="1" class="on">1×</button><button data-s="2">2×</button></span></div>';
     if (cfg.legend) html += '<div class="a-legend">' + cfg.legend.map(function (l) {
@@ -74,27 +72,8 @@ window.AnimKit = (function () {
     var S = {}, phaseI = 0, speed = 1, fc = 0;
     var noteEl = wrap.querySelector('[data-note]');
     var dbg = document.createElement('span'); dbg.style.display = 'none'; dbg.setAttribute('data-frames', '1'); document.body.appendChild(dbg);
-    var animId = location.pathname.split('/').pop().replace('.html', '');
-    var audioOn = false, audioEl = null;
-    /* 无 mp3 时的兜底：用系统语音朗读本动画文字 */
-    var canSpeak = !!(window.speechSynthesis && window.SpeechSynthesisUtterance);
-    function speak(text) {
-      if (!canSpeak || !text) return;
-      try { window.speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(text); u.lang = 'zh-CN'; u.rate = 1.05; window.speechSynthesis.speak(u); } catch (e) { }
-    }
-    function narrPhase(i) { var p = cfg.phases[i] || {}; return cfg.title + '。' + (cfg.sub || '') + '。' + (p.name ? ('阶段：' + p.name + '。') : '') + (p.note || ''); }
-    function narrTitle() { return cfg.title + '。' + (cfg.sub || '') + (cfg.legend ? ('。图例：' + cfg.legend.map(function (l) { return l.t; }).join('、')) : ''); }
-    function playAudio(src, fallback, forceSpeak) {
-      try {
-        if (audioEl) { audioEl.pause(); audioEl = null; }
-        var a = new Audio(src); audioEl = a;
-        if (fallback) a.addEventListener('error', function () { if (audioOn || forceSpeak) speak(fallback); }, { once: true });
-        a.play().catch(function () { });
-      } catch (e) { if (audioOn || forceSpeak) speak(fallback); }
-    }
     function applyPhase(i) {
       if (cfg.phases[i].ap) cfg.phases[i].ap(S);
-      if (audioOn) playAudio('audio/' + animId + '_' + i + '.mp3?v=20260911e', narrPhase(i));
       noteEl.innerHTML = '阶段：<b>' + cfg.phases[i].name + '</b>' + (cfg.phases[i].note ? ' —— ' + cfg.phases[i].note : '');
       reportH();
     }
@@ -116,13 +95,6 @@ window.AnimKit = (function () {
         Array.prototype.forEach.call(wrap.querySelectorAll('[data-act=speed] button'), function (x) { x.classList.remove('on'); });
         b.classList.add('on'); };
     });
-    var bAudio = wrap.querySelector('[data-act=audio]');
-    bAudio.onclick = function () {
-      audioOn = !audioOn;
-      bAudio.textContent = audioOn ? '🔇 语音：开' : '🔊 语音：关';
-      if (audioOn) playAudio('audio/' + animId + '_' + phaseI + '.mp3?v=20260911e', narrPhase(phaseI));
-    };
-    wrap.querySelector('[data-act=title]').onclick = function () { playAudio('audio/' + animId + '_title.mp3?v=20260911e', narrTitle(), true); };
     function reportH() { try { parent.postMessage({ __animResize: true, h: document.body.scrollHeight }, '*'); } catch (e) { } }
     if (window.ResizeObserver) { try { new ResizeObserver(reportH).observe(document.body); } catch (e) { } }
     window.addEventListener('resize', reportH);
