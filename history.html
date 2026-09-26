@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f5c8b">
+<title>科学史 · 细胞生物学</title>
+<link rel="stylesheet" href="assets/style.css?v=20260926g">
+<script src="assets/theme.js?v=20260926g"></script>
+<style>
+.tl{position:relative;margin:10px 0 0 6px;padding-left:22px;border-left:2px solid #d6e2ee}
+.tl-item{position:relative;margin:0 0 14px}
+.tl-item:before{content:"";position:absolute;left:-29px;top:4px;width:10px;height:10px;border-radius:50%;background:#1f5c8b}
+.tl-y{font-weight:700;color:#c0392b;font-size:13px;margin-right:8px}
+.tl-t{font-weight:700;color:#1f5c8b;font-size:14px}
+.tl-w{color:#6a4a8a;font-size:12px;margin-left:8px}
+.tl-d{font-size:13px;color:#33465c;line-height:1.7;margin-top:2px}
+.tl-l{margin-top:3px}
+.tl-l a{font-size:11.5px;text-decoration:none;color:#234f7a;background:#eef4fb;border:1px solid #ccd8ea;border-radius:20px;padding:1px 8px}
+html[data-theme="dark"] .tl{border-left-color:#2c3a4a}
+html[data-theme="dark"] .tl-item:before{background:#4a7aa8}
+html[data-theme="dark"] .tl-d{color:#c9d6e2}
+</style>
+</head>
+<body data-page="history">
+<div class="wrap">
+  <header class="top">
+    <h1>🕰 细胞生物学 · 科学史</h1>
+    <p>关键发现、经典实验与诺奖里程碑 ｜ 点“对应讲义页”可跳到站内知识点</p>
+  </header>
+  <p><a href="index.html">← 返回首页</a> ｜ <a href="methods.html">🧪 实验方法</a> ｜ <a href="animations.html">🎬 动画总目录</a></p>
+  <div class="fc-chips" id="chips"></div>
+  <input id="q" class="ans" placeholder="搜索年份 / 事件 / 人物 …" style="margin-top:6px;width:100%">
+  <div id="count" class="hint" style="margin-top:6px"></div>
+  <div class="tl" id="host"></div>
+  <footer style="margin-top:24px">仅供个人学习使用</footer>
+</div>
+<script src="data/manifest.js?v=20260926g"></script>
+<script src="data/history.js?v=20260926g"></script>
+<script>
+(function () {
+  var ALL = (window.HISTORY || []).slice();
+  var CHN = {}; (window.MANIFEST || []).forEach(function (m) { CHN[m.id] = m.title; });
+  var cur = "all", kw = "";
+  var chips = document.getElementById("chips"), host = document.getElementById("host"), cnt = document.getElementById("count"), qi = document.getElementById("q");
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  var chs = []; ALL.forEach(function (h) { if (h.ch && chs.indexOf(h.ch) < 0) chs.push(h.ch); });
+  chs.sort();
+  function chip(label, val) { var b = document.createElement("button"); b.className = "fc-chip" + (val === cur ? " on" : ""); b.textContent = label; b.dataset.v = val; b.onclick = function () { cur = val; sync(); render(); }; chips.appendChild(b); }
+  chip("全部（" + ALL.length + "）", "all");
+  chs.forEach(function (c) { chip((CHN[c] || c).slice(0, 12), c); });
+  function sync() { Array.prototype.forEach.call(chips.children, function (b) { b.classList.toggle("on", b.dataset.v === cur); }); }
+  qi.oninput = function () { kw = qi.value.trim().toLowerCase(); render(); };
+  function render() {
+    var list = ALL.filter(function (h) {
+      if (cur !== "all" && h.ch !== cur) return false;
+      if (kw && (h.y + h.t + (h.who || "") + h.d).toLowerCase().indexOf(kw) < 0) return false;
+      return true;
+    });
+    cnt.textContent = "共 " + list.length + " 条";
+    host.innerHTML = list.map(function (h) {
+      var link = (h.kp && CHN[h.ch]) ? '<div class="tl-l"><a href="' + h.ch + '.html#s_' + esc(h.kp) + '">📄 对应讲义页：' + esc(CHN[h.ch]) + '</a></div>' : "";
+      return '<div class="tl-item"><span class="tl-y">' + esc(h.y) + '</span><span class="tl-t">' + esc(h.t) + '</span>' +
+        (h.who ? '<span class="tl-w">' + esc(h.who) + '</span>' : "") +
+        '<div class="tl-d">' + esc(h.d) + '</div>' + link + '</div>';
+    }).join("") || '<p class="empty">没有匹配的条目。</p>';
+  }
+  render();
+})();
+</script>
+</body>
+</html>

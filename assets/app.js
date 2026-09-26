@@ -1277,7 +1277,7 @@
     HW.init(cid);
     document.title = ch.title + " · 细胞生物学";
     var aside = document.getElementById("sidebar"), main = document.getElementById("main");
-    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="schedule.html">🧭 学习路线</a><a href="animations.html">🎬 动画总目录</a><a href="mindmap.html">🕸 跨章总图</a><a href="textbook.html">📚 教材对照表</a><a href="compare.html">🔗 对比速记表</a><a href="zhenti.html">📋 历年真题</a><a href="802.html">📋 802 真题</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
+    aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="schedule.html">🧭 学习路线</a><a href="animations.html">🎬 动画总目录</a><a href="history.html">🕰 科学史</a><a href="methods.html">🧪 实验方法</a><a href="mindmap.html">🕸 跨章总图</a><a href="textbook.html">📚 教材对照表</a><a href="compare.html">🔗 对比速记表</a><a href="zhenti.html">📋 历年真题</a><a href="802.html">📋 802 真题</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
     aside.appendChild(el("div", "grp", "各模块（概念 + 考题）"));
     ch.modules.forEach(function (m) {
       var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a);
@@ -1334,6 +1334,12 @@
         '<div class="pv-q">带着这些问题去听课：</div><ol>' +
         (ch.preview.questions || []).map(function (q) { return "<li>" + esc(q) + "</li>"; }).join("") + "</ol>";
       main.appendChild(pv);
+    }
+    if (ch.narrative) {
+      var nb = el("div", "statsbox narbox");
+      nb.innerHTML = '<details><summary>📖 本章完整叙述（教材式导读·串联概念与实验）</summary><div class="nar-body">' +
+        esc(ch.narrative).replace(/\n/g, "<br>") + "</div></details>";
+      main.appendChild(nb);
     }
     var ob = renderOutline(ch); if (ob) main.appendChild(ob);
 
@@ -1433,6 +1439,16 @@
           var ib = el("div", "intuition");
           ib.innerHTML = '<div class="in-h">🧠 通俗理解（直觉 · 类比）</div><p>' + esc(s.intuition).replace(/\n/g, "<br>") + '</p>';
           card.appendChild(ib);
+        }
+        if (s.derive) {
+          var db = el("div", "derivebox");
+          db.innerHTML = '<div class="dv-h">📐 推导 / 计算</div><div class="dv-body">' + esc(s.derive).replace(/\n/g, "<br>") + '</div>';
+          card.appendChild(db);
+        }
+        if (s.experiment) {
+          var eb = el("div", "expbox");
+          eb.innerHTML = '<div class="ex-h">🧪 实验过程 / 方法</div><div class="ex-body">' + esc(s.experiment).replace(/\n/g, "<br>") + '</div>';
+          card.appendChild(eb);
         }
         if (s.points && s.points.length) {
           var pb = el("div", "points");
