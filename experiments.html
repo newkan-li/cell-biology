@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>实验一览 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926ac">
-<script src="assets/theme.js?v=20260926ac"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926ad">
+<script src="assets/theme.js?v=20260926ad"></script>
 <style>
 .egrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px;margin-top:10px}
 .ecard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
@@ -40,6 +40,11 @@ html[data-theme="dark"] .mf-了解{background:#232c36;color:#b9c6d6;border-color
     <p>各章经典实验与方法（含步骤与结果判读）｜ 点“前往讲义页”看上下文</p>
   </header>
   <p><a href="index.html">← 返回首页</a> ｜ <a href="guide.html">🚀 上手指南</a> ｜ <a href="report.html">📊 学习报告</a> ｜ <a href="experiments.html">🔬 实验一览</a>　<a href="schedule.html">🧭 学习路线</a> ｜ <a href="animations.html">🎬 动画目录</a> ｜ <a href="history.html">🕰 科学史</a> ｜ <a href="methods.html">🧪 实验方法</a> ｜ <a href="glossary.html">📖 术语表</a></p>
+  <div class="notice" style="background:#eef7ee;border-color:#bfe0c4;color:#234a2c">
+    <b>🎯 这是考什么？</b>本页是<b>具体经典实验</b>，考的是“<b>结论 / 意义</b>”——谁用什么方法、<b>证明了什么</b>。多见于<b>选择/判断、简答、实验分析题</b>（如“怎样证明分泌蛋白经 ER→高尔基体→细胞外”）。
+    方法本身的<b>原理 / 用途</b>见 <a href="methods.html" style="color:#1b5e20;font-weight:600">🧪 实验方法</a>。<br>
+    <b>复习顺序建议：</b>先背本页顶部「⭐ 高频实验 → 结论」，再补高频方法原理；<b>操作细节（浓度/时间）基本不考</b>。
+  </div>
   <div class="fc-chips" id="chips"></div>
   <input id="q" class="ans" placeholder="搜索实验名 / 关键词 …" style="margin-top:6px;width:100%">
   <div class="statsbox" id="hotbox">
@@ -51,10 +56,10 @@ html[data-theme="dark"] .mf-了解{background:#232c36;color:#b9c6d6;border-color
   <div id="host"></div>
   <footer style="margin-top:24px">仅供个人学习使用</footer>
 </div>
-<script src="data/manifest.js?v=20260926ac"></script>
-<script src="data/hotexp.js?v=20260926ac"></script>
-<script src="data/explist.js?v=20260926ac"></script>
-<script src="data/xref.js?v=20260926ac"></script>
+<script src="data/manifest.js?v=20260926ad"></script>
+<script src="data/hotexp.js?v=20260926ad"></script>
+<script src="data/explist.js?v=20260926ad"></script>
+<script src="data/xref.js?v=20260926ad"></script>
 <script>
 (function () {
   var ALL = window.EXPLIST || [];
