@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>细胞生物学 · 自学网页</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926x">
-<script src="assets/theme.js?v=20260926x"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926y">
+<script src="assets/theme.js?v=20260926y"></script>
 <style>
 #gate{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#1f5c8b;background:linear-gradient(160deg,#1f5c8b,#12324d);padding:20px}
 #gate.hide{display:none}
@@ -41,6 +41,12 @@ body.locked{overflow:hidden}
     <h1>细胞生物学 · 自学网页</h1>
     <p>翟中和《细胞生物学》第4版 · 教师课件逐页详解 ｜ 概念学习 + 图注解读 + 本页要点 + 全题型练习 + 错题本 + 术语表</p>
   </header>
+
+  <div id="firstv" class="notice" style="display:none;background:#eaf4ff;border-color:#bcd8f2;color:#1c3f63">
+    <button id="firstvx" title="关闭" style="float:right;border:0;background:transparent;font-size:18px;line-height:1;cursor:pointer;color:#5b6b7b">×</button>
+    <b>🚀 第一次使用？</b> 3 分钟上手 → 先看 <a href="guide.html" style="color:#1f5c8b;font-weight:600">上手指南</a>，再按 <a href="schedule.html" style="color:#1f5c8b;font-weight:600">学习路线</a> 逐讲推进。
+  </div>
+  <script>(function(){try{if(localStorage.getItem("cellbio_guideSeen"))return;var b=document.getElementById("firstv");if(!b)return;b.style.display="block";document.getElementById("firstvx").onclick=function(){b.style.display="none";try{localStorage.setItem("cellbio_guideSeen","1");}catch(e){}};}catch(e){}})();</script>
 
   <div class="notice" style="background:#fff8e8;border-color:#f0d9a8;color:#5a4a1a">
     <b>📚 当前覆盖范围：</b>20 章 · 894 张概念页 + 1646 道章节题——13 章教师课件 + 7 章教材原文 OCR 章（第六章 线粒体和叶绿体、第十二章 核糖体、第十五章 细胞分化与胚胎发育、第十七章 细胞的社会联系、第十一章 细胞核与染色体、第十三章 细胞分裂、第三章 细胞生物学研究方法）；另含 894 道本页自测、823 道客观真题、680 道姜益泉真题、395 条术语。<br>
@@ -84,6 +90,7 @@ body.locked{overflow:hidden}
       <button class="navbtn" style="width:auto;margin:0" id="restoreAll">⬆ 从备份恢复…</button>
       <input id="fileAll" type="file" accept=".json" style="display:none">
       <button class="navbtn" style="width:auto;margin:0" id="exportAll">🖨 导出全部（题目+作答）PDF</button>
+      <a class="navbtn" style="width:auto;margin:0;text-align:center;text-decoration:none" href="guide.html">🚀 上手指南</a>
       <a class="navbtn" style="width:auto;margin:0;text-align:center;text-decoration:none" href="schedule.html">🧭 学习路线</a>
       <a class="navbtn" style="width:auto;margin:0;text-align:center;text-decoration:none" href="report.html">📊 学习报告</a>
       <a class="navbtn" style="width:auto;margin:0;text-align:center;text-decoration:none" href="animations.html">🎬 动画总目录</a>
@@ -107,29 +114,29 @@ body.locked{overflow:hidden}
 
   <footer>编者参考答案 · 仅供个人学习使用 · 逐题精讲由 AI 辅助整理 ｜ <a href="#" id="logout" style="color:inherit">退出登录</a></footer>
 </div>
-<script src="data/manifest.js?v=20260926x"></script>
-<script src="data/ch01.js?v=20260926x"></script>
-<script src="data/ch02.js?v=20260926x"></script>
-<script src="data/ch03.js?v=20260926x"></script>
-<script src="data/ch04.js?v=20260926x"></script>
-<script src="data/ch05.js?v=20260926x"></script>
-<script src="data/ch06.js?v=20260926x"></script>
-<script src="data/ch07.js?v=20260926x"></script>
-<script src="data/ch08.js?v=20260926x"></script>
-<script src="data/ch09.js?v=20260926x"></script>
-<script src="data/ch10.js?v=20260926x"></script>
-<script src="data/ch11.js?v=20260926x"></script>
-<script src="data/ch12.js?v=20260926x"></script>
-<script src="data/ch13.js?v=20260926x"></script>
-<script src="data/tb11.js?v=20260926x"></script>
-<script src="data/tb13.js?v=20260926x"></script>
-<script src="data/tb03.js?v=20260926x"></script>
-<script src="data/tb06.js?v=20260926x"></script>
-<script src="data/tb12.js?v=20260926x"></script>
-<script src="data/tb15.js?v=20260926x"></script>
-<script src="data/tb17.js?v=20260926x"></script>
-<script src="data/glossary.js?v=20260926x"></script>
-<script src="assets/app.js?v=20260926x"></script>
+<script src="data/manifest.js?v=20260926y"></script>
+<script src="data/ch01.js?v=20260926y"></script>
+<script src="data/ch02.js?v=20260926y"></script>
+<script src="data/ch03.js?v=20260926y"></script>
+<script src="data/ch04.js?v=20260926y"></script>
+<script src="data/ch05.js?v=20260926y"></script>
+<script src="data/ch06.js?v=20260926y"></script>
+<script src="data/ch07.js?v=20260926y"></script>
+<script src="data/ch08.js?v=20260926y"></script>
+<script src="data/ch09.js?v=20260926y"></script>
+<script src="data/ch10.js?v=20260926y"></script>
+<script src="data/ch11.js?v=20260926y"></script>
+<script src="data/ch12.js?v=20260926y"></script>
+<script src="data/ch13.js?v=20260926y"></script>
+<script src="data/tb11.js?v=20260926y"></script>
+<script src="data/tb13.js?v=20260926y"></script>
+<script src="data/tb03.js?v=20260926y"></script>
+<script src="data/tb06.js?v=20260926y"></script>
+<script src="data/tb12.js?v=20260926y"></script>
+<script src="data/tb15.js?v=20260926y"></script>
+<script src="data/tb17.js?v=20260926y"></script>
+<script src="data/glossary.js?v=20260926y"></script>
+<script src="assets/app.js?v=20260926y"></script>
 <script>
 (function(){
   var SALT_B64="PHvTEb+bKAyQIjr548zpUg==";
