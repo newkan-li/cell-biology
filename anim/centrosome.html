@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>中心体</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'中心体：一对中心粒 + 周围基质，微管的组织中心',
+    sub:'中心体由一对相互垂直的中心粒和周围的中心粒周基质组成；基质中的 γ-tubulin 环成核微管，是动物细胞的主要 MTOC。',
+    legend:[{c:'#8e5bb5',t:'中心粒'},{c:'#5a7fa8',t:'γ-tubulin/基质'},{c:'#2e9e5b',t:'微管'}],
+    phases:[
+      {name:'① 一对垂直中心粒',dur:1500,note:'中心体含一对相互垂直的中心粒（9 组三联体微管）。'},
+      {name:'② 中心粒周基质',dur:1500,note:'中心粒周围有富含 γ-tubulin 的基质。'},
+      {name:'③ 成核微管',dur:1600,note:'γ-tubulin 环作为微管生长的起点(成核)。'},
+      {name:'④ 组织纺锤体',dur:1500,note:'分裂时中心体移向两极、组织纺锤体。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'中心体',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cx=W/2, cy=H/2+10;
+      if(phaseI>=1){ ctx.fillStyle='#efe8fb'; ctx.beginPath(); ctx.arc(cx,cy,80,0,7); ctx.fill(); AnimKit.label(ctx,'中心粒周基质',cx,cy+104,'#6a4a8a','12px "Microsoft YaHei"'); }
+      // 两个垂直中心粒
+      ctx.strokeStyle='#8e5bb5';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(cx-38,cy-20);ctx.lineTo(cx-38,cy+20);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(cx-58,cy+18);ctx.lineTo(cx-18,cy+18);ctx.stroke();
+      AnimKit.label(ctx,'一对中心粒(相互垂直)',cx-8,cy+52,'#6a4a8a','12px "Microsoft YaHei"');
+      if(phaseI>=2){ for(var i=0;i<8;i++){ var a=i/8*Math.PI*2; AnimKit.circle(ctx,cx+80*Math.cos(a),cy+80*Math.sin(a),7,'#5a7fa8',null);
+        ctx.strokeStyle='#2e9e5b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+120*Math.cos(a),cy+120*Math.sin(a));ctx.stroke(); } }
+      if(phaseI>=3){ AnimKit.label(ctx,'分裂时组织纺锤体',W/2,cy+150,'#1f5c8b','bold 13px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①一对垂直中心粒','②中心粒周基质','③γ-tubulin成核','④组织纺锤体'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

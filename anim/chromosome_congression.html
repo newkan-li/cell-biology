@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>搜索-捕获</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'微管“搜索-捕获”把染色体拉到赤道板',
+    sub:'前中期，纺锤体微管正端动态解聚/延伸，随机“搜索”并“捕获”染色体动粒，逐渐把染色体拉到细胞中央的赤道板。',
+    legend:[{c:'#2e9e5b',t:'微管正端'},{c:'#c0392b',t:'染色体'}],
+    phases:[
+      {name:'① 微管动态搜索',dur:1500,note:'微管正端不断解聚/延伸，随机探索空间。'},
+      {name:'② 捕获动粒',dur:1500,note:'微管正端结合到染色体动粒上。'},
+      {name:'③ 牵拉染色体',dur:1600,note:'微管解聚把染色体拉向纺锤体，向赤道集中。'},
+      {name:'④ 排列于赤道板',dur:1500,note:'所有染色体最终排列在细胞中央赤道板。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'搜索-捕获与染色体整列',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+10, lx=W*0.3, rx=W*0.7, mid=W/2;
+      AnimKit.circle(ctx,lx,cy,9,'#1f5c8b',null); AnimKit.circle(ctx,rx,cy,9,'#1f5c8b',null);
+      var pos=(phaseI>=3)?mid:(phaseI>=2?W/2-70:W/2-130);
+      if(phaseI>=0){ for(var i=0;i<5;i++){ ctx.strokeStyle='#2e9e5b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(lx+10,cy);ctx.lineTo(pos-20,cy);ctx.stroke(); } }
+      AnimKit.circle(ctx,pos,cy-26,18,'#c0392b',null);
+      if(phaseI>=1){ ctx.strokeStyle='#2e9e5b';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(lx+10,cy);ctx.lineTo(pos-18,cy-24);ctx.stroke(); }
+      AnimKit.arrow(ctx,lx+40,cy+40,pos-20,cy+40,'#8aa0b8',2.5);
+      AnimKit.label(ctx,'赤道板',W/2,cy+70,'#45687f','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①动态搜索','②捕获动粒','③牵拉','④排列赤道板'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

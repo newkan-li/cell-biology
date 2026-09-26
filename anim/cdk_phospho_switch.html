@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CDK磷酸化开关</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'CDK 的磷酸化开关：Wee1 关、Cdc25 开、CAK 激活',
+    sub:'CDK 上有关键磷酸化位点：Wee1 磷酸化抑制位点(Tyr15)使其关闭；Cdc25 去磷酸则打开；CAK 磷酸化激活位点使其具备活性。',
+    legend:[{c:'#c0392b',t:'Wee1(抑制)'},{c:'#2e9e5b',t:'Cdc25(激活)'},{c:'#5a7fa8',t:'CAK(激活位点)'}],
+    phases:[
+      {name:'① cyclin 结合 CDK',dur:1400,note:'cyclin 结合 CDK，但此时活性仍低。'},
+      {name:'② Wee1 磷酸化→抑制',dur:1600,note:'Wee1 在抑制位点(Tyr15)加磷酸，CDK 关闭。'},
+      {name:'③ Cdc25 去磷酸→打开',dur:1600,note:'Cdc25 去除抑制磷酸，CDK 被激活。'},
+      {name:'④ 进入 M 期',dur:1500,note:'CAK 磷酸化激活位点，CDK 充分活化，启动 M 期。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'CDK 的磷酸化开关',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cx=W/2, cy=H/2+10;
+      AnimKit.circle(ctx,cx,cy,46, phaseI>=2?'#9ad3a8':'#e6ecf2', 'CDK', phaseI>=2?'#1e5a2a':'#7a8aa0');
+      AnimKit.circle(ctx,cx-70,cy-30,24,'#5a7fa8','cy'); AnimKit.label(ctx,'cyclin',cx-70,cy-64,'#45687f','12px "Microsoft YaHei"');
+      if(phaseI>=1 && phaseI<2){ AnimKit.circle(ctx,cx-30,cy-52,14,'#c0392b','P'); AnimKit.label(ctx,'Wee1 抑制磷酸(Tyr15)',cx-180,cy-52,'#c0392b','12px "Microsoft YaHei"','left'); }
+      if(phaseI>=2){ AnimKit.label(ctx,'Cdc25 去磷酸 → 打开',cx+90,cy-20,'#1e7a45','12px "Microsoft YaHei"','left'); }
+      if(phaseI>=3){ AnimKit.circle(ctx,cx+40,cy-52,14,'#5a7fa8','P'); AnimKit.label(ctx,'CAK 磷酸化激活位点',cx+90,cy-52,'#45687f','12px "Microsoft YaHei"','left'); }
+      AnimKit.label(ctx,['①cyclin结合','②Wee1抑制','③Cdc25去磷酸','④CAK激活→M期'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

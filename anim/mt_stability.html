@@ -1,0 +1,28 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>微管稳定性</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'微管的稳定性：动态微管 vs 永久性微管',
+    sub:'胞质微管多为动态结构（可组装/解聚），而鞭毛、纤毛、中心粒、纺锤体的微管相对稳定（永久性）。',
+    legend:[{c:'#2e9e5b',t:'动态微管'},{c:'#5a7fa8',t:'永久性微管'}],
+    phases:[
+      {name:'① 动态微管',dur:1500,note:'存在于胞质，随细胞需要快速组装与解聚。'},
+      {name:'② 动态不稳定性',dur:1500,note:'末端在生长/骤缩间切换，适应细胞变化。'},
+      {name:'③ 永久性微管',dur:1600,note:'鞭毛、纤毛、中心粒、纺锤体的微管较稳定。'},
+      {name:'④ 功能分工',dur:1500,note:'动态微管负责运输/重组，稳定微管负责结构/运动。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'微管的稳定性分类',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+10;
+      for(var i=0;i<5;i++){ var x=W*0.28-70+i*35; AnimKit.pill(ctx,x,cy-60+((Math.floor(fc/20)+i)%3)*18,26,22,'#2e9e5b',null); }
+      AnimKit.label(ctx,'动态微管(胞质)',W*0.28,cy+90,'#1e7a45','13px "Microsoft YaHei"');
+      for(var j=0;j<5;j++){ var x2=W*0.72-70+j*35; AnimKit.pill(ctx,x2,cy-70+j*32,30,26,'#5a7fa8',null); }
+      AnimKit.label(ctx,'永久性微管(鞭毛/纤毛/中心粒/纺锤体)',W*0.72,cy+96,'#45687f','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①动态微管','②动态不稳定性','③永久性微管','④功能分工'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

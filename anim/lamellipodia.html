@@ -1,0 +1,27 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>伪足</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'细胞前缘的伪足：片状伪足与丝状伪足',
+    sub:'细胞前缘由 actin 聚合形成探索性突起：片状伪足(lamellipodia)成片前伸，丝状伪足(filopodia)细长探路，移动速度约 1μm/s。',
+    legend:[{c:'#c98a3a',t:'actin 聚合'},{c:'#5a7fa8',t:'细胞'}],
+    phases:[
+      {name:'① 前缘 actin 聚合',dur:1500,note:'actin 快速聚合把细胞膜顶出去。'},
+      {name:'② 片状伪足',dur:1500,note:'形成片状的探索性突起(lamellipodia)。'},
+      {name:'③ 丝状伪足',dur:1500,note:'形成细长指状突起(filopodia)探测环境。'},
+      {name:'④ 探索、可快速回缩',dur:1500,note:'突起形成/回缩很快，约 1μm/s。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'伪足',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+20, x=W*0.4;
+      ctx.fillStyle='#e8f1fb';ctx.strokeStyle='#5a7fa8';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(x,cy,90,70,0,0,7);ctx.fill();ctx.stroke();
+      if(phaseI>=1){ ctx.fillStyle='#f6d9a8';ctx.beginPath();ctx.ellipse(x+95,cy,34,46,0,0,7);ctx.fill(); AnimKit.label(ctx,'片状伪足',x+95,cy+70,'#a9742e','12px "Microsoft YaHei"'); }
+      if(phaseI>=2){ for(var i=-1;i<=1;i++){ ctx.strokeStyle='#c98a3a';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(x+105,cy+i*24);ctx.lineTo(x+180,cy+i*30);ctx.stroke(); } AnimKit.label(ctx,'丝状伪足',x+200,cy,'#a9742e','12px "Microsoft YaHei"','left'); }
+      AnimKit.label(ctx,['①actin聚合前伸','②片状伪足','③丝状伪足','④探索/快速回缩'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

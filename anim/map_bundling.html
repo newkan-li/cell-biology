@@ -1,0 +1,27 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MAP成束</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'微管结合蛋白(MAPs)把微管交联成束',
+    sub:'MAP2/tau 等微管结合蛋白能把相邻微管交联成平行束，稳定微管并决定其排列（如轴突/树突）。',
+    legend:[{c:'#2e9e5b',t:'微管'},{c:'#c98a3a',t:'MAPs'}],
+    phases:[
+      {name:'① 分散的微管',dur:1400,note:'没有交联时微管彼此分散。'},
+      {name:'② MAPs 结合微管',dur:1500,note:'MAPs 结合到微管侧面。'},
+      {name:'③ 交联成束',dur:1600,note:'MAPs 把相邻微管交联、扎成平行束。'},
+      {name:'④ 稳定并决定排列',dur:1500,note:'成束的微管更稳定，决定细胞内的排列方向。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'MAPs 使微管成束',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+10, gap=phaseI>=2?26:80;
+      for(var i=-1;i<=1;i++){ var y=cy+i*gap;
+        ctx.strokeStyle='#2e9e5b';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(W*0.25,y);ctx.lineTo(W*0.75,y);ctx.stroke(); }
+      if(phaseI>=1){ for(var x=W*0.3;x<W*0.72;x+=60){ for(var j=-1;j<=1;j++){ if(phaseI>=2&&j!==0) continue; AnimKit.circle(ctx,x,cy+j*(gap/2),6,'#c98a3a',null);} } }
+      AnimKit.label(ctx,['①分散','②MAPs结合','③交联成束','④稳定/决定排列'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

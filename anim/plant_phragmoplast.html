@@ -1,0 +1,28 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>成膜体</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'植物胞质分裂：成膜体引导细胞板形成',
+    sub:'植物细胞分裂时，成膜体微管引导含细胞壁物质的囊泡向赤道面聚集、融合成细胞板，最终发育为新细胞壁。',
+    legend:[{c:'#2e9e5b',t:'成膜体微管'},{c:'#e0a95a',t:'囊泡'},{c:'#5a7fa8',t:'细胞板'}],
+    phases:[
+      {name:'① 成膜体形成',dur:1500,note:'赤道处微管聚集成成膜体（两个反向排列的微管阵列）。'},
+      {name:'② 囊泡向赤道聚集',dur:1600,note:'囊泡沿成膜体微管被运到赤道面。'},
+      {name:'③ 融合成细胞板',dur:1600,note:'囊泡融合形成细胞板，由中央向外扩展。'},
+      {name:'④ 发育为新细胞壁',dur:1500,note:'细胞板最终发育为新的细胞壁。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'成膜体与细胞板',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cx=W/2, cy=H/2+10;
+      if(phaseI>=0){ for(var i=0;i<5;i++){ ctx.strokeStyle='#2e9e5b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(cx+i*6,cy-90);ctx.lineTo(cx+i*6,cy-10);ctx.moveTo(cx+i*6,cy+10);ctx.lineTo(cx+i*6,cy+90);ctx.stroke(); } }
+      if(phaseI>=1){ for(var j=-4;j<=4;j++) AnimKit.circle(ctx,cx,cy+j*14,6,'#e0a95a',null); }
+      if(phaseI>=2){ var w=phaseI>=3?200:120; ctx.fillStyle='#5a7fa8'; ctx.fillRect(cx-6,cy-w/2,12,w); AnimKit.label(ctx,'细胞板',cx+30,cy,'#45687f','12px "Microsoft YaHei"','left'); }
+      if(phaseI>=3) AnimKit.label(ctx,'细胞板 → 新细胞壁',W/2,cy+150,'#1f5c8b','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①成膜体形成','②囊泡聚集','③融合成细胞板','④发育为新壁'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

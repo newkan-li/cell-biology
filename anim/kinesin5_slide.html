@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>kinesin-5</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'kinesin-5 在极性微管间滑动，把纺锤体两极推开',
+    sub:'kinesin-5 通过杆状区形成反向四聚体，结合两根极性相反的微管，滑动时把两极推离（后期 B 的机制之一）。',
+    legend:[{c:'#c0392b',t:'kinesin-5'},{c:'#2e9e5b',t:'极性微管'}],
+    phases:[
+      {name:'① 反向四聚体',dur:1500,note:'kinesin-5 由两个头部反向组成四聚体。'},
+      {name:'② 结合反向平行微管',dur:1500,note:'两端分别结合极性相反的两根微管。'},
+      {name:'③ 滑动推开两极',dur:1700,note:'水解 ATP 沿微管滑动，把两极推开。'},
+      {name:'④ 后期B：两极分离',dur:1500,note:'与星体微管受力共同使两极分离。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'kinesin-5 推开纺锤体两极',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+10;
+      var sep=phaseI>=2?260:190;
+      ctx.strokeStyle='#2e9e5b';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(W/2-40,cy-60);ctx.lineTo(W/2-sep,cy-20);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(W/2+40,cy-60);ctx.lineTo(W/2+sep,cy-20);ctx.stroke();
+      AnimKit.circle(ctx,W/2-sep,cy-20,9,'#1f5c8b',null); AnimKit.circle(ctx,W/2+sep,cy-20,9,'#1f5c8b',null);
+      AnimKit.label(ctx,'极1',W/2-sep,cy-42,'#45687f','12px "Microsoft YaHei"'); AnimKit.label(ctx,'极2',W/2+sep,cy-42,'#45687f','12px "Microsoft YaHei"');
+      if(phaseI>=0){ AnimKit.circle(ctx,W/2-16,cy-40,10,'#c0392b','K'); AnimKit.circle(ctx,W/2+16,cy-40,10,'#c0392b','K'); }
+      if(phaseI>=2){ AnimKit.arrow(ctx,W/2,cy-70,W/2-70,cy-70,'#c0392b',3); AnimKit.arrow(ctx,W/2,cy-70,W/2+70,cy-70,'#c0392b',3); }
+      AnimKit.label(ctx,['①反向四聚体','②结合反平行微管','③滑动','④两极分离(后期B)'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

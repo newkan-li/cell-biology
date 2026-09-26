@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>桥粒</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'桥粒与半桥粒：把中间纤维网络连成整体',
+    sub:'桥粒把相邻细胞的角蛋白纤维（中间纤维）连在一起；半桥粒把上皮细胞的中间纤维锚定到基膜上，共同分散机械张力。',
+    legend:[{c:'#2e9e5b',t:'中间纤维(角蛋白)'},{c:'#5a7fa8',t:'桥粒/半桥粒'},{c:'#8e5bb5',t:'基膜'}],
+    phases:[
+      {name:'① 桥粒连接相邻细胞',dur:1500,note:'桥粒位于相邻细胞间，连接两侧的角蛋白纤维。'},
+      {name:'② 张力经 IF 网络分散',dur:1500,note:'机械张力沿中间纤维网络被分散。'},
+      {name:'③ 半桥粒锚定基膜',dur:1600,note:'半桥粒把上皮细胞的中间纤维锚定到基膜。'},
+      {name:'④ 增强组织抗拉',dur:1500,note:'桥粒+半桥粒使上皮层抗拉、抗剪切。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'桥粒与半桥粒',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cy=H/2+10;
+      // 两个相邻细胞
+      ctx.strokeStyle='#5a7fa8';ctx.lineWidth=2;ctx.beginPath();ctx.rect(W*0.2,cy-90,W*0.25,180);ctx.stroke();ctx.beginPath();ctx.rect(W*0.55,cy-90,W*0.25,180);ctx.stroke();
+      // IF networks
+      ctx.strokeStyle='#2e9e5b';ctx.lineWidth=3;
+      for(var i=0;i<4;i++){ ctx.beginPath();ctx.moveTo(W*0.25,cy-60+i*40);ctx.lineTo(W*0.44,cy-40+i*30);ctx.stroke(); ctx.beginPath();ctx.moveTo(W*0.56,cy-40+i*30);ctx.lineTo(W*0.75,cy-60+i*40);ctx.stroke(); }
+      // desmosome
+      ctx.fillStyle='#5a7fa8'; ctx.fillRect(W*0.44,cy-40,4,120); ctx.fillRect(W*0.55,cy-40,4,120);
+      AnimKit.label(ctx,'桥粒',W*0.5,cy-100,'#45687f','12px "Microsoft YaHei"');
+      // 基膜
+      ctx.fillStyle='#efe8fb';ctx.fillRect(W*0.2,cy+110,W*0.6,16); AnimKit.label(ctx,'基膜',W*0.2,cy+146,'#6a4a8a','12px "Microsoft YaHei"');
+      if(phaseI>=2) AnimKit.label(ctx,'半桥粒锚定',W*0.2,cy+96,'#45687f','12px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①桥粒连相邻细胞','②张力经IF分散','③半桥粒锚定基膜','④增强抗拉'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

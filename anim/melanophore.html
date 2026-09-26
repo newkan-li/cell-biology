@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>色素颗粒运输</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'黑色素细胞：色素颗粒运输改变体色',
+    sub:'色素颗粒沿细胞骨架定向运输：向周边分散时皮肤变深，向细胞中心聚集时变浅。',
+    legend:[{c:'#c0392b',t:'色素颗粒'},{c:'#5a7fa8',t:'细胞'}],
+    phases:[
+      {name:'① 颗粒分散→变深',dur:1500,note:'色素颗粒沿骨架向细胞周边分散，皮肤变深。'},
+      {name:'② 颗粒聚集→变浅',dur:1500,note:'颗粒向细胞中心聚集，皮肤变浅。'},
+      {name:'③ 依赖马达蛋白',dur:1500,note:'颗粒运输由马达蛋白沿微管/微丝驱动。'},
+      {name:'④ 快速可逆调色',dur:1500,note:'通过颗粒位置快速可逆地调节体色。'}
+    ],
+    init:function(S){S.d=1;},
+    step:function(S,dt){ if(S.d<1) S.d=Math.min(1,S.d+dt/1000*0.5); },
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'色素颗粒运输与体色',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var cx=W/2, cy=H/2+10, spread=(phaseI===0?120:30);
+      ctx.fillStyle='#e8f1fb';ctx.strokeStyle='#5a7fa8';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,150,0,7);ctx.fill();ctx.stroke();
+      for(var i=0;i<10;i++){ var a=i/10*Math.PI*2; AnimKit.circle(ctx,cx+spread*Math.cos(a),cy+spread*Math.sin(a),8,'#c0392b',null); }
+      AnimKit.label(ctx,phaseI===0?'分散 → 变深':'聚集 → 变浅',cx,cy+178,phaseI===0?'#8a2a20':'#4a6a8a','bold 13px "Microsoft YaHei"');
+      AnimKit.label(ctx,['①分散变深','②聚集变浅','③马达蛋白驱动','④可逆调色'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>

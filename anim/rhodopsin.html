@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>视紫红质</title><link rel="stylesheet" href="anim.css?v=20260911e"></head><body>
+<script src="anim.js?v=20260911e"></script>
+<script>
+(function(){
+  AnimKit.mount({
+    title:'视杆细胞的光转导：视紫红质→cGMP↓→通道关闭',
+    sub:'弱光下 GPCR 视紫红质被激活 → 激活 cGMP 磷酸二酯酶(PDE)，cGMP→GMP 使 cGMP 水平降低 → 阳离子通道关闭 → 细胞膜超极化，产生光信号。',
+    legend:[{c:'#8e5bb5',t:'视紫红质(GPCR)'},{c:'#2e9e5b',t:'cGMP'},{c:'#c0392b',t:'通道关闭'}],
+    phases:[
+      {name:'① 光激活视紫红质',dur:1500,note:'弱光下 GPCR 视紫红质被激活。'},
+      {name:'② 激活 PDE 水解 cGMP',dur:1600,note:'cGMP 磷酸二酯酶催化 cGMP→GMP，cGMP 水平降低。'},
+      {name:'③ 阳离子通道关闭',dur:1600,note:'cGMP 减少使 Na⁺/Ca²⁺ 通道关闭。'},
+      {name:'④ 膜超极化→信号',dur:1500,note:'细胞膜超极化，产生光信号传向神经。'}
+    ],
+    draw:function(ctx,W,H,S,fc,phaseI){
+      ctx.fillStyle='#f6f9fc';ctx.fillRect(0,0,W,H);
+      AnimKit.label(ctx,'光转导',W/2,34,'#1f5c8b','bold 15px "Microsoft YaHei"');
+      var m=AnimKit.membrane(ctx,W,H,{yTop:H*0.36,yBot:H*0.50,cx:W*0.3,gap:70});
+      AnimKit.circle(ctx,W*0.3,m.yTop-30,12,'#e0a95a','hv'); AnimKit.label(ctx,'光',W*0.3,m.yTop-56,'#b0791f','12px "Microsoft YaHei"');
+      if(phaseI>=0){ AnimKit.pill(ctx,W*0.3-80,m.yTop-8,160,200,'#efe8fb','视紫红质','#6a4a8a'); }
+      var cy=m.yBot+90;
+      if(phaseI>=1){ AnimKit.pill(ctx,W*0.52,cy-20,140,40,'#5a7fa8','PDE','#fff'); AnimKit.arrow(ctx,W*0.3+70,cy,W*0.52-6,cy,'#5a7fa8',2.5);
+        AnimKit.label(ctx,'cGMP → GMP (水平下降)',W*0.72,cy,'#1e7a45','12px "Microsoft YaHei"','left'); }
+      if(phaseI>=2){ AnimKit.label(ctx,'Na⁺/Ca²⁺ 通道关闭',W*0.3,m.yBot+20,'#c0392b','bold 12px "Microsoft YaHei"'); }
+      if(phaseI>=3){ AnimKit.label(ctx,'膜超极化 → 光信号',W/2,H-40,'#1f5c8b','bold 13px "Microsoft YaHei"'); }
+      AnimKit.label(ctx,['①光激活视紫红质','②PDE水解cGMP','③通道关闭','④超极化→信号'][phaseI],W/2,H-16,'#1f5c8b','bold 13px "Microsoft YaHei"');
+    }
+  });
+})();
+</script></body></html>
