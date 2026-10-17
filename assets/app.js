@@ -441,7 +441,9 @@
     var _rec = mcqStore(cid)[q.id];
     if (_rec && _rec.last != null) {
       var _ok = String(_rec.last) === String(q.a).trim();
-      var _bar = redoBar(_ok ? "上次作答：✅ 正确" : "上次作答：❌ 错误", function () {
+      Array.prototype.forEach.call(opts.children, function (b) { if (b.dataset.l === String(_rec.last)) b.classList.add(_ok ? "right" : "wrong"); });
+      var _bt = (_ok ? "上次作答：✅ 正确" : "上次作答：❌ 错误") + "（你选 " + _rec.last + "）";
+      var _bar = redoBar(_bt, function () {
         clearQRec(cid, "mcq", q.id);
         resetQuestionBox(box, opts, res, cb);
         _bar.remove();
@@ -498,7 +500,9 @@
     var _jr = judgeStore(cid)[q.id];
     if (_jr && _jr.last != null) {
       var _jok = String(_jr.last) === String(q.a).trim();
-      var _jbar = redoBar(_jok ? "上次作答：✅ 正确" : "上次作答：❌ 错误", function () {
+      Array.prototype.forEach.call(opts.children, function (b) { if (b.dataset.l === String(_jr.last)) b.classList.add(_jok ? "right" : "wrong"); });
+      var _jt = (_jok ? "上次作答：✅ 正确" : "上次作答：❌ 错误") + "（你选 " + _jr.last + "）";
+      var _jbar = redoBar(_jt, function () {
         clearQRec(cid, "judge", q.id);
         resetQuestionBox(box, opts, res, cb);
         _jbar.remove();
@@ -569,7 +573,9 @@
     var _fr = fillStore(cid)[q.id];
     if (_fr && _fr.last != null) {
       var _fok = fuzzyMatch(q.a, _fr.last);
-      var _fbar = redoBar(_fok ? "上次作答：✅ 正确" : "上次作答：❌ 错误", function () {
+      inp.value = _fr.last; inp.classList.add(_fok ? "right" : "wrong");
+      var _ft = (_fok ? "上次作答：✅ 正确" : "上次作答：❌ 错误") + "（你填 " + _fr.last + "）";
+      var _fbar = redoBar(_ft, function () {
         clearQRec(cid, "fill", q.id);
         resetQuestionBox(box, null, res, cb, inp);
         _fbar.remove();
@@ -1190,7 +1196,16 @@
     box.appendChild(fb);
     var prior = cpPrior(cid, kp, q, kind);
     if (prior) {
-      var _pbar = redoBar(prior.ok ? "上次作答：✅ 正确" : "上次作答：❌ 错误", function () {
+      var _pt = (prior.ok ? "上次作答：✅ 正确" : "上次作答：❌ 错误") + (prior.a != null && prior.a !== "" ? "（你选 " + prior.a + "）" : "");
+      if (optsBox) {
+        Array.prototype.forEach.call(optsBox.children, function (b) {
+          var isChosen = (kind === "judge") ? (b.textContent.trim() === String(prior.a)) : (String(b.textContent).trim().charAt(0) === String(prior.a));
+          if (isChosen) b.classList.add(prior.ok ? "right" : "wrong");
+        });
+      } else if (box._cpInput && prior.a != null) {
+        box._cpInput.value = prior.a; box._cpInput.classList.add(prior.ok ? "right" : "wrong");
+      }
+      var _pbar = redoBar(_pt, function () {
         clearQRec(cid, "cp", kp);
         if (q && q.id) clearQRec(cid, kind, q.id);
         done = false;
