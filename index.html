@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>细胞生物学 · 自学网页</title>
-<link rel="stylesheet" href="assets/style.css?v=20260926cf">
-<script src="assets/theme.js?v=20260926cf"></script>
+<link rel="stylesheet" href="assets/style.css?v=20260926cg">
+<script src="assets/theme.js?v=20260926cg"></script>
 <style>
 #gate{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#1f5c8b;background:linear-gradient(160deg,#1f5c8b,#12324d);padding:20px}
 #gate.hide{display:none}
@@ -57,8 +57,27 @@ body.locked{overflow:hidden}
       .then(function(k){return crypto.subtle.deriveBits({name:"PBKDF2",salt:b64(SALT_B64),iterations:ITER,hash:"SHA-256"},k,256);})
       .then(function(bits){return new Uint8Array(bits);});
   }
-  /* 已登录：立即解锁（不等数据脚本） */
-  if(store.get()) unlock();
+  /* 登录后再动态加载数据与 app（让首屏/登录立即完成） */
+  var LIST = ["data/manifest.js",
+    "data/ch01.js","data/ch02.js","data/ch03.js","data/ch04.js","data/ch05.js","data/ch06.js","data/ch07.js",
+    "data/ch08.js","data/ch09.js","data/ch10.js","data/ch11.js","data/ch12.js","data/ch13.js",
+    "data/tb11.js","data/tb13.js","data/tb03.js","data/tb06.js","data/tb12.js","data/tb15.js","data/tb17.js",
+    "data/glossary.js","assets/app.js"];
+  var VER = "20260926cg";
+  var started = false;
+  function loadAll() {
+    if (started) return; started = true;
+    var i = 0;
+    (function next() {
+      if (i >= LIST.length) { setTimeout(function () { document.dispatchEvent(new Event("DOMContentLoaded", { bubbles: true })); }, 0); return; }
+      var s = document.createElement("script");
+      s.src = LIST[i++] + "?v=" + VER;
+      s.onload = next; s.onerror = next;
+      document.head.appendChild(s);
+    })();
+  }
+  /* 已登录：立即解锁并加载数据 */
+  if (store.get()) { unlock(); loadAll(); }
   var form=document.getElementById("gateform"),pw=document.getElementById("gatepw"),err=document.getElementById("gateerr"),btn=document.getElementById("gatebtn");
   var busy=false;
   form.addEventListener("submit",function(e){
@@ -69,7 +88,7 @@ body.locked{overflow:hidden}
     if(!pw.value){err.textContent="请输入密码";return;}
     busy=true;btn.disabled=true;btn.textContent="验证中…";
     derive(pw.value).then(function(got){
-      if(bytesEqual(got,b64(DK_B64))){store.set();unlock();}
+      if(bytesEqual(got,b64(DK_B64))){store.set();unlock();loadAll();}
       else{err.textContent="密码错误，请重试";pw.value="";pw.focus();}
     }).catch(function(e){err.textContent="验证失败："+(e&&e.message?e.message:"请重试");})
       .then(function(){busy=false;btn.disabled=false;btn.textContent="进入";});
@@ -170,28 +189,5 @@ body.locked{overflow:hidden}
 
   <footer>编者参考答案 · 仅供个人学习使用 · 逐题精讲由 AI 辅助整理 ｜ <a href="#" id="logout" style="color:inherit">退出登录</a></footer>
 </div>
-<script src="data/manifest.js?v=20260926cf"></script>
-<script src="data/ch01.js?v=20260926cf"></script>
-<script src="data/ch02.js?v=20260926cf"></script>
-<script src="data/ch03.js?v=20260926cf"></script>
-<script src="data/ch04.js?v=20260926cf"></script>
-<script src="data/ch05.js?v=20260926cf"></script>
-<script src="data/ch06.js?v=20260926cf"></script>
-<script src="data/ch07.js?v=20260926cf"></script>
-<script src="data/ch08.js?v=20260926cf"></script>
-<script src="data/ch09.js?v=20260926cf"></script>
-<script src="data/ch10.js?v=20260926cf"></script>
-<script src="data/ch11.js?v=20260926cf"></script>
-<script src="data/ch12.js?v=20260926cf"></script>
-<script src="data/ch13.js?v=20260926cf"></script>
-<script src="data/tb11.js?v=20260926cf"></script>
-<script src="data/tb13.js?v=20260926cf"></script>
-<script src="data/tb03.js?v=20260926cf"></script>
-<script src="data/tb06.js?v=20260926cf"></script>
-<script src="data/tb12.js?v=20260926cf"></script>
-<script src="data/tb15.js?v=20260926cf"></script>
-<script src="data/tb17.js?v=20260926cf"></script>
-<script src="data/glossary.js?v=20260926cf"></script>
-<script src="assets/app.js?v=20260926cf"></script>
 </body>
 </html>
