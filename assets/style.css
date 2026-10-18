@@ -632,3 +632,26 @@ html[data-theme="dark"] .mh-flow-step li{color:#a9b2c0}
 html[data-theme="sepia"] .mindsvg{background:#fffdf3}
 html[data-theme="sepia"] .mm-node-rect{fill:#eef3e2;stroke:#c3d0b0}
 html[data-theme="sepia"] .mm-node-text{fill:#3a3327}
+
+.videobox{background:#f2f7fc;border-color:#cfe0ee}
+.videogrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.videocard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.vc-top{display:flex;justify-content:space-between;gap:6px;font-size:11.5px;color:var(--sub)}
+.vteacher{background:#eef4fb;color:#234f7a;border-radius:10px;padding:1px 8px;max-width:65%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vdur{white-space:nowrap}
+.vtitle{font-size:13.4px;font-weight:600;margin:6px 0 2px;line-height:1.45}
+.vcourse{font-size:11.8px;color:var(--sub);line-height:1.5;margin-bottom:7px}
+.vbtns{display:flex;gap:10px;align-items:center}
+.vplay{border:0;background:#1f5c8b;color:#fff;border-radius:16px;padding:4px 12px;font-size:12.5px;cursor:pointer}
+.vlink{color:var(--blue);text-decoration:none;font-size:12px}
+.vplayer{margin-top:10px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.vp-h{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 10px;background:#eef4fb;font-size:12.5px}
+.vp-h button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:2px 10px;font-size:12px;cursor:pointer}
+.vp-frame{position:relative;padding-top:56.25%}
+.vp-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+html[data-theme="dark"] .videobox{background:#1b2735;border-color:#2c3a4a}
+html[data-theme="dark"] .videocard{background:#1f2937;border-color:#33475a}
+html[data-theme="dark"] .vteacher{background:#22303d;color:#a8c6e0}
+html[data-theme="dark"] .vplayer{background:#1b2531;border-color:#2c3a4a}
+html[data-theme="dark"] .vp-h{background:#22303d}
+html[data-theme="dark"] .vp-h button{background:#1b2531;color:#c9d6e2;border-color:#33475a}
