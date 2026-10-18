@@ -1477,32 +1477,50 @@
     }
     var ob = renderOutline(ch); if (ob) main.appendChild(ob);
 
-    if (window.VIDEOS && window.VIDEOS[cid] && window.VIDEOS[cid].length) {
-      var vsec = el("div", "statsbox videobox");
-      vsec.innerHTML = '<h3 style="margin:0 0 4px">🎬 本章微课（B站）</h3><p class="hint" style="margin:0 0 8px">对应翟中和《细胞生物学》第四版 ｜ 可站内播放，或去 B 站看</p>';
-      var vgrid = el("div", "videogrid");
-      var vplayer = el("div", "vplayer"); vplayer.style.display = "none";
-      vplayer.innerHTML = '<div class="vp-h"><b id="vp-title"></b><button class="vp-close" id="vp-close">关闭</button></div><div class="vp-frame"><iframe id="vp-iframe" allowfullscreen scrolling="no" frameborder="0"></iframe></div>';
-      window.VIDEOS[cid].forEach(function (v) {
-        var card = el("div", "videocard");
-        card.innerHTML = '<div class="vc-top"><span class="vteacher">' + esc(v.teacher) + '</span><span class="vdur">' + esc(v.dur) + '</span></div>' +
-          '<div class="vtitle">' + esc(v.part) + '</div>' +
-          '<div class="vcourse">' + esc(v.ch) + ' · ' + esc(v.course) + '</div>';
-        var play = el("button", "vplay", "▶ 播放");
-        play.onclick = function () {
-          vplayer.style.display = "block";
-          document.getElementById("vp-title").textContent = v.part + " · " + v.teacher;
-          document.getElementById("vp-iframe").src = "https://player.bilibili.com/player.html?bvid=" + encodeURIComponent(v.bvid) + "&page=" + v.page + "&high_quality=1&danmaku=0&autoplay=1";
-          vplayer.scrollIntoView({ behavior: "smooth", block: "center" });
-        };
-        var go = el("a", "vlink", "B站原页 →");
-        go.href = "https://www.bilibili.com/video/" + v.bvid + "/?p=" + v.page; go.target = "_blank"; go.rel = "noopener";
-        var btns = el("div", "vbtns"); btns.appendChild(play); btns.appendChild(go); card.appendChild(btns);
-        vgrid.appendChild(card);
-      });
-      vplayer.querySelector("#vp-close").onclick = function () { vplayer.style.display = "none"; document.getElementById("vp-iframe").src = "about:blank"; };
-      vsec.appendChild(vgrid); vsec.appendChild(vplayer);
-      main.appendChild(vsec);
+    if (window.VIDEOS && window.VIDEOS[cid]) {
+      var vd = window.VIDEOS[cid], vcore = vd.core || [], vsecs = vd.sections || [];
+      var vtotal = vcore.length; vsecs.forEach(function (x) { vtotal += x.videos.length; });
+      if (vtotal) {
+        var vsec = el("div", "statsbox videobox");
+        vsec.innerHTML = '<h3 style="margin:0 0 4px">🎬 本章微课（B站）</h3><p class="hint" style="margin:0 0 8px">对应翟中和《细胞生物学》第四版 · 核心推荐 + 按节更多分P（共 ' + vtotal + ' 个）</p>';
+        var vplayer = el("div", "vplayer"); vplayer.style.display = "none";
+        vplayer.innerHTML = '<div class="vp-h"><b id="vp-title"></b><button class="vp-close" id="vp-close">关闭</button></div><div class="vp-frame"><iframe id="vp-iframe" allowfullscreen scrolling="no" frameborder="0"></iframe></div>';
+        function vcard(v) {
+          var card = el("div", "videocard");
+          card.innerHTML = '<div class="vc-top"><span class="vteacher">' + esc(v.teacher) + '</span><span class="vdur">' + esc(v.dur) + '</span></div>' +
+            '<div class="vtitle">' + esc(v.part) + '</div>' +
+            '<div class="vcourse">' + esc(v.ch || vd.ch || "") + ' · ' + esc(v.course) + '</div>';
+          var play = el("button", "vplay", "▶ 播放");
+          play.onclick = function () {
+            vplayer.style.display = "block";
+            document.getElementById("vp-title").textContent = v.part + " · " + v.teacher;
+            document.getElementById("vp-iframe").src = "https://player.bilibili.com/player.html?bvid=" + encodeURIComponent(v.bvid) + "&page=" + v.page + "&high_quality=1&danmaku=0&autoplay=1";
+            vplayer.scrollIntoView({ behavior: "smooth", block: "center" });
+          };
+          var go = el("a", "vlink", "B站原页 →");
+          go.href = "https://www.bilibili.com/video/" + v.bvid + "/?p=" + v.page; go.target = "_blank"; go.rel = "noopener";
+          var btns = el("div", "vbtns"); btns.appendChild(play); btns.appendChild(go); card.appendChild(btns);
+          return card;
+        }
+        var vgrid = el("div", "videogrid");
+        vcore.forEach(function (v) { vgrid.appendChild(vcard(v)); });
+        vsec.appendChild(vgrid);
+        if (vsecs.length) {
+          var vmore = el("details", "vmore");
+          vmore.innerHTML = '<summary>📚 按节更多分P（' + vsecs.length + ' 节）</summary>';
+          vsecs.forEach(function (x) {
+            var g = el("div", "vsec");
+            g.appendChild(el("h4", "vsec-h", x.sec));
+            var gg = el("div", "videogrid");
+            x.videos.forEach(function (v) { gg.appendChild(vcard(v)); });
+            g.appendChild(gg); vmore.appendChild(g);
+          });
+          vsec.appendChild(vmore);
+        }
+        vplayer.querySelector("#vp-close").onclick = function () { vplayer.style.display = "none"; document.getElementById("vp-iframe").src = "about:blank"; };
+        vsec.appendChild(vplayer);
+        main.appendChild(vsec);
+      }
     }
 
     var statsbox = el("div", "statsbox"); statsbox.id = "statsbox"; renderStats(cid, ch, statsbox); main.appendChild(statsbox);

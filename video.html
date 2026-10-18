@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>视频微课索引 · 第四版 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20261018a">
-<script src="assets/theme.js?v=20261018a"></script>
+<link rel="stylesheet" href="assets/style.css?v=20261018b">
+<script src="assets/theme.js?v=20261018b"></script>
 <style>
 .vwrap{max-width:1040px;margin:0 auto}
 .vchips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 14px}
@@ -26,6 +26,11 @@
 .vbtns{display:flex;gap:10px;align-items:center}
 .vplay{border:0;background:#1f5c8b;color:#fff;border-radius:16px;padding:4px 12px;font-size:12.5px;cursor:pointer}
 .vlink{color:var(--blue);text-decoration:none;font-size:12px}
+.vmore{margin-top:10px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:4px 12px}
+.vmore>summary{cursor:pointer;font-weight:600;color:var(--blue);padding:7px 0;font-size:13px}
+.vsec{margin:10px 0}
+.vsec-h{font-size:13px;color:#7a2a24;margin:4px 0 6px}
+html[data-theme="dark"] .vmore{background:#1b2531;border-color:#2c3a4a}
 #player{margin:14px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;display:none}
 .vp-h{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 10px;background:#eef4fb;font-size:12.5px}
 .vp-h button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:2px 10px;font-size:12px;cursor:pointer}
@@ -52,8 +57,8 @@ html[data-theme="dark"] .vp-h button{background:#1b2531;color:#c9d6e2;border-col
   <div id="host"></div>
   <footer style="margin-top:24px">视频版权归原作者 · 仅供个人学习</footer>
 </div>
-<script src="data/manifest.js?v=20261018a"></script>
-<script src="data/videos.js?v=20261018a"></script>
+<script src="data/manifest.js?v=20261018b"></script>
+<script src="data/videos.js?v=20261018b"></script>
 <script>
 (function(){
   var V=window.VIDEOS||{}, M=window.MANIFEST||[], names={};
@@ -76,27 +81,51 @@ html[data-theme="dark"] .vp-h button{background:#1b2531;color:#c9d6e2;border-col
   }
   document.getElementById("pclose").onclick=function(){document.getElementById("player").style.display="none";document.getElementById("pframe").src="about:blank";};
   var host=document.getElementById("host");
+  function vcard(v,id,i){
+    return '<div class="vcard"><div class="vc-top"><span class="vteacher">'+esc(v.teacher)+'</span><span>'+esc(v.dur)+'</span></div>'+
+      '<div class="vtitle">'+esc(v.part)+'</div>'+
+      '<div class="vcourse">'+esc(v.ch||"")+' · '+esc(v.course)+'</div>'+
+      '<div class="vbtns"><button class="vplay" data-id="'+id+'" data-i="'+i+'">▶ 播放</button>'+
+      '<a class="vlink" target="_blank" rel="noopener" href="https://www.bilibili.com/video/'+esc(v.bvid)+'/?p='+v.page+'">B站原页 →</a></div></div>';
+  }
+  var curPlay=null;
   function render(){
     Array.prototype.forEach.call(chips.children,function(b){b.className=(b.dataset.id===cur)?"on":"";});
     var html="";
     ids.forEach(function(id){
       if(cur!=="all"&&cur!==id) return;
-      var arr=V[id]; if(!arr||!arr.length) return;
-      html+='<section class="vgroup"><h2>'+esc(names[id]||id)+' <span style="font-size:12px;color:var(--sub);font-weight:400">'+arr.length+' 个视频</span></h2><div class="vgrid">';
-      arr.forEach(function(v,i){
-        html+='<div class="vcard"><div class="vc-top"><span class="vteacher">'+esc(v.teacher)+'</span><span>'+esc(v.dur)+'</span></div>'+
-          '<div class="vtitle">'+esc(v.part)+'</div>'+
-          '<div class="vcourse">'+esc(v.ch)+' · '+esc(v.course)+'</div>'+
-          '<div class="vbtns"><button class="vplay" data-id="'+id+'" data-i="'+i+'">▶ 播放</button>'+
-          '<a class="vlink" target="_blank" rel="noopener" href="https://www.bilibili.com/video/'+esc(v.bvid)+'/?p='+v.page+'">B站原页 →</a></div></div>';
-      });
-      html+='</div></section>';
+      var obj=V[id]; if(!obj) return;
+      var core=obj.core||[], secs=obj.sections||[];
+      var total=core.length; secs.forEach(function(x){total+=x.videos.length;});
+      if(!total) return;
+      html+='<section class="vgroup"><h2>'+esc(names[id]||id)+' <span style="font-size:12px;color:var(--sub);font-weight:400">'+total+' 个视频</span></h2>';
+      html+='<div class="vgrid">';
+      core.forEach(function(v,i){html+=vcard(v,id,"c"+i);});
+      html+='</div>';
+      if(secs.length){
+        html+='<details class="vmore"><summary>📚 按节更多分P（'+secs.length+' 节）</summary>';
+        secs.forEach(function(x,si){
+          html+='<div class="vsec"><h4 class="vsec-h">'+esc(x.sec)+'</h4><div class="vgrid">';
+          x.videos.forEach(function(v,i){html+=vcard(v,id,"s"+si+"_"+i);});
+          html+='</div></div>';
+        });
+        html+='</details>';
+      }
+      html+='</section>';
     });
     host.innerHTML=html||'<p class="hint">暂无视频</p>';
   }
   host.addEventListener("click",function(e){
     if(e.target.classList&&e.target.classList.contains("vplay")){
-      var id=e.target.dataset.id, i=+e.target.dataset.i, v=V[id]&&V[id][i]; if(v) play(v);
+      var id=e.target.dataset.id, key=String(e.target.dataset.i), v=null;
+      var obj=V[id]; if(obj){
+        if(key.charAt(0)==="c"){ v=(obj.core||[])[+key.slice(1)]; }
+        else if(key.charAt(0)==="s"){
+          var p=key.slice(1).split("_"), si=+p[0], vi=+p[1];
+          v=((obj.sections||[])[si]||{}).videos && obj.sections[si].videos[vi];
+        }
+      }
+      if(v) play(v);
     }
   });
   render();

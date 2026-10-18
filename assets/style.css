@@ -655,3 +655,10 @@ html[data-theme="dark"] .vteacher{background:#22303d;color:#a8c6e0}
 html[data-theme="dark"] .vplayer{background:#1b2531;border-color:#2c3a4a}
 html[data-theme="dark"] .vp-h{background:#22303d}
 html[data-theme="dark"] .vp-h button{background:#1b2531;color:#c9d6e2;border-color:#33475a}
+
+.vmore{margin-top:10px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:4px 12px}
+.vmore>summary{cursor:pointer;font-weight:600;color:var(--blue);padding:7px 0;font-size:13px}
+.vsec{margin:10px 0}
+.vsec-h{font-size:13px;color:#7a2a24;margin:4px 0 6px}
+html[data-theme="dark"] .vmore{background:#1b2531;border-color:#2c3a4a}
+html[data-theme="dark"] .vsec-h{color:#e0a090}
