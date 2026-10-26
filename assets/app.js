@@ -646,7 +646,7 @@
       bOk.classList.toggle("on", state === "ok"); bPart.classList.toggle("on", state === "part"); bNo.classList.toggle("on", state === "no");
       cb.style.display = state === "no" ? "flex" : "none";
       if (state === "no") {
-        addWrong(cid, { id: q.id, type: kind, q: (kind === "term" ? q.term : q.q), correct: (kind === "term" ? q.def : (kind === "calc" ? (q.a || q.steps) : q.a)), chosen: "(自评不会)", cause: "", ts: Date.now() });
+        addWrong(cid, { id: q.id, type: kind, q: (kind === "term" ? q.term : q.q), correct: (kind === "term" ? q.def : (kind === "calc" ? (q.steps || q.a) : q.a)), chosen: "(自评不会)", cause: "", ts: Date.now() });
       } else { clearWrong(cid, q.id); }
       kpRecord(q.kp, state === "ok");
       if (state === "no") srsRate(q.id, 0); else if (state === "part") srsRate(q.id, 1); else if (srsGet(q.id)) srsRate(q.id, 2);

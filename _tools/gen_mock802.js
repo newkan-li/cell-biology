@@ -10,7 +10,7 @@ for(const id of ids){const c=load(id);for(const k of Object.keys(pools))for(cons
  if(q.prio!=='S'&&q.prio!=='A')continue;
  const qt=q.q||q.term||'';
  if(/根据图|如图|图\s*\d/.test(qt)||/＋|Ca2\s*[，,]\s*而不是/.test(qt))continue;
- pools[k].push({ch:id,kind:k,id:q.id,q:qt,a:q.a||q.def||'',o:q.o||null,e:q.e||'',subtype:q.subtype||'',kps:q.kps||'',kp:q.kp,prio:q.prio});
+ pools[k].push({ch:id,kind:k,id:q.id,q:qt,a:(k==='calc'?(q.steps||q.a||''):(q.a||q.def||'')),o:q.o||null,e:q.e||'',subtype:q.subtype||'',kps:q.kps||'',kp:q.kp,prio:q.prio});
 }}
 let seed=8022027;function rnd(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
