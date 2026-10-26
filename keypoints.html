@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>考点证据表 · 细胞生物学</title>
+<link rel="stylesheet" href="assets/style.css?v=20261018ab">
+<script src="assets/theme.js?v=20261018ab"></script>
+<style>
+.kp-wrap{max-width:1180px;margin:0 auto;padding:18px 16px 40px}
+.kp-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;margin:8px 0 12px}
+.kp-head h1{font-size:23px;margin:0 0 4px;color:var(--ink)}
+.kp-sub{font-size:13px;color:var(--muted);line-height:1.7;max-width:820px}
+.kp-note{font-size:12.5px;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin:10px 0;line-height:1.7}
+.kp-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.kp-controls select,.kp-controls input{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink)}
+.kp-controls input{flex:1;min-width:200px}
+.tierbtn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:20px;padding:7px 13px;cursor:pointer;font:inherit;font-size:13px}
+.tierbtn.on{background:#1f5c8b;color:#fff;border-color:#1f5c8b}
+.kp-sum{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}
+.chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:16px;padding:3px 9px;font-size:12px;background:var(--card);color:var(--muted)}
+.chip b{color:var(--ink)}
+.kp-list{display:grid;gap:8px}
+.kp-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.kp-card h3{margin:0 0 3px;font-size:14.5px;line-height:1.45;color:var(--ink)}
+.kp-meta{font-size:12px;color:var(--muted);margin:1px 0 6px}
+.kp-meta a{color:#1f5c8b;text-decoration:none}
+.tier{display:inline-block;min-width:22px;text-align:center;border-radius:6px;padding:1px 6px;font-size:11.5px;font-weight:700;margin-right:6px;vertical-align:1px}
+.tier.S{background:#fdecea;color:#b03a2e;border:1px solid #efc4bd}
+.tier.A{background:#fff6e5;color:#946200;border:1px solid #efd49a}
+.tier.B{background:#eef4fb;color:#234f7a;border:1px solid #cbd9ea}
+.ev{display:flex;gap:5px;flex-wrap:wrap}
+.ev span{font-size:11.5px;border-radius:12px;padding:1px 7px;background:#f3f6fa;border:1px solid #dde6f0;color:#41566e}
+.ev .z{background:#eef8f0;border-color:#bfe0c4;color:#1a7f37}
+.ev .h{background:#fff7e6;border-color:#efd49a;color:#8a5b00}
+.ev .o{background:#eef4fb;border-color:#cbd9ea;color:#234f7a}
+.ev .q{background:#f6f2ff;border-color:#d9cff2;color:#5b3fa0}
+.empty{text-align:center;color:var(--muted);padding:30px;font-size:13px}
+html[data-theme="dark"] .kp-card,html[data-theme="dark"] .kp-note,html[data-theme="dark"] .kp-controls select,html[data-theme="dark"] .kp-controls input{background:#1b2531;border-color:#2c3a4a;color:#c9d6e2}
+html[data-theme="dark"] .kp-head h1,html[data-theme="dark"] .chip b,html[data-theme="dark"] .kp-card h3{color:#d7e2ee}
+html[data-theme="dark"] .ev span{background:#22303d;border-color:#33475a;color:#a8bfd6}
+html[data-theme="dark"] .tierbtn{background:#22303d;border-color:#33475a;color:#c9d6e2}
+html[data-theme="dark"] .tierbtn.on{background:#4a90d9;border-color:#4a90d9;color:#fff}
+</style>
+</head>
+<body>
+<div class="kp-wrap">
+  <div class="kp-head">
+    <div>
+      <h1>考点证据表</h1>
+      <div class="kp-sub">把“真题样本、高频实验、提纲分层、题库密度、近年热点”放在一起，给每个考点标 S/A/B。S 优先背，A 重点理解，B 有余力再看。</div>
+    </div>
+    <a class="navbtn" style="width:auto;margin:0;text-decoration:none" href="index.html">← 返回首页</a>
+  </div>
+  <div class="kp-note">证据说明：<b>S</b> = 802 真题样本出现 / 高频实验 / 提纲必背；<b>A</b> = 提纲常考或题库密度较高；<b>B</b> = 有题库覆盖或一般性提示。802 样本来自本地 51 题手写本，年份/院校标注不全，只能作“出现性证据”，不能当官方频率。官方已明确不提供往年试题，S/A/B 是复习优先级，不是押题承诺。</div>
+  <div class="kp-controls">
+    <select id="chSel"><option value="">全部章节</option></select>
+    <button class="tierbtn on" data-tier="">全部</button>
+    <button class="tierbtn" data-tier="S">S 必背</button>
+    <button class="tierbtn" data-tier="A">A 常考</button>
+    <button class="tierbtn" data-tier="B">B 了解</button>
+    <input id="kw" placeholder="搜索考点 / 模块 / kp，例如 溶酶体、cAMP、微管">
+  </div>
+  <div class="kp-sum" id="sum"></div>
+  <div class="kp-list" id="list"></div>
+  <div class="empty" id="empty" style="display:none">没有匹配的考点</div>
+</div>
+<script src="data/keypoints.js?v=20261018ab"></script>
+<script>
+(function(){
+  var ALL=window.KEYPOINTS||[], tier='', ch='', kw='';
+  var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+  var chSel=document.getElementById('chSel'), list=document.getElementById('list'), empty=document.getElementById('empty'), sum=document.getElementById('sum'), kwEl=document.getElementById('kw');
+  var seen={}; ALL.forEach(function(x){if(!seen[x.ch]){seen[x.ch]=1;var o=document.createElement('option');o.value=x.ch;o.textContent=x.ch+' '+(x.ctitle||'');chSel.appendChild(o)}});
+  function ev(x){
+    var a=[];
+    if(x.z802)a.push('<span class="z">802样本×'+x.z802+'</span>');
+    if(x.hot)a.push('<span class="h">高频实验×'+x.hot+'</span>');
+    if(x.outline)a.push('<span class="o">提纲·'+esc(x.outline)+'</span>');
+    if(x.bank)a.push('<span class="q">题库 '+x.bank+' 题</span>');
+    if(x.recent)a.push('<span class="h">近年热点×'+x.recent+'</span>');
+    return a.join('');
+  }
+  function render(){
+    var arr=ALL.filter(function(x){
+      if(tier&&x.tier!==tier)return false;
+      if(ch&&x.ch!==ch)return false;
+      if(kw){var s=(x.title+' '+x.mod+' '+x.kp+' '+x.ctitle).toLowerCase();if(s.indexOf(kw.toLowerCase())<0)return false}
+      return true;
+    });
+    var c={S:0,A:0,B:0}; arr.forEach(function(x){c[x.tier]=(c[x.tier]||0)+1});
+    sum.innerHTML='<span class="chip">当前 <b>'+arr.length+'</b> 条</span><span class="chip">S <b>'+c.S+'</b></span><span class="chip">A <b>'+c.A+'</b></span><span class="chip">B <b>'+c.B+'</b></span>';
+    list.innerHTML=arr.map(function(x){
+      return '<div class="kp-card"><h3><span class="tier '+x.tier+'">'+x.tier+'</span>'+esc(x.title)+'</h3>'+
+        '<div class="kp-meta">'+esc(x.ctitle||x.ch)+' · '+esc(x.mod||'')+(x.page?' · p'+esc(x.page):'')+' · <a href="'+esc(x.link)+'">打开讲义页 →</a></div>'+
+        '<div class="ev">'+ev(x)+'</div></div>';
+    }).join('');
+    empty.style.display=arr.length?'none':'block';
+  }
+  document.querySelectorAll('.tierbtn').forEach(function(b){b.onclick=function(){document.querySelectorAll('.tierbtn').forEach(function(z){z.classList.remove('on')});b.classList.add('on');tier=b.getAttribute('data-tier')||'';render()}});
+  chSel.onchange=function(){ch=chSel.value;render()};
+  kwEl.oninput=function(){kw=kwEl.value.trim();render()};
+  render();
+})();
+</script>
+</body>
+</html>
