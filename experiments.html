@@ -8,8 +8,8 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b">
 <title>实验一览 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20261018ar">
-<script src="assets/theme.js?v=20261018ar"></script>
+<link rel="stylesheet" href="assets/style.css?v=20261018as">
+<script src="assets/theme.js?v=20261018as"></script>
 <style>
 .egrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px;margin-top:10px}
 .ecard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
@@ -40,13 +40,13 @@ html[data-theme="dark"] .mf-了解{background:#232c36;color:#b9c6d6;border-color
 <div class="wrap">
   <header class="top">
     <h1>🔬 实验一览</h1>
-    <p>各章经典实验与方法（含步骤与结果判读）｜ 点“前往讲义页”看上下文</p>
+    <p>教材各章经典实验复习清单（含结论与结果判读）｜ <b>不是首师大 802 官方考试大纲</b></p>
   </header>
   <p><a href="index.html">← 返回首页</a> ｜ <a href="quest.html">🚩 闯关模式</a> ｜ <a href="recite.html">✍️ 背诵/默写</a> ｜ <a href="faq.html">❓ 常见问题</a> ｜ <a href="guide.html">🚀 上手指南</a> ｜ <a href="report.html">📊 学习报告</a> ｜ <a href="experiments.html">🔬 实验一览</a>　<a href="schedule.html">🧭 学习路线</a> ｜ <a href="animations.html">🎬 动画目录</a> ｜ <a href="history.html">🕰 科学史</a> ｜ <a href="methods.html">🧪 实验方法</a> ｜ <a href="glossary.html">📖 术语表</a></p>
   <div class="notice" style="background:#eef7ee;border-color:#bfe0c4;color:#234a2c">
-    <b>🎯 这是考什么？</b>本页是<b>具体经典实验</b>，考的是“<b>结论 / 意义</b>”——谁用什么方法、<b>证明了什么</b>。多见于<b>选择/判断、简答、实验分析题</b>（如“怎样证明分泌蛋白经 ER→高尔基体→细胞外”）。
-    方法本身的<b>原理 / 用途</b>见 <a href="methods.html" style="color:#1b5e20;font-weight:600">🧪 实验方法</a>。<br>
-    <b>复习顺序建议：</b>先背本页顶部「⭐ 高频实验 → 结论」，再补高频方法原理；<b>操作细节（浓度/时间）基本不考</b>。
+    <b>⚠️ 先说明：</b>本页是<b>按翟中和第4版教材和 802 真题样本整理的“经典实验复习清单”</b>，<b>不是首师大 802 官方考试大纲</b>。官方没有公布实验题范围，所以这里只能作为“高频实验结论/意义”的复习范围，不能保证覆盖当年全部实验题。<br>
+    <b>🎯 本页考什么？</b>考“<b>谁用什么方法、证明了什么、结论/意义</b>”，多见于选择/判断、简答、实验分析题。方法本身的<b>原理/用途</b>见 <a href="methods.html" style="color:#1b5e20;font-weight:600">🧪 实验方法</a>；<b>实验设计怎么答</b>见 <a href="expdesign.html" style="color:#1b5e20;font-weight:600">🧠 实验设计五步法</a>。<br>
+    <b>复习顺序：</b>先背顶部「⭐ 高频实验 → 结论」，再补方法原理，最后用实验设计模板练题。
   </div>
   <div class="fc-chips" id="chips"></div>
   <input id="q" class="ans" placeholder="搜索实验名 / 关键词 …" style="margin-top:6px;width:100%">
@@ -59,10 +59,10 @@ html[data-theme="dark"] .mf-了解{background:#232c36;color:#b9c6d6;border-color
   <div id="host"></div>
   <footer style="margin-top:24px">仅供个人学习使用</footer>
 </div>
-<script src="data/manifest.js?v=20261018ar"></script>
-<script src="data/hotexp.js?v=20261018ar"></script>
-<script src="data/explist.js?v=20261018ar"></script>
-<script src="data/xref.js?v=20261018ar"></script>
+<script src="data/manifest.js?v=20261018as"></script>
+<script src="data/hotexp.js?v=20261018as"></script>
+<script src="data/explist.js?v=20261018as"></script>
+<script src="data/xref.js?v=20261018as"></script>
 <script>
 (function () {
   var ALL = window.EXPLIST || [];
