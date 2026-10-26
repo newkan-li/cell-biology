@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>802 仿真卷 · 细胞生物学</title>
+<link rel="stylesheet" href="assets/style.css?v=20261018ah">
+<script src="assets/theme.js?v=20261018ah"></script>
+<style>
+.mk-wrap{max-width:1050px;margin:0 auto;padding:18px 16px 44px}
+.mk-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;margin:8px 0}
+.mk-head h1{font-size:23px;margin:0 0 5px;color:var(--ink)}
+.mk-note{font-size:12.5px;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 12px;line-height:1.7;margin:8px 0}
+.mk-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.pbtn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:20px;padding:7px 13px;cursor:pointer;font:inherit;font-size:13px}
+.pbtn.on{background:#1f5c8b;color:#fff;border-color:#1f5c8b}
+.mk-timer{font-variant-numeric:tabular-nums;font-weight:700;color:#1f5c8b;font-size:18px;margin-left:auto}
+.mk-sheet{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:12px}
+.mk-sheet h2{font-size:17px;margin:16px 0 8px;color:#1f5c8b}
+.mk-sec{border-top:1px dashed var(--line);margin-top:16px;padding-top:12px}
+.mk-sec:first-of-type{border-top:0;margin-top:0;padding-top:0}
+.mk-sec h3{font-size:15px;margin:0 0 8px;color:var(--ink)}
+.mk-q{margin:10px 0;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fbfdff}
+.mk-q .qt{font-size:14px;line-height:1.7;color:var(--ink)}
+.mk-q .opts{margin:6px 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:3px;font-size:13.5px;color:#33465c}
+.mk-q details{margin-top:7px;font-size:13px}
+.mk-q summary{cursor:pointer;color:#1f5c8b;font-weight:600}
+.mk-ans{white-space:pre-wrap;line-height:1.75;margin-top:5px;color:#25405a;background:#f2f7ff;border:1px solid #cfe0ee;border-radius:7px;padding:7px 9px}
+.mk-meta{font-size:11.5px;color:var(--muted);margin-top:6px}
+html[data-theme="dark"] .mk-sheet,html[data-theme="dark"] .mk-q,html[data-theme="dark"] .mk-note{background:#1b2531;border-color:#2c3a4a}
+html[data-theme="dark"] .mk-q .qt{color:#d7e2ee}
+html[data-theme="dark"] .mk-q .opts{color:#b9c9d9}
+html[data-theme="dark"] .mk-ans{background:#22303d;border-color:#33475a;color:#c9d6e2}
+html[data-theme="dark"] .pbtn{background:#22303d;border-color:#33475a;color:#c9d6e2}
+html[data-theme="dark"] .pbtn.on{background:#4a90d9;border-color:#4a90d9;color:#fff}
+@media print{.mk-bar,.mk-head .navbtn{display:none}.mk-sheet{border:0;padding:0}.mk-q{break-inside:avoid}details{display:block}details>summary{display:none}}
+</style>
+</head>
+<body>
+<div class="mk-wrap">
+  <div class="mk-head">
+    <div><h1>802 细胞生物学 · 仿真卷</h1><div class="mk-note" id="note"></div></div>
+    <a class="navbtn" style="width:auto;margin:0;text-decoration:none" href="index.html">← 返回首页</a>
+  </div>
+  <div class="mk-bar">
+    <button class="pbtn" data-p="paperA">A 卷</button>
+    <button class="pbtn" data-p="paperB">B 卷</button>
+    <button class="pbtn" data-p="paperC">C 卷</button>
+    <button class="pbtn" id="timerBtn">开始计时</button>
+    <button class="pbtn" id="resetBtn">重置</button>
+    <button class="pbtn" onclick="window.print()">打印</button>
+    <span class="mk-timer" id="timer">180:00</span>
+  </div>
+  <div class="mk-sheet" id="sheet"></div>
+</div>
+<script src="data/mock802.js?v=20261018ah"></script>
+<script>
+(function(){
+  var D=window.MOCK802||{papers:[]}, cur=(D.papers[0]||{}).id||'paperA';
+  var kindName={term:'一、名词解释',mcq:'二、选择题',judge:'三、判断题',fill:'四、填空题',short:'五、简答题',calc:'六、论述 / 实验设计'};
+  var kindShort={term:'名词解释',mcq:'选择题',judge:'判断题',fill:'填空题',short:'简答题',calc:'论述/实验'};
+  var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+  function paper(){return D.papers.find(function(p){return p.id===cur})||D.papers[0]}
+  function render(){
+    var p=paper(); if(!p){document.getElementById('sheet').textContent='暂无试卷';return}
+    document.getElementById('note').innerHTML=esc(D.meta.note||'');
+    var n=0, html='<h2>'+esc(p.name)+' · 满分 '+p.total+' 分 · '+p.minutes+' 分钟</h2>';
+    p.sections.forEach(function(sec){
+      if(!sec.items.length)return;
+      html+='<div class="mk-sec"><h3>'+kindName[sec.kind]+'（每题 '+sec.per+' 分，共 '+sec.per*sec.items.length+' 分）</h3>';
+      sec.items.forEach(function(it){
+        n++;
+        html+='<div class="mk-q"><div class="qt">'+n+'. '+esc(it.q)+'</div>';
+        if(it.o)html+='<div class="opts">'+it.o.map(function(o){return '<div>'+esc(o)+'</div>'}).join('')+'</div>';
+        html+='<details><summary>查看答案</summary><div class="mk-ans">'+esc(it.a)+(it.e?'\n\n解析：'+esc(it.e):'')+'</div></details>';
+        html+='<div class="mk-meta">'+esc(it.ch)+' · '+esc(it.kp||'')+' · '+({S:'掌握',A:'理解',B:'了解'}[it.prio]||'了解')+'</div></div>';
+      });
+      html+='</div>';
+    });
+    document.getElementById('sheet').innerHTML=html;
+    document.querySelectorAll('.pbtn[data-p]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-p')===p.id)});
+  }
+  document.querySelectorAll('.pbtn[data-p]').forEach(function(b){b.onclick=function(){cur=b.getAttribute('data-p');render()}});
+  var left=180*60, tid=null;
+  function show(){var m=Math.floor(left/60),s=left%60;document.getElementById('timer').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s}
+  document.getElementById('timerBtn').onclick=function(){if(tid){clearInterval(tid);tid=null;this.textContent='继续计时'}else{this.textContent='暂停';tid=setInterval(function(){left--;if(left<=0){clearInterval(tid);tid=null;document.getElementById('timerBtn').textContent='开始计时';left=0}show()},1000)}};
+  document.getElementById('resetBtn').onclick=function(){if(tid){clearInterval(tid);tid=null}left=180*60;document.getElementById('timerBtn').textContent='开始计时';show()};
+  render();show();
+})();
+</script>
+</body>
+</html>
