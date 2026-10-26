@@ -594,7 +594,7 @@
       answerHTML = "<b>标准定义：</b><br>" + esc(q.def).replace(/\n/g, "<br>");
       kps = q.kps || "";
     } else {
-      title = (kind === "short" ? "简答题 " : "论述/推导 ") + idx + "：" + diffTag(kind) + " " + esc(q.q) + (q.type ? ' <span class="src">[' + esc(q.type) + "]</span>" : "") + (q.src ? ' <span class="src">[' + esc(q.src) + "]</span>" : "");
+      title = (kind === "short" ? "简答题 " : (kind === "calc" ? (q.subtype || "论述/推导") : "论述/推导")) + " " + idx + "：" + diffTag(kind) + " " + esc(q.q) + (q.type ? ' <span class="src">[' + esc(q.type) + "]</span>" : "") + (q.src ? ' <span class="src">[' + esc(q.src) + "]</span>" : "");
       answerHTML = "<b>参考答案：</b><br>" + esc(kind === "calc" ? (q.steps || q.a) : q.a).replace(/\n/g, "<br>");
       kps = q.kps || "";
     }
@@ -726,7 +726,7 @@
     }
     block("afterclass-term", "一、名词解释（含踩分点）", te, "term");
     block("afterclass-short", "二、简答题", sh, "short");
-    block("afterclass-calc", "三、论述 / 推导题", ca, "calc");
+    block("afterclass-calc", "三、论述 / 实验 / 计算题", ca, "calc");
     var jyq = ch.jyq || [];
     if (jyq.length) {
       var hj = el("h3", "", "四、姜益泉《辅导与习题集》（各校真题 / 课后题）"); hj.id = "afterclass-jyq"; sec.appendChild(hj);
@@ -1002,7 +1002,7 @@
         });
       }
       selfSec("四、简答题", m.short, "short");
-      selfSec("五、论述 / 推导题", m.calc, "calc");
+      selfSec("五、论述 / 实验 / 计算题", m.calc, "calc");
       selfSec("六、名词解释", m.term, "term");
       P.push('</section>');
     });
@@ -1431,7 +1431,7 @@
     if ((ch.short || []).length || (ch.calc || []).length || (ch.term || []).length || (ch.jyq || []).length) {
       aside.appendChild(el("div", "grp", "课后习题（主观）"));
       var ac = el("a", "", "📚 本章课后习题"); ac.href = "#afterclass"; aside.appendChild(ac);
-      [["afterclass-term", "名词解释"], ["afterclass-short", "简答题"], ["afterclass-calc", "论述/推导"], ["afterclass-jyq", "姜益泉真题/课后题"]].forEach(function (x) {
+      [["afterclass-term", "名词解释"], ["afterclass-short", "简答题"], ["afterclass-calc", "论述/实验/计算"], ["afterclass-jyq", "姜益泉真题/课后题"]].forEach(function (x) {
         var sa = el("a", "sub", "· " + x[1]); sa.href = "#" + x[0]; aside.appendChild(sa);
       });
     }
@@ -2081,7 +2081,7 @@
     if (!ctl || !host) return;
     var names = { ch01: "绪论", ch02: "质膜", ch03: "内膜系统", ch04: "蛋白质运输", ch05: "后翻译转运", ch06: "微管", ch07: "微丝", ch08: "中间纤维", ch09: "细胞周期", ch10: "信号(一)", ch11: "信号(二)", ch12: "衰老凋亡", ch13: "癌细胞" };
     var ztNames = ZT_NAMES;
-    var types = [["mcq", "选择题"], ["judge", "判断题"], ["fill", "填空题"], ["short", "简答题"], ["calc", "论述/推导"], ["term", "名词解释"]];
+    var types = [["mcq", "选择题"], ["judge", "判断题"], ["fill", "填空题"], ["short", "简答题"], ["calc", "论述/实验/计算"], ["term", "名词解释"]];
     var pool = [];
     (window.MANIFEST || []).forEach(function (m) {
       var ch = window.CHAPTERS[m.id]; if (!ch) return;
@@ -2219,7 +2219,7 @@
     });
     return { kp: kp, q: q, titles: titles };
   }
-  function kindName(k) { return { mcq: "选择题", judge: "判断题", fill: "填空题", short: "简答题", calc: "论述/推导", term: "名词解释" }[k] || k; }
+  function kindName(k) { return { mcq: "选择题", judge: "判断题", fill: "填空题", short: "简答题", calc: "论述/实验/计算", term: "名词解释" }[k] || k; }
   function answerHtml(info) {
     var q = info.q, k = info.kind, a = "";
     if (k === "mcq") {
