@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>802 仿真卷 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20261018aq">
-<script src="assets/theme.js?v=20261018aq"></script>
+<link rel="stylesheet" href="assets/style.css?v=20261018ar">
+<script src="assets/theme.js?v=20261018ar"></script>
 <style>
 .mk-wrap{max-width:1050px;margin:0 auto;padding:18px 16px 44px}
 .mk-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;margin:8px 0}
@@ -28,6 +28,7 @@
 .mk-q summary{cursor:pointer;color:#1f5c8b;font-weight:600}
 .mk-ans{white-space:pre-wrap;line-height:1.75;margin-top:5px;color:#25405a;background:#f2f7ff;border:1px solid #cfe0ee;border-radius:7px;padding:7px 9px}
 .mk-meta{font-size:11.5px;color:var(--muted);margin-top:6px}
+.mk-meta a{color:#1f5c8b;text-decoration:none;border-bottom:1px dashed #9bb0c4}
 .mk-rubric{font-size:12.5px;line-height:1.7;margin-top:6px;background:#fff8e8;border:1px solid #f0d9a8;border-radius:7px;padding:6px 9px;color:#6b5200}
 html[data-theme="dark"] .mk-rubric{background:#2a2618;border-color:#4a4326;color:#e0c060}
 html[data-theme="dark"] .mk-sheet,html[data-theme="dark"] .mk-q,html[data-theme="dark"] .mk-note{background:#1b2531;border-color:#2c3a4a}
@@ -55,7 +56,7 @@ html[data-theme="dark"] .pbtn.on{background:#4a90d9;border-color:#4a90d9;color:#
   </div>
   <div class="mk-sheet" id="sheet"></div>
 </div>
-<script src="data/mock802.js?v=20261018aq"></script>
+<script src="data/mock802.js?v=20261018ar"></script>
 <script>
 (function(){
   var D=window.MOCK802||{papers:[]}, cur=(D.papers[0]||{}).id||'paperA';
@@ -75,7 +76,8 @@ html[data-theme="dark"] .pbtn.on{background:#4a90d9;border-color:#4a90d9;color:#
         html+='<div class="mk-q"><div class="qt">'+n+'. '+esc(it.q)+'</div>';
         if(it.o)html+='<div class="opts">'+it.o.map(function(o){return '<div>'+esc(o)+'</div>'}).join('')+'</div>';
         html+='<details><summary>查看答案</summary><div class="mk-ans">'+esc(it.a)+(it.e?'\n\n解析：'+esc(it.e):'')+'</div>'+(it.kps?'<div class="mk-rubric"><b>评分要点：</b>'+esc(it.kps)+'</div>':'')+'</details>';
-        html+='<div class="mk-meta">本题 '+sec.per+' 分 · '+esc(it.ch)+' · '+esc(it.kp||'')+' · '+({S:'掌握',A:'理解',B:'了解'}[it.prio]||'了解')+'</div></div>';
+        var ref=it.refLevel==='知识点' ? ('知识点：'+esc(it.kpTitle||it.kp)) : ('章节：'+esc(it.kpTitle||it.mod||it.ch));
+        html+='<div class="mk-meta">本题 '+sec.per+' 分 · <a href="'+esc(it.link||(it.ch+'.html'))+'" target="_blank">'+esc(it.ctitle||it.ch)+' · '+ref+' →</a> · '+({S:'掌握',A:'理解',B:'了解'}[it.prio]||'了解')+'</div></div>';
       });
       html+='</div>';
     });

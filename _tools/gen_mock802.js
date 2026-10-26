@@ -7,11 +7,13 @@ function load(id){const ctx={window:{}};vm.runInNewContext(fs.readFileSync(path.
 const ids=['ch01','ch02','ch03','ch04','ch05','ch06','ch07','ch08','ch09','ch10','ch11','ch12','ch13','tb03','tb06','tb11','tb12','tb13','tb15','tb17'];
 const pools={term:[],mcq:[],judge:[],fill:[],short:[],calc:[]};
 let EXPLAIN={};try{const ctx={window:{}};vm.runInNewContext(fs.readFileSync(path.join(ROOT,'data','mock802-explain.js'),'utf8'),ctx);EXPLAIN=ctx.window.MOCK802_EXPLAIN||{};}catch(e){}
+let KM={};try{const ctx={window:{}};vm.runInNewContext(fs.readFileSync(path.join(ROOT,'data','keypoints.js'),'utf8'),ctx);(ctx.window.KEYPOINTS||[]).forEach(x=>KM[x.kp]=x);}catch(e){}
+let KPMAP={};try{const ctx={window:{}};vm.runInNewContext(fs.readFileSync(path.join(ROOT,'data','mock802-kpmap.js'),'utf8'),ctx);KPMAP=ctx.window.MOCK802_KPMAP||{};}catch(e){}
 for(const id of ids){const c=load(id);for(const k of Object.keys(pools))for(const q of c[k]||[]){
  if(q.prio!=='S'&&q.prio!=='A')continue;
  const qt=q.q||q.term||'';
  if(/根据图|如图|图\s*\d/.test(qt)||/＋|Ca2\s*[，,]\s*而不是/.test(qt))continue;
- pools[k].push({ch:id,kind:k,id:q.id,q:qt,a:(k==='calc'?(q.steps||q.a||''):(q.a||q.def||'')),o:q.o||null,e:q.e||EXPLAIN[q.id]||'',subtype:q.subtype||'',kps:q.kps||'',kp:q.kp,prio:q.prio});
+ const kp0=KPMAP[q.id]||q.kp; const ko=KM[kp0]||{}; const modName=(c.modules[q.modI]&&c.modules[q.modI].name)||''; const kt=ko.title||''; function bg(s){s=String(s||'').replace(/[^\u4e00-\u9fa5A-Za-z0-9]/g,'');const a=new Set();for(let i=0;i<s.length-1;i++)a.add(s.slice(i,i+2));return a} const qb=bg(qt),tb=bg(kt);let inter=0;qb.forEach(y=>{if(tb.has(y))inter++});const sim=inter/Math.max(1,Math.min(qb.size,tb.size)); const exact=sim>=0.1; pools[k].push({ch:id,ctitle:c.title||id,mod:modName,kind:k,id:q.id,q:qt,a:(k==='calc'?(q.steps||q.a||''):(q.a||q.def||'')),o:q.o||null,e:q.e||EXPLAIN[q.id]||'',subtype:q.subtype||'',kps:q.kps||'',kp:kp0,kpTitle:exact?kt:modName,page:ko.page||'',link:exact?(id+'.html#s_'+kp0):(id+'.html'),refLevel:exact?'知识点':'章节',prio:q.prio});
 }}
 let seed=8022027;function rnd(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
