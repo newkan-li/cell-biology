@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>802 仿真卷 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20261018au">
-<script src="assets/theme.js?v=20261018au"></script>
+<link rel="stylesheet" href="assets/style.css?v=20261018av">
+<script src="assets/theme.js?v=20261018av"></script>
 <style>
 .mk-wrap{max-width:1050px;margin:0 auto;padding:18px 16px 44px}
 .mk-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;margin:8px 0}
@@ -27,6 +27,9 @@
 .mk-q details{margin-top:7px;font-size:13px}
 .mk-q summary{cursor:pointer;color:#1f5c8b;font-weight:600}
 .mk-ans{white-space:pre-wrap;line-height:1.75;margin-top:5px;color:#25405a;background:#f2f7ff;border:1px solid #cfe0ee;border-radius:7px;padding:7px 9px}
+.mk-ans .sec{color:#1f5c8b;font-weight:700;margin-right:2px}
+.mk-ans .sec.design{color:#b03a2e;background:#fdecea;border-radius:4px;padding:0 4px}
+.mk-exp{margin-top:6px;font-size:13px;line-height:1.75;color:#1a5c3a;background:#eef8f0;border-left:3px solid #2f9e5b;border-radius:6px;padding:6px 9px}
 .mk-meta{font-size:11.5px;color:var(--muted);margin-top:6px}
 .mk-meta a{color:#1f5c8b;text-decoration:none;border-bottom:1px dashed #9bb0c4}
 .mk-rubric{font-size:12.5px;line-height:1.7;margin-top:6px;background:#fff8e8;border:1px solid #f0d9a8;border-radius:7px;padding:6px 9px;color:#6b5200}
@@ -35,6 +38,9 @@ html[data-theme="dark"] .mk-sheet,html[data-theme="dark"] .mk-q,html[data-theme=
 html[data-theme="dark"] .mk-q .qt{color:#d7e2ee}
 html[data-theme="dark"] .mk-q .opts{color:#b9c9d9}
 html[data-theme="dark"] .mk-ans{background:#22303d;border-color:#33475a;color:#c9d6e2}
+html[data-theme="dark"] .mk-ans .sec{color:#7fb3d8}
+html[data-theme="dark"] .mk-ans .sec.design{color:#f08a7a;background:#3a201d}
+html[data-theme="dark"] .mk-exp{background:#1e3325;border-left-color:#4a9e6b;color:#a9d8b8}
 html[data-theme="dark"] .pbtn{background:#22303d;border-color:#33475a;color:#c9d6e2}
 html[data-theme="dark"] .pbtn.on{background:#4a90d9;border-color:#4a90d9;color:#fff}
 @media print{.mk-bar,.mk-head .navbtn{display:none}.mk-sheet{border:0;padding:0}.mk-q{break-inside:avoid}details{display:block}details>summary{display:none}}
@@ -56,13 +62,19 @@ html[data-theme="dark"] .pbtn.on{background:#4a90d9;border-color:#4a90d9;color:#
   </div>
   <div class="mk-sheet" id="sheet"></div>
 </div>
-<script src="data/mock802.js?v=20261018au"></script>
+<script src="data/mock802.js?v=20261018av"></script>
 <script>
 (function(){
   var D=window.MOCK802||{papers:[]}, cur=(D.papers[0]||{}).id||'paperA';
   var kindName={term:'一、名词解释',mcq:'二、选择题',judge:'三、判断题',fill:'四、填空题',short:'五、简答题',calc:'六、论述 / 实验设计'};
   var kindShort={term:'名词解释',mcq:'选择题',judge:'判断题',fill:'填空题',short:'简答题',calc:'论述/实验'};
   var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+  function fmtAns(s){
+    return esc(s).replace(/\n/g,'<br>').replace(/【([^】]+)】/g,function(_,h){
+      var cls=h.indexOf('设计思路')>=0?'sec design':'sec';
+      return '<span class="'+cls+'">【'+h+'】</span>';
+    });
+  }
   function paper(){return D.papers.find(function(p){return p.id===cur})||D.papers[0]}
   function render(){
     var p=paper(); if(!p){document.getElementById('sheet').textContent='暂无试卷';return}
@@ -75,7 +87,10 @@ html[data-theme="dark"] .pbtn.on{background:#4a90d9;border-color:#4a90d9;color:#
         n++;
         html+='<div class="mk-q"><div class="qt">'+n+'. '+esc(it.q)+'</div>';
         if(it.o)html+='<div class="opts">'+it.o.map(function(o){return '<div>'+esc(o)+'</div>'}).join('')+'</div>';
-        html+='<details><summary>查看答案</summary><div class="mk-ans">'+esc(it.a)+(it.e?'\n\n解析：'+esc(it.e):'')+'</div>'+(it.kps?'<div class="mk-rubric"><b>评分要点：</b>'+esc(it.kps)+'</div>':'')+'</details>';
+        var ex=String(it.e||'').replace(/^解析：/,'');
+        html+='<details><summary>查看答案</summary><div class="mk-ans">'+fmtAns(it.a)+'</div>'+
+          (ex?'<div class="mk-exp"><b>解析：</b>'+esc(ex).replace(/\n/g,'<br>')+'</div>':'')+
+          (it.kps?'<div class="mk-rubric"><b>评分要点：</b>'+esc(it.kps)+'</div>':'')+'</details>';
         var ref=it.refLevel==='知识点' ? ('知识点：'+esc(it.kpTitle||it.kp)) : ('章节：'+esc(it.kpTitle||it.mod||it.ch));
         html+='<div class="mk-meta">本题 '+sec.per+' 分 · <a href="'+esc(it.link||(it.ch+'.html'))+'" target="_blank">'+esc(it.ctitle||it.ch)+' · '+ref+' →</a> · '+({S:'掌握',A:'理解',B:'了解'}[it.prio]||'了解')+'</div></div>';
       });
