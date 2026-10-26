@@ -175,6 +175,9 @@
   function freqTag(q) {
     return q && q.freq ? ' <span class="src">[' + esc(q.freq) + ']</span>' : '';
   }
+  function reqTag(q) {
+    return q && q.req ? ' <span class="req">[' + esc(q.req) + ']</span>' : '';
+  }
 
   function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
 
@@ -429,7 +432,7 @@
   }
   function renderMCQ(cid, q, idx) {
     var box = el("div", "q"); box.id = "q_" + q.id;
-    box.appendChild(el("p", "qq", "第 " + idx + " 题 " + diffTag("mcq") + " " + freqTag(q) + esc(q.q) + (q.mod ? '<span class="src">[' + esc(q.mod) + "]</span>" : "")));
+    box.appendChild(el("p", "qq", "第 " + idx + " 题 " + diffTag("mcq") + " " + freqTag(q) + reqTag(q) + esc(q.q) + (q.mod ? '<span class="src">[' + esc(q.mod) + "]</span>" : "")));
     var opts = el("div", "mcq");
     q.o.forEach(function (o) {
       var letter = o.trim().charAt(0);
@@ -490,7 +493,7 @@
   /* ================= 判断题 ================= */
   function renderJudge(cid, q, idx) {
     var box = el("div", "q"); box.id = "q_" + q.id;
-    box.appendChild(el("p", "qq", "第 " + idx + " 题（判断对错） " + diffTag("judge") + " " + freqTag(q) + esc(q.q)));
+    box.appendChild(el("p", "qq", "第 " + idx + " 题（判断对错） " + diffTag("judge") + " " + freqTag(q) + reqTag(q) + esc(q.q)));
     var opts = el("div", "mcq");
     ["对", "错"].forEach(function (v) {
       var b = el("button", "mopt", v); b.dataset.l = v;
@@ -544,7 +547,7 @@
   /* ================= fill ================= */
   function renderFill(cid, q, idx) {
     var box = el("div", "q"); box.id = "q_" + q.id;
-    box.appendChild(el("p", "qq", "第 " + idx + " 题 " + diffTag("fill") + " " + freqTag(q) + esc(q.q)));
+    box.appendChild(el("p", "qq", "第 " + idx + " 题 " + diffTag("fill") + " " + freqTag(q) + reqTag(q) + esc(q.q)));
     var inp = el("input", "ans"); inp.placeholder = "输入答案（多个空用逗号分隔）"; box.appendChild(inp);
     var bar = el("div", "self");
     var bChk = el("button", "ok", "检查"), bShow = el("button", "", "显示答案");
@@ -594,11 +597,11 @@
     var box = el("div", "q"); box.id = "q_" + q.id;
     var title, answerHTML, kps = "";
     if (kind === "term") {
-      title = "名词解释 " + idx + "：" + freqTag(q) + esc(q.term);
+      title = "名词解释 " + idx + "：" + freqTag(q) + reqTag(q) + esc(q.term);
       answerHTML = "<b>标准定义：</b><br>" + esc(q.def).replace(/\n/g, "<br>");
       kps = q.kps || "";
     } else {
-      title = (kind === "short" ? "简答题 " : (kind === "calc" ? (q.subtype || "论述/推导") : "论述/推导")) + " " + idx + "：" + diffTag(kind) + " " + freqTag(q) + esc(q.q) + (q.type ? ' <span class="src">[' + esc(q.type) + "]</span>" : "") + (q.src ? ' <span class="src">[' + esc(q.src) + "]</span>" : "");
+      title = (kind === "short" ? "简答题 " : (kind === "calc" ? (q.subtype || "论述/推导") : "论述/推导")) + " " + idx + "：" + diffTag(kind) + " " + freqTag(q) + reqTag(q) + esc(q.q) + (q.type ? ' <span class="src">[' + esc(q.type) + "]</span>" : "") + (q.src ? ' <span class="src">[' + esc(q.src) + "]</span>" : "");
       answerHTML = "<b>参考答案：</b><br>" + esc(kind === "calc" ? (q.steps || q.a) : q.a).replace(/\n/g, "<br>");
       kps = q.kps || "";
     }
