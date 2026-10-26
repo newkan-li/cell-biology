@@ -1,6 +1,6 @@
 /* 生成 802 仿真卷 data/mock802.js
    说明：官方未公布题型/分值；本文件按透明假设规格生成仿真卷，不是真题。
-   规格：名解5×4=20，选择15×2=30，判断10×1=10，填空15×2=30，简答4×8=32，论述/实验2×14=28，共150分/180分钟；主观题附评分要点，全部题目附解析。 */
+   规格：名解5×4=20，选择15×2=30，判断10×1=10，填空15×2=30，简答4×8=32，论述/实验2×14=28，共150分/180分钟；主观题附评分要点，全部题目附解析。答案中的【设计思路】【目的与原理】等是答题结构提示，考试时不必抄写这些标签，按逻辑分段作答即可。 */
 const fs=require('fs'),path=require('path'),vm=require('vm');
 const ROOT=path.join(__dirname,'..');
 function load(id){const ctx={window:{}};vm.runInNewContext(fs.readFileSync(path.join(ROOT,'data',id+'.js'),'utf8'),ctx);return ctx.window.CHAPTERS[id];}
