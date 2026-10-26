@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>802 仿真卷 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20261018ai">
-<script src="assets/theme.js?v=20261018ai"></script>
+<link rel="stylesheet" href="assets/style.css?v=20261018aj">
+<script src="assets/theme.js?v=20261018aj"></script>
 <style>
 .mk-wrap{max-width:1050px;margin:0 auto;padding:18px 16px 44px}
 .mk-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;margin:8px 0}
@@ -40,13 +40,11 @@ html[data-theme="dark"] .pbtn.on{background:#4a90d9;border-color:#4a90d9;color:#
 <body>
 <div class="mk-wrap">
   <div class="mk-head">
-    <div><h1>802 细胞生物学 · 仿真卷</h1><div class="mk-note" id="note"></div></div>
+    <div><h1>802 细胞生物学 · 仿真卷（10套）</h1><div class="mk-note" id="note"></div></div>
     <a class="navbtn" style="width:auto;margin:0;text-decoration:none" href="index.html">← 返回首页</a>
   </div>
   <div class="mk-bar">
-    <button class="pbtn" data-p="paperA">A 卷</button>
-    <button class="pbtn" data-p="paperB">B 卷</button>
-    <button class="pbtn" data-p="paperC">C 卷</button>
+    <div id="paperTabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
     <button class="pbtn" id="timerBtn">开始计时</button>
     <button class="pbtn" id="resetBtn">重置</button>
     <button class="pbtn" onclick="window.print()">打印</button>
@@ -54,7 +52,7 @@ html[data-theme="dark"] .pbtn.on{background:#4a90d9;border-color:#4a90d9;color:#
   </div>
   <div class="mk-sheet" id="sheet"></div>
 </div>
-<script src="data/mock802.js?v=20261018ai"></script>
+<script src="data/mock802.js?v=20261018aj"></script>
 <script>
 (function(){
   var D=window.MOCK802||{papers:[]}, cur=(D.papers[0]||{}).id||'paperA';
@@ -81,7 +79,11 @@ html[data-theme="dark"] .pbtn.on{background:#4a90d9;border-color:#4a90d9;color:#
     document.getElementById('sheet').innerHTML=html;
     document.querySelectorAll('.pbtn[data-p]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-p')===p.id)});
   }
-  document.querySelectorAll('.pbtn[data-p]').forEach(function(b){b.onclick=function(){cur=b.getAttribute('data-p');render()}});
+  var tabBox=document.getElementById('paperTabs');
+  D.papers.forEach(function(p){
+    var b=document.createElement('button'); b.className='pbtn'; b.setAttribute('data-p',p.id); b.textContent=p.name.replace('802 仿真卷 ','')+' 卷';
+    b.onclick=function(){cur=p.id;render()}; tabBox.appendChild(b);
+  });
   var left=180*60, tid=null;
   function show(){var m=Math.floor(left/60),s=left%60;document.getElementById('timer').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s}
   document.getElementById('timerBtn').onclick=function(){if(tid){clearInterval(tid);tid=null;this.textContent='继续计时'}else{this.textContent='暂停';tid=setInterval(function(){left--;if(left<=0){clearInterval(tid);tid=null;document.getElementById('timerBtn').textContent='开始计时';left=0}show()},1000)}};

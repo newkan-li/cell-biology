@@ -26,7 +26,7 @@ function pick(kind,n,maxPerCh,pref){
 }
 const specs=[['term',5,1,4],['mcq',15,3,2],['judge',10,2,1],['fill',15,3,2],['short',4,1,8],['calc',2,1,14]];
 const papers=[];
-for(const name of ['A','B','C']){
+for(const name of ['A','B','C','D','E','F','G','H','I','J']){
  const sections=[];
  for(const [kind,n,maxPerCh,per] of specs){
   let arr;
