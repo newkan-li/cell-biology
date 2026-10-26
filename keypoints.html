@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>考点证据表 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20261018ac">
-<script src="assets/theme.js?v=20261018ac"></script>
+<link rel="stylesheet" href="assets/style.css?v=20261018ad">
+<script src="assets/theme.js?v=20261018ad"></script>
 <style>
 .kp-wrap{max-width:1180px;margin:0 auto;padding:18px 16px 40px}
 .kp-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;margin:8px 0 12px}
@@ -49,7 +49,7 @@ html[data-theme="dark"] .tierbtn.on{background:#4a90d9;border-color:#4a90d9;colo
   <div class="kp-head">
     <div>
       <h1>考点证据表</h1>
-      <div class="kp-sub">把“真题样本、高频实验、提纲分层、题库密度、近年热点”放在一起，给每个考点标 S/A/B。S 优先背，A 重点理解，B 有余力再看。</div>
+      <div class="kp-sub">把“真题样本、高频实验、提纲分层、题库密度、本科课件、姜益泉、近年热点”放在一起，给每个考点标 S/A/B。S 优先背，A 重点理解，B 有余力再看。</div>
     </div>
     <a class="navbtn" style="width:auto;margin:0;text-decoration:none" href="index.html">← 返回首页</a>
   </div>
@@ -66,7 +66,7 @@ html[data-theme="dark"] .tierbtn.on{background:#4a90d9;border-color:#4a90d9;colo
   <div class="kp-list" id="list"></div>
   <div class="empty" id="empty" style="display:none">没有匹配的考点</div>
 </div>
-<script src="data/keypoints.js?v=20261018ac"></script>
+<script src="data/keypoints.js?v=20261018ad"></script>
 <script>
 (function(){
   var ALL=window.KEYPOINTS||[], tier='', ch='', kw='';
@@ -79,6 +79,8 @@ html[data-theme="dark"] .tierbtn.on{background:#4a90d9;border-color:#4a90d9;colo
     if(x.hot)a.push('<span class="h">高频实验×'+x.hot+'</span>');
     if(x.outline)a.push('<span class="o">提纲·'+esc(x.outline)+'</span>');
     if(x.bank)a.push('<span class="q">题库 '+x.bank+' 题</span>');
+    if(x.ppt)a.push('<span class="o">课件×'+x.ppt+'</span>');
+    if(x.jyq)a.push('<span class="q">姜益泉×'+x.jyq+'</span>');
     if(x.recent)a.push('<span class="h">近年热点×'+x.recent+'</span>');
     return a.join('');
   }

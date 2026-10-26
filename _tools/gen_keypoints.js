@@ -9,6 +9,14 @@ const z=load('data/802.js').ZT802.items||[];
 const hot=load('data/hotexp.js').HOTEXP||[];
 const outline=load('data/outline.js').OUTLINE||[];
 const recent=(load('data/recent.js').RECENT||{}).items||[];
+const pptA=JSON.parse(fs.readFileSync('/tmp/cell4/ppttext.json','utf8'));
+const pptB=JSON.parse(fs.readFileSync('/tmp/cell4/pdftext.json','utf8'));
+const jyqText=fs.readFileSync('/tmp/cell4/jyq.txt','utf8');
+function normKey(x){return String(x||'').replace(/p\d+[^ ]*/gi,'').replace(/[^\u4e00-\u9fa5A-Za-z0-9]+/g,'').toLowerCase();}
+function countIn(text,needle){if(!needle||needle.length<3)return 0;return text.split(needle).length-1;}
+function titleNeedles(title){const t=normKey(title);const arr=[];if(t.length>=6&&t.length<=40)arr.push(t);String(title||'').replace(/[（(].*?[)）]/g,' ').split(/[\s、，,；;：:·\/\-]+/).forEach(x=>{const n=normKey(x);if(n.length>=4&&n.length<=20)arr.push(n)});return [...new Set(arr)].slice(0,8);}
+const pptNorm={};['ch01','ch02','ch03','ch04','ch05'].forEach(ch=>pptNorm[ch]=normKey(pptA[ch]||''));['ch06','ch07','ch08','ch09','ch10','ch11','ch12','ch13'].forEach(ch=>pptNorm[ch]=normKey(pptB[ch]||''));
+const jyqNorm=normKey(jyqText);
 const zBy={},hotBy={},hotGenBy={},outBy={},recentBy={};
 z.forEach(x=>{if(x.kp)zBy[x.kp]=(zBy[x.kp]||0)+1});
 hot.forEach(x=>{if(!x.kp)return;if(x.freq==='高频')hotBy[x.kp]=(hotBy[x.kp]||0)+1;else hotGenBy[x.kp]=(hotGenBy[x.kp]||0)+1;});
@@ -34,7 +42,9 @@ for(const id of ids){
    else if(bc>=1||hg>0||ot==='了解')tier='B';
    const title=(s.title||'').replace(/\s+/g,' ').trim()||m.name||kp;
    const page=s.page||'';
-   items.push({ch:id,ctitle:ch.title||id,mod:m.name||'',kp,title,tier,z802:zc,hot:hc,hotGen:hg,outline:ot,bank:bc,recent:rc,page,link:id+'.html#s_'+kp});
+   const needles=titleNeedles(title);let pc=0,jc=0;
+   needles.forEach(n=>{pc=Math.max(pc,countIn(pptNorm[id]||'',n));jc=Math.max(jc,countIn(jyqNorm,n));});
+   items.push({ch:id,ctitle:ch.title||id,mod:m.name||'',kp,title,tier,z802:zc,hot:hc,hotGen:hg,outline:ot,bank:bc,recent:rc,ppt:pc,jyq:jc,page,link:id+'.html#s_'+kp});
   });
  });
 }
