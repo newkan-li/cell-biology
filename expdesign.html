@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>实验设计五步法 · 细胞生物学</title>
+<link rel="stylesheet" href="assets/style.css?v=20261018aq">
+<script src="assets/theme.js?v=20261018aq"></script>
+<style>
+.ed-wrap{max-width:980px;margin:0 auto;padding:18px 16px 44px}
+.ed-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;margin:8px 0}
+.ed-head h1{font-size:23px;margin:0 0 5px;color:var(--ink)}
+.ed-sub{font-size:13px;color:var(--muted);line-height:1.7;max-width:760px}
+.ed-box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:12px}
+.ed-box h2{font-size:17px;margin:0 0 8px;color:#1f5c8b}
+.ed-box h3{font-size:14.5px;margin:14px 0 5px;color:var(--ink)}
+.ed-box p,.ed-box li{font-size:13.5px;line-height:1.8;color:#33465c}
+.ed-box ol,.ed-box ul{padding-left:22px;margin:6px 0}
+.ed-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;margin:8px 0}
+.ed-card{border:1px solid var(--line);border-radius:9px;padding:9px 10px;background:#fbfdff}
+.ed-card b{display:block;color:#1f5c8b;font-size:13.5px;margin-bottom:3px}
+.ed-card span{font-size:12.5px;color:var(--muted);line-height:1.7}
+.ed-tip{background:#fff8e8;border:1px solid #f0d9a8;border-radius:8px;padding:8px 10px;font-size:13px;line-height:1.75;color:#6b5200;margin:8px 0}
+.ed-link{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.ed-link a{font-size:13px;text-decoration:none;color:#1f5c8b;border:1px solid #cbd9ea;background:#eef4fb;border-radius:16px;padding:4px 10px}
+html[data-theme="dark"] .ed-box,html[data-theme="dark"] .ed-card{background:#1b2531;border-color:#2c3a4a}
+html[data-theme="dark"] .ed-box p,html[data-theme="dark"] .ed-box li,html[data-theme="dark"] .ed-card span{color:#b9c9d9}
+html[data-theme="dark"] .ed-head h1,html[data-theme="dark"] .ed-box h3,html[data-theme="dark"] .ed-card b{color:#d7e2ee}
+html[data-theme="dark"] .ed-tip{background:#2a2618;border-color:#4a4326;color:#e0c060}
+</style>
+</head>
+<body>
+<div class="ed-wrap">
+  <div class="ed-head">
+    <div>
+      <h1>实验设计题 · 五步拆题法</h1>
+      <div class="ed-sub">实验设计不是“背步骤”，而是先想清楚：要证明什么、看什么指标、和谁比较、怎样排除其他解释。按下面五步写，答案自然完整。</div>
+    </div>
+    <a class="navbtn" style="width:auto;margin:0;text-decoration:none" href="index.html">← 返回首页</a>
+  </div>
+
+  <div class="ed-box">
+    <h2>一、五步拆题法</h2>
+    <h3>第1步：把题目翻译成一个“可检验的结论”</h3>
+    <p>先写一句话：<b>我要证明/检测______。</b> 例如“证明蛋白X定位于线粒体”“证明药物D抑制蛋白质合成”“证明A与B直接互作”。结论越具体，后面越不容易跑偏。</p>
+    <h3>第2步：选“直接指标”，不要只选现象</h3>
+    <p>定位→共定位+组分分离；互作→pull-down/FRET/双杂交；翻译→标记氨基酸掺入/嘌呤霉素/体外翻译；分化→谱系标志+功能；增殖→EdU/细胞周期/克隆形成。指标要能定量，最好有两个独立指标。</p>
+    <h3>第3步：分组与对照</h3>
+    <p>至少写：<b>实验组、阴性对照、阳性对照、特异性对照</b>。对照不是“随便设一个”，而是用来排除某一种替代解释。</p>
+    <h3>第4步：时间轴与剂量</h3>
+    <p>写清预处理、处理、检测的时间点；药物/因子要做浓度梯度和时间进程。因果顺序很重要：先测上游（cAMP），再测中游（PKA），最后测下游（代谢）。</p>
+    <h3>第5步：预期结果 + 排除替代解释</h3>
+    <p>写“如果结论成立，应该看到什么；如果看到另一种结果，说明什么”。同时写1–2个可能干扰因素及如何排除，答案会明显更像科研设计。</p>
+  </div>
+
+  <div class="ed-box">
+    <h2>二、常用对照怎么设</h2>
+    <div class="ed-grid">
+      <div class="ed-card"><b>空白/未处理对照</b><span>看基础水平，排除检测体系本身的背景。</span></div>
+      <div class="ed-card"><b>溶剂对照</b><span>药物溶于DMSO等时，必须加等量溶剂，排除溶剂效应。</span></div>
+      <div class="ed-card"><b>阳性对照</b><span>用已知有效药物/因子，证明实验体系“能出信号”。</span></div>
+      <div class="ed-card"><b>阴性/无关对照</b><span>无关RNAi、无关抗体、无关蛋白，排除非特异结合或脱靶。</span></div>
+      <div class="ed-card"><b>特异性对照</b><span>突变结合位点、抗原预吸附、省略一抗，证明信号来自目标分子。</span></div>
+      <div class="ed-card"><b>回补/ rescue</b><span>敲除后重新表达抗sgRNA的基因，证明表型由该基因缺失引起。</span></div>
+    </div>
+  </div>
+
+  <div class="ed-box">
+    <h2>三、答题结构（建议直接照这个写）</h2>
+    <ol>
+      <li><b>目的与原理</b>：一句话结论 + 为什么选这个指标。</li>
+      <li><b>材料与分组</b>：细胞/动物/体外体系；实验组、对照组。</li>
+      <li><b>主要步骤</b>：按时间顺序写，包含关键试剂/检测方法。</li>
+      <li><b>对照设置</b>：阴性、阳性、溶剂、特异性、回补。</li>
+      <li><b>预期结果</b>：实验组 vs 对照组，支持/否定结论。</li>
+      <li><b>注意事项</b>：1–2个替代解释及排除方法。</li>
+    </ol>
+    <div class="ed-tip"><b>最容易丢分的地方：</b>只写“做Western/免疫荧光”，不写分组和对照；只写“结果升高/降低”，不写预期模式；把“结合”当“内吞”、把“复合物”当“直接互作”、把“细胞死亡”当“翻译抑制”。</div>
+  </div>
+
+  <div class="ed-box">
+    <h2>四、看一个例子：验证蛋白X定位于线粒体</h2>
+    <p><b>结论：</b>X在线粒体富集。 <b>直接指标：</b>GFP-X与MitoTracker共定位；线粒体组分中X富集。</p>
+    <p><b>分组：</b>GFP-X、GFP-only、未转染；线粒体/胞质/核组分；COX IV、GAPDH、Lamin B标志。</p>
+    <p><b>预期：</b>GFP-X与MitoTracker高度共定位，线粒体组分中X明显富集、胞质很少；GFP-only弥散。</p>
+    <p><b>排除：</b>过表达聚集→低表达/可溶性对照；组分交叉污染→标志蛋白验证；抗体非特异→抗原预吸附。</p>
+  </div>
+
+  <div class="ed-link">
+    <a href="mock802.html">去做 802 仿真卷实验题 →</a>
+    <a href="keypoints.html">查看考点证据表 →</a>
+    <a href="methods.html">实验方法索引 →</a>
+  </div>
+</div>
+</body>
+</html>
