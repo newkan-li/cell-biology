@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>考点证据表 · 细胞生物学</title>
-<link rel="stylesheet" href="assets/style.css?v=20261018ad">
-<script src="assets/theme.js?v=20261018ad"></script>
+<link rel="stylesheet" href="assets/style.css?v=20261018ae">
+<script src="assets/theme.js?v=20261018ae"></script>
 <style>
 .kp-wrap{max-width:1180px;margin:0 auto;padding:18px 16px 40px}
 .kp-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;margin:8px 0 12px}
@@ -60,19 +60,21 @@ html[data-theme="dark"] .tierbtn.on{background:#4a90d9;border-color:#4a90d9;colo
     <button class="tierbtn" data-tier="S">S 必背</button>
     <button class="tierbtn" data-tier="A">A 常考</button>
     <button class="tierbtn" data-tier="B">B 了解</button>
+    <button class="tierbtn" id="weakBtn">只看题型单一</button>
     <input id="kw" placeholder="搜索考点 / 模块 / kp，例如 溶酶体、cAMP、微管">
   </div>
   <div class="kp-sum" id="sum"></div>
   <div class="kp-list" id="list"></div>
   <div class="empty" id="empty" style="display:none">没有匹配的考点</div>
 </div>
-<script src="data/keypoints.js?v=20261018ad"></script>
+<script src="data/keypoints.js?v=20261018ae"></script>
 <script>
 (function(){
-  var ALL=window.KEYPOINTS||[], tier='', ch='', kw='';
+  var ALL=window.KEYPOINTS||[], tier='', ch='', kw='', weak=false;
   var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
   var chSel=document.getElementById('chSel'), list=document.getElementById('list'), empty=document.getElementById('empty'), sum=document.getElementById('sum'), kwEl=document.getElementById('kw');
   var seen={}; ALL.forEach(function(x){if(!seen[x.ch]){seen[x.ch]=1;var o=document.createElement('option');o.value=x.ch;o.textContent=x.ch+' '+(x.ctitle||'');chSel.appendChild(o)}});
+  function typeLine(x){var n={mcq:'选择',judge:'判断',fill:'填空',short:'简答',calc:'论述',term:'名词'};var ks=Object.keys(x.types||{});var a=ks.map(function(k){return n[k]||k});var s=a.length?a.join('/'):'无题';if((x.tier==='S'||x.tier==='A')&&a.length<=1)s+=' · 题型单一';return s;}
   function ev(x){
     var a=[];
     if(x.z802)a.push('<span class="z">802样本×'+x.z802+'</span>');
@@ -89,18 +91,20 @@ html[data-theme="dark"] .tierbtn.on{background:#4a90d9;border-color:#4a90d9;colo
       if(tier&&x.tier!==tier)return false;
       if(ch&&x.ch!==ch)return false;
       if(kw){var s=(x.title+' '+x.mod+' '+x.kp+' '+x.ctitle).toLowerCase();if(s.indexOf(kw.toLowerCase())<0)return false}
+      if(weak){if(x.tier!=='S'&&x.tier!=='A')return false;if(Object.keys(x.types||{}).length>1)return false;}
       return true;
     });
     var c={S:0,A:0,B:0}; arr.forEach(function(x){c[x.tier]=(c[x.tier]||0)+1});
     sum.innerHTML='<span class="chip">当前 <b>'+arr.length+'</b> 条</span><span class="chip">S <b>'+c.S+'</b></span><span class="chip">A <b>'+c.A+'</b></span><span class="chip">B <b>'+c.B+'</b></span>';
     list.innerHTML=arr.map(function(x){
       return '<div class="kp-card"><h3><span class="tier '+x.tier+'">'+x.tier+'</span>'+esc(x.title)+'</h3>'+
-        '<div class="kp-meta">'+esc(x.ctitle||x.ch)+' · '+esc(x.mod||'')+(x.page?' · p'+esc(x.page):'')+' · <a href="'+esc(x.link)+'">打开讲义页 →</a></div>'+
+        '<div class="kp-meta">'+esc(x.ctitle||x.ch)+' · '+esc(x.mod||'')+(x.page?' · p'+esc(x.page):'')+' · 题型：'+esc(typeLine(x))+' · <a href="'+esc(x.link)+'">打开讲义页 →</a></div>'+
         '<div class="ev">'+ev(x)+'</div></div>';
     }).join('');
     empty.style.display=arr.length?'none':'block';
   }
   document.querySelectorAll('.tierbtn').forEach(function(b){b.onclick=function(){document.querySelectorAll('.tierbtn').forEach(function(z){z.classList.remove('on')});b.classList.add('on');tier=b.getAttribute('data-tier')||'';render()}});
+  document.getElementById('weakBtn').onclick=function(){weak=!weak;this.classList.toggle('on',weak);render()};
   chSel.onchange=function(){ch=chSel.value;render()};
   kwEl.oninput=function(){kw=kwEl.value.trim();render()};
   render();

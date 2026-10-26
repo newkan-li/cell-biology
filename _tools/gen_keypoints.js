@@ -23,7 +23,7 @@ hot.forEach(x=>{if(!x.kp)return;if(x.freq==='高频')hotBy[x.kp]=(hotBy[x.kp]||0
 const rank={'必背':3,'常考':2,'了解':1};
 outline.forEach(x=>{if(!x.kp)return;if(!outBy[x.kp]||rank[x.tier]>rank[outBy[x.kp]])outBy[x.kp]=x.tier;});
 recent.forEach(x=>{if(x.kp)recentBy[x.kp]=(recentBy[x.kp]||0)+1;});
-const bankBy={};
+const bankBy={},bankTypes={};
 const items=[];
 for(const id of ids){
  let w;try{w=load('data/'+id+'.js')}catch(e){continue}
@@ -34,7 +34,7 @@ for(const id of ids){
    const zc=zBy[kp]||0,hc=hotBy[kp]||0,hg=hotGenBy[kp]||0,ot=outBy[kp]||'',rc=recentBy[kp]||0;
    // 题库密度
    let bc=0;
-   ['mcq','judge','fill','short','calc','term'].forEach(k=>{(ch[k]||[]).forEach(q=>{if(q.kp===kp)bc++})});
+   ['mcq','judge','fill','short','calc','term'].forEach(k=>{(ch[k]||[]).forEach(q=>{if(q.kp===kp){bc++;bankTypes[kp]=bankTypes[kp]||{};bankTypes[kp][k]=(bankTypes[kp][k]||0)+1;}})});
    bankBy[kp]=bc;
    let tier='C';
    if(zc>=1||hc>0||ot==='必背')tier='S';
@@ -44,7 +44,7 @@ for(const id of ids){
    const page=s.page||'';
    const needles=titleNeedles(title);let pc=0,jc=0;
    needles.forEach(n=>{pc=Math.max(pc,countIn(pptNorm[id]||'',n));jc=Math.max(jc,countIn(jyqNorm,n));});
-   items.push({ch:id,ctitle:ch.title||id,mod:m.name||'',kp,title,tier,z802:zc,hot:hc,hotGen:hg,outline:ot,bank:bc,recent:rc,ppt:pc,jyq:jc,page,link:id+'.html#s_'+kp});
+   items.push({ch:id,ctitle:ch.title||id,mod:m.name||'',kp,title,tier,z802:zc,hot:hc,hotGen:hg,outline:ot,bank:bc,types:bankTypes[kp]||{},recent:rc,ppt:pc,jyq:jc,page,link:id+'.html#s_'+kp});
   });
  });
 }
