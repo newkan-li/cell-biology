@@ -139,6 +139,7 @@
     o[kp] = c; jset(KPS_KEY, o);
     bumpTask("practice");
     if (typeof window.__refreshHeat === "function") window.__refreshHeat();
+    try { document.dispatchEvent(new Event("cellprogress")); } catch (e) { }
   }
   /* 0~1 掌握度：正确率(0.6) + 复习强度(0.4) */
   function kpMastery(kp) {
@@ -1447,6 +1448,17 @@
     document.title = ch.title + " · 细胞生物学";
     var aside = document.getElementById("sidebar"), main = document.getElementById("main");
     aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="guide.html">🚀 上手指南</a><a href="faq.html">❓ 常见问题</a><a href="recite.html">✍️ 背诵/默写</a><a href="quest.html">🚩 闯关模式</a><a href="schedule.html">🧭 学习路线</a><a href="report.html">📊 学习报告</a><a href="animations.html">🎬 动画总目录</a><a href="videos.html">🎬 视频微课</a><a href="history.html">🕰 科学史</a><a href="methods.html">🧪 实验方法</a><a href="experiments.html">🔬 实验一览</a><a href="mindmap.html">🕸 跨章总图</a><a href="textbook.html">📚 教材对照表</a><a href="compare.html">🔗 对比速记表</a><a href="zhenti.html">📋 历年真题</a><a href="802.html">📋 802 真题</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
+    var qbox = el("div", "questbox");
+    qbox.innerHTML = '<div class="quest-h">🚩 本章闯关</div>' +
+      '<div class="quest-body"><div class="quest-rail"><i class="qmark" style="bottom:25%"></i><i class="qmark" style="bottom:50%"></i><i class="qmark" style="bottom:75%"></i><i class="quest-fill"></i></div>' +
+      '<div class="quest-info"><div class="quest-pct">0%</div><div class="quest-step">当前关卡：准备开始</div>' +
+      '<div class="quest-stats">概念 0/0 · 题目 0/0<br>正确率 — · 错题 0 · 待问 0</div></div></div>' +
+      '<div class="quest-msg">第一关已开启，先拿下这一页。</div>' +
+      '<button class="quest-next" type="button">开始学习 →</button>';
+    aside.appendChild(qbox);
+    var qfill = qbox.querySelector(".quest-fill"), qpct = qbox.querySelector(".quest-pct"),
+      qstep = qbox.querySelector(".quest-step"), qstats = qbox.querySelector(".quest-stats"),
+      qmsg = qbox.querySelector(".quest-msg"), qnext = qbox.querySelector(".quest-next");
     aside.appendChild(el("div", "grp", "各模块（概念 + 考题）"));
     ch.modules.forEach(function (m) {
       var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a);
@@ -1486,10 +1498,56 @@
     fi.onchange = function () { if (fi.files[0]) restoreFile(cid, fi.files[0]); };
     rst.onclick = function () { fi.click(); };
     tools.appendChild(rst); aside.appendChild(tools); aside.appendChild(fi);
-    aside.appendChild(el("div", "grp", "进度"));
-    var pbar = el("div", "prog"); pbar.innerHTML = "<i></i>"; aside.appendChild(pbar);
-    var ptxt = el("div", "hint"); aside.appendChild(ptxt);
-    function refreshProgress() { var s = chapterStats(cid, ch); pbar.firstChild.style.width = (s.slides ? Math.round(s.seen * 100 / s.slides) : 0) + "%"; ptxt.textContent = "概念页 " + s.seen + "/" + s.slides + " ｜ 错题 " + s.wrong + " ｜ 待问 " + confusedCount(cid); }
+    function refreshProgress() {
+      var s = chapterStats(cid, ch), seen = seenStore(cid);
+      var unseen = [];
+      ch.modules.forEach(function (m) {
+        m.slides.forEach(function (sl) {
+          var key = cid + "_s" + m.i + "_" + sl.i;
+          if (!seen[key]) unseen.push({ m: m, s: sl, key: key });
+        });
+      });
+      var pctSlide = s.slides ? s.seen / s.slides : 0;
+      var pctQ = s.totalQ ? (s.answered || 0) / s.totalQ : 0;
+      var pct = Math.round((s.totalQ ? (pctSlide * 0.5 + pctQ * 0.5) : pctSlide) * 100);
+      var wrongN = s.wrong || 0, askN = confusedCount(cid);
+      qfill.style.height = pct + "%";
+      qpct.textContent = pct + "%";
+      qstats.innerHTML = "概念 " + s.seen + "/" + s.slides + " · 题目 " + (s.answered || 0) + "/" + (s.totalQ || 0) +
+        "<br>正确率 " + (s.rate == null ? "—" : s.rate + "%") + " · 错题 " + wrongN + " · 待问 " + askN;
+      var stage = unseen.length ? "概念页" : ((s.answered || 0) < (s.totalQ || 0) ? "本节练习" : (wrongN ? "错题清理" : "本章通关测"));
+      qstep.textContent = "当前关卡：" + stage;
+      var msg;
+      if (pct >= 100) msg = "本章通关！去错题本收尾，再挑战下一章。";
+      else if (wrongN >= 5) msg = "错题有点多，先消灭 3 道再前进。";
+      else if (s.answered && s.rate != null && s.rate < 60) msg = "正确率偏低，慢一点，把错题弄懂再走。";
+      else if (pct < 20) msg = "第一关已开启，先拿下这一页。";
+      else if (pct < 40) msg = "开局不错，稳住节奏，别急着跳。";
+      else if (pct < 60) msg = "已经过半，继续推进，你可以的。";
+      else if (pct < 80) msg = "最难的坡已经爬过，再坚持一下。";
+      else if (pct < 100) msg = "最后一关，冲过去就通关了。";
+      else msg = "保持这个节奏，下一章继续！";
+      qmsg.textContent = msg;
+      if (unseen.length) {
+        qnext.textContent = "继续读下一节 →";
+        qnext.onclick = function () { var el2 = document.getElementById("s_" + unseen[0].key); if (el2) el2.scrollIntoView({ behavior: "smooth", block: "start" }); };
+      } else if ((s.answered || 0) < (s.totalQ || 0)) {
+        var target = null;
+        ch.modules.forEach(function (m) { if (!target && ((m.mcq && m.mcq.length) || (m.judge && m.judge.length) || (m.fill && m.fill.length))) target = m; });
+        qnext.textContent = "去做本节题 →";
+        qnext.onclick = function () { var el2 = target && document.getElementById("m" + target.i + "-mcq"); if (el2) el2.scrollIntoView({ behavior: "smooth", block: "start" }); };
+      } else if (wrongN) {
+        qnext.textContent = "复习错题 →";
+        qnext.onclick = function () { openWrongDrawer(cid, ch); };
+      } else if (s.rate != null && s.rate < 80) {
+        qnext.textContent = "做章末通关测 →";
+        qnext.onclick = function () { var el2 = document.getElementById("chexam"); if (el2) el2.scrollIntoView({ behavior: "smooth", block: "start" }); };
+      } else {
+        qnext.textContent = "本章已通关 🎉";
+        qnext.onclick = function () { window.scrollTo({ top: 0, behavior: "smooth" }); };
+      }
+    }
+    document.addEventListener("cellprogress", refreshProgress);
 
     // hero
     var hero = el("div", "hero");
