@@ -663,3 +663,22 @@ html[data-theme="dark"] .vp-h button{background:#1b2531;color:#c9d6e2;border-col
 .vsec-h{font-size:13px;color:#7a2a24;margin:4px 0 6px}
 html[data-theme="dark"] .vmore{background:#1b2531;border-color:#2c3a4a}
 html[data-theme="dark"] .vsec-h{color:#e0a090}
+
+/* wrong-book redo */
+.wb-redo{margin-top:8px}
+.wb-redo>button{border:1px solid var(--line);background:#eef4fb;color:var(--blue);border-radius:14px;padding:3px 11px;font-size:12px;cursor:pointer}
+.wb-stage{display:none;margin-top:7px;padding:9px 10px;border:1px dashed var(--line);border-radius:8px;background:#fbfdff}
+.wb-stage.on{display:block}
+.wb-opts{display:flex;gap:5px;flex-wrap:wrap;margin:4px 0}
+.wb-opt{border:1px solid var(--line);background:#fff;border-radius:14px;padding:3px 11px;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.wb-opt.right{background:#eef8f0;border-color:#7fc98f;color:#1a7f37}
+.wb-opt.wrong{background:#fdecea;border-color:#e6a9a0;color:#b03a2e}
+.wb-fill{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.wb-fill input{flex:1;min-width:180px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:13px}
+.wb-fb{font-size:12.5px;margin-top:5px;min-height:18px}
+.wb-fb.ok{color:#1a7f37}.wb-fb.no{color:#b03a2e}
+.wb-ans{font-size:12.5px;margin-top:6px}
+.wb-ans summary{cursor:pointer;color:var(--blue);font-weight:600}
+.wb-ans .wb-a{margin-top:5px;background:#f3f8ff;border:1px solid #cfe0ee;border-radius:7px;padding:6px 9px;white-space:pre-wrap;line-height:1.75}
+html[data-theme="dark"] .wb-redo>button,html[data-theme="dark"] .wb-opt,html[data-theme="dark"] .wb-stage,html[data-theme="dark"] .wb-fill input{background:#22303d;border-color:#33475a;color:#c9d6e2}
+html[data-theme="dark"] .wb-ans .wb-a{background:#22303d;border-color:#33475a;color:#c9d6e2}

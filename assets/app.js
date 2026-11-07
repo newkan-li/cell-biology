@@ -2705,6 +2705,92 @@
   }
 
   /* ================= global wrong page ================= */
+  function wrongAnswerDetails(e, q) {
+    var det = el("details", "wb-ans");
+    var ans = String(e.correct == null ? "" : e.correct);
+    if (q && q.o && /^[A-E]$/.test(ans)) {
+      for (var i = 0; i < q.o.length; i++) {
+        if (String(q.o[i]).trim().charAt(0) === ans) { ans = q.o[i]; break; }
+      }
+    }
+    det.innerHTML = "<summary>查看答案与解析</summary><div class='wb-a'><b>正确答案：</b>" + esc(ans) +
+      (q && q.e ? "\n<b>解析：</b>" + esc(q.e) : "") + "</div>";
+    return det;
+  }
+  function wrongRedo(cid, e, q, item) {
+    if (!q) return null;
+    var wrap = el("div", "wb-redo");
+    var btn = el("button", "", "🔄 重新做这题");
+    var stage = el("div", "wb-stage");
+    var built = false;
+    function build() {
+      if (built) return; built = true;
+      var fb = el("div", "wb-fb");
+      if (e.type === "mcq" && q.o) {
+        stage.appendChild(el("div", "hint", "先自己选，再点选项；答案在下方“查看答案与解析”。"));
+        var row = el("div", "wb-opts");
+        q.o.forEach(function (o) {
+          var b = el("button", "wb-opt", String(o).trim().charAt(0));
+          b.title = o;
+          b.onclick = function () {
+            Array.prototype.forEach.call(row.children, function (x) { x.disabled = true; });
+            var ok = String(o).trim().charAt(0) === String(q.a).trim();
+            b.classList.add(ok ? "right" : "wrong");
+            if (!ok) Array.prototype.forEach.call(row.children, function (x) { if (x.textContent === String(q.a).trim()) x.classList.add("right"); });
+            fb.className = "wb-fb " + (ok ? "ok" : "no");
+            fb.textContent = ok ? "✅ 正确" : "❌ 再想想，正确答案已标出";
+          };
+          row.appendChild(b);
+        });
+        stage.appendChild(row);
+      } else if (e.type === "judge") {
+        stage.appendChild(el("div", "hint", "重新判断对错："));
+        var jr = el("div", "wb-opts");
+        ["对", "错"].forEach(function (v) {
+          var b = el("button", "wb-opt", v);
+          b.onclick = function () {
+            Array.prototype.forEach.call(jr.children, function (x) { x.disabled = true; });
+            var ok = v === String(q.a);
+            b.classList.add(ok ? "right" : "wrong");
+            if (!ok) Array.prototype.forEach.call(jr.children, function (x) { if (x.textContent === String(q.a)) x.classList.add("right"); });
+            fb.className = "wb-fb " + (ok ? "ok" : "no");
+            fb.textContent = ok ? "✅ 正确" : "❌ 再想想，正确答案已标出";
+          };
+          jr.appendChild(b);
+        });
+        stage.appendChild(jr);
+      } else if (e.type === "fill") {
+        var fr = el("div", "wb-fill");
+        var inp = el("input"); inp.placeholder = "重新填写答案";
+        var ck = el("button", "wb-opt", "检查");
+        ck.onclick = function () {
+          var ok = fuzzyMatch(q.a, inp.value);
+          inp.disabled = true; ck.disabled = true;
+          fb.className = "wb-fb " + (ok ? "ok" : "no");
+          fb.textContent = ok ? "✅ 正确" : "❌ 不正确，答案见下方";
+        };
+        fr.appendChild(inp); fr.appendChild(ck); stage.appendChild(fr);
+      } else {
+        var ta = el("textarea", "ta");
+        ta.placeholder = "先自己写一遍，再对照参考答案";
+        ta.style.minHeight = "80px";
+        var rev = el("button", "wb-opt", "显示参考答案");
+        var ref = el("div", "wb-a");
+        ref.style.display = "none";
+        ref.textContent = String(q.def || q.steps || q.a || e.correct || "");
+        rev.onclick = function () { ref.style.display = "block"; rev.disabled = true; };
+        stage.appendChild(ta); stage.appendChild(rev); stage.appendChild(ref);
+      }
+      stage.appendChild(fb);
+    }
+    btn.onclick = function () {
+      var on = !stage.classList.contains("on");
+      stage.classList.toggle("on", on);
+      if (on) build();
+    };
+    wrap.appendChild(btn); wrap.appendChild(stage);
+    return wrap;
+  }
   function renderWrongPage() {
     var host = document.getElementById("wronghost");
     var M = window.MANIFEST || [];
@@ -2718,15 +2804,20 @@
       total += list.length;
       var sec = el("section");
       sec.appendChild(el("h2", "", esc(m.title) + "（" + list.length + "）"));
-      var qmap = {}; ch.mcq.forEach(function (q) { qmap[q.id] = q; });
+      var qmap = {};
+      ["mcq", "judge", "fill", "short", "calc", "term"].forEach(function (k) {
+        (ch[k] || []).forEach(function (q) { qmap[q.id] = q; });
+      });
       list.slice().reverse().forEach(function (e) {
         var item = el("div", "wb-entry");
         var q = qmap[e.id];
         item.innerHTML = '<div class="wq">' + esc(e.q) + '<span class="pill">' + esc(kindName(e.type)) + "</span>" +
           (e.cause ? '<span class="cause-tag">' + esc((CAUSES.filter(function (c) { return c[0] === e.cause; })[0] || ["", "其他"])[1]) + "</span>" : "") + "</div>" +
-          (q ? '<div style="margin-top:4px">选项：' + q.o.map(esc).join("　") + "</div>" : "") +
-          '<div class="wa">正确答案：<b>' + esc(e.correct) + "</b></div>" +
-          (e.chosen ? '<div class="wa">你的作答：' + esc(e.chosen) + "</div>" : "");
+          (q && q.o ? '<div style="margin-top:4px">选项：' + q.o.map(esc).join("　") + "</div>" : "") +
+          (e.chosen ? '<div class="wa">上次作答：' + esc(e.chosen) + "</div>" : "");
+        var rd = wrongRedo(m.id, e, q, item);
+        if (rd) item.appendChild(rd);
+        item.appendChild(wrongAnswerDetails(e, q));
         var act = el("div", "act"); var b = el("button", "", "标记已掌握");
         b.onclick = function () { clearWrong(m.id, e.id); item.remove(); };
         act.appendChild(b); item.appendChild(act); sec.appendChild(item);
