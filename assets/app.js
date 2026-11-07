@@ -1500,13 +1500,25 @@
     tools.appendChild(rst); aside.appendChild(tools); aside.appendChild(fi);
     function refreshProgress() {
       var s = chapterStats(cid, ch), seen = seenStore(cid);
-      var unseen = [];
+      var unseen = [], ordered = [];
       ch.modules.forEach(function (m) {
         m.slides.forEach(function (sl) {
           var key = cid + "_s" + m.i + "_" + sl.i;
-          if (!seen[key]) unseen.push({ m: m, s: sl, key: key });
+          var item = { m: m, s: sl, key: key };
+          ordered.push(item);
+          if (!seen[key]) unseen.push(item);
         });
       });
+      var lastKey = jget(skey(cid, "lastslide"), "");
+      var nextSlide = null;
+      if (lastKey) {
+        var lastIdx = -1;
+        for (var oi = 0; oi < ordered.length; oi++) if (ordered[oi].key === lastKey) { lastIdx = oi; break; }
+        for (var ni = lastIdx + 1; ni >= 0 && ni < ordered.length; ni++) {
+          if (!seen[ordered[ni].key]) { nextSlide = ordered[ni]; break; }
+        }
+      }
+      if (!nextSlide) nextSlide = unseen[0] || null;
       var pctSlide = s.slides ? s.seen / s.slides : 0;
       var pctQ = s.totalQ ? (s.answered || 0) / s.totalQ : 0;
       var pct = Math.round((s.totalQ ? (pctSlide * 0.5 + pctQ * 0.5) : pctSlide) * 100);
@@ -1532,9 +1544,12 @@
       if (pct < 100 && wrongN >= 5) extra = " 先清理 3 道错题再前进。";
       else if (pct < 100 && s.answered && s.rate != null && s.rate < 60) extra = " 正确率偏低，慢一点，把错题弄懂再走。";
       qmsg.innerHTML = "<b>🎖 " + wh.name + "：</b>" + esc(wh.msg + extra);
-      if (unseen.length) {
+      if (nextSlide) {
         qnext.textContent = "继续读下一节 →";
-        qnext.onclick = function () { var el2 = document.getElementById("s_" + unseen[0].key); if (el2) el2.scrollIntoView({ behavior: "smooth", block: "start" }); };
+        qnext.onclick = function () {
+          var el2 = document.getElementById("s_" + nextSlide.key);
+          if (el2) el2.scrollIntoView({ behavior: "smooth", block: "start" });
+        };
       } else if ((s.answered || 0) < (s.totalQ || 0)) {
         var target = null;
         ch.modules.forEach(function (m) { if (!target && ((m.mcq && m.mcq.length) || (m.judge && m.judge.length) || (m.fill && m.fill.length))) target = m; });
@@ -1785,6 +1800,7 @@
         db.onclick = function () {
           seen[key] = seen[key] ? 0 : 1; jset(skey(cid, "seen"), seen);
           if (seen[key]) {
+            jset(skey(cid, "lastslide"), key);
             bumpTask("read");
             if (!srsGet(key)) srsRate(key, 2);   // 首次标记已读 → 安排首次复习
           }
