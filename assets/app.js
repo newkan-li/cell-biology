@@ -2836,7 +2836,8 @@
       list.slice().reverse().forEach(function (e) {
         var item = el("div", "wb-entry");
         item.innerHTML = '<div class="wq">' + esc(e.q) + '<span class="pill">' + esc(kindName(e.type)) + "</span></div>" +
-          '<div class="wa">正确答案：<b>' + esc(e.correct) + "</b></div>" + (e.chosen ? '<div class="wa">你的作答：' + esc(e.chosen) + "</div>" : "");
+          (e.chosen ? '<div class="wa">上次作答：' + esc(e.chosen) + "</div>" : "");
+        item.appendChild(wrongAnswerDetails(e, null));
         var act = el("div", "act"); var b = el("button", "", "标记已掌握");
         b.onclick = function () { clearWrong(cid, e.id); item.remove(); };
         act.appendChild(b); item.appendChild(act); sec.appendChild(item);
