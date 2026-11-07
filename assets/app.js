@@ -1516,18 +1516,22 @@
       qstats.innerHTML = "概念 " + s.seen + "/" + s.slides + " · 题目 " + (s.answered || 0) + "/" + (s.totalQ || 0) +
         "<br>正确率 " + (s.rate == null ? "—" : s.rate + "%") + " · 错题 " + wrongN + " · 待问 " + askN;
       var stage = unseen.length ? "概念页" : ((s.answered || 0) < (s.totalQ || 0) ? "本节练习" : (wrongN ? "错题清理" : "本章通关测"));
-      qstep.textContent = "当前关卡：" + stage;
-      var msg;
-      if (pct >= 100) msg = "本章通关！去错题本收尾，再挑战下一章。";
-      else if (wrongN >= 5) msg = "错题有点多，先消灭 3 道再前进。";
-      else if (s.answered && s.rate != null && s.rate < 60) msg = "正确率偏低，慢一点，把错题弄懂再走。";
-      else if (pct < 20) msg = "第一关已开启，先拿下这一页。";
-      else if (pct < 40) msg = "开局不错，稳住节奏，别急着跳。";
-      else if (pct < 60) msg = "已经过半，继续推进，你可以的。";
-      else if (pct < 80) msg = "最难的坡已经爬过，再坚持一下。";
-      else if (pct < 100) msg = "最后一关，冲过去就通关了。";
-      else msg = "保持这个节奏，下一章继续！";
-      qmsg.textContent = msg;
+      var WH = [
+        { min: 0, name: "剑桥集结（1775）", msg: "1775年，华盛顿在剑桥接手一支缺枪少弹的民兵。别等状态完美，先拿下这一页，就是你的第一支队伍。" },
+        { min: 20, name: "长岛撤退（1776）", msg: "长岛战败后，华盛顿没有解散军队，而是趁大雾撤退、保存力量。遇到难懂的地方，先退一步，把基础保住。" },
+        { min: 40, name: "特伦顿奇袭（1776）", msg: "圣诞夜渡特拉华河，大陆军奇袭特伦顿，一场小胜扭转了士气。今天先完成一个小目标，状态就会回来。" },
+        { min: 55, name: "萨拉托加转折（1777）", msg: "萨拉托加大捷让法国参战，战争迎来转折。你已经走到中段，再坚持一下，转机就在前面。" },
+        { min: 70, name: "福吉谷冬训（1777-78）", msg: "福吉谷的寒冬里，士兵缺衣少食，却在这段时间训练成军。最累的时候，不求快，先把基本功练扎实。" },
+        { min: 85, name: "约克镇合围（1781）", msg: "约克镇合围，华盛顿把分散的力量集中到最后一点。最后一关，集中精力，一次只做一件事。" },
+        { min: 100, name: "独立建国（1783/1787）", msg: "1783年《巴黎和约》签订，1787年制宪，独立的美国站稳脚跟。你这一章也通关了，下一章继续。" }
+      ];
+      var wh = WH[0];
+      for (var wi = 0; wi < WH.length; wi++) if (pct >= WH[wi].min) wh = WH[wi];
+      qstep.textContent = "🎖 " + wh.name + " · 当前：" + stage;
+      var extra = "";
+      if (pct < 100 && wrongN >= 5) extra = " 先清理 3 道错题再前进。";
+      else if (pct < 100 && s.answered && s.rate != null && s.rate < 60) extra = " 正确率偏低，慢一点，把错题弄懂再走。";
+      qmsg.innerHTML = "<b>🎖 " + wh.name + "：</b>" + esc(wh.msg + extra);
       if (unseen.length) {
         qnext.textContent = "继续读下一节 →";
         qnext.onclick = function () { var el2 = document.getElementById("s_" + unseen[0].key); if (el2) el2.scrollIntoView({ behavior: "smooth", block: "start" }); };

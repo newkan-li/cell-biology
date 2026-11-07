@@ -706,3 +706,5 @@ html[data-theme="dark"] .questbox{background:#1b2531;border-color:#2c3a4a}
 html[data-theme="dark"] .quest-rail{background:#263545}
 html[data-theme="dark"] .quest-msg{background:#2a2618;border-color:#4a4326;color:#e0c060}
 html[data-theme="dark"] .quest-next{background:#22303d;border-color:#33475a;color:#a8c6e0}
+.quest-msg b{color:#8a5b00}
+html[data-theme="dark"] .quest-msg b{color:#f0cf70}
