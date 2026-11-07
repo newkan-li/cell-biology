@@ -1487,6 +1487,19 @@
     fi.onchange = function () { if (fi.files[0]) restoreFile(cid, fi.files[0]); };
     rst.onclick = function () { fi.click(); };
     tools.appendChild(rst); aside.appendChild(tools); aside.appendChild(fi);
+    function updateTopbar() {
+      if (!modquests.length) return;
+      var idx = 0;
+      for (var i = 0; i < modquests.length; i++) {
+        if (modquests[i].sec.getBoundingClientRect().top <= 90) idx = i;
+      }
+      var x = modquests[idx], st = x.stat || { pct: 0, wh: { name: "剑桥集结", msg: "第一关已开启，先拿下这一页。" } };
+      cqMod.textContent = x.m.name;
+      cqStage.textContent = st.wh.name;
+      cqPct.textContent = st.pct + "%";
+      cqBar.style.width = st.pct + "%";
+      cqMsg.textContent = st.wh.msg + (st.pct < 100 ? " 不要放弃，下一关就在前面。" : "");
+    }
     function refreshProgress() {
       var seen = seenStore(cid), mc = mcqStore(cid), jg = judgeStore(cid), fi = fillStore(cid);
       var WH = [
@@ -1499,8 +1512,7 @@
         { min: 100, name: "独立建国", msg: "1783年《巴黎和约》签订，1787年制宪。你这一模块通关了，带着这股劲继续下一关！" }
       ];
       modquests.forEach(function (x) {
-        var m = x.m, elq = x.el;
-        var totalSlides = (m.slides || []).length, seenN = 0;
+        var m = x.m, totalSlides = (m.slides || []).length, seenN = 0;
         (m.slides || []).forEach(function (sl) {
           if (seen[cid + "_s" + m.i + "_" + sl.i]) seenN++;
         });
@@ -1515,17 +1527,10 @@
         var pq = qTotal ? qDone / qTotal : 0;
         var pct = Math.round((qTotal ? (ps * 0.55 + pq * 0.45) : ps) * 100);
         var wh = WH[0];
-        for (var i = 0; i < WH.length; i++) if (pct >= WH[i].min) wh = WH[i];
-        elq.querySelector(".modq-pct").textContent = pct + "%";
-        elq.querySelector(".modq-stage").textContent = wh.name;
-        elq.querySelector(".modq-bar>i").style.width = pct + "%";
-        var steps = elq.querySelectorAll(".modq-steps span");
-        for (var j = 0; j < steps.length; j++) {
-          steps[j].classList.toggle("done", pct >= WH[j].min && j < WH.length - 1);
-          steps[j].classList.toggle("cur", j === WH.indexOf(wh));
-        }
-        elq.querySelector(".modq-msg").textContent = wh.msg + (pct < 100 ? " 不要放弃，下一关就在前面。" : "");
+        for (var wi = 0; wi < WH.length; wi++) if (pct >= WH[wi].min) wh = WH[wi];
+        x.stat = { pct: pct, wh: wh };
       });
+      updateTopbar();
     }
     document.addEventListener("cellprogress", refreshProgress);
 
@@ -1624,17 +1629,19 @@
       (relMap[e.a] = relMap[e.a] || []).push(e.b);
       (relMap[e.b] = relMap[e.b] || []).push(e.a);
     });
+    var topbar = el("div", "chapter-quest-top");
+    topbar.innerHTML = '<div class="cq-left"><span class="cq-flag">🚩</span><span class="cq-mod">模块闯关</span><span class="cq-stage">剑桥集结</span></div>' +
+      '<div class="cq-bar"><i></i></div><div class="cq-pct">0%</div><div class="cq-msg">第一关已开启，先拿下这一页。</div>';
+    document.body.appendChild(topbar);
+    var cqMod = topbar.querySelector(".cq-mod"), cqStage = topbar.querySelector(".cq-stage"),
+      cqPct = topbar.querySelector(".cq-pct"), cqBar = topbar.querySelector(".cq-bar>i"),
+      cqMsg = topbar.querySelector(".cq-msg");
     var modquests = [];
+    window.addEventListener("scroll", updateTopbar, { passive: true });
     ch.modules.forEach(function (m, mi) {
       var sec = el("section"); sec.id = "m" + m.i;
       sec.appendChild(el("h2", "", esc(m.name)));
-      var mq = el("div", "modquest");
-      mq.innerHTML = '<div class="modq-top"><span>🚩 模块闯关 · <b class="modq-stage">剑桥集结</b></span><span class="modq-pct">0%</span></div>' +
-        '<div class="modq-bar"><i></i></div>' +
-        '<div class="modq-steps"><span>剑桥</span><span>长岛</span><span>特伦顿</span><span>萨拉托加</span><span>福吉谷</span><span>约克镇</span><span>建国</span></div>' +
-        '<div class="modq-msg">第一关已开启，先拿下这一页。</div>';
-      sec.appendChild(mq);
-      modquests.push({ m: m, el: mq });
+      modquests.push({ m: m, sec: sec });
       m.slides.forEach(function (s, si) {
         var key = cid + "_s" + m.i + "_" + s.i;
         var altKey = cid + "_s" + mi + "_" + si;
