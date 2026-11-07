@@ -12,6 +12,12 @@
     ["other", "其他"]
   ];
   var PREFIX = "cellbio_";
+  var ASSET_V = "20261018az";
+  function imgSrc(u) {
+    if (!u) return u;
+    if (/^(data:|blob:|https?:)/.test(u)) return u;
+    return u + (u.indexOf("?") >= 0 ? "&" : "?") + "v=" + ASSET_V;
+  }
 
   /* ---------- storage ---------- */
   function jget(k, def) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
@@ -1609,7 +1615,7 @@
           page.style.aspectRatio = s.ocr.w + " / " + s.ocr.h;
           (s.ocr.figs || []).forEach(function (f) {
             var im = document.createElement("img"); im.className = "ocrfig"; im.loading = "lazy"; im.alt = "";
-            im.src = f[4];
+            im.src = imgSrc(f[4]);
             im.style.left = (f[0] / s.ocr.w * 100) + "%";
             im.style.top = (f[1] / s.ocr.h * 100) + "%";
             im.style.width = (f[2] / s.ocr.w * 100) + "%";
@@ -1624,9 +1630,9 @@
             sp.textContent = l[4];
             page.appendChild(sp);
           });
-          var img = el("img"); img.alt = s.title; img.className = "ocrimg"; img.loading = "lazy"; img.src = s.img;
+          var img = el("img"); img.alt = s.title; img.className = "ocrimg"; img.loading = "lazy"; img.src = imgSrc(s.img);
           img.style.display = "none";
-          img.onclick = function () { document.getElementById("lbimg").src = (s.big || s.img); document.getElementById("lightbox").classList.add("on"); };
+          img.onclick = function () { document.getElementById("lbimg").src = this.src; document.getElementById("lightbox").classList.add("on"); };
           img.onerror = function () { img.style.display = "none"; if (wrap._err) wrap._err.style.display = "block"; };
           var errd = el("div", "hint", "⚠ 原图加载失败，可点「🔍 放大原图」查看。"); errd.style.display = "none"; wrap._err = errd;
           var ctr = el("div", "ocrctrl");
@@ -1635,17 +1641,17 @@
           bImg.onclick = function () {
             page.style.display = "none"; errd.style.display = "none"; img.style.display = "block";
             img.loading = "eager";
-            if (!img.complete || !img.naturalWidth) img.src = s.img;   /* 强制加载隐藏期间未加载的图 */
+            if (!img.complete || !img.naturalWidth) img.src = imgSrc(s.img);   /* 强制加载隐藏期间未加载的图 */
           };
-          bZoom.onclick = function () { document.getElementById("lbimg").src = (s.big || s.img); document.getElementById("lightbox").classList.add("on"); };
+          bZoom.onclick = function () { document.getElementById("lbimg").src = img.src || imgSrc(s.img); document.getElementById("lightbox").classList.add("on"); };
           ctr.appendChild(bTxt); ctr.appendChild(bImg); ctr.appendChild(bZoom);
           wrap.appendChild(ctr); wrap.appendChild(errd); wrap.appendChild(page); wrap.appendChild(img);
           body.appendChild(wrap);
         } else if (s.img) {
           var img2 = el("img"); img2.alt = s.title;
-          img2.onclick = function () { document.getElementById("lbimg").src = (s.big || s.img); document.getElementById("lightbox").classList.add("on"); };
+          img2.onclick = function () { document.getElementById("lbimg").src = this.src; document.getElementById("lightbox").classList.add("on"); };
           img2.loading = /^tb/.test(cid) ? "eager" : "lazy";
-          img2.src = s.img;
+          img2.src = imgSrc(s.img);
           body.appendChild(img2);
         }
         if (s.explain) body.appendChild(el("div", "explain", esc(s.explain).replace(/\n/g, "<br>")));
