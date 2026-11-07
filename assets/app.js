@@ -1523,7 +1523,10 @@
       cqStage.textContent = (h.kind ? h.kind + " " : "") + h.name + " · " + h.stages[st.idx || 0];
       cqPct.textContent = st.pct + "%";
       cqBar.style.width = st.pct + "%";
-      cqMsg.textContent = h.msg + (st.pct < 100 ? " 不要放弃，下一关就在前面。" : " 你已通关，继续下一章！");
+      var fullMsg = h.msg + (st.pct < 100 ? " 不要放弃，下一关就在前面。" : " 你已通关，继续下一章！");
+      cqMsg.setAttribute("data-full", fullMsg);
+      var msgText = cqMsg.querySelector(".cq-msg-t");
+      if (msgText) msgText.textContent = fullMsg; else cqMsg.textContent = fullMsg;
     }
     function refreshProgress() {
       var seen = seenStore(cid), mc = mcqStore(cid), jg = judgeStore(cid), fi = fillStore(cid);
@@ -1649,7 +1652,7 @@
     });
     var topbar = el("div", "chapter-quest-top");
     topbar.innerHTML = '<div class="cq-left"><span class="cq-flag">🚩</span><span class="cq-mod">模块闯关</span><span class="cq-stage">剑桥集结</span></div>' +
-      '<div class="cq-bar"><i></i></div><div class="cq-pct">0%</div><div class="cq-msg">第一关已开启，先拿下这一页。</div>';
+      '<div class="cq-bar"><i></i></div><div class="cq-pct">0%</div><div class="cq-msg" data-full="第一关已开启，先拿下这一页。"><span class="cq-msg-t">第一关已开启，先拿下这一页。</span></div>';
     document.body.appendChild(topbar);
     var cqMod = topbar.querySelector(".cq-mod"), cqStage = topbar.querySelector(".cq-stage"),
       cqPct = topbar.querySelector(".cq-pct"), cqBar = topbar.querySelector(".cq-bar>i"),

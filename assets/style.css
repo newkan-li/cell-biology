@@ -734,7 +734,10 @@ html[data-theme="dark"] .modq-msg{background:#2a2618;border-color:#4a4326;color:
 .cq-bar{flex:1;min-width:100px;height:8px;background:#e7eef6;border-radius:6px;overflow:hidden}
 .cq-bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#4a90d9,#1f5c8b);transition:width .3s}
 .cq-pct{font-weight:800;color:#1f5c8b;min-width:38px;text-align:right;font-variant-numeric:tabular-nums}
-.cq-msg{max-width:330px;font-size:11.5px;color:#6b5200;background:#fff8e8;border:1px solid #f0d9a8;border-radius:6px;padding:3px 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cq-msg{position:relative;max-width:330px;font-size:11.5px;color:#6b5200;background:#fff8e8;border:1px solid #f0d9a8;border-radius:6px;padding:3px 7px;cursor:help;flex-shrink:1;min-width:0}
+.cq-msg-t{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cq-msg::after{content:attr(data-full);display:none;position:absolute;top:calc(100% + 8px);right:0;width:min(520px,78vw);padding:9px 11px;background:#fffdf5;border:1px solid #e8c979;border-radius:8px;box-shadow:0 8px 26px rgba(31,60,90,.18);color:#5b4700;font-size:12px;line-height:1.7;white-space:normal;word-break:break-word;z-index:1000;pointer-events:none}
+.cq-msg:hover::after{display:block}
 body[data-page="chapter"] main{padding-top:72px}
 @media(max-width:1100px){.chapter-quest-top{left:250px}.cq-mod{max-width:190px}.cq-stage{max-width:240px}.cq-msg{max-width:240px}}
 @media(max-width:900px){.chapter-quest-top{left:0}.cq-msg{display:none}.cq-mod{max-width:140px}.cq-stage{max-width:190px}body[data-page="chapter"] main{padding-top:66px}}
@@ -743,4 +746,5 @@ html[data-theme="dark"] .cq-stage{background:#22303d;border-color:#33475a;color:
 html[data-theme="dark"] .cq-bar{background:#263545}
 html[data-theme="dark"] .cq-pct{color:#7fb3d8}
 html[data-theme="dark"] .cq-msg{background:#2a2618;border-color:#4a4326;color:#e0c060}
+html[data-theme="dark"] .cq-msg::after{background:#322c1b;border-color:#6a5a2c;color:#f0cf70;box-shadow:0 8px 26px rgba(0,0,0,.45)}
 @media print{.chapter-quest-top{display:none!important}body[data-page="chapter"] main{padding-top:0!important}}
