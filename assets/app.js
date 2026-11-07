@@ -18,6 +18,30 @@
     if (/^(data:|blob:|https?:)/.test(u)) return u;
     return u + (u.indexOf("?") >= 0 ? "&" : "?") + "v=" + ASSET_V;
   }
+  var HISTORY = {
+    ch01: { name: "达尔文", stages: ["启航", "远航", "观察", "犹豫", "发表", "论战", "传世"], msg: "1831年达尔文随小猎犬号出发，五年航行、二十年整理，才发表《物种起源》。你不需要一次看懂，先把这一页读完。" },
+    ch02: { name: "列文虎克", stages: ["磨镜", "发现", "质疑", "坚持", "证实", "传播", "奠基"], msg: "列文虎克磨了几十年镜片，才看到微生物。把基础磨细，答案会自己出现。" },
+    ch03: { name: "帕拉德", stages: ["入门", "试错", "电镜", "追踪", "质疑", "确立", "传承"], msg: "帕拉德用脉冲-追踪实验一遍遍追踪分泌蛋白，才把ER→高尔基体→分泌泡的路线确定下来。" },
+    ch04: { name: "布洛贝尔", stages: ["假说", "争议", "纯化", "验证", "坚持", "诺奖", "奠基"], msg: "布洛贝尔提出信号肽假说后多年被质疑，仍坚持用实验验证。难懂的分选题，多走一步就通了。" },
+    ch05: { name: "麦克林托克", stages: ["观察", "异例", "冷遇", "坚持", "转座", "承认", "传奇"], msg: "麦克林托克在冷遇中坚持研究玉米转座子几十年。你现在觉得慢，不代表你走错。" },
+    ch06: { name: "贝齐格", stages: ["显微", "超分辨", "质疑", "坚持", "成像", "诺奖", "传承"], msg: "贝齐格在质疑中坚持发展超分辨显微技术，让细胞骨架看得更清。看不清时，换个方法再试。" },
+    ch07: { name: "休·赫胥黎", stages: ["肌肉", "滑行", "争议", "证据", "修正", "确立", "传承"], msg: "赫胥黎用滑行学说解释肌肉收缩，靠反复证据修正，而不是一次灵感。" },
+    ch08: { name: "丽塔·列维-蒙塔尔奇尼", stages: ["神经", "培养", "质疑", "坚持", "因子", "诺奖", "传承"], msg: "丽塔在长期质疑中坚持神经生长因子研究。中间纤维这类难记结构，也要一点点啃。" },
+    ch09: { name: "保罗·纳斯", stages: ["酵母", "突变", "cdc", "保守", "周期", "诺奖", "传承"], msg: "纳斯用酵母突变体一步步找出细胞周期基因。周期调控很绕，但每个突变都能把路照亮。" },
+    ch10: { name: "厄尔·萨瑟兰", stages: ["激素", "cAMP", "质疑", "验证", "第二信使", "诺奖", "奠基"], msg: "萨瑟兰在质疑中证明cAMP是第二信使。信号通路再复杂，也从一个关键分子开始。" },
+    ch11: { name: "斯坦利·科恩", stages: ["生长因子", "纯化", "质疑", "坚持", "受体", "诺奖", "转化"], msg: "科恩在反复纯化与质疑中坚持生长因子研究。信号题别怕，先抓住配体—受体—效应器。" },
+    ch12: { name: "悉尼·布伦纳", stages: ["线虫", "谱系", "突变", "ced", "凋亡", "诺奖", "传承"], msg: "布伦纳选择线虫，几十年建立细胞谱系与凋亡基因。慢功夫，最后会变成清晰的地图。" },
+    ch13: { name: "西德尼·法伯", stages: ["白血病", "叶酸", "试验", "挫折", "缓解", "化疗", "希望"], msg: "法伯在一次次失败中坚持临床试验，才让儿童白血病第一次出现缓解。别被一次错题打败。" },
+    tb03: { name: "罗伯特·胡克", stages: ["显微镜", "切片", "cell", "质疑", "显微", "传播", "奠基"], msg: "胡克用自制显微镜观察软木切片，才第一次命名cell。工具越用越熟，题也越做越顺。" },
+    tb06: { name: "林恩·马古利斯", stages: ["共生", "质疑", "坚持", "证据", "半自主", "接受", "传承"], msg: "马古利斯的内共生学说曾被强烈质疑，她坚持用证据说话。线粒体叶绿体题，抓住证据链。" },
+    tb11: { name: "罗莎琳德·富兰克林", stages: ["晶体", "衍射", "照片", "争议", "证据", "承认", "传承"], msg: "富兰克林用X射线衍射照片为DNA结构提供关键证据。你现在的积累，也许正是后面的关键一张照片。" },
+    tb12: { name: "阿达·约纳特", stages: ["核糖体", "晶体", "争议", "坚持", "结构", "诺奖", "传承"], msg: "约纳特在争议中坚持核糖体晶体学研究，最终解析出核糖体结构。复杂结构，也能被一点点拆开。" },
+    tb13: { name: "托马斯·亨特·摩尔根", stages: ["果蝇", "突变", "连锁", "争议", "染色体", "诺奖", "传承"], msg: "摩尔根从果蝇突变中建立染色体遗传理论。分裂题看似杂乱，找到连锁关系就清楚了。" },
+    tb15: { name: "约翰·格登", stages: ["克隆", "核移植", "质疑", "坚持", "重编程", "诺奖", "传承"], msg: "格登的核移植实验曾被嘲笑，几十年后被证实。分化题别急着放弃，结论需要时间。" },
+    tb17: { name: "圣地亚哥·拉蒙-卡哈尔", stages: ["神经元", "染色", "绘图", "质疑", "突触", "诺奖", "传承"], msg: "卡哈尔用染色和手绘一点点描出神经元结构。细胞连接与ECM，也要一层层看清。" }
+  };
+  var DEFAULT_HISTORY = { name: "华盛顿", stages: ["剑桥集结", "长岛撤退", "特伦顿", "萨拉托加", "福吉谷", "约克镇", "建国"], msg: "1775年，华盛顿在剑桥接手一支缺枪少弹的民兵。别等状态完美，先拿下这一页。" };
+
 
   /* ---------- storage ---------- */
   function jget(k, def) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
@@ -1493,24 +1517,18 @@
       for (var i = 0; i < modquests.length; i++) {
         if (modquests[i].sec.getBoundingClientRect().top <= 90) idx = i;
       }
-      var x = modquests[idx], st = x.stat || { pct: 0, wh: { name: "剑桥集结", msg: "第一关已开启，先拿下这一页。" } };
+      var x = modquests[idx], st = x.stat || { pct: 0, hist: DEFAULT_HISTORY, idx: 0 };
+      var h = st.hist || DEFAULT_HISTORY;
       cqMod.textContent = x.m.name;
-      cqStage.textContent = st.wh.name;
+      cqStage.textContent = h.name + " · " + h.stages[st.idx || 0];
       cqPct.textContent = st.pct + "%";
       cqBar.style.width = st.pct + "%";
-      cqMsg.textContent = st.wh.msg + (st.pct < 100 ? " 不要放弃，下一关就在前面。" : "");
+      cqMsg.textContent = h.msg + (st.pct < 100 ? " 不要放弃，下一关就在前面。" : " 你已通关，继续下一章！");
     }
     function refreshProgress() {
       var seen = seenStore(cid), mc = mcqStore(cid), jg = judgeStore(cid), fi = fillStore(cid);
-      var WH = [
-        { min: 0, name: "剑桥集结", msg: "1775年，华盛顿在剑桥接手一支缺枪少弹的民兵。别等状态完美，先拿下这一页。" },
-        { min: 18, name: "长岛撤退", msg: "长岛战败后，华盛顿没有解散军队，而是保存力量。遇到难点，先退一步，把基础保住。" },
-        { min: 36, name: "特伦顿奇袭", msg: "圣诞夜渡特拉华河，一场小胜扭转士气。先完成一个小目标，状态就会回来。" },
-        { min: 54, name: "萨拉托加转折", msg: "萨拉托加大捷让战争迎来转折。你已经走到中段，再坚持一下，转机就在前面。" },
-        { min: 72, name: "福吉谷冬训", msg: "福吉谷的寒冬里，士兵缺衣少食，却在这段时间训练成军。最累的时候，先练基本功。" },
-        { min: 86, name: "约克镇合围", msg: "约克镇合围，华盛顿把力量集中到最后一点。最后一关，集中精力，一次只做一件事。" },
-        { min: 100, name: "独立建国", msg: "1783年《巴黎和约》签订，1787年制宪。你这一模块通关了，带着这股劲继续下一关！" }
-      ];
+      var H = HISTORY[cid] || DEFAULT_HISTORY;
+      var TH = [0, 18, 36, 54, 72, 86, 100];
       modquests.forEach(function (x) {
         var m = x.m, totalSlides = (m.slides || []).length, seenN = 0;
         (m.slides || []).forEach(function (sl) {
@@ -1526,9 +1544,9 @@
         var ps = totalSlides ? seenN / totalSlides : 0;
         var pq = qTotal ? qDone / qTotal : 0;
         var pct = Math.round((qTotal ? (ps * 0.55 + pq * 0.45) : ps) * 100);
-        var wh = WH[0];
-        for (var wi = 0; wi < WH.length; wi++) if (pct >= WH[wi].min) wh = WH[wi];
-        x.stat = { pct: pct, wh: wh };
+        var idx = 0;
+        for (var wi = 0; wi < TH.length; wi++) if (pct >= TH[wi]) idx = wi;
+        x.stat = { pct: pct, hist: H, idx: idx };
       });
       updateTopbar();
     }
