@@ -682,3 +682,7 @@ html[data-theme="dark"] .vsec-h{color:#e0a090}
 .wb-ans .wb-a{margin-top:5px;background:#f3f8ff;border:1px solid #cfe0ee;border-radius:7px;padding:6px 9px;white-space:pre-wrap;line-height:1.75}
 html[data-theme="dark"] .wb-redo>button,html[data-theme="dark"] .wb-opt,html[data-theme="dark"] .wb-stage,html[data-theme="dark"] .wb-fill input{background:#22303d;border-color:#33475a;color:#c9d6e2}
 html[data-theme="dark"] .wb-ans .wb-a{background:#22303d;border-color:#33475a;color:#c9d6e2}
+.wb-entry.mastered{opacity:.62;border-left-color:#2f9e5b;background:#f6fbf7}
+.wb-mastered-badge{background:#eef8f0;border:1px solid #bfe0c4;color:#1a7f37;margin-left:6px}
+html[data-theme="dark"] .wb-entry.mastered{background:#1a2b20;border-left-color:#4a9e6b}
+html[data-theme="dark"] .wb-mastered-badge{background:#1e3325;border-color:#2f5a3b;color:#7fc98f}

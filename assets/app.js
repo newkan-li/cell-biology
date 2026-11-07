@@ -39,6 +39,12 @@
   function clearWrong(cid, id) {
     setWrong(cid, wrongList(cid).filter(function (e) { return e.id !== id; }));
   }
+  function toggleMastered(cid, id) {
+    var arr = wrongList(cid);
+    for (var i = 0; i < arr.length; i++) if (arr[i].id === id) { arr[i].mastered = !arr[i].mastered; break; }
+    setWrong(cid, arr);
+    return arr.filter(function (e) { return e.id === id; })[0];
+  }
 
   /* ---------- 不懂 / 待问 ---------- */
   function confusedStore(cid) { return jget(skey(cid, "confused"), {}); }
@@ -838,21 +844,36 @@
     d.appendChild(head);
     var list = wrongList(cid);
     var qmap = {};
-    ch.mcq.forEach(function (q) { qmap[q.id] = q; });
+    ["mcq", "judge", "fill", "short", "calc", "term"].forEach(function (k) {
+      (ch[k] || []).forEach(function (q) { qmap[q.id] = q; });
+    });
     if (!list.length) { d.appendChild(el("p", "empty", "暂无错题，继续加油！")); }
     list.slice().reverse().forEach(function (e) {
-      var item = el("div", "wb-entry");
+      var item = el("div", "wb-entry" + (e.mastered ? " mastered" : ""));
       var q = qmap[e.id];
-      var extra = q ? ("<div style='margin-top:4px'>选项：" + q.o.map(esc).join("　") + "</div>") : "";
       item.innerHTML = '<div class="wq">' + esc(e.q) + '<span class="pill">' + esc(kindName(e.type)) + "</span>" +
+        (e.mastered ? '<span class="pill wb-mastered-badge">已掌握</span>' : "") +
         (e.cause ? '<span class="cause-tag">' + esc((CAUSES.filter(function (c) { return c[0] === e.cause; })[0] || ["", "其他"])[1]) + "</span>" : "") + "</div>" +
-        extra +
-        '<div class="wa">正确答案：<b>' + esc(e.correct) + "</b></div>" +
-        (e.chosen ? '<div class="wa">你的作答：' + esc(e.chosen) + "</div>" : "");
+        (q && q.o ? '<div style="margin-top:4px">选项：' + q.o.map(esc).join("　") + "</div>" : "") +
+        (e.chosen ? '<div class="wa">上次作答：' + esc(e.chosen) + "</div>" : "");
+      if (q) { var rd = wrongRedo(cid, e, q, item); if (rd) item.appendChild(rd); }
+      item.appendChild(wrongAnswerDetails(e, q));
       var act = el("div", "act");
-      var bm = el("button", "", "标记已掌握");
-      bm.onclick = function () { clearWrong(cid, e.id); item.remove(); };
-      act.appendChild(bm); item.appendChild(act);
+      var bm = el("button", "", e.mastered ? "↩ 取消已掌握" : "✅ 标记已掌握");
+      bm.onclick = function () {
+        var z = toggleMastered(cid, e.id);
+        if (z) {
+          item.classList.toggle("mastered", !!z.mastered);
+          bm.textContent = z.mastered ? "↩ 取消已掌握" : "✅ 标记已掌握";
+          var badge = item.querySelector(".wb-mastered-badge");
+          if (z.mastered && !badge) {
+            var sp = el("span", "pill wb-mastered-badge", "已掌握"); item.querySelector(".wq").appendChild(sp);
+          } else if (!z.mastered && badge) badge.remove();
+        }
+      };
+      var br = el("button", "", "移出错题本");
+      br.onclick = function () { clearWrong(cid, e.id); item.remove(); };
+      act.appendChild(bm); act.appendChild(br); item.appendChild(act);
       d.appendChild(item);
     });
     document.body.appendChild(d);
@@ -2818,9 +2839,21 @@
         var rd = wrongRedo(m.id, e, q, item);
         if (rd) item.appendChild(rd);
         item.appendChild(wrongAnswerDetails(e, q));
-        var act = el("div", "act"); var b = el("button", "", "标记已掌握");
-        b.onclick = function () { clearWrong(m.id, e.id); item.remove(); };
-        act.appendChild(b); item.appendChild(act); sec.appendChild(item);
+        var act = el("div", "act");
+        var bm = el("button", "", e.mastered ? "↩ 取消已掌握" : "✅ 标记已掌握");
+        bm.onclick = function () {
+          var z = toggleMastered(m.id, e.id);
+          if (z) {
+            item.classList.toggle("mastered", !!z.mastered);
+            bm.textContent = z.mastered ? "↩ 取消已掌握" : "✅ 标记已掌握";
+            var badge = item.querySelector(".wb-mastered-badge");
+            if (z.mastered && !badge) item.querySelector(".wq").appendChild(el("span", "pill wb-mastered-badge", "已掌握"));
+            else if (!z.mastered && badge) badge.remove();
+          }
+        };
+        var br = el("button", "", "移出错题本");
+        br.onclick = function () { clearWrong(m.id, e.id); item.remove(); };
+        act.appendChild(bm); act.appendChild(br); item.appendChild(act); sec.appendChild(item);
       });
       host.appendChild(sec);
     });
@@ -2838,9 +2871,21 @@
         item.innerHTML = '<div class="wq">' + esc(e.q) + '<span class="pill">' + esc(kindName(e.type)) + "</span></div>" +
           (e.chosen ? '<div class="wa">上次作答：' + esc(e.chosen) + "</div>" : "");
         item.appendChild(wrongAnswerDetails(e, null));
-        var act = el("div", "act"); var b = el("button", "", "标记已掌握");
-        b.onclick = function () { clearWrong(cid, e.id); item.remove(); };
-        act.appendChild(b); item.appendChild(act); sec.appendChild(item);
+        var act = el("div", "act");
+        var bm = el("button", "", e.mastered ? "↩ 取消已掌握" : "✅ 标记已掌握");
+        bm.onclick = function () {
+          var z = toggleMastered(cid, e.id);
+          if (z) {
+            item.classList.toggle("mastered", !!z.mastered);
+            bm.textContent = z.mastered ? "↩ 取消已掌握" : "✅ 标记已掌握";
+            var badge = item.querySelector(".wb-mastered-badge");
+            if (z.mastered && !badge) item.querySelector(".wq").appendChild(el("span", "pill wb-mastered-badge", "已掌握"));
+            else if (!z.mastered && badge) badge.remove();
+          }
+        };
+        var br = el("button", "", "移出错题本");
+        br.onclick = function () { clearWrong(cid, e.id); item.remove(); };
+        act.appendChild(bm); act.appendChild(br); item.appendChild(act); sec.appendChild(item);
       });
       host.appendChild(sec);
     });
