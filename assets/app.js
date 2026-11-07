@@ -1448,17 +1448,6 @@
     document.title = ch.title + " · 细胞生物学";
     var aside = document.getElementById("sidebar"), main = document.getElementById("main");
     aside.innerHTML = '<div class="ttl">' + esc(ch.title) + '</div><a href="index.html">← 返回首页</a><a href="guide.html">🚀 上手指南</a><a href="faq.html">❓ 常见问题</a><a href="recite.html">✍️ 背诵/默写</a><a href="quest.html">🚩 闯关模式</a><a href="schedule.html">🧭 学习路线</a><a href="report.html">📊 学习报告</a><a href="animations.html">🎬 动画总目录</a><a href="videos.html">🎬 视频微课</a><a href="history.html">🕰 科学史</a><a href="methods.html">🧪 实验方法</a><a href="experiments.html">🔬 实验一览</a><a href="mindmap.html">🕸 跨章总图</a><a href="textbook.html">📚 教材对照表</a><a href="compare.html">🔗 对比速记表</a><a href="zhenti.html">📋 历年真题</a><a href="802.html">📋 802 真题</a><a href="glossary.html">📖 术语表</a><a href="review.html">🔁 今日复习</a><a href="flashcards.html?ch=' + esc(cid) + '">🃏 闪卡</a><a href="exam.html">📝 模拟测验</a>';
-    var qbox = el("div", "questbox");
-    qbox.innerHTML = '<div class="quest-h">🚩 本章闯关</div>' +
-      '<div class="quest-body"><div class="quest-rail"><i class="qmark" style="bottom:25%"></i><i class="qmark" style="bottom:50%"></i><i class="qmark" style="bottom:75%"></i><i class="quest-fill"></i></div>' +
-      '<div class="quest-info"><div class="quest-pct">0%</div><div class="quest-step">当前关卡：准备开始</div>' +
-      '<div class="quest-stats">概念 0/0 · 题目 0/0<br>正确率 — · 错题 0 · 待问 0</div></div></div>' +
-      '<div class="quest-msg">第一关已开启，先拿下这一页。</div>' +
-      '<button class="quest-next" type="button">开始学习 →</button>';
-    aside.appendChild(qbox);
-    var qfill = qbox.querySelector(".quest-fill"), qpct = qbox.querySelector(".quest-pct"),
-      qstep = qbox.querySelector(".quest-step"), qstats = qbox.querySelector(".quest-stats"),
-      qmsg = qbox.querySelector(".quest-msg"), qnext = qbox.querySelector(".quest-next");
     aside.appendChild(el("div", "grp", "各模块（概念 + 考题）"));
     ch.modules.forEach(function (m) {
       var a = el("a", "", esc(m.name)); a.href = "#m" + m.i; aside.appendChild(a);
@@ -1499,72 +1488,44 @@
     rst.onclick = function () { fi.click(); };
     tools.appendChild(rst); aside.appendChild(tools); aside.appendChild(fi);
     function refreshProgress() {
-      var s = chapterStats(cid, ch), seen = seenStore(cid);
-      var unseen = [], ordered = [];
-      ch.modules.forEach(function (m) {
-        m.slides.forEach(function (sl) {
-          var key = cid + "_s" + m.i + "_" + sl.i;
-          var item = { m: m, s: sl, key: key };
-          ordered.push(item);
-          if (!seen[key]) unseen.push(item);
-        });
-      });
-      var lastKey = jget(skey(cid, "lastslide"), "");
-      var nextSlide = null;
-      if (lastKey) {
-        var lastIdx = -1;
-        for (var oi = 0; oi < ordered.length; oi++) if (ordered[oi].key === lastKey) { lastIdx = oi; break; }
-        for (var ni = lastIdx + 1; ni >= 0 && ni < ordered.length; ni++) {
-          if (!seen[ordered[ni].key]) { nextSlide = ordered[ni]; break; }
-        }
-      }
-      if (!nextSlide) nextSlide = unseen[0] || null;
-      var pctSlide = s.slides ? s.seen / s.slides : 0;
-      var pctQ = s.totalQ ? (s.answered || 0) / s.totalQ : 0;
-      var pct = Math.round((s.totalQ ? (pctSlide * 0.5 + pctQ * 0.5) : pctSlide) * 100);
-      var wrongN = s.wrong || 0, askN = confusedCount(cid);
-      qfill.style.height = pct + "%";
-      qpct.textContent = pct + "%";
-      qstats.innerHTML = "概念 " + s.seen + "/" + s.slides + " · 题目 " + (s.answered || 0) + "/" + (s.totalQ || 0) +
-        "<br>正确率 " + (s.rate == null ? "—" : s.rate + "%") + " · 错题 " + wrongN + " · 待问 " + askN;
-      var stage = unseen.length ? "概念页" : ((s.answered || 0) < (s.totalQ || 0) ? "本节练习" : (wrongN ? "错题清理" : "本章通关测"));
+      var seen = seenStore(cid), mc = mcqStore(cid), jg = judgeStore(cid), fi = fillStore(cid);
       var WH = [
-        { min: 0, name: "剑桥集结（1775）", msg: "1775年，华盛顿在剑桥接手一支缺枪少弹的民兵。别等状态完美，先拿下这一页，就是你的第一支队伍。" },
-        { min: 20, name: "长岛撤退（1776）", msg: "长岛战败后，华盛顿没有解散军队，而是趁大雾撤退、保存力量。遇到难懂的地方，先退一步，把基础保住。" },
-        { min: 40, name: "特伦顿奇袭（1776）", msg: "圣诞夜渡特拉华河，大陆军奇袭特伦顿，一场小胜扭转了士气。今天先完成一个小目标，状态就会回来。" },
-        { min: 55, name: "萨拉托加转折（1777）", msg: "萨拉托加大捷让法国参战，战争迎来转折。你已经走到中段，再坚持一下，转机就在前面。" },
-        { min: 70, name: "福吉谷冬训（1777-78）", msg: "福吉谷的寒冬里，士兵缺衣少食，却在这段时间训练成军。最累的时候，不求快，先把基本功练扎实。" },
-        { min: 85, name: "约克镇合围（1781）", msg: "约克镇合围，华盛顿把分散的力量集中到最后一点。最后一关，集中精力，一次只做一件事。" },
-        { min: 100, name: "独立建国（1783/1787）", msg: "1783年《巴黎和约》签订，1787年制宪，独立的美国站稳脚跟。你这一章也通关了，下一章继续。" }
+        { min: 0, name: "剑桥集结", msg: "1775年，华盛顿在剑桥接手一支缺枪少弹的民兵。别等状态完美，先拿下这一页。" },
+        { min: 18, name: "长岛撤退", msg: "长岛战败后，华盛顿没有解散军队，而是保存力量。遇到难点，先退一步，把基础保住。" },
+        { min: 36, name: "特伦顿奇袭", msg: "圣诞夜渡特拉华河，一场小胜扭转士气。先完成一个小目标，状态就会回来。" },
+        { min: 54, name: "萨拉托加转折", msg: "萨拉托加大捷让战争迎来转折。你已经走到中段，再坚持一下，转机就在前面。" },
+        { min: 72, name: "福吉谷冬训", msg: "福吉谷的寒冬里，士兵缺衣少食，却在这段时间训练成军。最累的时候，先练基本功。" },
+        { min: 86, name: "约克镇合围", msg: "约克镇合围，华盛顿把力量集中到最后一点。最后一关，集中精力，一次只做一件事。" },
+        { min: 100, name: "独立建国", msg: "1783年《巴黎和约》签订，1787年制宪。你这一模块通关了，带着这股劲继续下一关！" }
       ];
-      var wh = WH[0];
-      for (var wi = 0; wi < WH.length; wi++) if (pct >= WH[wi].min) wh = WH[wi];
-      qstep.textContent = "🎖 " + wh.name + " · 当前：" + stage;
-      var extra = "";
-      if (pct < 100 && wrongN >= 5) extra = " 先清理 3 道错题再前进。";
-      else if (pct < 100 && s.answered && s.rate != null && s.rate < 60) extra = " 正确率偏低，慢一点，把错题弄懂再走。";
-      qmsg.innerHTML = "<b>🎖 " + wh.name + "：</b>" + esc(wh.msg + extra);
-      if (nextSlide) {
-        qnext.textContent = "继续读下一节 →";
-        qnext.onclick = function () {
-          var el2 = document.getElementById("s_" + nextSlide.key);
-          if (el2) el2.scrollIntoView({ behavior: "smooth", block: "start" });
-        };
-      } else if ((s.answered || 0) < (s.totalQ || 0)) {
-        var target = null;
-        ch.modules.forEach(function (m) { if (!target && ((m.mcq && m.mcq.length) || (m.judge && m.judge.length) || (m.fill && m.fill.length))) target = m; });
-        qnext.textContent = "去做本节题 →";
-        qnext.onclick = function () { var el2 = target && document.getElementById("m" + target.i + "-mcq"); if (el2) el2.scrollIntoView({ behavior: "smooth", block: "start" }); };
-      } else if (wrongN) {
-        qnext.textContent = "复习错题 →";
-        qnext.onclick = function () { openWrongDrawer(cid, ch); };
-      } else if (s.rate != null && s.rate < 80) {
-        qnext.textContent = "做章末通关测 →";
-        qnext.onclick = function () { var el2 = document.getElementById("chexam"); if (el2) el2.scrollIntoView({ behavior: "smooth", block: "start" }); };
-      } else {
-        qnext.textContent = "本章已通关 🎉";
-        qnext.onclick = function () { window.scrollTo({ top: 0, behavior: "smooth" }); };
-      }
+      modquests.forEach(function (x) {
+        var m = x.m, elq = x.el;
+        var totalSlides = (m.slides || []).length, seenN = 0;
+        (m.slides || []).forEach(function (sl) {
+          if (seen[cid + "_s" + m.i + "_" + sl.i]) seenN++;
+        });
+        var qTotal = 0, qDone = 0;
+        ["mcq", "judge", "fill"].forEach(function (k) {
+          (m[k] || []).forEach(function (q) {
+            qTotal++;
+            if ((k === "mcq" ? mc : k === "judge" ? jg : fi)[q.id]) qDone++;
+          });
+        });
+        var ps = totalSlides ? seenN / totalSlides : 0;
+        var pq = qTotal ? qDone / qTotal : 0;
+        var pct = Math.round((qTotal ? (ps * 0.55 + pq * 0.45) : ps) * 100);
+        var wh = WH[0];
+        for (var i = 0; i < WH.length; i++) if (pct >= WH[i].min) wh = WH[i];
+        elq.querySelector(".modq-pct").textContent = pct + "%";
+        elq.querySelector(".modq-stage").textContent = wh.name;
+        elq.querySelector(".modq-bar>i").style.width = pct + "%";
+        var steps = elq.querySelectorAll(".modq-steps span");
+        for (var j = 0; j < steps.length; j++) {
+          steps[j].classList.toggle("done", pct >= WH[j].min && j < WH.length - 1);
+          steps[j].classList.toggle("cur", j === WH.indexOf(wh));
+        }
+        elq.querySelector(".modq-msg").textContent = wh.msg + (pct < 100 ? " 不要放弃，下一关就在前面。" : "");
+      });
     }
     document.addEventListener("cellprogress", refreshProgress);
 
@@ -1663,9 +1624,17 @@
       (relMap[e.a] = relMap[e.a] || []).push(e.b);
       (relMap[e.b] = relMap[e.b] || []).push(e.a);
     });
+    var modquests = [];
     ch.modules.forEach(function (m, mi) {
       var sec = el("section"); sec.id = "m" + m.i;
       sec.appendChild(el("h2", "", esc(m.name)));
+      var mq = el("div", "modquest");
+      mq.innerHTML = '<div class="modq-top"><span>🚩 模块闯关 · <b class="modq-stage">剑桥集结</b></span><span class="modq-pct">0%</span></div>' +
+        '<div class="modq-bar"><i></i></div>' +
+        '<div class="modq-steps"><span>剑桥</span><span>长岛</span><span>特伦顿</span><span>萨拉托加</span><span>福吉谷</span><span>约克镇</span><span>建国</span></div>' +
+        '<div class="modq-msg">第一关已开启，先拿下这一页。</div>';
+      sec.appendChild(mq);
+      modquests.push({ m: m, el: mq });
       m.slides.forEach(function (s, si) {
         var key = cid + "_s" + m.i + "_" + s.i;
         var altKey = cid + "_s" + mi + "_" + si;

@@ -708,3 +708,20 @@ html[data-theme="dark"] .quest-msg{background:#2a2618;border-color:#4a4326;color
 html[data-theme="dark"] .quest-next{background:#22303d;border-color:#33475a;color:#a8c6e0}
 .quest-msg b{color:#8a5b00}
 html[data-theme="dark"] .quest-msg b{color:#f0cf70}
+/* per-module Washington quest */
+.modquest{margin:8px 0 14px;padding:9px 11px 8px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(180deg,#f5f9ff,#fff)}
+.modq-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px;color:var(--blue);font-weight:700}
+.modq-pct{font-size:15px;font-weight:800;color:var(--blue);white-space:nowrap}
+.modq-bar{height:9px;background:#e7eef6;border-radius:6px;overflow:hidden;margin:6px 0 5px}
+.modq-bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#4a90d9,#1f5c8b);transition:width .3s}
+.modq-steps{display:flex;gap:3px;flex-wrap:wrap;font-size:10.5px;color:var(--sub);margin:2px 0 4px}
+.modq-steps span{padding:1px 5px;border-radius:8px;background:#f1f5fa;border:1px solid #e0e8f1}
+.modq-steps span.done{background:#eef8f0;border-color:#bfe0c4;color:#1a7f37}
+.modq-steps span.cur{background:#1f5c8b;border-color:#1f5c8b;color:#fff;font-weight:700}
+.modq-msg{font-size:11.5px;line-height:1.6;color:#6b5200;background:#fff8e8;border:1px solid #f0d9a8;border-radius:6px;padding:4px 7px}
+html[data-theme="dark"] .modquest{background:#1b2531;border-color:#2c3a4a}
+html[data-theme="dark"] .modq-bar{background:#263545}
+html[data-theme="dark"] .modq-steps span{background:#22303d;border-color:#33475a;color:#a8bfd6}
+html[data-theme="dark"] .modq-steps span.done{background:#1e3325;border-color:#2f5a3b;color:#7fc98f}
+html[data-theme="dark"] .modq-steps span.cur{background:#4a90d9;border-color:#4a90d9;color:#fff}
+html[data-theme="dark"] .modq-msg{background:#2a2618;border-color:#4a4326;color:#e0c060}
