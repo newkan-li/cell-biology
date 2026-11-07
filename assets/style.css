@@ -686,3 +686,5 @@ html[data-theme="dark"] .wb-ans .wb-a{background:#22303d;border-color:#33475a;co
 .wb-mastered-badge{background:#eef8f0;border:1px solid #bfe0c4;color:#1a7f37;margin-left:6px}
 html[data-theme="dark"] .wb-entry.mastered{background:#1a2b20;border-left-color:#4a9e6b}
 html[data-theme="dark"] .wb-mastered-badge{background:#1e3325;border-color:#2f5a3b;color:#7fc98f}
+.wb-wrong-count{background:#fdecea;border:1px solid #efc4bd;color:#b03a2e}
+html[data-theme="dark"] .wb-wrong-count{background:#3a201d;border-color:#8a3a30;color:#f08a7a}

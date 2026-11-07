@@ -38,7 +38,12 @@
   function setWrong(cid, arr) { jset(skey(cid, "wrong"), arr); }
 
   function addWrong(cid, entry) {
-    var arr = wrongList(cid).filter(function (e) { return e.id !== entry.id; });
+    var all = wrongList(cid);
+    var prev = all.filter(function (e) { return e.id === entry.id; })[0];
+    var arr = all.filter(function (e) { return e.id !== entry.id; });
+    entry.wrongCount = ((prev && prev.wrongCount) || 0) + 1;
+    entry.firstWrong = (prev && (prev.firstWrong || prev.ts)) || entry.ts;
+    entry.lastWrong = entry.ts;
     arr.push(entry);
     setWrong(cid, arr);
   }
@@ -858,10 +863,10 @@
       var item = el("div", "wb-entry" + (e.mastered ? " mastered" : ""));
       var q = qmap[e.id];
       item.innerHTML = '<div class="wq">' + esc(e.q) + '<span class="pill">' + esc(kindName(e.type)) + "</span>" +
+        '<span class="pill wb-wrong-count">错 ' + (e.wrongCount || 1) + ' 次</span>' +
         (e.mastered ? '<span class="pill wb-mastered-badge">已掌握</span>' : "") +
         (e.cause ? '<span class="cause-tag">' + esc((CAUSES.filter(function (c) { return c[0] === e.cause; })[0] || ["", "其他"])[1]) + "</span>" : "") + "</div>" +
-        (q && q.o ? '<div style="margin-top:4px">选项：' + q.o.map(esc).join("　") + "</div>" : "") +
-        (e.chosen ? '<div class="wa">上次作答：' + esc(e.chosen) + "</div>" : "");
+        (q && q.o ? '<div style="margin-top:4px">选项：' + q.o.map(esc).join("　") + "</div>" : "");
       if (q) { var rd = wrongRedo(cid, e, q, item); if (rd) item.appendChild(rd); }
       item.appendChild(wrongAnswerDetails(e, q));
       var act = el("div", "act");
@@ -2760,12 +2765,16 @@
           var b = el("button", "wb-opt", String(o).trim().charAt(0));
           b.title = o;
           b.onclick = function () {
-            Array.prototype.forEach.call(row.children, function (x) { x.disabled = true; });
             var ok = String(o).trim().charAt(0) === String(q.a).trim();
-            b.classList.add(ok ? "right" : "wrong");
-            if (!ok) Array.prototype.forEach.call(row.children, function (x) { if (x.textContent === String(q.a).trim()) x.classList.add("right"); });
-            fb.className = "wb-fb " + (ok ? "ok" : "no");
-            fb.textContent = ok ? "✅ 正确" : "❌ 再想想，正确答案已标出";
+            if (ok) {
+              Array.prototype.forEach.call(row.children, function (x) { x.disabled = true; });
+              b.classList.add("right");
+              fb.className = "wb-fb ok"; fb.textContent = "✅ 正确";
+            } else {
+              Array.prototype.forEach.call(row.children, function (x) { if (!x.classList.contains("right")) x.classList.remove("wrong"); });
+              b.classList.add("wrong");
+              fb.className = "wb-fb no"; fb.textContent = "❌ 不对，再试一次";
+            }
           };
           row.appendChild(b);
         });
@@ -2776,12 +2785,16 @@
         ["对", "错"].forEach(function (v) {
           var b = el("button", "wb-opt", v);
           b.onclick = function () {
-            Array.prototype.forEach.call(jr.children, function (x) { x.disabled = true; });
             var ok = v === String(q.a);
-            b.classList.add(ok ? "right" : "wrong");
-            if (!ok) Array.prototype.forEach.call(jr.children, function (x) { if (x.textContent === String(q.a)) x.classList.add("right"); });
-            fb.className = "wb-fb " + (ok ? "ok" : "no");
-            fb.textContent = ok ? "✅ 正确" : "❌ 再想想，正确答案已标出";
+            if (ok) {
+              Array.prototype.forEach.call(jr.children, function (x) { x.disabled = true; });
+              b.classList.add("right");
+              fb.className = "wb-fb ok"; fb.textContent = "✅ 正确";
+            } else {
+              Array.prototype.forEach.call(jr.children, function (x) { if (!x.classList.contains("right")) x.classList.remove("wrong"); });
+              b.classList.add("wrong");
+              fb.className = "wb-fb no"; fb.textContent = "❌ 不对，再试一次";
+            }
           };
           jr.appendChild(b);
         });
@@ -2792,9 +2805,13 @@
         var ck = el("button", "wb-opt", "检查");
         ck.onclick = function () {
           var ok = fuzzyMatch(q.a, inp.value);
-          inp.disabled = true; ck.disabled = true;
-          fb.className = "wb-fb " + (ok ? "ok" : "no");
-          fb.textContent = ok ? "✅ 正确" : "❌ 不正确，答案见下方";
+          if (ok) {
+            inp.disabled = true; ck.disabled = true;
+            fb.className = "wb-fb ok"; fb.textContent = "✅ 正确";
+          } else {
+            fb.className = "wb-fb no"; fb.textContent = "❌ 不对，再试一次";
+            inp.focus();
+          }
         };
         fr.appendChild(inp); fr.appendChild(ck); stage.appendChild(fr);
       } else {
@@ -2836,12 +2853,13 @@
         (ch[k] || []).forEach(function (q) { qmap[q.id] = q; });
       });
       list.slice().reverse().forEach(function (e) {
-        var item = el("div", "wb-entry");
+        var item = el("div", "wb-entry" + (e.mastered ? " mastered" : ""));
         var q = qmap[e.id];
         item.innerHTML = '<div class="wq">' + esc(e.q) + '<span class="pill">' + esc(kindName(e.type)) + "</span>" +
+          '<span class="pill wb-wrong-count">错 ' + (e.wrongCount || 1) + ' 次</span>' +
+          (e.mastered ? '<span class="pill wb-mastered-badge">已掌握</span>' : "") +
           (e.cause ? '<span class="cause-tag">' + esc((CAUSES.filter(function (c) { return c[0] === e.cause; })[0] || ["", "其他"])[1]) + "</span>" : "") + "</div>" +
-          (q && q.o ? '<div style="margin-top:4px">选项：' + q.o.map(esc).join("　") + "</div>" : "") +
-          (e.chosen ? '<div class="wa">上次作答：' + esc(e.chosen) + "</div>" : "");
+          (q && q.o ? '<div style="margin-top:4px">选项：' + q.o.map(esc).join("　") + "</div>" : "");
         var rd = wrongRedo(m.id, e, q, item);
         if (rd) item.appendChild(rd);
         item.appendChild(wrongAnswerDetails(e, q));
@@ -2873,9 +2891,10 @@
       var nm = (window.ZT_NAMES && window.ZT_NAMES[cid.replace(/^(ZS|ZT)/, "")]) || cid;
       sec.appendChild(el("h2", "", "历年/客观真题 · " + esc(nm) + "（" + list.length + "）"));
       list.slice().reverse().forEach(function (e) {
-        var item = el("div", "wb-entry");
-        item.innerHTML = '<div class="wq">' + esc(e.q) + '<span class="pill">' + esc(kindName(e.type)) + "</span></div>" +
-          (e.chosen ? '<div class="wa">上次作答：' + esc(e.chosen) + "</div>" : "");
+        var item = el("div", "wb-entry" + (e.mastered ? " mastered" : ""));
+        item.innerHTML = '<div class="wq">' + esc(e.q) + '<span class="pill">' + esc(kindName(e.type)) + "</span>" +
+          '<span class="pill wb-wrong-count">错 ' + (e.wrongCount || 1) + ' 次</span>' +
+          (e.mastered ? '<span class="pill wb-mastered-badge">已掌握</span>' : "") + "</div>";
         item.appendChild(wrongAnswerDetails(e, null));
         var act = el("div", "act");
         var bm = el("button", "", e.mastered ? "↩ 取消已掌握" : "✅ 标记已掌握");
