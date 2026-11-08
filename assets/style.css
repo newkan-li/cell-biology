@@ -748,3 +748,10 @@ html[data-theme="dark"] .cq-pct{color:#7fb3d8}
 html[data-theme="dark"] .cq-msg{background:#2a2618;border-color:#4a4326;color:#e0c060}
 html[data-theme="dark"] .cq-msg::after{background:#322c1b;border-color:#6a5a2c;color:#f0cf70;box-shadow:0 8px 26px rgba(0,0,0,.45)}
 @media print{.chapter-quest-top{display:none!important}body[data-page="chapter"] main{padding-top:0!important}}
+/* P0 mind map gallery */
+.p0-mindbox{border-color:#cbd9ea}
+.p0-mind-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.p0-mind-grid a{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px;color:var(--fg);text-decoration:none}
+.p0-mind-grid img{width:100%;height:190px;object-fit:contain;background:#fff;border-radius:6px}
+.p0-mind-grid span{display:block;font-size:12.5px;color:var(--sub);text-align:center;margin-top:4px}
+html[data-theme="dark"] .p0-mind-grid a{background:#1b2531;border-color:#2c3a4a}
